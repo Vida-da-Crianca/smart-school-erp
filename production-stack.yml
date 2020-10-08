@@ -4,8 +4,8 @@ services:
     image: mysql:latest
     environment:
       MYSQL_DATABASE: erpjb
-      MYSQL_PASSWORD: #2020..
-      MYSQL_ROOT_PASSWORD: #2020..
+      MYSQL_PASSWORD: erpjb@2020
+      MYSQL_ROOT_PASSWORD: erpjb@2020
       MYSQL_USER: erpjp
     command: 
       [
@@ -21,9 +21,13 @@ services:
     # ports:
     #  - 3306:3306 
   app:
-    image: carlosocarvalho/erpjb-school
+    image: carlosocarvalho/erpjb-school:main
     environment:
       - ENVIRONMENT=production
+      - DB_HOST=db
+      - DB_NAME=erpjb
+      - DB_PASSWORD=erpjb@2020
+      - DB_USER=root
     volumes:
       - /var/apps/erpjb/production/app/uploads:/app/uploads
       - /var/apps/erpjb/production/app/logs:/app/application/logs

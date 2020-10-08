@@ -61,9 +61,9 @@ jobs:
       - name: Create Folder for Application 
         run: |
            mkdir -p -m 777 $DIRECTORY_APPLICATION/app/uploads &&
-           mkdir -p $DIRECTORY_APPLICATION/app/temp
-           mkdir -p $DIRECTORY_APPLICATION/app/logs 
-           mkdir -p $DIRECTORY_APPLICATION/database/msyql
+           mkdir -p -m 777 $DIRECTORY_APPLICATION/app/temp
+           mkdir -p -m 777 $DIRECTORY_APPLICATION/app/logs 
+           mkdir -p -m 777 $DIRECTORY_APPLICATION/database/msyql
 
 
       
