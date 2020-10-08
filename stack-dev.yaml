@@ -7,14 +7,23 @@ services:
       MYSQL_PASSWORD: erp
       MYSQL_ROOT_PASSWORD: erp
       MYSQL_USER: erp
-    command: --default-authentication-plugin=mysql_native_password
+    command: 
+      [
+        '--default_authentication_plugin=mysql_native_password',
+        '--character-set-server=utf8mb4',
+        '--collation-server=utf8mb4_unicode_ci'
+    ]
     volumes:
       - ./data:/var/lib/mysql
     networks:
      - erp_net
     ports:
      - 3307:3306
-  erp:
+    # configs:
+    #   -
+    #     source: mysql.conf
+    #     target: /etc/mysql/conf.d/group.cnf
+  app:
     image: webdevops/php-nginx:5.6
     environment:
       - VERSION_erp=1.0.2
@@ -53,7 +62,9 @@ networks:
   proxy:
     external: true
   erp_net:
-# configs:
+configs:
+   mysql.conf:
+     file: './mysql.conf'
    
 #   php.ini:
 #     file: './docker/php.ini'
