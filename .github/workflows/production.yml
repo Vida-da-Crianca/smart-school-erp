@@ -57,6 +57,5 @@ jobs:
       - uses: actions/checkout@v2
       
       - name: Deploy application
-      
         run: |
          cat production-stack.yaml
