@@ -21,7 +21,7 @@ env:
 jobs:
   build:
     # Ensure test job passes before pushing image.
-    runs-on: ubuntu-latest
+    runs-on: docker-stack
     if: github.event_name == 'push'
 
     steps:
