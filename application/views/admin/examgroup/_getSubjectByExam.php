@@ -31,7 +31,7 @@
                                             ?>
                                             <tr>
                                                 <td><?php echo $exam_subject_value->subject_name; ?></td>
-                                                <td><?php echo date($this->customlib->getSchoolDateFormat(),strtotime($exam_subject_value->date_from)); ?></td>
+                                                <td><?php echo $this->customlib->dateformat($exam_subject_value->date_from); ?></td>
                                                 <td><?php echo $exam_subject_value->time_from; ?></td>
                                                 <td><?php echo $exam_subject_value->duration; ?></td>
                                                 <td><?php echo $exam_subject_value->room_no; ?></td>

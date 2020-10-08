@@ -13,30 +13,29 @@ class visitors_model extends MY_Model {
     }
 
     function add($data) {
-		$this->db->trans_start(); # Starting Transaction
+        $this->db->trans_start(); # Starting Transaction
         $this->db->trans_strict(false); # See Note 01. If you wish can remove as well
         //=======================Code Start===========================
         $this->db->insert('visitors_book', $data);
         $query = $this->db->insert_id();
-		$message      = INSERT_RECORD_CONSTANT." On  visitors  id ".$query;
-        $action       = "Insert";
-        $record_id    = $query;
+        $message = INSERT_RECORD_CONSTANT . " On  visitors  id " . $query;
+        $action = "Insert";
+        $record_id = $query;
         $this->log($message, $record_id, $action);
-		//echo $this->db->last_query();die;
+        //echo $this->db->last_query();die;
         //======================Code End==============================
 
         $this->db->trans_complete(); # Completing transaction
-        /*Optional*/
+        /* Optional */
 
         if ($this->db->trans_status() === false) {
             # Something went wrong.
             $this->db->trans_rollback();
             return false;
-
         } else {
 
 
-        //return $return_value;
+            return $record_id;
         }
     }
 
@@ -63,52 +62,52 @@ class visitors_model extends MY_Model {
     }
 
     public function delete($id) {
-		$this->db->trans_start(); # Starting Transaction
+        $this->db->trans_start(); # Starting Transaction
         $this->db->trans_strict(false); # See Note 01. If you wish can remove as well
         //=======================Code Start===========================
         $this->db->where('id', $id);
         $this->db->delete('visitors_book');
-		$message      = DELETE_RECORD_CONSTANT." On  visitors  id ".$id;
-        $action       = "Delete";
-        $record_id    = $id;
+        $message = DELETE_RECORD_CONSTANT . " On  visitors  id " . $id;
+        $action = "Delete";
+        $record_id = $id;
         $this->log($message, $record_id, $action);
-		//======================Code End==============================
+        //======================Code End==============================
         $this->db->trans_complete(); # Completing transaction
-        /*Optional*/
+        /* Optional */
         if ($this->db->trans_status() === false) {
             # Something went wrong.
             $this->db->trans_rollback();
             return false;
         } else {
-        //return $return_value;
-        }		
-        $this->session->set_flashdata('msg', '<div class="alert alert-success">'.$this->lang->line('delete_message').'</div>');
+            //return $return_value;
+        }
+        $this->session->set_flashdata('msg', '<div class="alert alert-success">' . $this->lang->line('delete_message') . '</div>');
         redirect('admin/visitors');
     }
 
     public function update($id, $data) {
-		$this->db->trans_start(); # Starting Transaction
+        $this->db->trans_start(); # Starting Transaction
         $this->db->trans_strict(false); # See Note 01. If you wish can remove as well
         //=======================Code Start===========================
         $this->db->where('id', $id);
         $this->db->update('visitors_book', $data);
-        
-		$message      = UPDATE_RECORD_CONSTANT." On  visitors id ".$id;
-        $action       = "Update";
-        $record_id    = $id;
+
+        $message = UPDATE_RECORD_CONSTANT . " On  visitors id " . $id;
+        $action = "Update";
+        $record_id = $id;
         $this->log($message, $record_id, $action);
-		//echo $this->db->last_query();die;
+        //echo $this->db->last_query();die;
         //======================Code End==============================
         $this->db->trans_complete(); # Completing transaction
-        /*Optional*/
+        /* Optional */
         if ($this->db->trans_status() === false) {
             # Something went wrong.
             $this->db->trans_rollback();
             return false;
         } else {
-        //return $return_value;
+            //return $return_value;
         }
-		$this->session->set_flashdata('msg', '<div class="alert alert-success">'.$this->lang->line('update_message').'</div>');
+        $this->session->set_flashdata('msg', '<div class="alert alert-success">' . $this->lang->line('update_message') . '</div>');
         redirect('admin/visitors');
     }
 
@@ -117,8 +116,7 @@ class visitors_model extends MY_Model {
         $this->db->set('image', $image);
         $this->db->where($array);
         $this->db->update('visitors_book');
-        $this->session->set_flashdata('msg', '<div class="alert alert-success">'.$this->lang->line('success_message').'</div>');
-        redirect('admin/visitors');
+        $this->session->set_flashdata('msg', '<div class="alert alert-success">' . $this->lang->line('success_message') . '</div>');
     }
 
     public function image_update($visitor_id, $image) {
@@ -126,8 +124,7 @@ class visitors_model extends MY_Model {
         $this->db->set('image', $image);
         $this->db->where($array);
         $this->db->update('visitors_book');
-        $this->session->set_flashdata('msg', '<div class="alert alert-success">'.$this->lang->line('success_message').'</div>');
-       
+        $this->session->set_flashdata('msg', '<div class="alert alert-success">' . $this->lang->line('success_message') . '</div>');
     }
 
     public function image_delete($id, $img_name) {
@@ -136,7 +133,7 @@ class visitors_model extends MY_Model {
         $this->db->where('id', $id);
         $this->db->delete('visitors_book');
         $controller_name = $this->uri->segment(2);
-        $this->session->set_flashdata('msg', '<div class="alert alert-success"> ' . ucfirst($controller_name) . ''.$this->lang->line('success_message').'</div>');
+        $this->session->set_flashdata('msg', '<div class="alert alert-success"> ' . ucfirst($controller_name) . '' . $this->lang->line('success_message') . '</div>');
         redirect('admin/' . $controller_name);
     }
 

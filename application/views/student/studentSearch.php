@@ -140,7 +140,7 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                     <tbody>
                                         <?php
                                         if (empty($resultlist)) {
-                                            ?>
+                                             ?>
                                                              
                                             <?php
                                         } else {
@@ -151,7 +151,7 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
 												
                                                     <td><?php echo $student['admission_no']; ?></td>
 											
-                                                    <td>
+                                                    <td> 
                                                         <a href="<?php echo base_url(); ?>student/view/<?php echo $student['id']; ?>"><?php echo $student['firstname'] . " " . $student['lastname']; ?>
                                                         </a>
                                                     </td>
@@ -160,7 +160,7 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
 													<td><?php echo $student['father_name']; ?></td>
 													<?php }?>
                                                     <td><?php
-                                                        if ($student["dob"] != null) {
+                                                        if ($student["dob"] != null && $student["dob"]!='0000-00-00') {
                                                             echo date($this->customlib->getSchoolDateFormat(), $this->customlib->dateyyyymmddTodateformat($student['dob']));
                                                         }
                                                         ?></td>
@@ -226,7 +226,11 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                     foreach ($resultlist as $student) {
 
                                         if (empty($student["image"])) {
-                                            $image = "uploads/student_images/no_image.png";
+                                            if($student['gender']=='Female'){
+                                                             $image= "uploads/student_images/default_female.jpg";
+                                                        }else{
+                                                             $image ="uploads/student_images/default_male.jpg";
+                                                        }
                                         } else {
                                             $image = $student['image'];
                                         }
@@ -238,7 +242,7 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                                         <div class="item active">
                                                             <a href="<?php echo base_url(); ?>student/view/<?php echo $student['id'] ?>"> <img class="img-responsive img-thumbnail width150" alt="<?php echo $student["firstname"] . " " . $student["lastname"] ?>" src="<?php echo base_url() . $image; ?>" alt="Image"></a>
                                                         </div>
-                                                    </div>
+                                                    </div> 
                                                 </div>
                                                 <div class="slide-content">
                                                     <h4><a href="<?php echo base_url(); ?>student/view/<?php echo $student['id'] ?>"> <?php echo $student['firstname'] . " " . $student['lastname'] ?></a></h4>

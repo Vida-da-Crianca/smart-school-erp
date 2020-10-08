@@ -16,6 +16,7 @@ class Site extends Public_Controller {
         $this->load->library('Auth');
         $this->load->library('Enc_lib');
         $this->load->library('customlib');
+        $this->load->library('mailsmsconf');
         $this->load->library('mailer');
         $this->load->config('ci-blog');
         $this->mailer;
@@ -37,8 +38,8 @@ class Site extends Public_Controller {
 
     function login() {
 
-$app_name=$this->setting_model->get();
-$app_name=$app_name[0]['name'];
+        $app_name = $this->setting_model->get();
+        $app_name = $app_name[0]['name'];
 
         if ($this->auth->logged_in()) {
             $this->auth->is_logged_in(true);
@@ -47,7 +48,7 @@ $app_name=$app_name[0]['name'];
         $data = array();
         $data['title'] = 'Login';
         $school = $this->setting_model->get();
-        
+
         $data['name'] = $app_name;
 
         $notice_content = $this->config->item('ci_front_notice_content');
@@ -57,7 +58,7 @@ $app_name=$app_name[0]['name'];
         $this->form_validation->set_rules('username', $this->lang->line('username'), 'trim|required|xss_clean');
         $this->form_validation->set_rules('password', $this->lang->line('password'), 'trim|required|xss_clean');
         if ($this->form_validation->run() == FALSE) {
-           $data['name'] = $app_name;
+            $data['name'] = $app_name;
             $this->load->view('admin/login', $data);
         } else {
             $login_post = array(
@@ -72,7 +73,7 @@ $app_name=$app_name[0]['name'];
             } else {
                 $lang_array = array('lang_id' => $setting_result[0]['lang_id'], 'language' => $setting_result[0]['language']);
             }
-            
+
             if ($result) {
                 if ($result->is_active) {
                     if ($result->surname != "") {
@@ -97,8 +98,15 @@ $app_name=$app_name[0]['name'];
                         'language' => $lang_array,
                         'is_rtl' => $setting_result[0]['is_rtl'],
                         'theme' => $setting_result[0]['theme'],
+                        'gender' => $result->gender,
                     );
+                    $language_result1 = $this->language_model->get($lang_array['lang_id']);
+                    if ($this->customlib->get_rtl_languages($language_result1['short_code'])) {
+                        $session_data['is_rtl'] = 'enabled';
+                    }
+
                     $this->session->set_userdata('admin', $session_data);
+
                     $role = $this->customlib->getStaffRole();
                     $role_name = json_decode($role)->name;
                     $this->customlib->setUserLog($this->input->post('username'), $role_name);
@@ -136,39 +144,36 @@ $app_name=$app_name[0]['name'];
 
     function forgotpassword() {
 
-$app_name=$this->setting_model->get();
-$data['name']=$app_name[0]['name'];
+        $app_name = $this->setting_model->get();
+        $data['name'] = $app_name[0]['name'];
         $this->form_validation->set_rules('email', $this->lang->line('email'), 'trim|valid_email|required|xss_clean');
 
         if ($this->form_validation->run() == FALSE) {
-            $this->load->view('admin/forgotpassword',$data);
+            $this->load->view('admin/forgotpassword', $data);
         } else {
             $email = $this->input->post('email');
 
             $result = $this->staff_model->getByEmail($email);
 
             if ($result && $result->email != "") {
-
-                $verification_code = $this->enc_lib->encrypt(uniqid(mt_rand()));
-                $update_record = array('id' => $result->id, 'verification_code' => $verification_code);
-                $this->staff_model->add($update_record);
-                $name = $result->name;
-
-                $resetPassLink = site_url('admin/resetpassword') . "/" . $verification_code;
-
-                $body = $this->forgotPasswordBody($name, $resetPassLink);
-                $body_array = json_decode($body);
-
-                if (!empty($this->mail_config)) {
-                    $result = $this->mailer->send_mail($result->email, $body_array->subject, $body_array->body);
+                if ($result->is_active == '1') {
+                    $verification_code = $this->enc_lib->encrypt(uniqid(mt_rand()));
+                    $update_record = array('id' => $result->id, 'verification_code' => $verification_code);
+                    $this->staff_model->add($update_record);
+                    $name = $result->name;
+                    $resetPassLink = site_url('admin/resetpassword') . "/" . $verification_code;
+                    $sender_details = array('resetPassLink' => $resetPassLink, 'name' => $name, 'email' => $email);
+                    $this->mailsmsconf->mailsms('forgot_password', $sender_details);
+                    $this->session->set_flashdata('message', $this->lang->line('please_check_your_email_to_recover_your_password'));
+                } else {
+                    $this->session->set_flashdata('disable_message', $this->lang->line('your_account_is_disabled_please_contact_to_administrator'));
                 }
-
-                $this->session->set_flashdata('message', $this->lang->line('please_check_your_email_to_recover_your_password'));
 
                 redirect('site/login', 'refresh');
             } else {
+
                 $data = array(
-                    'error_message' => $this->lang->line('invalid_email')
+                    'error_message' => $this->lang->line('incorrect') . " " . $this->lang->line('email')
                 );
             }
             $this->load->view('admin/forgotpassword', $data);
@@ -177,8 +182,8 @@ $data['name']=$app_name[0]['name'];
 
     //reset password - final step for forgotten password
     public function admin_resetpassword($verification_code = null) {
-        $app_name=$this->setting_model->get();
-$data['name']=$app_name[0]['name'];
+        $app_name = $this->setting_model->get();
+        $data['name'] = $app_name[0]['name'];
         if (!$verification_code) {
             show_404();
         }
@@ -224,8 +229,8 @@ $data['name']=$app_name[0]['name'];
 
     //reset password - final step for forgotten password
     public function resetpassword($role = null, $verification_code = null) {
-         $app_name=$this->setting_model->get();
-$data['name']=$app_name[0]['name'];
+        $app_name = $this->setting_model->get();
+        $data['name'] = $app_name[0]['name'];
         if (!$role || !$verification_code) {
             show_404();
         }
@@ -270,14 +275,14 @@ $data['name']=$app_name[0]['name'];
     }
 
     function ufpassword() {
-       
-        $app_name=$this->setting_model->get();
-        $data['name']=$app_name[0]['name'];
+
+        $app_name = $this->setting_model->get();
+        $data['name'] = $app_name[0]['name'];
         $this->form_validation->set_rules('username', $this->lang->line('email'), 'trim|required|xss_clean');
         $this->form_validation->set_rules('user[]', $this->lang->line('user_type'), 'trim|required|xss_clean');
         if ($this->form_validation->run() == FALSE) {
-            
-            $this->load->view('ufpassword',$data);
+
+            $this->load->view('ufpassword', $data);
         } else {
             $email = $this->input->post('username');
             $usertype = $this->input->post('user[]');
@@ -296,157 +301,21 @@ $data['name']=$app_name[0]['name'];
                 }
                 $resetPassLink = site_url('user/resetpassword') . '/' . $usertype[0] . "/" . $verification_code;
 
-                $body = $this->forgotPasswordBody($name, $resetPassLink);
-                $body_array = json_decode($body);
-
-                if (!empty($this->mail_config)) {
-                    $result = $this->mailer->send_mail($email, $body_array->subject, $body_array->body);
-                }
+                $sender_details = array('resetPassLink' => $resetPassLink, 'name' => $name, 'email' => $email);
+                $this->mailsmsconf->mailsms('forgot_password', $sender_details);
 
                 $this->session->set_flashdata('message', $this->lang->line("please_check_your_email_to_recover_your_password"));
                 redirect('site/userlogin', 'refresh');
             } else {
                 $data = array(
-                     'name'=> $app_name[0]['name'],
+                    'name' => $app_name[0]['name'],
                     'error_message' => $this->lang->line('invalid_email_or_user_type')
                 );
             }
-           
+
             $this->load->view('ufpassword', $data);
         }
-    } 
-
-    function forgotPasswordBody($name, $resetPassLink) {
-        //===============
-        $subject = "Password Update Request";
-        $body = 'Dear ' . $name . ', 
-                <br/>Recently a request was submitted to reset password for your account. If you didn\'t make the request, just ignore this email. Otherwise you can reset your password using this link <a href="' . $resetPassLink . '"><button>Click here to reset your password</button></a>';
-        $body .= '<br/><hr/>if you\'re having trouble clicking the password reset button, copy and paste the URL below into your web browser';
-        $body .= '<br/>' . $resetPassLink;
-        $body .= '<br/><br/>Regards,
-                <br/>' . $this->customlib->getSchoolName();
-
-        //======================
-        return json_encode(array('subject' => $subject, 'body' => $body));
     }
- // function userlogin() {
- //        if ($this->auth->user_logged_in()) {
- //            $this->auth->user_redirect();
- //        }
- //        $data = array();
- //        $data['title'] = 'Login';
- //        $school = $this->setting_model->get();
- //        $data['name'] = $school[0]['name'];
- //        $notice_content = $this->config->item('ci_front_notice_content');
- //        $notices = $this->cms_program_model->getByCategory($notice_content, array('start' => 0, 'limit' => 5));
- //        $data['notice'] = $notices;
- //        $data['school'] = $school[0];
- //        $this->form_validation->set_rules('username', $this->lang->line('username'), 'trim|required|xss_clean');
- //        $this->form_validation->set_rules('password', $this->lang->line('password'), 'trim|required|xss_clean');
- //        if ($this->form_validation->run() == FALSE) {
- //            $this->load->view('userlogin', $data);
- //        } else {
- //            $login_post = array(
- //                'username' => $this->input->post('username'),
- //                'password' => $this->input->post('password')
- //            );
- //            $login_details = $this->user_model->checkLogin($login_post);
-
- //            if (isset($login_details) && !empty($login_details)) {
- //                $user = $login_details[0];
- //                if ($user->is_active == "yes") {
- //                    if ($user->role == "student") {
- //                        $result = $this->user_model->read_user_information($user->id);
- //                    } else if ($user->role == "parent") {
- //                        $result = $this->user_model->checkLoginParent($login_post);
- //                    }
-
- //                    if ($result != false) {
- //                        $setting_result = $this->setting_model->get();
- //                        if ($result[0]->lang_id == 0) {
- //                            $language = array('lang_id' => $setting_result[0]['lang_id'], 'language' => $setting_result[0]['language']);
- //                        } else {
- //                            $language = array('lang_id' => $result[0]->lang_id, 'language' => $result[0]->language);
- //                        }
-
-                       
- //                        if ($result[0]->role == "student") {
- //                            $session_data = array(
- //                                'id' => $result[0]->id,
- //                                'student_id' => $result[0]->user_id,
- //                                'role' => $result[0]->role,
- //                                'username' => $result[0]->firstname . " " . $result[0]->lastname,
- //                                'date_format' => $setting_result[0]['date_format'],
- //                                'currency_symbol' => $setting_result[0]['currency_symbol'],
- //                                'timezone' => $setting_result[0]['timezone'],
- //                                'sch_name' => $setting_result[0]['name'],
- //                                'language' => $language,
- //                                'is_rtl' => $setting_result[0]['is_rtl'],
- //                                'theme' => $setting_result[0]['theme'],
- //                                'image' => $result[0]->image,
- //                            );
- //                            $student_display_session = $this->studentsession_model->searchActiveClassSectionStudent($result[0]->user_id);
- //                            $student_current_class = array('student_session_id'=>$student_display_session->id,'class_id' => $student_display_session->class_id,
- //                                'section_id' => $student_display_session->section_id);
- //                            $this->session->set_userdata('student', $session_data);
- //                            $this->session->set_userdata('current_class', $student_current_class);
- //                            $this->customlib->setUserLog($result[0]->username, $result[0]->role);
- //                            redirect('user/user/dashboard');
- //                        } else if ($result[0]->role == "parent") {
-              
- //                            if ($result[0]->guardian_relation == "Father") {
- //                                $image = $result[0]->father_pic;
- //                            } else if ($result[0]->guardian_relation == "Mother") {
- //                                $image = $result[0]->mother_pic;
- //                            } else if ($result[0]->guardian_relation == "Other") {
- //                                $image = $result[0]->guardian_pic;
- //                            }
-
- //                            $session_data = array(
- //                                'id' => $result[0]->id,
- //                                'student_id' => $result[0]->user_id,
- //                                'role' => $result[0]->role,
- //                                'username' => $result[0]->guardian_name,
- //                                'date_format' => $setting_result[0]['date_format'],
- //                                'timezone' => $setting_result[0]['timezone'],
- //                                'sch_name' => $setting_result[0]['name'],
- //                                'currency_symbol' => $setting_result[0]['currency_symbol'],
- //                                'language' => array('lang_id' => $setting_result[0]['lang_id'], 'language' => $setting_result[0]['language']),
- //                                'is_rtl' => $setting_result[0]['is_rtl'],
- //                                'theme' => $setting_result[0]['theme'],
- //                                'image' => $image,
- //                            );
- //                            $this->session->set_userdata('student', $session_data);
- //                            $s = array();
- //                            $user_id = ($result[0]->id);
- //                            $students_array = $this->student_model->read_siblings_students($user_id);
-
- //                            $child_student = array();
- //                            foreach ($students_array as $std_key => $std_val) {
- //                                $child = array(
- //                                    'student_id' => $std_val->id,
- //                                    'name' => $std_val->firstname . " " . $std_val->lastname
- //                                );
- //                                $child_student[] = $child;
- //                            }
- //                            $this->session->set_userdata('parent_childs', $child_student);
- //                            $this->customlib->setUserLog($result[0]->username, $result[0]->role);
- //                            redirect('parent/parents/dashboard');
- //                        }
- //                    } else {
- //                        $data['error_message'] = 'Account Suspended';
- //                        $this->load->view('userlogin', $data);
- //                    }
- //                } else {
- //                    $data['error_message'] = $this->lang->line('your_account_is_disabled_please_contact_to_administrator');
- //                    $this->load->view('userlogin', $data);
- //                }
- //            } else {
- //                $data['error_message'] = $this->lang->line('invalid_username_or_password');
- //                $this->load->view('userlogin', $data);
- //            }
- //        }
- //    }
 
     function userlogin() {
         if ($this->auth->user_logged_in()) {
@@ -487,8 +356,8 @@ $data['name']=$app_name[0]['name'];
                         } else {
                             $language = array('lang_id' => $result[0]->lang_id, 'language' => $result[0]->language);
                         }
-                        if($result[0]->role == "parent") {
-                             $username=$result[0]->guardian_name;
+                        if ($result[0]->role == "parent") {
+                            $username = $result[0]->guardian_name;
                             if ($result[0]->guardian_relation == "Father") {
                                 $image = $result[0]->father_pic;
                             } else if ($result[0]->guardian_relation == "Mother") {
@@ -496,39 +365,35 @@ $data['name']=$app_name[0]['name'];
                             } else if ($result[0]->guardian_relation == "Other") {
                                 $image = $result[0]->guardian_pic;
                             }
-                        }elseif ($result[0]->role == "student") {
-                             $image = $result[0]->image;
-                            $username= ($result[0]->lastname != "")? $result[0]->firstname . " " .$result[0]->lastname: $result[0]->firstname;
+                        } elseif ($result[0]->role == "student") {
+                            $image = $result[0]->image;
+                            $username = ($result[0]->lastname != "") ? $result[0]->firstname . " " . $result[0]->lastname : $result[0]->firstname;
                         }
-                       
-                        
-                     
-                            $session_data = array(
-                                'id' => $result[0]->id,
-                                'student_id' => $result[0]->user_id,
-                                'role' => $result[0]->role,
-                                'username' => $username,
-                                'date_format' => $setting_result[0]['date_format'],
-                                'currency_symbol' => $setting_result[0]['currency_symbol'],
-                                'timezone' => $setting_result[0]['timezone'],
-                                'sch_name' => $setting_result[0]['name'],
-                                'language' => $language,
-                                'is_rtl' => $setting_result[0]['is_rtl'],
-                                'theme' => $setting_result[0]['theme'],
-                                'image' => $result[0]->image,
-                            );
-                            $this->session->set_userdata('student', $session_data);
-
-                            // $student_display_session = $this->studentsession_model->searchActiveClassSectionStudent($result[0]->user_id);
-                            // $student_current_class = array('student_session_id'=>$student_display_session->id,'class_id' => $student_display_session->class_id,
-                            //     'section_id' => $student_display_session->section_id);
-
-                            // $this->session->set_userdata('current_class', $student_current_class);
-
+                        $session_data = array(
+                            'id' => $result[0]->id,
+                            'login_username' => $result[0]->username,
+                            'student_id' => $result[0]->user_id,
+                            'role' => $result[0]->role,
+                            'username' => $username,
+                            'date_format' => $setting_result[0]['date_format'],
+                            'currency_symbol' => $setting_result[0]['currency_symbol'],
+                            'timezone' => $setting_result[0]['timezone'],
+                            'sch_name' => $setting_result[0]['name'],
+                            'language' => $language,
+                            'is_rtl' => $setting_result[0]['is_rtl'],
+                            'theme' => $setting_result[0]['theme'],
+                            'image' => $result[0]->image,
+                            'gender' => $result[0]->gender,
+                        );
+                        $language_result1 = $this->language_model->get($language['lang_id']);
+                        if ($this->customlib->get_rtl_languages($language_result1['short_code'])) {
+                            $session_data['is_rtl'] = 'enabled';
+                        }
+                        $this->session->set_userdata('student', $session_data);
+                        if ($result[0]->role == "parent") {
                             $this->customlib->setUserLog($result[0]->username, $result[0]->role);
-                            // redirect('user/user/dashboard');
-                            redirect('user/user/choose');
-                   
+                        }
+                        redirect('user/user/choose');
                     } else {
                         $data['error_message'] = 'Account Suspended';
                         $this->load->view('userlogin', $data);
@@ -545,7 +410,7 @@ $data['name']=$app_name[0]['name'];
     }
 
     public function savemulticlass() {
-        
+
         $student_id = '';
         $this->form_validation->set_rules('student_id', $this->lang->line('student'), 'trim|required|xss_clean');
 

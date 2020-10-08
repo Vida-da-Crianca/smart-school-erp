@@ -51,10 +51,9 @@ class Calendar_model extends CI_Model {
         return $query->num_rows();
     }
 
-       function countrows() {
+       function countrows($id,$role_id) {
 
-        $query = $this->db->where("event_type", "task")->get("events");
-
+       $query = $this->db->where(array('event_type' => 'task', 'event_for' => $id, 'role_id' => $role_id))->order_by("is_active,start_date", "asc")->get("events");
         return $query->num_rows();
     }
 

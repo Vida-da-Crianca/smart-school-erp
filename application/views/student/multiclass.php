@@ -88,9 +88,11 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                                         <div class="text-center">
 
                                                             <div class="col-xs-12 col-xs-offset-0 col-sm-3 col-sm-offset-9">
+                                                                 <?php if($this->rbac->hasPrivilege('multi_class_student','can_add')){ ?>
                                                                 <button type="button" class="btn btn-default btn-sm pull-right addrow addrow-mb2010">
                                                                     <i class="fa fa-plus"></i>
                                                                 </button>
+                                                            <?php }?>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -132,8 +134,9 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                                                     </div>
                                                                     <div class="col-sm-2">
                                                                         <div class="form-group"><label for="email" style="opacity: 0;"><?php echo $this->lang->line('action')?></label>
-
+                                                                              <?php if($this->rbac->hasPrivilege('multi_class_student','can_delete')){ ?>
                                                                             <button class="btn btn-sm btn-danger rmv_row" type="button"><?php echo $this->lang->line('remove') ?></button>
+                                                                        <?php } ?>
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -350,7 +353,16 @@ function getSectionByClasses($classes, $class_selected, $section_selected) {
                 ).append(
                 $('<div>').addClass('col-sm-5').append($('<div>').addClass('form-group').append($('<label>').html('Section')).append(new_section_dropdown))
                 ).append(
-                $('<div>').addClass('col-sm-2').append($('<div>').addClass('form-group').append($('<label>',{ css: {'opacity': 0}}).html('Action')).append($('<button>').html('Remove').addClass('btn btn-sm btn-danger rmv_row'))));
+                $('<div>').addClass('col-sm-2').append($('<div>').addClass('form-group').append($('<label>',{ css: {'opacity': 0}}).html('Action')).append(
+                    
+                    <?php
+                      if($this->rbac->hasPrivilege('multi_class_student','can_delete')){ ?>
+                  
+                    $('<button>').html('Remove').addClass('btn btn-sm btn-danger rmv_row')
+                    <?php }
+                    ?>
+                    )));
+
         $(this).closest(".panel-body").find('.nxt_row').val(parseInt(nxt_row) + 1);
         $newDiv.appendTo(container);
 

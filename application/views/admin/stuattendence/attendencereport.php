@@ -90,7 +90,7 @@
             <div class="col-md-12">
                 <div class="box box-primary">
                     <!-- <div class="box-header ptbnull"></div> -->
-                      <div class="box-header with-border">
+                    <div class="box-header with-border">
                         <h3 class="box-title"><i class="fa fa-search"></i> <?php echo $this->lang->line('select_criteria'); ?></h3>
                     </div>
                     <form id='form1' action="<?php echo site_url('admin/stuattendence/attendencereport') ?>"  method="post" accept-charset="utf-8">
@@ -137,149 +137,156 @@
                                         <span class="text-danger"><?php echo form_error('date'); ?></span>
                                     </div>
                                 </div>
-                               <div class="col-md-12">
-                                <div class="form-group">
-                                <button type="submit" name="search" value="search" class="btn btn-primary btn-sm pull-right checkbox-toggle"><i class="fa fa-search"></i> <?php echo $this->lang->line('search'); ?></button>
-                               </div> 
-                            </div>  
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <button type="submit" name="search" value="search" class="btn btn-primary btn-sm pull-right checkbox-toggle"><i class="fa fa-search"></i> <?php echo $this->lang->line('search'); ?></button>
+                                    </div> 
+                                </div>  
                             </div>
                         </div>
-                        
+
                     </form>
-                
 
-                <?php
-                if (isset($resultlist)) {
-                    ?>
-                    <div class="">
-                        <div class="box-header ptbnull"></div>
-                        <div class="box-header with-border">
-                            <h3 class="box-title"><i class="fa fa-users"></i> <?php echo $this->lang->line('attendance'); ?> <?php echo $this->lang->line('list'); ?> </h3>
-                            <div class="box-tools pull-right">
-                            </div>
-                        </div>
-                        <div class="box-body">
-                            <?php
-                            if (!empty($resultlist)) {
-                                ?>
-                                <div class="mailbox-controls">
-                                    <div class="pull-right">
-                                    </div>
+
+                    <?php
+                    if (isset($resultlist)) {
+                        ?>
+                        <div class="">
+                            <div class="box-header ptbnull"></div>
+                            <div class="box-header with-border">
+                                <h3 class="box-title"><i class="fa fa-users"></i> <?php echo $this->lang->line('attendance'); ?> <?php echo $this->lang->line('list'); ?> </h3>
+                                <div class="box-tools pull-right">
                                 </div>
-                                <input type="hidden" name="class_id" value="<?php echo $class_id; ?>">
-                                <input type="hidden" name="section_id" value="<?php echo $section_id; ?>">
-                                <input type="hidden" name="date" value="<?php echo $date; ?>">
-                                <div class="download_label"><?php echo $this->lang->line('attendance'); ?> <?php echo $this->lang->line('list')."<br>";$this->customlib->get_postmessage(); ?></div>
-                                <div class="table-responsive">    
-                                    <table class="table table-hover table-striped example">
-                                        <thead>
-                                            <tr>
-                                                <th>#</th>
-                                                <th><?php echo $this->lang->line('admission_no'); ?></th>
-                                                <th><?php echo $this->lang->line('roll_no'); ?></th>
-                                                <th><?php echo $this->lang->line('name'); ?></th>
-                                                <th class="text-right"><?php echo $this->lang->line('attendance'); ?></th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <?php
-                                            $row_count = 1;
-                                            foreach ($resultlist as $key => $value) {
-                                                ?>
-                                                <tr>
-                                                <!--   <td>
-                                                  <input type="hidden" name="student_session[]" value="<?php echo $value['student_session_id']; ?>">
-                                                  <input  type="hidden" value="<?php echo $value['attendence_id']; ?>"  name="attendendence_id<?php echo $value['student_session_id']; ?>">
-
-                                                  </td> -->
-                                                    <td> <?php echo $row_count; ?></td>
-                                                    <td>     <?php echo $value['admission_no']; ?>   </td>
-                                                    <td>     <?php echo $value['roll_no']; ?>   </td>
-                                                    <td>
-                                                        <?php echo $value['firstname'] . " " . $value['lastname']; ?>
-                                                    </td>
-                                                    <td class="pull-right">
-                                                        <?php
-                                                        $c = 1;
-                                                        foreach ($attendencetypeslist as $key => $type) {
-                                                            $att_type = str_replace(" ", "_", strtolower($type['type']));
-                                                            if ($value['date'] != "xxx") {
-                                                                if ($value['attendence_type_id'] == $type['id']) {
-
-                                                                    if ($type['id'] == "1") {
-                                                                        ?>
-                                                                        <small class="label label-success">
-                                                                            <?php echo $this->lang->line($att_type) ?>
-                                                                        </small>
-                                                                        <?php
-                                                                    } elseif ($type['id'] == "3") {
-                                                                        ?>
-                                                                        <small class="label label-warning">
-
-                                                                            <?php echo $this->lang->line($att_type) ?>
-                                                                        </small>
-                                                                        <?php
-                                                                    } elseif ($type['id'] == "2") {
-                                                                        ?>
-                                                                        <small class="label label-primary">
-                                                                            <?php echo $this->lang->line($att_type) ?>
-                                                                        </small>
-                                                                        <?php
-                                                                    } elseif ($type['id'] == "6") {
-                                                                        ?>
-                                                                        <small class="label label-info">
-                                                                            <?php echo $this->lang->line($att_type) ?>
-                                                                        </small>
-                                                                        <?php
-                                                                    } elseif ($type['id'] == "5") {
-                                                                        ?>
-                                                                        <small class="label label-default">
-                                                                            <?php echo $this->lang->line($att_type) ?>
-                                                                        </small>
-                                                                        <?php
-                                                                    } else {
-                                                                        ?>
-                                                                        <small class="label label-danger">
-                                                                            <?php echo $this->lang->line($att_type) ?>
-                                                                        </small>
-                                                                        <?php
-                                                                    }
-                                                                }
-                                                                ?>
-                                                                <?php
-                                                            } else {
-                                                                ?>
-                                                                <div class="radio radio-info radio-inline">
-                                                                    <input <?php if ($c == 1) echo "checked"; ?> type="radio" id="attendencetype<?php echo $value['student_session_id']; ?>" value="<?php echo $type['id'] ?>" name="attendencetype<?php echo $value['student_session_id']; ?>">
-                                                                    <label for="inlineRadio1"> <?php echo $this->lang->line($att_type) ?> </label>
-                                                                </div>
-                                                                <?php
-                                                            }
-                                                            $c++;
-                                                        }
-                                                        ?>
-
-                                                    </td>
-                                                </tr>
-                                                <?php
-                                                $row_count++;
-                                            }
-                                            ?>
-                                        </tbody>
-                                    </table>
-
-                                    <?php
-                                }else {
-                                    ?>
-                                    <div class="alert alert-info">
-                                        <?php echo $this->lang->line('no_attendance_prepare'); ?>
-                                    </div>
-                                    <?php
-                                }
-                                ?>
                             </div>
-                        </div></div> 
-                       </div> 
+                            <div class="box-body">
+                                <?php
+                                if (!empty($resultlist)) {
+                                    ?>
+                                    <div class="mailbox-controls">
+                                        <div class="pull-right">
+                                        </div>
+                                    </div>
+                                    <input type="hidden" name="class_id" value="<?php echo $class_id; ?>">
+                                    <input type="hidden" name="section_id" value="<?php echo $section_id; ?>">
+                                    <input type="hidden" name="date" value="<?php echo $date; ?>">
+                                    <div class="download_label"><?php echo $this->lang->line('attendance'); ?> <?php echo $this->lang->line('list') . "<br>";
+                            $this->customlib->get_postmessage();
+                                    ?></div>
+                                    <div class="table-responsive">    
+                                        <table class="table table-hover table-striped example">
+                                            <thead>
+                                                <tr>
+                                                    <th>#</th>
+                                                    <th><?php echo $this->lang->line('admission_no'); ?></th>
+                                                    <th><?php echo $this->lang->line('roll_no'); ?></th>
+                                                    <th><?php echo $this->lang->line('name'); ?></th>
+                                                    <th><?php echo $this->lang->line('note'); ?></th>
+                                                    <th class="text-right"><?php echo $this->lang->line('attendance'); ?></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <?php
+                                                $row_count = 1;
+                                                foreach ($resultlist as $key => $value) {
+                                                    ?>
+                                                    <tr>
+                                                    <!--   <td>
+                                                      <input type="hidden" name="student_session[]" value="<?php echo $value['student_session_id']; ?>">
+                                                      <input  type="hidden" value="<?php echo $value['attendence_id']; ?>"  name="attendendence_id<?php echo $value['student_session_id']; ?>">
+
+                                                      </td> -->
+                                                        <td> <?php echo $row_count; ?></td>
+                                                        <td><?php echo $value['admission_no']; ?>   </td>
+                                                        <td><?php echo $value['roll_no']; ?>   </td>
+                                                        <td>
+            <?php echo $value['firstname'] . " " . $value['lastname']; ?>
+                                                        </td>
+                                                        <td>
+
+            <?php echo $value['remark']; ?>
+                                                        </td>
+                                                        <td class="pull-right">
+                                                            <?php
+                                                            $c = 1;
+                                                            foreach ($attendencetypeslist as $key => $type) {
+                                                                $att_type = str_replace(" ", "_", strtolower($type['type']));
+                                                                if ($value['date'] != "xxx") {
+                                                                    if ($value['attendence_type_id'] == $type['id']) {
+
+                                                                        if ($type['id'] == "1") {
+                                                                            ?>
+                                                                            <small class="label label-success">
+                                                                            <?php echo $this->lang->line($att_type) ?>
+                                                                            </small>
+                                                                            <?php
+                                                                        } elseif ($type['id'] == "3") {
+                                                                            ?>
+                                                                            <small class="label label-warning">
+
+                                                                            <?php echo $this->lang->line($att_type) ?>
+                                                                            </small>
+                                                                            <?php
+                                                                        } elseif ($type['id'] == "2") {
+                                                                            ?>
+                                                                            <small class="label label-primary">
+                                                                            <?php echo $this->lang->line($att_type) ?>
+                                                                            </small>
+                                                                            <?php
+                                                                        } elseif ($type['id'] == "6") {
+                                                                            ?>
+                                                                            <small class="label label-info">
+                                                                            <?php echo $this->lang->line($att_type) ?>
+                                                                            </small>
+                                                                            <?php
+                                                                        } elseif ($type['id'] == "5") {
+                                                                            ?>
+                                                                            <small class="label label-default">
+                                                                            <?php echo $this->lang->line($att_type) ?>
+                                                                            </small>
+                                                                            <?php
+                                                                        } else {
+                                                                            ?>
+                                                                            <small class="label label-danger">
+                                                                            <?php echo $this->lang->line($att_type) ?>
+                                                                            </small>
+                                                                            <?php
+                                                                        }
+                                                                    }
+                                                                    ?>
+                                                                    <?php
+                                                                } else {
+                                                                    ?>
+                                                                    <div class="radio radio-info radio-inline">
+                                                                        <input <?php if ($c == 1) echo "checked"; ?> type="radio" id="attendencetype<?php echo $value['student_session_id']; ?>" value="<?php echo $type['id'] ?>" name="attendencetype<?php echo $value['student_session_id']; ?>">
+                                                                        <label for="inlineRadio1"> <?php echo $this->lang->line($att_type) ?> </label>
+                                                                    </div>
+                                                                    <?php
+                                                                }
+                                                                $c++;
+                                                            }
+                                                            ?>
+
+                                                        </td>
+                                                    </tr>
+                                                    <?php
+                                                    $row_count++;
+                                                }
+                                                ?>
+                                            </tbody>
+                                        </table>
+
+                                        <?php
+                                    }else {
+                                        ?>
+                                        <div class="alert alert-info">
+                                        <?php echo $this->lang->line('no_attendance_prepare'); ?>
+                                        </div>
+                                        <?php
+                                    }
+                                    ?>
+                                </div>
+                            </div></div> 
+                    </div> 
                     <?php
                 }
                 ?>
@@ -321,7 +328,7 @@
                         $.ajax({
                             type: "GET",
                             url: base_url + "sections/getByClass",
-                            data: {'class_id': class_id,'day_wise':'yes'},
+                            data: {'class_id': class_id, 'day_wise': 'yes'},
                             dataType: "json",
                             success: function (data) {
                                 $.each(data, function (i, obj)
@@ -332,6 +339,6 @@
                             }
                         });
                     });
-                    
+
                 });
             </script>

@@ -46,13 +46,13 @@
                                 </div>
 
                                 <div class="form-group">
-                                    <label for="exampleInputEmail1"><?php echo $this->lang->line('percent_from'); ?><small class="req"> *</small></label>
+                                    <label for="exampleInputEmail1"><?php echo $this->lang->line('percent_upto'); ?><small class="req"> *</small></label>
                                     <input id="mark_from" name="mark_from" placeholder="" type="text" class="form-control"  value="<?php echo set_value('mark_from'); ?>" />
                                     <span class="text-danger"><?php echo form_error('mark_from'); ?></span>
                                 </div>
 
                                 <div class="form-group">
-                                    <label><?php echo $this->lang->line('percent_upto'); ?><small class="req"> *</small></label>
+                                    <label><?php echo $this->lang->line('percent_from'); ?><small class="req"> *</small></label>
                                     <input id="mark_upto" name="mark_upto" placeholder="" type="text" class="form-control"  value="<?php echo set_value('mark_upto'); ?>" />
                                     <span class="text-danger"><?php echo form_error('mark_upto'); ?></span>
                                 </div>
@@ -218,4 +218,3 @@
         });
     });
 </script>
-

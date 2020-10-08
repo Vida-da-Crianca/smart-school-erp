@@ -3,7 +3,7 @@
 if (!defined('BASEPATH'))
     exit('No direct script access allowed');
 
-class Expense_model extends My_Model {
+class Expense_model extends MY_Model {
 
     public function __construct() {
         parent::__construct();
@@ -42,7 +42,7 @@ class Expense_model extends My_Model {
         } else {
             $this->db->order_by('expenses.id', 'DESC');
         }
-       
+
         $query = $this->db->get();
         if ($id != null) {
             return $query->row_array();
@@ -56,33 +56,32 @@ class Expense_model extends My_Model {
      * @param $id
      */
     public function remove($id) {
-        
+
         $this->db->trans_start(); # Starting Transaction
         $this->db->trans_strict(false); # See Note 01. If you wish can remove as well
         //=======================Code Start===========================
         $this->db->where('id', $id);
         $this->db->delete('expenses');
-      
+
         //$return_value = $this->db->insert_id();
-        $message      = DELETE_RECORD_CONSTANT." On  expenses   id ".$id;
-        $action       = "Delete";
-        $record_id    = $id;
+        $message = DELETE_RECORD_CONSTANT . " On  expenses   id " . $id;
+        $action = "Delete";
+        $record_id = $id;
         $this->log($message, $record_id, $action);
 //echo $this->db->last_query();die;
         //======================Code End==============================
 
         $this->db->trans_complete(); # Completing transaction
-        /*Optional*/
+        /* Optional */
 
         if ($this->db->trans_status() === false) {
             # Something went wrong.
             $this->db->trans_rollback();
             return false;
-
         } else {
 
 
-        return $return_value;
+            return $return_value;
         }
     }
 
@@ -93,27 +92,26 @@ class Expense_model extends My_Model {
      * @param $data
      */
     public function add($data) {
-      
-         $this->db->trans_start(); # Starting Transaction
-         $this->db->trans_strict(false); # See Note 01. If you wish can remove as well
+
+        $this->db->trans_start(); # Starting Transaction
+        $this->db->trans_strict(false); # See Note 01. If you wish can remove as well
         //=======================Code Start===========================
 
 
-         if (isset($data['id']) && $data['id']!='') {
+        if (isset($data['id']) && $data['id'] != '') {
 
-           $this->db->where('id', $data['id']);
-           $this->db->update('expenses', $data);
+            $this->db->where('id', $data['id']);
+            $this->db->update('expenses', $data);
 
-        $message      = UPDATE_RECORD_CONSTANT." On  expenses   id ".$data['id'];
-        $action       = "Update";
-        $record_id    = $data['id'];
+            $message = UPDATE_RECORD_CONSTANT . " On  expenses   id " . $data['id'];
+            $action = "Update";
+            $record_id = $data['id'];
         } else {
             $this->db->insert('expenses', $data);
-           
-            $record_id    = $this->db->insert_id();
-            $message      = INSERT_RECORD_CONSTANT." On  expenses   id ".$record_id;
-        $action       = "Insert";
-        
+
+            $record_id = $this->db->insert_id();
+            $message = INSERT_RECORD_CONSTANT . " On  expenses   id " . $record_id;
+            $action = "Insert";
         }
 
         $this->log($message, $record_id, $action);
@@ -121,18 +119,16 @@ class Expense_model extends My_Model {
         //======================Code End==============================
 
         $this->db->trans_complete(); # Completing transaction
-        /*Optional*/
+        /* Optional */
 
         if ($this->db->trans_status() === false) {
             # Something went wrong.
             $this->db->trans_rollback();
             return false;
-
         } else {
 
 
-        return $record_id;
-
+            return $record_id;
         }
     }
 
@@ -176,15 +172,15 @@ class Expense_model extends My_Model {
         return $query->row();
     }
 
-    public function getExpenseHeadData($start_date,$end_date){
-        $condition="date_format(date,'%Y-%m-%d') between '".$start_date."' and '".$end_date."'";
+    public function getExpenseHeadData($start_date, $end_date) {
+        $condition = "date_format(date,'%Y-%m-%d') between '" . $start_date . "' and '" . $end_date . "'";
 
-      $recorddata=$this->db->select('sum(amount) as total,exp_category')->from('expenses');
-                $this->db->join('expense_head', 'expenses.exp_head_id = expense_head.id');
-                $this->db->where($condition)->group_by('expense_head.id');
-                $r=$this->db->get()->result_array();
-                //print_r($recorddata);die;
-                return $r;
+        $recorddata = $this->db->select('sum(amount) as total,exp_category')->from('expenses');
+        $this->db->join('expense_head', 'expenses.exp_head_id = expense_head.id');
+        $this->db->where($condition)->group_by('expense_head.id');
+        $r = $this->db->get()->result_array();
+        //print_r($recorddata);die;
+        return $r;
     }
 
 }

@@ -21,10 +21,10 @@
                                 </div>
                                 <h4 class="pagetitleh2"><?php echo $this->lang->line('basic_information'); ?> </h4>
 
-
+                                <?php echo validation_errors(); ?>
 
                                 <div class="around10">
-                                  
+
                                     <?php if ($this->session->flashdata('msg')) { ?>
                                         <?php echo $this->session->flashdata('msg') ?>
                                     <?php } ?>  

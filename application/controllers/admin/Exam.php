@@ -61,7 +61,7 @@ class Exam extends Admin_Controller {
                 'note' => $this->input->post('note'),
             );
             $this->exam_model->add($data);
-            $this->session->set_flashdata('msg', '<div class="alert alert-success text-left">'.$this->lang->line('success_message').'</div>');
+            $this->session->set_flashdata('msg', '<div class="alert alert-success text-left">' . $this->lang->line('success_message') . '</div>');
             redirect('admin/exam/index');
         }
         $exam_result = $this->exam_model->get();
@@ -127,7 +127,7 @@ class Exam extends Admin_Controller {
                 'note' => $this->input->post('note'),
             );
             $this->exam_model->add($data);
-            $this->session->set_flashdata('msg', '<div class="alert alert-success text-left">'.$this->lang->line('success_message').'</div>');
+            $this->session->set_flashdata('msg', '<div class="alert alert-success text-left">' . $this->lang->line('success_message') . '</div>');
             redirect('exam/index');
         }
     }
@@ -155,7 +155,7 @@ class Exam extends Admin_Controller {
                 'note' => $this->input->post('note'),
             );
             $this->exam_model->add($data);
-            $this->session->set_flashdata('msg', '<div class="alert alert-success text-left">'.$this->lang->line('update_message').'</div>');
+            $this->session->set_flashdata('msg', '<div class="alert alert-success text-left">' . $this->lang->line('update_message') . '</div>');
             redirect('admin/exam/index');
         }
     }

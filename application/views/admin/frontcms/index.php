@@ -44,11 +44,11 @@
         left: 20px;
     }
 
- .form-horizontal2 .control-label {
-    padding-top: 7px;
-    margin-bottom: 0;
-    text-align: left;
-}
+    .form-horizontal2 .control-label {
+        padding-top: 7px;
+        margin-bottom: 0;
+        text-align: left;
+    }
 </style>
 
 <!-- Content Wrapper. Contains page content -->
@@ -176,8 +176,16 @@
                                         <div class="col-md-5 col-md-offset-1 col-sm-12">
 
 
-<!-- <label for="input-type"><?php //echo $this->lang->line('social_media');   ?></label>
+<!-- <label for="input-type"><?php //echo $this->lang->line('social_media');     ?></label>
 <hr/> -->
+                                            <div class="form-group">
+                                                <label class="col-sm-5 control-label"><?php echo $this->lang->line('whatsapp_url'); ?> </label>
+                                                <div class="col-sm-7">
+                                                    <input type="text" class="form-control" name="whatsapp_url" value="<?php echo set_value('whatsapp_url', $frontcmslist->whatsapp_url) ?>">
+                                                    <span class="text text-danger"></span>
+                                                </div>
+
+                                            </div>
                                             <div class="form-group">
                                                 <label class="col-sm-5 control-label"><?php echo $this->lang->line('facebook_url'); ?> </label>
                                                 <div class="col-sm-7">
@@ -268,12 +276,12 @@
                             </div><!-- /.box-body -->
 
                             <div class="box-footer">
-                                <?php  if($this->rbac->hasPrivilege('front_cms_setting', 'can_edit')){
+                                <?php if ($this->rbac->hasPrivilege('front_cms_setting', 'can_edit')) {
                                     ?>
-                                      <button type="submit" class="btn btn-primary pull-right"> <?php echo $this->lang->line('save')?></button>&nbsp;&nbsp;<span class="custom_loader"></span>
-                                    <?php
-                                }?>
-                              
+                                    <button type="submit" class="btn btn-primary pull-right"> <?php echo $this->lang->line('save') ?></button>&nbsp;&nbsp;<span class="custom_loader"></span>
+                                <?php }
+                                ?>
+
                             </div>
                         </form>
                     </div><!-- /.box-body -->

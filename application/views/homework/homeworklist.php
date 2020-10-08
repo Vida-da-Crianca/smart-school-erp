@@ -112,8 +112,7 @@ $language_name = $language["short_code"];
                                     </thead>
                                     <tbody>
 
-                                        <?php 
-
+                                        <?php
                                         foreach ($homeworklist as $key => $homework) {
                                             ?>
                                             <tr>
@@ -125,20 +124,17 @@ $language_name = $language["short_code"];
                                                 <td><?php echo date($this->customlib->getSchoolDateFormat(), $this->customlib->dateyyyymmddTodateformat($homework['homework_date'])); ?></td>
                                                 <td><?php echo date($this->customlib->getSchoolDateFormat(), $this->customlib->dateyyyymmddTodateformat($homework['submit_date'])); ?></td>
                                                 <td><?php
-                                                     
                                                     $evl_date = "";
                                                     if ($homework['evaluation_date'] != "0000-00-00") {
                                                         echo date($this->customlib->getSchoolDateFormat(), $this->customlib->dateYYYYMMDDtoStrtotime($homework['evaluation_date']));
                                                     }
                                                     ?></td>
                                                 <td><?php
-                                                  
-                                                        echo $homework["created_by"];
-                                                    
+                                                    echo $homework["created_by"];
                                                     ?></td>
                                                 <td class="mailbox-date pull-right">
 
-                                                    <?php if ($this->rbac->hasPrivilege('homework_evaluation', 'can_view')){ ?>
+                                                    <?php if ($this->rbac->hasPrivilege('homework_evaluation', 'can_view')) { ?>
                                                         <a data-placement="left" class="btn btn-default btn-xs" onclick="evaluation(<?php echo $homework['id']; ?>);" title=""  data-toggle="tooltip"  data-original-title="<?php echo $this->lang->line('evaluation'); ?>">
                                                             <i class="fa fa-reorder"></i></a>
                                                         <?php
@@ -148,20 +144,24 @@ $language_name = $language["short_code"];
                                                         <a data-placement="left" class="btn btn-default btn-xs" onclick="homework_docs(<?php echo $homework['id']; ?>);" data-toggle="tooltip"  data-original-title="<?php echo $this->lang->line('assignments'); ?>">
                                                             <i class="fa fa-download"></i></a>
 
-                                                    <?php }
-                                                    if ($this->rbac->hasPrivilege('homework', 'can_edit')) { ?>
+                                                    <?php
+                                                    }
+                                                    if ($this->rbac->hasPrivilege('homework', 'can_edit')) {
+                                                        ?>
 
                                                         <a data-placement="left" class="btn btn-default btn-xs modal_form" data-toggle="tooltip"  data-original-title="<?php echo $this->lang->line('edit'); ?>" data-method_call="edit" data-record_id="<?php echo $homework['id']; ?>"><i class="fa fa-pencil"></i></a>
 
-                                                    <?php } 
-                                                    if ($this->rbac->hasPrivilege('homework', 'can_delete')) { ?>
+                                                    <?php
+                                                    }
+                                                    if ($this->rbac->hasPrivilege('homework', 'can_delete')) {
+                                                        ?>
                                                         <a data-placement="left" href="<?php echo base_url(); ?>homework/delete/<?php echo $homework['id']; ?>" class="btn btn-default btn-xs" data-toggle="tooltip" title="" onclick="return confirm('<?php echo $this->lang->line('delete_confirm') ?>');" data-original-title="<?php echo $this->lang->line('delete'); ?>">
                                                             <i class="fa fa-remove"></i>
                                                         </a>
-                                                    <?php } ?>
+                                            <?php } ?>
                                                 </td>
                                             </tr>
-                                        <?php } ?>
+<?php } ?>
 
                                     </tbody>
                                 </table>
@@ -192,11 +192,11 @@ $language_name = $language["short_code"];
                                         <label for="pwd"><?php echo $this->lang->line('class') ?></label><small class="req"> *</small>
                                         <select class="form-control modal_class_id" name="modal_class_id" id="modal_class_id">
                                             <option value=""><?php echo $this->lang->line('select') ?></option>
-                                            <?php foreach ($classlist as $key => $value) {
-                                                ?>
+<?php foreach ($classlist as $key => $value) {
+    ?>
                                                 <option value="<?php echo $value["id"] ?>"><?php echo $value["class"] ?></option>
 
-                                            <?php } ?>
+<?php } ?>
 
                                         </select>
                                         <span id="name_add_error" class="text-danger"></span>
@@ -325,7 +325,7 @@ $language_name = $language["short_code"];
 
                                                 <th class="text-right"><?php echo $this->lang->line('action') ?></th>
                                             </tr>
-                                            
+
                                         </thead>
                                         <tbody id="homework_docs_result">
                                         </tbody>
@@ -337,7 +337,7 @@ $language_name = $language["short_code"];
                     </div>
                 </div>
             </div>
-         
+
         </div>
     </div>
 </div>
@@ -389,7 +389,7 @@ $language_name = $language["short_code"];
     $(document).ready(function (e) {
 
         getSectionByClass("<?php echo $class_id ?>", "<?php echo $section_id ?>", 'secid');
-       
+
         getSubjectGroup("<?php echo $class_id ?>", "<?php echo $section_id ?>", "<?php echo $subject_group_id ?>", 'subject_group_id')
         getsubjectBySubjectGroup("<?php echo $class_id ?>", "<?php echo $section_id ?>", "<?php echo $subject_group_id ?>", "<?php echo $subject_id ?>", 'subid');
 
@@ -564,6 +564,7 @@ $language_name = $language["short_code"];
     function addhomework() {
 
         $('iframe').contents().find('.wysihtml5-editor').html("");
+
     }
 
 
@@ -573,7 +574,7 @@ $language_name = $language["short_code"];
 
     var save_method; //for save method string
     var update_id; //for save method string
- 
+
     function getSectionByClass(class_id, section_id, select_control) {
         if (class_id != "") {
             $('#' + select_control).html("");
@@ -622,6 +623,7 @@ $language_name = $language["short_code"];
             $('#myModal').modal('show');
             $('#myModal .box-title').text('<?php echo $this->lang->line('edit_homework'); ?>');
         } else if (save_method == "add") {
+            $('iframe').contents().find('.wysihtml5-editor').html("");
             $('#modal_record_id').val(0);
             $('#myModal .box-title').text('<?php echo $this->lang->line('add_homework'); ?>');
             $('#myModal').modal('show');

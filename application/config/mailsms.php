@@ -16,7 +16,8 @@ $config['mailsms'] = array(
     'homework' => 'homework',
     'alumni_student' => 'alumni_student',
     'online_classes' => 'online_classes',
-    'online_meeting' => 'online_meeting'
+    'online_meeting' => 'online_meeting',
+    'forgot_password' => 'forgot_password',
 );
 
 
@@ -32,9 +33,7 @@ $config['attendence'] = array(
 
 
 $config['attendence_exam'] = array(
-  
     'absent' => 'absent'
-    
 );
 $config['perm_category'] = array('can_view', 'can_add', 'can_edit', 'can_delete');
 

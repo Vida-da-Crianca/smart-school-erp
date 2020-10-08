@@ -27,10 +27,14 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                         <i class="fa fa-arrow-left"></i> <?php echo $this->lang->line('back'); ?></a>
                                 </div>
                             </div>
+
                         </div>
+
                     </div><!--./box-header-->
+
                     <div class="box-body" style="padding-top:0;">
                         <div class="row">
+                            <?php echo $this->session->flashdata('error') ?>
                             <div class="col-md-12">
                                 <div class="sfborder">
                                     <div class="col-md-2">
@@ -53,12 +57,12 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                                         <?php if ($sch_setting->father_name) { ?>
                                                             <th><?php echo $this->lang->line('father_name'); ?></th>
                                                             <td><?php echo $student['father_name']; ?></td>
-                                                        <?php } 
+                                                        <?php }
                                                         ?>
-                                                        
-                                                            <th><?php echo $this->lang->line('admission_no'); ?></th>
-                                                            <td><?php echo $student['admission_no']; ?></td>
-                                                    
+
+                                                        <th><?php echo $this->lang->line('admission_no'); ?></th>
+                                                        <td><?php echo $student['admission_no']; ?></td>
+
                                                     </tr>
                                                     <tr>
                                                         <?php if ($sch_setting->mobile_no) { ?>
@@ -178,7 +182,7 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                                     }
                                                     ?>
                                                     <td align="left"><?php
-                                                        echo $fee_value->name;
+                                                        echo $fee_value->name . " (" . $fee_value->type . ")";
                                                         ?></td>
                                                     <td align="left"><?php echo $fee_value->code; ?></td>
                                                     <td align="left" class="text text-center">
@@ -195,7 +199,6 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                                     <td align="left" class="text text-left">
                                                         <?php
                                                         if ($feetype_balance == 0) {
-                                                            
                                                             ?><span class="label label-success"><?php echo $this->lang->line('paid'); ?></span><?php
                                                         } else if (!empty($fee_value->amount_detail)) {
                                                             ?><span class="label label-warning"><?php echo $this->lang->line('partial'); ?></span><?php
@@ -285,8 +288,7 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
 
 
                                                             </td>
-                                                            <td class="text text-left"><?php 
-                                                        echo $this->lang->line(strtolower($fee_deposits_value->payment_mode)); ?></td>
+                                                            <td class="text text-left"><?php echo $this->lang->line(strtolower($fee_deposits_value->payment_mode)); ?></td>
                                                             <td class="text text-left">
 
                                                                 <?php echo date($this->customlib->getSchoolDateFormat(), $this->customlib->dateyyyymmddTodateformat($fee_deposits_value->date)); ?>

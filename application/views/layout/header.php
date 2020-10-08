@@ -147,7 +147,7 @@ if ($this->config->item('SSLK') == "") {
                                 </form>
                             <?php }?>
                             <div class="navbar-custom-menu">
-                                <?php //if($this->rbac->hasPrivilege('language_switcher','can_view')){
+                                <?php if($this->rbac->hasPrivilege('language_switcher','can_view')){
                                     ?>
                                     <div class="langdiv"><select class="languageselectpicker" onchange="set_languages(this.value)"  type="text" id="languageSwitcher" >
                                           
@@ -155,7 +155,7 @@ if ($this->config->item('SSLK') == "") {
 
                                         </select></div> 
                                     <?php
-                               // }?>
+                               }?>
                                 
                                      
                                 <ul class="nav navbar-nav headertopmenu">
@@ -229,8 +229,13 @@ if (!empty($image)) {
 
     $file = "uploads/staff_images/" . $image;
 } else {
+    if($result['gender']=='Female'){
+                $file= "uploads/staff_images/default_female.jpg";
+    }else{
+                $file ="uploads/staff_images/default_male.jpg";
+     }
 
-    $file = "uploads/student_images/no_image.png";
+    
 }
 ?>
                                     <li class="dropdown user-menu">
@@ -273,7 +278,7 @@ if (!empty($image)) {
 
         $.ajax({
             type: "POST",
-            url: base_url + "admin/language/defoult_language/"+id,
+            url: base_url + "admin/language/default_language/"+id,
             data: {},
             //dataType: "json",
             success: function (data) {

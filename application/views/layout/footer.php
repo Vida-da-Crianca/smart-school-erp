@@ -10,13 +10,12 @@
 </script>
 <?php
 $language = $this->customlib->getLanguage();
-  $language_name = $language["short_code"];
-
- ?>
+$language_name = $language["short_code"];
+?>
 <link href="<?php echo base_url(); ?>backend/toast-alert/toastr.css" rel="stylesheet"/>
 <script src="<?php echo base_url(); ?>backend/toast-alert/toastr.js"></script>
 <script src="<?php echo base_url(); ?>backend/bootstrap/js/bootstrap.min.js"></script>
- <link rel="stylesheet" href="<?php echo base_url(); ?>backend/plugins/select2/select2.min.css">
+<link rel="stylesheet" href="<?php echo base_url(); ?>backend/plugins/select2/select2.min.css">
 <script src="<?php echo base_url(); ?>backend/plugins/select2/select2.full.min.js"></script>
 <script src="<?php echo base_url(); ?>backend/plugins/input-mask/jquery.inputmask.js"></script>
 <script src="<?php echo base_url(); ?>backend/plugins/input-mask/jquery.inputmask.date.extensions.js"></script>
@@ -27,29 +26,29 @@ $language = $this->customlib->getLanguage();
 <script src="<?php echo base_url(); ?>backend/plugins/timepicker/bootstrap-timepicker.min.js"></script>
 <script src="<?php echo base_url(); ?>backend/plugins/slimScroll/jquery.slimscroll.min.js"></script>
 <script src="<?php echo base_url(); ?>backend/dist/js/jquery.mCustomScrollbar.concat.min.js"></script>
-  <script type="text/javascript">
-     $('body').tooltip({
-  selector: '[data-toggle]',
-  trigger: 'click hover',
- placement: 'top',
-  delay: {
-    show: 50,
-    hide: 400
-  }
-})
-      // $(document).ready(function(){ 
-      //   $('[data-toggle="tooltip"]').tooltip({
-      //      trigger : 'hover'
-      //   })
-      // });
-    </script>
+<script type="text/javascript">
+    $('body').tooltip({
+        selector: '[data-toggle]',
+        trigger: 'click hover',
+        placement: 'top',
+        delay: {
+            show: 50,
+            hide: 400
+        }
+    })
+    // $(document).ready(function(){ 
+    //   $('[data-toggle="tooltip"]').tooltip({
+    //      trigger : 'hover'
+    //   })
+    // });
+</script>
 <!--language js-->
 <script type="text/javascript" src="<?php echo base_url(); ?>backend/dist/js/bootstrap-select.min.js"></script>
-   
- <script type="text/javascript">
-    $(function(){
-      $('.languageselectpicker').selectpicker();
-   });
+
+<script type="text/javascript">
+    $(function () {
+        $('.languageselectpicker').selectpicker();
+    });
 </script>
 <script type="text/javascript">
     $(document).ready(function () {
@@ -85,7 +84,7 @@ if ($language_name != 'en') {
 
 <script src="<?php echo base_url(); ?>backend/plugins/chartjs/Chart.min.js"></script>
 <script src="<?php echo base_url(); ?>backend/plugins/fastclick/fastclick.min.js"></script>
-<!-- <script type="text/javascript" src="<?php //echo base_url();   ?>backend/dist/js/bootstrap-filestyle.min.js"></script> -->
+<!-- <script type="text/javascript" src="<?php //echo base_url();     ?>backend/dist/js/bootstrap-filestyle.min.js"></script> -->
 <script src="<?php echo base_url(); ?>backend/dist/js/app.min.js"></script>
 
 <!--nprogress-->
@@ -104,7 +103,7 @@ if ($language_name != 'en') {
 <script type="text/javascript" src="<?php echo base_url(); ?>backend/dist/datatables/js/dataTables.responsive.min.js" ></script>
 <script type="text/javascript" src="<?php echo base_url(); ?>backend/dist/datatables/js/ss.custom.js" ></script>
 <!-- <script src="<?php echo base_url(); ?>backend/dist/datatables/js/datetime-moment.js"></script>
- -->
+-->
 </body>
 </html>
 <!-- jQuery 3 -->
@@ -206,9 +205,9 @@ if ($this->session->flashdata('success_msg')) {
 
                     </div>
                     <div class="modal-footer">
-                       <div class="col-md-12"> 
-                        <button type="button" class="btn btn-primary submit_session" data-loading-text="<i class='fa fa-spinner fa-spin '></i> Please wait.."><?php echo $this->lang->line('save'); ?></button>
-                      </div>  
+                        <div class="col-md-12"> 
+                            <button type="button" class="btn btn-primary submit_session" data-loading-text="<i class='fa fa-spinner fa-spin '></i> Please wait.."><?php echo $this->lang->line('save'); ?></button>
+                        </div>  
                     </div>
                 </div>
             </div>
@@ -284,7 +283,7 @@ if (isset($title)) {
         },
         timezone: "Asia/Kolkata",
         draggable: false,
-         lang: '<?php echo $language_name ?>',
+        lang: '<?php echo $language_name ?>',
         editable: false,
         eventLimit: false, // allow "more" link when too many events
 
@@ -307,6 +306,7 @@ if (isset($title)) {
             }
         },
         dayClick: function (date, jsEvent, view) {
+            console.log(calendar_date_time_format);
             var d = date.format();
             if (!$.fullCalendar.moment(d).hasTime()) {
                 d += ' 05:30';
@@ -318,10 +318,11 @@ if (isset($title)) {
                 $("#input-field").val('');
                 $("#desc-field").text('');
                 $("#date-field").daterangepicker({
+                    separator: " TOOOO ",
                     startDate: date,
                     endDate: date,
                     timePicker: true, timePickerIncrement: 5, locale: {
-                        format: 'MM/DD/YYYY hh:mm a'
+                        format: calendar_date_time_format + ' hh:mm a'
                     }
                 });
                 $('#newEventModal').modal('show');
@@ -332,19 +333,14 @@ if (isset($title)) {
 
     });
 
-    $(document).ready(function () {
-        $("#date-field").daterangepicker({timePicker: true, timePickerIncrement: 5, locale: {
-                format: 'MM/DD/YYYY hh:mm A'
-            }});
 
-
-    });
 
     function datepic() {
         $("#date-field").daterangepicker();
     }
+
     function view_event(id) {
-        
+
         $('.selectevent').find('.cpicker-big').removeClass('cpicker-big').addClass('cpicker-small');
         var base_url = '<?php echo base_url() ?>';
         if (typeof (id) == 'undefined') {
@@ -360,7 +356,7 @@ if (isset($title)) {
 
                 $("#event_title").val(msg.event_title);
                 $("#event_desc").text(msg.event_description);
-                $('#eventdates').val(msg.start_date + '-' + msg.end_date);
+
                 $('#eventid').val(id);
                 if (msg.event_type == 'public') {
 
@@ -376,16 +372,19 @@ if (isset($title)) {
                     $('input:radio[name=eventtype]')[3].checked = true;
 
                 }
-                // $("#red#28B8DA").removeClass('cpicker-big').addClass('cpicker-small');
+                //===========
 
-                //$(this).removeClass('cpicker-small', 'fast').addClass('cpicker-big', 'fast');
-                $("#eventdates").daterangepicker({
-                    startDate: msg.startdate,
-                    endDate: msg.enddate,
-                    timePicker: true, timePickerIncrement: 5, locale: {
-                        format: 'MM/DD/YYYY hh:mm A'
+
+                $('#eventdates').daterangepicker({
+                    timePicker: true,
+                    startDate: new Date(msg.start_date),
+                    endDate: new Date(msg.end_date),
+                    locale: {
+                        format: calendar_date_time_format + ' hh:mm a'
                     }
                 });
+                //============
+
                 $("#event_color").val(msg.event_color);
                 $("#delete_event").attr("onclick", "deleteevent(" + id + ",'Event')")
 
@@ -522,13 +521,13 @@ if (isset($title)) {
     });
 
 
+    var calendar_date_time_format = '<?php echo $result = strtr($this->customlib->getSchoolDateFormat(), ['d' => 'DD', 'm' => 'MM', 'M' => 'MMM', 'Y' => 'YYYY']) ?>';
+    $(document).ready(function () {
 
-          $(document).ready(function () {
-            
         $("body").delegate(".date", "focusin", function () {
-        var date_format = '<?php echo $result = strtr($this->customlib->getSchoolDateFormat(), ['d' => 'dd', 'm' => 'mm', 'Y' => 'yyyy',]) ?>';
+            var date_format = '<?php echo $result = strtr($this->customlib->getSchoolDateFormat(), ['d' => 'dd', 'm' => 'mm', 'Y' => 'yyyy',]) ?>';
 
-        $(this).datepicker({
+            $(this).datepicker({
                 todayHighlight: false,
                 format: date_format,
                 autoclose: true,
@@ -545,64 +544,61 @@ if (isset($title)) {
 
             });
         });
-           // loadDate();
-          });
+        // loadDate();
+    });
 
-        function loadDate(){
+    function loadDate() {
 
-            var date_format = '<?php echo $result = strtr($this->customlib->getSchoolDateFormat(), ['d' => 'dd', 'm' => 'mm', 'Y' => 'yyyy',]) ?>';
+        var date_format = '<?php echo $result = strtr($this->customlib->getSchoolDateFormat(), ['d' => 'dd', 'm' => 'mm', 'Y' => 'yyyy',]) ?>';
 
-            $('.date').datetimepicker({
-                format: datetime_format,
-                locale:
-                        '<?php echo $language_name ?>',
+        $('.date').datetimepicker({
+            format: datetime_format,
+            locale:
+                    '<?php echo $language_name ?>',
 
-            });
-        }
+        });
+    }
 
-        showdate('this_year');
+    showdate('this_year');
 
-       function showdate(type){
-        
-        <?php 
-        if(isset($_POST['date_from']) && $_POST['date_from']!='' && isset($_POST['date_to']) && $_POST['date_to']!='') {
+    function showdate(type) {
 
-                ?>
-                var date_from='<?php echo date($this->customlib->getSchoolDateFormat(),strtotime($_POST['date_from'])); ?>';
-                 var date_to='<?php echo date($this->customlib->getSchoolDateFormat(),strtotime($_POST['date_to'])); ?>';
+<?php
+if (isset($_POST['date_from']) && $_POST['date_from'] != '' && isset($_POST['date_to']) && $_POST['date_to'] != '') {
+    ?>
+            var date_from = '<?php echo date($this->customlib->getSchoolDateFormat(), $this->customlib->datetostrtotime($_POST['date_from'])); ?>';
+            var date_to = '<?php echo date($this->customlib->getSchoolDateFormat(), $this->customlib->datetostrtotime($_POST['date_to'])); ?>';
 
 
-                <?php
- 
-        }else{
-            ?>
-            var date_from='<?php echo date($this->customlib->getSchoolDateFormat()); ?>';
-             var date_to='<?php echo date($this->customlib->getSchoolDateFormat()); ?>';
-            <?php
-        }
+    <?php
+} else {
+    ?>
+            var date_from = '<?php echo date($this->customlib->getSchoolDateFormat()); ?>';
+            var date_to = '<?php echo date($this->customlib->getSchoolDateFormat()); ?>';
+    <?php
+}
+?>
 
-        ?>
-       
-        if(type=='period'){
+        if (type == 'period') {
 
-               $.ajax({
-                url: base_url+'Report/get_betweendate/'+type,
-                type: 'POST', 
-              data:{date_from:date_from,date_to:date_to},
+            $.ajax({
+                url: base_url + 'Report/get_betweendate/' + type,
+                type: 'POST',
+                data: {date_from: date_from, date_to: date_to},
                 success: function (res) {
-                     
-                  $('#date_result').html(res);
 
-                  loadDate();
+                    $('#date_result').html(res);
+
+                    loadDate();
                 }
 
 
             });
 
-        }else{
+        } else {
             $('#date_result').html('');
         }
-    
+
 
     }
 </script>

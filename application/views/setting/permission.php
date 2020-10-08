@@ -1,58 +1,14 @@
 <style type="text/css">
-    .material-switch > input[type="checkbox"] {
-        display: none;   
-    }
-
-    .material-switch > label {
-        cursor: pointer;
-        height: 0px;
-        position: relative; 
-        width: 40px;  
-    }
-
-    .material-switch > label::before {
-        background: rgb(0, 0, 0);
-        box-shadow: inset 0px 0px 10px rgba(0, 0, 0, 0.5);
-        border-radius: 8px;
-        content: '';
-        height: 16px;
-        margin-top: -8px;
-        position:absolute;
-        opacity: 0.3;
-        transition: all 0.4s ease-in-out;
-        width: 40px;
-    }
-    .material-switch > label::after {
-        background: rgb(255, 255, 255);
-        border-radius: 16px;
-        box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3);
-        content: '';
-        height: 24px;
-        left: -4px;
-        margin-top: -8px;
-        position: absolute;
-        top: -4px;
-        transition: all 0.3s ease-in-out;
-        width: 24px;
-    }
-    .material-switch > input[type="checkbox"]:checked + label::before {
-        background: inherit;
-        opacity: 0.5;
-    }
-    .material-switch > input[type="checkbox"]:checked + label::after {
-        background: inherit;
-        left: 30px;
-    }
-    .table .pull-right {text-align: initial;}
-.material-switch{position: absolute; right: 40px;}
+    
+    .table .pull-right {text-align: initial; width: auto; float: right !important;}
 </style>
 
-<div class="content-wrapper" style="min-height: 946px;">  
-    <section class="content-header">
+<div class="content-wrapper">  
+   <!--  <section class="content-header">
         <h1>
-            <i class="fa fa-gears"></i> <?php echo $this->lang->line('system_settings'); ?>
+            <i class="fa fa-gears"></i> <?php //echo $this->lang->line('system_settings'); ?>
         </h1>
-    </section>
+    </section> -->
     <!-- Main content -->
     <section class="content">
         <div class="row">        
@@ -68,7 +24,7 @@
                         <li class="pull-left header"> <?php echo $this->lang->line('modules'); ?></li>
                     </ul>
                     <div class="tab-content">
-<div class="tab-pane table-responsive active" id="tab_system">
+                        <div class="tab-pane table-responsive active" id="tab_system">
                             <div class="download_label"><?php echo $this->lang->line('modules'); ?></div>
                             <table class="table table-striped table-bordered table-hover example" cellspacing="0" width="100%">
                                  <thead>
@@ -89,8 +45,8 @@
 
 
 
-                                                <td class="pull-right">
-                                                    <div class="material-switch">
+                                                <td class="relative">
+                                                    <div class="material-switch pull-right">
 
                                                         <input id="system<?php echo $system['id'] ?>" name="someSwitchOption001" type="checkbox" data-role="system" class="chk" data-rowid="<?php echo $system['id'] ?>" value="checked" <?php if ($system['is_active'] == 1) echo "checked='checked'"; ?> />
                                                         <label for="system<?php echo $system['id'] ?>" class="label-success"></label>
@@ -106,7 +62,7 @@
                                 </tbody>
                             </table>
                         </div>
-                        <div class="tab-pane  table-responsive" id="tab_students">
+                        <div class="tab-pane table-responsive" id="tab_students">
                             <div class="download_label"><?php echo $this->lang->line('users'); ?></div>
                             <table class="table table-striped table-bordered table-hover example" cellspacing="0" width="100%">
                                  <thead>
@@ -127,8 +83,8 @@
 
 
 
-                                                <td class="pull-right">
-                                                    <div class="material-switch">
+                                                <td class="relative">
+                                                    <div class="material-switch pull-right">
 
                                                         <input id="student<?php echo $student['id'] ?>" name="someSwitchOption001" type="checkbox" data-role="student" class="chk" data-rowid="<?php echo $student['id'] ?>" value="checked" <?php if ($student['student'] == 1) echo "checked='checked'"; ?> />
                                                         <label for="student<?php echo $student['id'] ?>" class="label-success"></label>
@@ -166,8 +122,8 @@
 
 
 
-                                                <td class="pull-right">
-                                                    <div class="material-switch">
+                                                <td class="relative">
+                                                    <div class="material-switch pull-right">
 
                                                         <input id="parent<?php echo $parent['id'] ?>" name="someSwitchOption001" type="checkbox" data-role="parent" class="chk" data-rowid="<?php echo $parent['id'] ?>" value="checked" <?php if ($parent['parent'] == 1) echo "checked='checked'"; ?> />
                                                         <label for="parent<?php echo $parent['id'] ?>" class="label-success"></label>

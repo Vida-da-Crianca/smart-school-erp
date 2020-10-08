@@ -1,6 +1,5 @@
 <?php
 
-
 class Payroll extends Admin_Controller {
 
     function __construct() {
@@ -16,7 +15,7 @@ class Payroll extends Admin_Controller {
         $this->load->model("staff_model");
         $this->load->model('staffattendancemodel');
         $this->payroll_status = $this->config->item('payroll_status');
-		$this->sch_setting_detail = $this->setting_model->getSetting();
+        $this->sch_setting_detail = $this->setting_model->getSetting();
     }
 
     function index() {
@@ -43,8 +42,8 @@ class Payroll extends Admin_Controller {
         $user_type = $this->staff_model->getStaffRole();
         $data['classlist'] = $user_type;
         $data['monthlist'] = $this->customlib->getMonthDropdown();
-		$data['sch_setting']        = $this->sch_setting_detail;
-		$data['staffid_auto_insert'] = $this->sch_setting_detail->staffid_auto_insert;
+        $data['sch_setting'] = $this->sch_setting_detail;
+        $data['staffid_auto_insert'] = $this->sch_setting_detail->staffid_auto_insert;
         $submit = $this->input->post("search");
         if (isset($submit) && $submit == "search") {
 
@@ -60,7 +59,7 @@ class Payroll extends Admin_Controller {
             $data["month"] = $month;
             $data["year"] = $year;
         }
-        
+
         $data["payroll_status"] = $this->payroll_status;
         $this->load->view("layout/header", $data);
         $this->load->view("admin/payroll/stafflist", $data);
@@ -81,8 +80,8 @@ class Payroll extends Admin_Controller {
         $data["holiday"] = 0;
         $data["leave_count"] = 0;
         $data["alloted_leave"] = 0;
-		$data['sch_setting']        = $this->sch_setting_detail;
-		$data['staffid_auto_insert'] = $this->sch_setting_detail->staffid_auto_insert;
+        $data['sch_setting'] = $this->sch_setting_detail;
+        $data['staffid_auto_insert'] = $this->sch_setting_detail->staffid_auto_insert;
         $user_type = $this->staff_model->getStaffRole();
         $data['classlist'] = $user_type;
 
@@ -159,7 +158,7 @@ class Payroll extends Admin_Controller {
         if (!$this->rbac->hasPrivilege('staff_payroll', 'can_add')) {
             access_denied();
         }
-       // print_r($_POST);die;
+
         $basic = $this->input->post("basic");
         $total_allowance = $this->input->post("total_allowance");
         $total_deduction = $this->input->post("total_deduction");
@@ -191,24 +190,26 @@ class Payroll extends Admin_Controller {
             );
 
             $checkForUpdate = $this->payroll_model->checkPayslip($month, $year, $staff_id);
-          
+
             if ($checkForUpdate == true) {
-               // print_r($data);die;
+                // print_r($data);die;
                 $insert_id = $this->payroll_model->createPayslip($data);
 
                 $payslipid = $insert_id;
-                
+
                 $allowance_type = $this->input->post("allowance_type");
                 $deduction_type = $this->input->post("deduction_type");
 
                 $allowance_amount = $this->input->post("allowance_amount");
                 $deduction_amount = $this->input->post("deduction_amount");
+
                 if (!empty($allowance_type)) {
 
                     $i = 0;
                     foreach ($allowance_type as $key => $all) {
 
-                        $all_data = array('payslip_id' => $payslipid,
+                        $all_data = array(
+                            'payslip_id' => $payslipid,
                             'allowance_type' => $allowance_type[$i],
                             'amount' => $allowance_amount[$i],
                             'staff_id' => $staff_id,
@@ -248,8 +249,6 @@ class Payroll extends Admin_Controller {
         }
     }
 
-   
-
     function search($month, $year, $role = '') {
 
         $user_type = $this->staff_model->getStaffRole();
@@ -262,8 +261,8 @@ class Payroll extends Admin_Controller {
         $data["name"] = $emp_name;
         $data["month"] = $month;
         $data["year"] = $year;
-        $data['sch_setting']        = $this->sch_setting_detail;
-        
+        $data['sch_setting'] = $this->sch_setting_detail;
+
         $data["payroll_status"] = $this->payroll_status;
         $data["resultlist"] = $searchEmployee;
         $data["payment_mode"] = $this->payment_mode;
@@ -303,7 +302,7 @@ class Payroll extends Admin_Controller {
         $remark = $this->input->post("remarks");
         $status = 'paid';
         $payslipid = $this->input->post("paymentid");
-        $this->form_validation->set_rules('payment_mode', $this->lang->line('payment_mode'), 'trim|required|xss_clean');
+        $this->form_validation->set_rules('payment_mode', $this->lang->line('payment') . " " . $this->lang->line('mode'), 'trim|required|xss_clean');
         if ($this->form_validation->run() == FALSE) {
 
             $msg = array(
@@ -324,29 +323,28 @@ class Payroll extends Admin_Controller {
     function payslipView() {
         if (!$this->rbac->hasPrivilege('staff', 'can_view')) {
             access_denied();
-        } 
+        }
         $data["payment_mode"] = $this->payment_mode;
         $this->load->model("setting_model");
         $setting_result = $this->setting_model->get();
         $data['settinglist'] = $setting_result[0];
         $id = $this->input->post("payslipid");
         $result = $this->payroll_model->getPayslip($id);
-        $data['sch_setting']        = $this->sch_setting_detail;
+        $data['sch_setting'] = $this->sch_setting_detail;
 
         $data['staffid_auto_insert'] = $this->sch_setting_detail->staffid_auto_insert;
-       if(!empty($result)){ 
-        $allowance = $this->payroll_model->getAllowance($result["id"]);
-        $data["allowance"] = $allowance;
-        $positive_allowance = $this->payroll_model->getAllowance($result["id"], "positive");
-        $data["positive_allowance"] = $positive_allowance;
-        $negative_allowance = $this->payroll_model->getAllowance($result["id"], "negative");
-        $data["negative_allowance"] = $negative_allowance;
-        $data["result"] = $result;
-         $this->load->view("admin/payroll/payslipview", $data);
-        }else{
+        if (!empty($result)) {
+            $allowance = $this->payroll_model->getAllowance($result["id"]);
+            $data["allowance"] = $allowance;
+            $positive_allowance = $this->payroll_model->getAllowance($result["id"], "positive");
+            $data["positive_allowance"] = $positive_allowance;
+            $negative_allowance = $this->payroll_model->getAllowance($result["id"], "negative");
+            $data["negative_allowance"] = $negative_allowance;
+            $data["result"] = $result;
+            $this->load->view("admin/payroll/payslipview", $data);
+        } else {
             echo "<div class='alert alert-info'>No Record Found.</div>";
         }
-       
     }
 
     function payslippdf() {
@@ -373,7 +371,7 @@ class Payroll extends Admin_Controller {
         }
         $this->session->set_userdata('top_menu', 'Reports');
         $this->session->set_userdata('sub_menu', 'Reports/human_resource');
-        $this->session->set_userdata('subsub_menu','Reports/attendance/attendance_report');
+        $this->session->set_userdata('subsub_menu', 'Reports/attendance/attendance_report');
         $month = $this->input->post("month");
         $year = $this->input->post("year");
         $role = $this->input->post("role");
@@ -392,14 +390,13 @@ class Payroll extends Admin_Controller {
             $this->load->view("layout/header", $data);
             $this->load->view("admin/payroll/payrollreport", $data);
             $this->load->view("layout/footer", $data);
-            
-        }else {
+        } else {
 
             $result = $this->payroll_model->getpayrollReport($month, $year, $role);
             $data["result"] = $result;
 
-            
-            
+
+
             $this->load->view("layout/header", $data);
             $this->load->view("admin/payroll/payrollreport", $data);
             $this->load->view("layout/footer", $data);

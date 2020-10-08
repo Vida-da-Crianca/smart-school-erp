@@ -242,3 +242,65 @@
          e.preventDefault();
      });
  });
+
+ 
+ $(document).ready(function () {
+         $('#andappModal').modal({
+         backdrop: 'static',
+         keyboard: false,
+         show: false
+     })
+
+      $("#andapp_code").on('submit', (function (e) {
+        e.preventDefault();
+
+        var _this = $(this);
+        var $this = _this.find("button[type=submit]:focus");
+
+        $.ajax({
+             type: "POST",
+             url: _this.attr('action'),
+             data: _this.serialize(),
+             dataType: 'JSON',
+            beforeSend: function () {
+                $('.andapp_modal-body .error_message').html("");
+                $("[class^='input-error']").html("");
+                $this.button('loading');
+
+            },
+             success: function(response, textStatus, xhr) {
+                 if (xhr.status != 200) {
+                     var $newmsgDiv = $("<div/>") // creates a div element
+                         .addClass("alert alert-danger") // add a class
+                         .html(response.response);
+                     $('.lic_modal-body .error_message').append($newmsgDiv);
+                 }else if(xhr.status == 200){
+
+                 if (response.status == 2) {
+                     $.each(response.error, function(key, value) {
+                         $('#input-' + key).parents('.form-group').find('#error').html(value);
+                     });
+                 }else if (response.status == 1) {
+                     successMsg(response.message);
+                     window.location.href=baseurl+'schsettings';
+                     $('#andappModal').modal('hide');
+                 }
+             }
+             },
+            error: function (xhr) { // if error occured
+                 $this.button('reset');
+               var r = jQuery.parseJSON(xhr.responseText);
+               var $newmsgDiv = $("<div/>") // creates a div element
+                         .addClass("alert alert-danger") // add a class
+                         .html(r.response);
+                     $('.andapp_modal-body .error_message').append($newmsgDiv);
+            },
+            complete: function () {
+                $this.button('reset');
+            }
+
+        });
+    }));
+    });
+
+  

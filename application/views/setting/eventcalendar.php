@@ -52,7 +52,7 @@
                                         <p class="tododesc" <?php if ($taskvalue["is_active"] == 'yes') {
                                             ?> style="text-decoration: line-through;color: #4f881d;" <?php } ?> ><?php echo $taskvalue["event_title"]; ?></p>
 
-                                        <small class="tododate"><?php echo date("m/d/Y", strtotime($taskvalue["start_date"])); ?>
+                                        <small class="tododate"><?php echo $this->customlib->dateformat($taskvalue["start_date"]); ?>
                                             <?php
                                             if ($this->rbac->hasPrivilege('calendar_to_do_list', 'can_delete')) {
                                                 ?><a href="#" onclick="deleteevent('<?php echo $taskvalue["id"]; ?>', 'Task'); return false;" title="<?php echo $this->lang->line('delete'); ?>" class="pull-right text-muted"><i class="fa fa-remove"></i></a>
@@ -61,12 +61,12 @@
                                             if ($this->rbac->hasPrivilege('calendar_to_do_list', 'can_edit')) {
                                                 ?>
                                                 <a href="#" onclick="edit_todo_task('<?php echo $taskvalue["id"]; ?>'); return false;" class="pull-right text-muted mright5" style="margin-right: 5px"title="<?php echo $this->lang->line('edit'); ?>"><i class="fa fa-pencil"></i></a>
-    <?php } ?>
+                                            <?php } ?>
                                         </small>
                                     </div>
                                 </div> 
                                 <div class="todo_divider"></div>   
-<?php } ?>
+                            <?php } ?>
                             <div class="todopagination"><?php echo $this->pagination->create_links(); ?></div>
                         </div>
 
@@ -87,7 +87,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
-                <h4 class="modal-title" id="modal-title" ><?php echo $this->lang->line('add')." ".$this->lang->line('to')." ".$this->lang->line('do'); ?></h4>
+                <h4 class="modal-title" id="modal-title" ><?php echo $this->lang->line('add') . " " . $this->lang->line('to') . " " . $this->lang->line('do'); ?></h4>
             </div>
             <div class="modal-body pb0">
 
@@ -103,17 +103,17 @@
 
                         <div class="form-group col-md-12">
                             <label for="exampleInputEmail1"><?php echo $this->lang->line('date'); ?></label>
-                            <input class="form-control date" type="text" autocomplete="off"  name="task_date" placeholder="Date" id="task-date">
+                            <input class="form-control" type="text" autocomplete="off"  name="task_date" placeholder="Date" id="task-date">
                             <input class="form-control" type="hidden" name="eventid" id="taskid">
                         </div>
 
 
 
                         <div class="row">
-                              <div class="box-footer clearboth" id="permission"><?php if ($this->rbac->hasPrivilege('calendar_to_do_list', 'can_add')) { ?>
+                            <div class="box-footer clearboth" id="permission"><?php if ($this->rbac->hasPrivilege('calendar_to_do_list', 'can_add')) { ?>
 
                                     <input type="submit" class="btn btn-primary submit_addtask pull-right" value="<?php echo $this->lang->line('save'); ?>">
-<?php } ?>
+                                <?php } ?>
                             </div>
                         </div>
 
@@ -130,7 +130,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
-                <h4 class="modal-title"><?php echo $this->lang->line('add')." ".$this->lang->line('new')." ".$this->lang->line('event'); ?></h4>
+                <h4 class="modal-title"><?php echo $this->lang->line('add') . " " . $this->lang->line('new') . " " . $this->lang->line('event'); ?></h4>
             </div>
             <div class="modal-body pb0">
 
@@ -202,10 +202,10 @@
                             </label> </div>
                         <?php if ($this->rbac->hasPrivilege('calendar_to_do_list', 'can_add')) { ?>
                             <div class="row">
-                               <div class="box-footer clearboth"> 
-                                <input type="submit" class="btn btn-primary submit_addevent pull-right" value="<?php echo $this->lang->line('save'); ?>"></div>
-                              </div>  
-<?php } ?>
+                                <div class="box-footer clearboth"> 
+                                    <input type="submit" class="btn btn-primary submit_addevent pull-right" value="<?php echo $this->lang->line('save'); ?>"></div>
+                            </div>  
+                        <?php } ?>
                     </form>
                 </div>
 
@@ -218,7 +218,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
-                <h4 class="modal-title"><?php echo $this->lang->line('view')." ".$this->lang->line('event'); ?></h4>
+                <h4 class="modal-title"><?php echo $this->lang->line('view') . " " . $this->lang->line('event'); ?></h4>
             </div>
             <div class="modal-body">
 
@@ -302,7 +302,7 @@
                                 ?>
                                 <input type="button" id="delete_event" class="btn btn-primary submit_delete pull-right" value="<?php echo $this->lang->line('delete'); ?>">
 
-<?php } ?>
+                            <?php } ?>
                         </div>        
                     </form>
                 </div>
@@ -313,23 +313,27 @@
 </div>  
 <!-- Page specific script -->
 <script>
+    $(document).ready(function () {
+        var date = new Date();
+        var today = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+        var date_format = '<?php echo $result = strtr($this->customlib->getSchoolDateFormat(), ['d' => 'dd', 'm' => 'mm', 'Y' => 'yyyy']) ?>';
 
-
+        $('#task-date').datepicker({
+            format: date_format,
+            autoclose: true,
+            todayHighlight: true
+        }).datepicker('setDate', today);
+    });
 
     function add_task() {
-        $("#modal-title").html("<?php echo $this->lang->line('add')." ".$this->lang->line('task');?>");
+        $("#modal-title").html("<?php echo $this->lang->line('add') . " " . $this->lang->line('task'); ?>");
         $("#task-title").val('');
         $("#taskid").val('');
-
         $('#newTask').modal('show');
-        //$('#task-date').datepicker({autoclose: true});
-        $("#task-date").val('<?php echo date('m/d/Y') ?>');
-
+        $('#task-date').datepicker('setDate', today);
     }
 
     function edit_todo_task(eventid) {
-
-
         $.ajax({
             url: "<?php echo site_url("admin/calendar/gettaskbyid/") ?>" + eventid,
             type: "POST",
@@ -340,11 +344,12 @@
             processData: false,
             success: function (res)
             {
-                $("#modal-title").html("<?php echo $this->lang->line('edit')." ".$this->lang->line('task');?>");
+                $("#modal-title").html("<?php echo $this->lang->line('edit') . " " . $this->lang->line('task'); ?>");
                 $("#task-title").val(res.event_title);
                 $("#taskid").val(eventid);
-                $("#task-date").val(new Date(res.start_date).toString("MM/dd/yyyy"));
-                $('#task-date').datepicker({autoclose: true});
+                dt = new Date(res.start_date)
+                var dat = new Date(dt.getFullYear(), dt.getMonth(), dt.getDate());
+                $("#task-date").datepicker('update', dat);
                 $('#newTask').modal('show');
                 $('#permission').html('<?php if ($this->rbac->hasPrivilege('calendar_to_do_list', 'can_edit')) { ?><input type="submit" class="btn btn-primary submit_addtask pull-right" value="<?php echo $this->lang->line('save'); ?>"><?php } ?>');
 
@@ -352,12 +357,8 @@
                         });
                     }
 
-
-
                     $(document).ready(function (e) {
-
                         $("#addtodo_form").on('submit', (function (e) {
-
                             e.preventDefault();
                             $.ajax({
                                 url: "<?php echo site_url("admin/calendar/addtodo") ?>",
@@ -438,8 +439,4 @@
 
                         });
                     }
-
-
-
 </script>
-

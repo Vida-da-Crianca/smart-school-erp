@@ -5,7 +5,7 @@
     <section class="content-header">
         <h1>
             <i class="fa fa-object-group"></i> <?php echo $this->lang->line('inventory'); ?>
-		</h1>
+        </h1>
     </section>
 
     <!-- Main content -->
@@ -119,7 +119,7 @@
                                     <span class="text-danger"><?php echo form_error('quantity'); ?></span>
                                 </div>
                                 <div class="form-group">
-                                    <label for="exampleInputEmail1"><?php echo $this->lang->line('purchase')." ".$this->lang->line('price')?></label><small class="req"> *</small>
+                                    <label for="exampleInputEmail1"><?php echo $this->lang->line('purchase') . " " . $this->lang->line('price') ?></label><small class="req"> *</small>
                                     <input id="date" name="purchase_price" placeholder="" type="text" class="form-control purchase_price"  value="<?php echo set_value('purchase_price'); ?>"  />
                                     <span class="text-danger"><?php echo form_error('purchase_price'); ?></span>
                                 </div>
@@ -175,7 +175,7 @@
                                         <th><?php echo $this->lang->line('supplier'); ?></th>
                                         <th><?php echo $this->lang->line('store'); ?></th>
                                         <th><?php echo $this->lang->line('quantity'); ?></th>
-                                        <th><?php echo $this->lang->line('purchase')." ".$this->lang->line('price')."(".$currency_symbol.")"; ?></th>
+                                        <th><?php echo $this->lang->line('purchase') . " " . $this->lang->line('price') . "(" . $currency_symbol . ")"; ?></th>
                                         <th><?php echo $this->lang->line('date'); ?></th>
                                         <th class="text-right"><?php echo $this->lang->line('action'); ?></th>
                                     </tr>
@@ -208,29 +208,30 @@
                                                     </div>
                                                 </td>
                                                 <td class="mailbox-name">
-        <?php echo $items['item_category']; ?>
+                                                    <?php echo $items['item_category']; ?>
 
                                                 </td>
 
                                                 <td class="mailbox-name">
-        <?php echo $items['item_supplier']; ?>
+                                                    <?php echo $items['item_supplier']; ?>
 
                                                 </td>
 
                                                 <td class="mailbox-name">
-        <?php echo $items['item_store']; ?>
+                                                    <?php echo $items['item_store']; ?>
 
                                                 </td>
                                                 <td class="mailbox-name">
-        <?php echo $items['quantity']; ?>
+                                                    <?php echo $items['quantity']; ?>
 
                                                 </td>
                                                 <td class="mailbox-name">
-        <?php echo $items['purchase_price']; ?>
+                                                    <?php echo $items['purchase_price']; ?>
 
                                                 </td>
                                                 <td class="mailbox-name">
-        <?php echo date($this->customlib->getSchoolDateFormat(), $this->customlib->dateyyyymmddTodateformat($items['date'])); ?>
+
+                                                    <?php echo $this->customlib->dateformat($items['date']); ?>
 
                                                 </td>
 
@@ -246,15 +247,15 @@
                                                         </a>
                                                     <?php }
                                                     ?>
-        <?php if ($this->rbac->hasPrivilege('item_stock', 'can_edit')) { ?> 
+                                                    <?php if ($this->rbac->hasPrivilege('item_stock', 'can_edit')) { ?> 
                                                         <a data-placement="left" href="<?php echo base_url(); ?>admin/itemstock/edit/<?php echo $items['id'] ?>" class="btn btn-default btn-xs"  data-toggle="tooltip" title="<?php echo $this->lang->line('edit'); ?>">
                                                             <i class="fa fa-pencil"></i>
                                                         </a>
-        <?php } if ($this->rbac->hasPrivilege('item_stock', 'can_delete')) { ?> 
+                                                    <?php } if ($this->rbac->hasPrivilege('item_stock', 'can_delete')) { ?> 
                                                         <a data-placement="left" href="<?php echo base_url(); ?>admin/itemstock/delete/<?php echo $items['id'] ?>" class="btn btn-default btn-xs"  data-toggle="tooltip" title="<?php echo $this->lang->line('delete'); ?>" onclick="return confirm('<?php echo $this->lang->line('delete_confirm') ?>');">
                                                             <i class="fa fa-remove"></i>
                                                         </a>
-        <?php } ?>
+                                                    <?php } ?>
                                                 </td>
                                             </tr>
                                             <?php
@@ -323,7 +324,7 @@
 
 
 
-       
+
         $("#btnreset").click(function () {
             $("#form1")[0].reset();
         });
@@ -349,19 +350,19 @@
             var item_category_id = $(this).val();
             //  console.log(item_category_id);
             $.ajax({
-                    type: "GET",
-                    url: base_url + "admin/itemstock/getItemunit",
-                    data: {'id': item_category_id},
-                    dataType: "json",
-                    success: function (data) {
-                       $('#item_unit').html(data.unit); 
-                    }
+                type: "GET",
+                url: base_url + "admin/itemstock/getItemunit",
+                data: {'id': item_category_id},
+                dataType: "json",
+                success: function (data) {
+                    $('#item_unit').html(data.unit);
+                }
 
-                });
-          
+            });
+
         });
 
-       
+
 
     });
 </script>

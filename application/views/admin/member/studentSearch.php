@@ -57,110 +57,110 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
 
                         </div>
                     </div>
-                
-                <?php
-                if (isset($resultlist)) {
-                    ?>
-                    <div class="" id="tachelist">
-                      <div class="box-header ptbnull"></div>   
-                        <div class="box-header ptbnull">
-                            <h3 class="box-title titlefix"><?php echo $this->lang->line('students'); ?></h3>
-                            <div class="box-tools pull-right">
 
-                            </div>
-                        </div>
-                        <div class="box-body">
-                            <div class="mailbox-controls">
-                            </div>
-                            <div class="table-responsive mailbox-messages">
-                                <div class="download_label"><?php echo $this->lang->line('students'); ?></div>
-                                <table class="table table-striped table-bordered table-hover example">
-                                    <thead>
-                                        <tr>
-                                            <th><?php echo $this->lang->line('member_id'); ?></th>
-                                            <th><?php echo $this->lang->line('library_card_no'); ?></th>
-                                            <th><?php echo $this->lang->line('admission_no'); ?></th>
-                                            <th><?php echo $this->lang->line('student_name'); ?></th>
-                                            <th><?php echo $this->lang->line('class'); ?></th>
-                                            <th><?php echo $this->lang->line('father_name'); ?></th>
-                                            <th><?php echo $this->lang->line('date_of_birth'); ?></th>
-                                            <th><?php echo $this->lang->line('gender'); ?></th>
-
-                                            <th><?php echo $this->lang->line('mobile_no'); ?></th>
-
-                                            <th class="text text-right"><?php echo $this->lang->line('action'); ?></th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <?php
-                                        if (empty($resultlist)) {
-                                            ?>
-
-                                            <?php
-                                        } else {
-                                            $count = 1;
-
-                                            foreach ($resultlist as $student) {
-                                                $clsactive = "a";
-                                                $member_id = "";
-                                                $library_card_no = "";
-                                                if ($student['libarary_member_id'] != 0) {
-                                                    $clsactive = "success";
-                                                    $member_id = $student['libarary_member_id'];
-                                                    $library_card_no = $student['library_card_no'];
-                                                }
-                                                ?>
-                                                <tr class="<?php echo $clsactive; ?>">
-                                                    <td><?php echo $member_id; ?></td>
-                                                    <td><?php echo $library_card_no; ?></td>
-                                                    <td><?php echo $student['admission_no']; ?></td>
-                                                    <td>
-                                                        <?php echo $student['firstname'] . " " . $student['lastname']; ?>
-
-                                                    </td>
-                                                    <td><?php echo $student['class'] . "(" . $student['section'] . ")" ?></td>
-                                                    <td><?php echo $student['father_name']; ?></td>
-                                                    <td><?php echo date($this->customlib->getSchoolDateFormat(), $this->customlib->dateyyyymmddTodateformat($student['dob'])); ?></td>
-                                                    <td><?php echo $student['gender']; ?></td>
-
-                                                    <td><?php echo $student['mobileno']; ?></td>
-
-                                                    <td class="text text-right">
-                                                        <?php
-                                                        if ($student['libarary_member_id'] == 0) {
-                                                            ?>
-
-                                                            <button data-placement="left"  data-stdid="<?php echo $student['id'] ?>" class="btn btn-default btn-xs add-student"  data-toggle="tooltip" title="<?php echo $this->lang->line('add'); ?>" >
-                                                                <i class="fa fa-plus"></i>
-                                                            </button>
-
-                                                            <?php
-                                                        } else {
-                                                            ?>
-                                                            <button data-placement="left" type="button" class="btn btn-default btn-xs surrender-student" data-loading-text="<i class='fa fa-spinner fa-spin '></i> Please Wait.." data-toggle="tooltip" data-memberid="<?php echo $member_id; ?>" title="<?php echo $this->lang->line('surrender_membership'); ?>"><i class="fa fa-mail-reply"></i></button>
-
-                                                            <?php
-                                                        }
-                                                        ?>
-
-
-                                                    </td>
-                                                </tr>
-                                                <?php
-                                                $count++;
-                                            }
-                                        }
-                                        ?>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-
-                    </div>
                     <?php
-                }
-                ?>
-              </div>  
+                    if (isset($resultlist)) {
+                        ?>
+                        <div class="" id="tachelist">
+                            <div class="box-header ptbnull"></div>   
+                            <div class="box-header ptbnull">
+                                <h3 class="box-title titlefix"><?php echo $this->lang->line('students'); ?></h3>
+                                <div class="box-tools pull-right">
+
+                                </div>
+                            </div>
+                            <div class="box-body">
+                                <div class="mailbox-controls">
+                                </div>
+                                <div class="table-responsive mailbox-messages">
+                                    <div class="download_label"><?php echo $this->lang->line('students'); ?></div>
+                                    <table class="table table-striped table-bordered table-hover example">
+                                        <thead>
+                                            <tr>
+                                                <th><?php echo $this->lang->line('member_id'); ?></th>
+                                                <th><?php echo $this->lang->line('library_card_no'); ?></th>
+                                                <th><?php echo $this->lang->line('admission_no'); ?></th>
+                                                <th><?php echo $this->lang->line('student_name'); ?></th>
+                                                <th><?php echo $this->lang->line('class'); ?></th>
+                                                <th><?php echo $this->lang->line('father_name'); ?></th>
+                                                <th><?php echo $this->lang->line('date_of_birth'); ?></th>
+                                                <th><?php echo $this->lang->line('gender'); ?></th>
+
+                                                <th><?php echo $this->lang->line('mobile_no'); ?></th>
+
+                                                <th class="text text-right"><?php echo $this->lang->line('action'); ?></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <?php
+                                            if (empty($resultlist)) {
+                                                ?>
+
+                                                <?php
+                                            } else {
+                                                $count = 1;
+
+                                                foreach ($resultlist as $student) {
+                                                    $clsactive = "a";
+                                                    $member_id = "";
+                                                    $library_card_no = "";
+                                                    if ($student['libarary_member_id'] != 0) {
+                                                        $clsactive = "success";
+                                                        $member_id = $student['libarary_member_id'];
+                                                        $library_card_no = $student['library_card_no'];
+                                                    }
+                                                    ?>
+                                                    <tr class="<?php echo $clsactive; ?>">
+                                                        <td><?php echo $member_id; ?></td>
+                                                        <td><?php echo $library_card_no; ?></td>
+                                                        <td><?php echo $student['admission_no']; ?></td>
+                                                        <td>
+                                                            <?php echo $student['firstname'] . " " . $student['lastname']; ?>
+
+                                                        </td>
+                                                        <td><?php echo $student['class'] . "(" . $student['section'] . ")" ?></td>
+                                                        <td><?php echo $student['father_name']; ?></td>
+                                                        <td><?php echo date($this->customlib->getSchoolDateFormat(), $this->customlib->dateyyyymmddTodateformat($student['dob'])); ?></td>
+                                                        <td><?php echo $student['gender']; ?></td>
+
+                                                        <td><?php echo $student['mobileno']; ?></td>
+
+                                                        <td class="text text-right">
+                                                            <?php
+                                                            if ($student['libarary_member_id'] == 0) {
+                                                                ?>
+
+                                                                <button data-placement="left"  data-stdid="<?php echo $student['id'] ?>" class="btn btn-default btn-xs add-student"  data-toggle="tooltip" title="<?php echo $this->lang->line('add'); ?>" >
+                                                                    <i class="fa fa-plus"></i>
+                                                                </button>
+
+                                                                <?php
+                                                            } else {
+                                                                ?>
+                                                                <button data-placement="left" type="button" class="btn btn-default btn-xs surrender-student" data-loading-text="<i class='fa fa-spinner fa-spin '></i> Please Wait.." data-toggle="tooltip" data-memberid="<?php echo $member_id; ?>" title="<?php echo $this->lang->line('surrender_membership'); ?>"><i class="fa fa-mail-reply"></i></button>
+
+                                                                <?php
+                                                            }
+                                                            ?>
+
+
+                                                        </td>
+                                                    </tr>
+                                                    <?php
+                                                    $count++;
+                                                }
+                                            }
+                                            ?>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+
+                        </div>
+                        <?php
+                    }
+                    ?>
+                </div>  
             </div>
         </div>
     </section>
@@ -171,7 +171,8 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <button type="button" class="close" onclick="window.location.reload
+                                (true);" aria-hidden="true">&times;</button>
                 <h4 class="modal-title" id="lineModalLabel"><?php echo $this->lang->line('add_member'); ?></h4>
             </div>
             <div class="modal-body">

@@ -15,6 +15,7 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
             <a id="sidebarCollapse" class="studentsideopen"><i class="fa fa-navicon"></i></a>
             <aside class="studentsidebar">
                 <div class="stutop" id="">
+
                     <!-- Create the tabs -->
                     <div class="studentsidetopfixed">
                         <p class="classtap"><?php echo $student["class"]; ?> <a href="#" data-toggle="control-sidebar" class="studentsideclose"><i class="fa fa-times"></i></a></p>
@@ -27,10 +28,11 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                 }
                                 ?> ><a href="#section<?php echo $svalue["section_id"] ?>" data-toggle="tab"><?php print_r($svalue["section"]); ?></a></li>
                                 <?php } ?>
-                        </ul>
+                        </ul> 
                     </div>
                     <!-- Tab panes -->
                     <div class="tab-content">
+                         
                         <?php foreach ($class_section as $skey => $snvalue) {
                             ?>
                             <div class="tab-pane <?php
@@ -41,14 +43,23 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                  <?php
                                  foreach ($studentlistbysection as $stkey => $stvalue) {
                                      if ($stvalue['section_id'] == $snvalue["section_id"]) {
+										
                                          ?>
-                                        <div class="studentname">
+                                        <div class="studentname"> 
                                             <a class="" href="<?php echo base_url() . "student/view/" . $stvalue["id"] ?>">
-                                                <div class="icon"><img src="<?php
+                                                <div class="icon">
+												
+												<img src="<?php
                                                     if (!empty($stvalue["image"])) {
                                                         echo base_url() . $stvalue["image"];
                                                     } else {
-                                                        echo base_url() . "uploads/student_images/no_image.png";
+														
+                                                        if($student['gender']== 'Female'){
+                                                             echo base_url() . "uploads/student_images/default_female.jpg";
+                                                        }elseif($student['gender']== 'Male'){
+                                                             echo base_url() . "uploads/student_images/default_male.jpg";
+                                                        }
+                                                       
                                                     }
                                                     ?>" alt="User Image"></div>
                                                 <div class="student-tittle"><?php echo $stvalue["firstname"] . " " . $stvalue["lastname"]; ?></div></a>
@@ -89,12 +100,19 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                 ?>>
                     <div class="box-body box-profile">
                         <img class="profile-user-img img-responsive img-circle" src="<?php
-                        if (!empty($student['image'])) {
-                            echo base_url() . $student['image'];
-                        } else {
-                            echo base_url() . "uploads/student_images/no_image.png";
-                        }
-                        ?>" alt="User profile picture">
+                                                    if (!empty($student["image"])) {
+                                                        echo base_url() . $student["image"];
+                                                    } else {
+														
+                                                        if($student['gender']== 'Female'){
+                                                             echo base_url() . "uploads/student_images/default_female.jpg";
+                                                        }else{
+                                                             echo base_url() . "uploads/student_images/default_male.jpg";
+                                                        }
+                                                       
+                                                    }
+                                                    ?>" alt="User profile picture">
+						
                         <h3 class="profile-username text-center"><?php echo $student['firstname'] . " " . $student['lastname']; ?></h3>
 
                         <ul class="list-group list-group-unbordered">
@@ -108,9 +126,11 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                     <b><?php echo $this->lang->line('disable')." ".$this->lang->line('reason') ?></b> <span class="pull-right text-aqua"><?php echo $reason_data['reason'] ?></span>
                                 </li>
                                 <li class="list-group-item listnoback">
-                                    <b><?php  echo $this->lang->line('disable')." ".$this->lang->line('note') ?></b> <span class="pull-right text-aqua"><?php echo $student['dis_note'] ?></span>
+                                     <b><?php  echo $this->lang->line('disable')." ".$this->lang->line('note') ?></b> <span class="pull-right text-aqua"><?php echo $student['dis_note'] ?></span>
                                 </li>
-
+                                 <li class="list-group-item listnoback">
+                                    <b><?php  echo $this->lang->line('disable')." ".$this->lang->line('date') ?></b> <span class="pull-right text-aqua"><?php echo date($this->customlib->getSchoolDateFormat(),$this->customlib->dateyyyymmddTodateformat($student['disable_at'])); ?></span>
+                                </li>
 
 
                             <?php } ?> 
@@ -1237,7 +1257,13 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
 
                                     </div>
                                 </div>
+                                <div class="col-sm-12">
+                                    <div class="form-group">
+                                        <label for="pwd"><?php echo $this->lang->line('date'); ?></label>
+                                        <input name="disable_date" class="form-control date" value="<?php echo date($this->customlib->getSchoolDateFormat()); ?>" type="text"   />
 
+                                    </div>
+                                </div>
                                 <div class="col-sm-12">
                                     <div class="form-group">
                                         <label for="pwd"><?php echo $this->lang->line('note'); ?></label>
@@ -1463,7 +1489,7 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
             });
             
             
-            
+             
         } else {
             return false;
         }

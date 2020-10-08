@@ -19,11 +19,12 @@ class Calendar extends Admin_Controller
         if (!$this->rbac->hasPrivilege('calendar_to_do_list', 'can_view')) {
             access_denied();
         }
-
+        $userdata     = $this->customlib->getUserData();
+        $data["role"] = $userdata["user_type"];
         $event_colors              = array("#03a9f4", "#c53da9", "#757575", "#8e24aa", "#d81b60", "#7cb342", "#fb8c00", "#fb3b3b");
         $data["event_colors"]      = $event_colors;
         $config['base_url']        = base_url() . 'admin/calendar/events';
-        $config['total_rows']      = $this->calendar_model->countrows();
+        $config['total_rows']      = $this->calendar_model->countrows($userdata["id"], $userdata["role_id"]);
         $config['per_page']        = 10;
         $config["full_tag_open"]   = '<ul class="pagination">';
         $config["full_tag_close"]  = '</ul>';
@@ -44,16 +45,15 @@ class Calendar extends Admin_Controller
         $config['num_tag_open']    = '<li>';
         $config['num_tag_close']   = '</li>';
         $this->pagination->initialize($config);
-        $userdata     = $this->customlib->getUserData();
-        $data["role"] = $userdata["user_type"];
+       
 
         $tasklist         = $this->calendar_model->getTask(10, $this->uri->segment(4), $userdata["id"], $userdata["role_id"]);
         $data["tasklist"] = $tasklist;
         $data["title"]    = "Event Calendar";
         $this->load->view("layout/header.php");
-        $this->load->view("setting/eventcalendar.php", $data);
+        $this->load->view("setting/eventcalendar", $data);
         $this->load->view("layout/footer.php");
-    }
+    } 
 
     public function addtodo()
     {
@@ -79,7 +79,7 @@ class Calendar extends Admin_Controller
             $event_type        = 'task';
             $event_color       = '#000';
             $date              = $this->input->post('task_date');
-            $start_date        = date("Y-m-d H:i:s", strtotime($date));
+            $start_date        = date('Y-m-d H:i:s', $this->customlib->datetostrtotime($this->input->post('task_date')));
             $eventid           = $this->input->post("eventid");
             if (!empty($eventid)) {
 
@@ -106,6 +106,7 @@ class Calendar extends Admin_Controller
                 );
                 $msg = "Task Created Successfully";
             }
+        
             $this->calendar_model->saveEvent($eventdata);
             $array = array('status' => 'success', 'error' => '', 'message' => $msg);
         }
@@ -120,7 +121,7 @@ class Calendar extends Admin_Controller
 
         if ($this->form_validation->run() == false) {
 
-            $msg = array(
+            $msg = array( 
                 'title' => form_error('title'),
             );
             $array = array('status' => 'fail', 'error' => $msg, 'message' => '');
@@ -134,12 +135,11 @@ class Calendar extends Admin_Controller
             }
 
             $a = $this->input->post("event_dates");
-            $b = explode('-', trim($a));
+            $b = explode(' - ', trim($a));
 
-            $start_date = date("Y-m-d H:i:s", strtotime($b[0]));
-            $end_date   = date("Y-m-d H:i:s", strtotime($b[1]));
-            $event_for  = "";
-
+            $start_date = date('Y-m-d H:i:s', $this->customlib->dateTimeformatTwentyfourhour($b[0]));
+            $end_date   = date('Y-m-d H:i:s', $this->customlib->dateTimeformatTwentyfourhour($b[1]));
+  
             $userdata = $this->customlib->getUserData();
             if ($event_type == 'private') {
 
@@ -163,11 +163,14 @@ class Calendar extends Admin_Controller
                 'event_for'                      => $event_for,
             );
 
+
+
             $this->calendar_model->saveEvent($eventdata);
+          
             $array = array('status' => 'success', 'error' => '', 'message' => "Event Created Successfully");
 
         }
-        echo json_encode($array);
+       echo json_encode($array);
     }
 
     public function updateevent()
@@ -206,10 +209,12 @@ class Calendar extends Admin_Controller
                 $event_for = $userdata["role_id"];
             }
             $a = $this->input->post("eventdates");
-            $b = explode('-', trim($a));
 
-            $start_date = date("Y-m-d H:i:s", strtotime($b[0]));
-            $end_date   = date("Y-m-d H:i:s", strtotime($b[1]));
+            $b = explode(' - ', trim($a));
+           $start_date = date('Y-m-d H:i:s', $this->customlib->dateTimeformatTwentyfourhour($b[0]));
+            $end_date   = date('Y-m-d H:i:s', $this->customlib->dateTimeformatTwentyfourhour($b[1]));
+            //$start_date = date("Y-m-d H:i:s", $this->customlib->dateTimeformat($b[0]));
+           // $end_date   = date("Y-m-d H:i:s", $this->customlib->dateTimeformat($b[1]));
 
             $eventdata = array('id' => $id,
                 'event_title'           => $event_title,
@@ -219,8 +224,8 @@ class Calendar extends Admin_Controller
                 'event_type'            => $event_type,
                 'event_color'           => $event_color,
                 'event_for'             => $event_for,
-            );
-
+            ); 
+           
             $this->calendar_model->saveEvent($eventdata);
             $array = array('status' => 'success', 'error' => '', 'message' => $this->lang->line('success_message'));
 
@@ -301,8 +306,8 @@ class Calendar extends Admin_Controller
             access_denied();
         }
         $result              = $this->calendar_model->getEvents($id);
-        $start_date          = date("m/d/Y H:i:s", strtotime($result["start_date"]));
-        $end_date            = date("m/d/Y H:i:s", strtotime($result["end_date"]));
+        $start_date          = date($this->customlib->getSchoolDateFormat()." H:i:s", strtotime($result["start_date"]));
+        $end_date            = date($this->customlib->getSchoolDateFormat()." H:i:s", strtotime($result["end_date"]));
         $colorid             = trim($result["event_color"], "#");
         $result["colorid"]   = $colorid;
         $result["startdate"] = $start_date;

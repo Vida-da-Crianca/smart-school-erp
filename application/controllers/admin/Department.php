@@ -1,8 +1,5 @@
 <?php
 
-/**
- * 
- */
 class Department extends Admin_Controller {
 
     function __construct() {
@@ -21,9 +18,6 @@ class Department extends Admin_Controller {
         $this->session->set_userdata('sub_menu', 'admin/department/department');
 
         $departmenttypeid = $this->input->post("departmenttypeid");
-
-
-
         $DepartmentTypes = $this->department_model->getDepartmentType();
         $data["departmenttype"] = $DepartmentTypes;
         $this->form_validation->set_rules(
@@ -31,7 +25,7 @@ class Department extends Admin_Controller {
             array('check_exists', array($this->department_model, 'valid_department'))
                 )
         );
-        $data["title"] =$this->lang->line('add')." ".$this->lang->line('department');
+        $data["title"] = $this->lang->line('add') . " " . $this->lang->line('department');
         if ($this->form_validation->run()) {
 
             $type = $this->input->post("type");
@@ -55,7 +49,7 @@ class Department extends Admin_Controller {
                 $data = array('department_name' => $type, 'is_active' => 'yes');
             }
             $insert_id = $this->department_model->addDepartmentType($data);
-            $this->session->set_flashdata('msg', '<div class="alert alert-success">'.$this->lang->line('success_message').'</div>');
+            $this->session->set_flashdata('msg', '<div class="alert alert-success">' . $this->lang->line('success_message') . '</div>');
             redirect("admin/department/department");
         } else {
 
@@ -70,7 +64,7 @@ class Department extends Admin_Controller {
         $result = $this->department_model->getDepartmentType($id);
 
         $data["result"] = $result;
-        $data["title"] = $this->lang->line('edit')." ".$this->lang->line('department');
+        $data["title"] = $this->lang->line('edit') . " " . $this->lang->line('department');
         $departmentTypes = $this->department_model->getDepartmentType();
         $data["departmenttype"] = $departmentTypes;
         $this->load->view("layout/header");

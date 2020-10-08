@@ -29,8 +29,8 @@ class Grade extends Admin_Controller
         $data['listgrade']  = $listgrade;
         $this->form_validation->set_rules('exam_type', $this->lang->line('exam')." ".$this->lang->line('type'), 'trim|required|xss_clean');
         $this->form_validation->set_rules('name', $this->lang->line('grade'), 'trim|required|xss_clean');
-        $this->form_validation->set_rules('mark_from', $this->lang->line('percentage_from'), 'trim|required|xss_clean');
-        $this->form_validation->set_rules('mark_upto', $this->lang->line('percentage_upto'), 'trim|required|xss_clean');
+        $this->form_validation->set_rules('mark_from', $this->lang->line('percentage_upto'), 'trim|required|xss_clean');
+        $this->form_validation->set_rules('mark_upto', $this->lang->line('percentage_from'), 'trim|required|xss_clean');
         $this->form_validation->set_rules('grade_point', $this->lang->line('grade')." ".$this->lang->line('point'), 'trim|required|xss_clean');
         if ($this->form_validation->run() == false) {
            
@@ -70,8 +70,8 @@ class Grade extends Admin_Controller
         $data['editgrade']  = $editgrade;
          $this->form_validation->set_rules('exam_type', $this->lang->line('exam')." ".$this->lang->line('type'), 'trim|required|xss_clean');
         $this->form_validation->set_rules('name', $this->lang->line('grade'), 'trim|required|xss_clean');
-        $this->form_validation->set_rules('mark_from', $this->lang->line('percentage_from'), 'trim|required|xss_clean');
-        $this->form_validation->set_rules('mark_upto', $this->lang->line('percentage_upto'), 'trim|required|xss_clean');
+        $this->form_validation->set_rules('mark_from', $this->lang->line('percentage_upto'), 'trim|required|xss_clean');
+        $this->form_validation->set_rules('mark_upto', $this->lang->line('percentage_from'), 'trim|required|xss_clean');
         $this->form_validation->set_rules('grade_point', $this->lang->line('grade')." ".$this->lang->line('point'), 'trim|required|xss_clean');
         if ($this->form_validation->run() == false) {
           

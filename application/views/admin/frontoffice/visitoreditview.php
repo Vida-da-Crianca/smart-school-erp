@@ -110,14 +110,14 @@
             }
             ?>">
                 <!-- general form elements -->
-                <div class="box box-primary">
+                <div class="box box-primary"> 
                     <div class="box-header ptbnull">
                         <h3 class="box-title titlefix"><?php echo $this->lang->line('visitor'); ?> <?php echo $this->lang->line('list'); ?></h3>
                         <div class="box-tools pull-right">
                         </div><!-- /.box-tools -->
                     </div><!-- /.box-header -->
                     <div class="box-body">
-                        <div class="download_label"></div>
+                        <div class="download_label"><?php echo $this->lang->line('visitor'); ?> <?php echo $this->lang->line('list'); ?></div>
                         <div class="mailbox-messages table-responsive">
                             <table class="table table-hover table-striped table-bordered example">
                                 <thead>
@@ -155,7 +155,7 @@
                                                 <td class="mailbox-name"> <?php echo $value['out_time']; ?></td>
                                                 <td class="mailbox-date pull-right">
                                                     <a  data-placement="left" onclick="getRecord(<?php echo $value['id']; ?>)" class="btn btn-default btn-xs" data-target="#visitordetails" data-toggle="modal"  title="View"><i class="fa fa-reorder"></i></a> 
-        <?php if ($value['image'] !== "") { ?>
+                                                    <?php if ($value['image'] !== "") { ?>
                                                         <a data-placement="left" href="<?php echo base_url(); ?>admin/visitors/download/<?php echo $value['image']; ?>" class="btn btn-default btn-xs" data-toggle="tooltip" title="" data-original-title="<?php echo $this->lang->line('download'); ?>">
                                                             <i class="fa fa-download"></i>
                                                         </a>  <?php } ?> 
@@ -165,11 +165,11 @@
                                                     <?php if ($value['image'] !== "") { ?><a data-placement="left" href="<?php echo base_url(); ?>admin/visitors/imagedelete/<?php echo $value['id']; ?>/<?php echo $value['image']; ?>" class="btn btn-default btn-xs" data-toggle="tooltip" title="" onclick="return confirm('<?php echo $this->lang->line('delete_confirm') ?>');" data-original-title="<?php echo $this->lang->line('delete'); ?>">
                                                             <i class="fa fa-remove"></i>
                                                         </a>
-        <?php } else { ?>
+                                                    <?php } else { ?>
                                                         <a data-placement="left" href="<?php echo base_url(); ?>admin/visitors/delete/<?php echo $value['id']; ?>" class="btn btn-default btn-xs" data-toggle="tooltip" title="" onclick="return confirm('<?php echo $this->lang->line('delete_confirm') ?>');" data-original-title="<?php echo $this->lang->line('delete'); ?>">
                                                             <i class="fa fa-remove"></i>
                                                         </a>
-        <?php } ?>
+                                                    <?php } ?>
                                                 </td>
 
 
@@ -215,30 +215,30 @@
 
 <script type="text/javascript">
 
-                                                $(function () {
+                                                            $(function () {
 
-                                                    $(".timepicker").timepicker({
-                                                        // showInputs: false,
-                                                        // defaultTime: false,
-                                                        // explicitMode: false,
-                                                        // minuteStep: 1
-                                                    });
-                                                });
-                                              
-
-                                                function getRecord(id) {
-                                                    // alert(id);
-                                                    $.ajax({
-                                                        url: '<?php echo base_url(); ?>admin/visitors/details/' + id,
-                                                        success: function (result) {
-                                                            //alert(result);
-                                                            $('#getdetails').html(result);
-                                                        }
+                                                                $(".timepicker").timepicker({
+                                                                    // showInputs: false,
+                                                                    // defaultTime: false,
+                                                                    // explicitMode: false,
+                                                                    // minuteStep: 1
+                                                                });
+                                                            });
 
 
-                                                    });
+                                                            function getRecord(id) {
+                                                                // alert(id);
+                                                                $.ajax({
+                                                                    url: '<?php echo base_url(); ?>admin/visitors/details/' + id,
+                                                                    success: function (result) {
+                                                                        //alert(result);
+                                                                        $('#getdetails').html(result);
+                                                                    }
 
-                                                }
+
+                                                                });
+
+                                                            }
 
 
 </script>

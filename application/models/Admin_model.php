@@ -7,6 +7,7 @@ class Admin_model extends CI_Model {
 
     public function __construct() {
         parent::__construct();
+
         $this->current_session = $this->setting_model->getCurrentSession();
         $this->current_session_name = $this->setting_model->getCurrentSessionName();
         $this->start_month = $this->setting_model->getStartMonth();
@@ -138,7 +139,7 @@ class Admin_model extends CI_Model {
     }
 
     public function checkOldPass($data) {
-        $this->db->where('id', $data['user_id']);        
+        $this->db->where('id', $data['user_id']);
         $this->db->where('email', $data['user_email']);
         $query = $this->db->get('staff');
 
@@ -213,11 +214,10 @@ class Admin_model extends CI_Model {
         return $query->result_array();
     }
 
+    public function getAllEnquiryCount($start_date, $end_date) {
 
-      public function getAllEnquiryCount($start_date,$end_date){
-       
-        $condition=" date_format(date,'%Y-%m-%d') between '".$start_date."' and '".$end_date."'";
-     return  $this->db->select("SUM(CASE WHEN status = 'won' THEN 1  ELSE 0 END) AS 'complete',SUM(CASE WHEN status = 'active' THEN 1  ELSE 0 END) AS 'active',SUM(CASE WHEN status = 'passive' THEN 1  ELSE 0 END) AS 'passive',SUM(CASE WHEN status = 'dead' THEN 1  ELSE 0 END) AS 'dead',SUM(CASE WHEN status = 'lost' THEN 1  ELSE 0 END) AS 'lost',count(*) as total")->from('enquiry')->where($condition)->get()->row_array();
+        $condition = " date_format(date,'%Y-%m-%d') between '" . $start_date . "' and '" . $end_date . "'";
+        return $this->db->select("SUM(CASE WHEN status = 'won' THEN 1  ELSE 0 END) AS 'complete',SUM(CASE WHEN status = 'active' THEN 1  ELSE 0 END) AS 'active',SUM(CASE WHEN status = 'passive' THEN 1  ELSE 0 END) AS 'passive',SUM(CASE WHEN status = 'dead' THEN 1  ELSE 0 END) AS 'dead',SUM(CASE WHEN status = 'lost' THEN 1  ELSE 0 END) AS 'lost',count(*) as total")->from('enquiry')->where($condition)->get()->row_array();
     }
 
 }

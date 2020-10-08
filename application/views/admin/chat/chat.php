@@ -3,12 +3,12 @@
     overflow: hidden;
 }
 </style> -->
-    <!-- Content Wrapper. Contains page content -->
-    <div class="content-wrapper">
+<!-- Content Wrapper. Contains page content -->
+<div class="content-wrapper">
     <!-- Content Header (Page header) -->
     <section class="content-header">
         <h1>
-            <i class="fa fa-map-o"></i> <?php echo $this->lang->line('chat')?>
+            <i class="fa fa-map-o"></i> <?php echo $this->lang->line('chat') ?>
         </h1>
     </section>
 
@@ -18,23 +18,23 @@
             <div class="col-md-12">
                 <!-- general form elements -->
                 <div id="frame">
-                    <div class="chatloader"></div>  
-                    
+                    <div class="chatloader"></div>
+
                     <div id="sidepanel">
                         <input type="hidden" name="chat_connection_id" value="0">
                         <input type="hidden" name="chat_to_user" value="0">
                         <input type="hidden" name="last_chat_id" value="0">
 
                         <div id="search">
-                            <label for=""><?php echo $this->lang->line('chat')." ".$this->lang->line('system')?></label>
+                            <label for=""><?php echo $this->lang->line('chat') . " " . $this->lang->line('system') ?></label>
                             <!-- <input type="text" placeholder="Search contacts..." /> -->
                             <div id="bottom-bar">
-                              <button id="addcontact" data-toggle="modal" data-target="#myModal"><i class="fa fa-plus"></i></button>
-                              
+                                <button id="addcontact" data-toggle="modal" data-target="#myModal"><i class="fa fa-plus"></i></button>
+
                             </div>
                         </div>
                         <div id="contacts">
-                            
+
                             <ul>
                             </ul>
                         </div>
@@ -43,7 +43,7 @@
                     <div class="chatcontent">
                         <div class="contact-profile">
                             <img src="<?php echo base_url('uploads/student_images/no_image.png'); ?>" alt="" />
-                            <p><?php echo $this->lang->line('select_any_user_to_start_your_chat')?></p>
+                            <p><?php echo $this->lang->line('select_any_user_to_start_your_chat') ?></p>
 
                         </div>
                         <div class="messages">
@@ -60,7 +60,7 @@
                         </div>
                     </div>
                 </div>
-              
+
             </div><!-- /.box-header -->
         </div><!-- /.box-header -->
 
@@ -88,7 +88,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    <h4 class="modal-title"><?php echo $this->lang->line('add')." ".$this->lang->line('contact');?></h4>
+                    <h4 class="modal-title"><?php echo $this->lang->line('add') . " " . $this->lang->line('contact'); ?></h4>
                 </div>
                 <div class="modal-body">
                     <div id="custom-search-input">
@@ -101,7 +101,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="submit" class="btn btn-success btn-sm"  data-loading-text="<i class='fa fa-spinner fa-spin '></i> Please wait"><i class="fa fa-plus"></i> <?php echo $this->lang->line('add');?></button>
+                    <button type="submit" class="btn btn-success btn-sm"  data-loading-text="<i class='fa fa-spinner fa-spin '></i> Please wait"><i class="fa fa-plus"></i> <?php echo $this->lang->line('add'); ?></button>
                 </div>
             </div>
         </form>
@@ -120,21 +120,21 @@
         timestamp++;
     }
 
-$(document).on('click','.input_submit',function(e) {
+    $(document).on('click', '.input_submit', function (e) {
 
 
-    message = $(".message-input input").val();
-    if($.trim(message) == '') {
-        return false;
-    }
-    newChatMessage();
-     e.preventDefault(); // To prevent the default
-});
+        message = $(".message-input input").val();
+        if ($.trim(message) == '') {
+            return false;
+        }
+        newChatMessage();
+        e.preventDefault(); // To prevent the default
+    });
 
     $(function () {
         setInterval(updateTime, 1000);
     });
-       $(".messages").animate(
+    $(".messages").animate(
             {
                 scrollTop: $(document).height()
             },
@@ -219,7 +219,7 @@ $(document).on('click','.input_submit',function(e) {
             data: {},
             dataType: "JSON",
             beforeSend: function () {
-            $('.chatloader').css({display: 'block'});
+                $('.chatloader').css({display: 'block'});
             },
             success: function (data) {
                 $("#contacts ul").html(data.page);
@@ -235,10 +235,10 @@ $(document).on('click','.input_submit',function(e) {
                 }
             },
             error: function (jqXHR, textStatus, errorThrown) {
-  $('.chatloader').css({display: 'none'});
+                $('.chatloader').css({display: 'none'});
             },
             complete: function (data) {
-  $('.chatloader').css({display: 'none'});
+                $('.chatloader').css({display: 'none'});
             }
         });
     });
@@ -251,7 +251,7 @@ $(document).on('click','.input_submit',function(e) {
             data: {'chat_connection_id': chat_connection_id},
             dataType: "JSON",
             beforeSend: function () {
-  $('.chatloader').css({display: 'block'});
+                $('.chatloader').css({display: 'block'});
                 $(".chat_input").val("");
                 $('.contact-profile').find('p').html($this.find('.name').text());
                 $('.contact-profile').find('img').attr("src", $this.find('img').attr('src'));
@@ -276,10 +276,10 @@ $(document).on('click','.input_submit',function(e) {
 
             },
             error: function (jqXHR, textStatus, errorThrown) {
-  $('.chatloader').css({display: 'none'});
+                $('.chatloader').css({display: 'none'});
             },
             complete: function (data) {
-  $('.chatloader').css({display: 'none'});
+                $('.chatloader').css({display: 'none'});
             }
         })
 
@@ -287,55 +287,60 @@ $(document).on('click','.input_submit',function(e) {
 
 
 
-    $(document).on('keydown', '.chat_input', function (e) {      
+    $(document).on('keydown', '.chat_input', function (e) {
 
-          switch (e.which) {
-           case 13:
-            newChatMessage();
-            break;
-           }   
+        switch (e.which) {
+            case 13:
+                newChatMessage();
+                break;
+        }
 
 
     });
 
+    function htmlEncode(str) {
+        return String(str).replace(/[^\w. ]/gi, function (c) {
+            return '&#' + c.charCodeAt(0) + ';';
+        });
+    }
 
     function newChatMessage() {
-        message = $(".message-input input").val();
+        message = htmlEncode($(".message-input input").val());
         if ($.trim(message) == '') {
             return false;
         }
 
         var chat_connection_id = $("input[name='chat_connection_id']").val();
         var chat_to_user = $("input[name='chat_to_user']").val();
-if(chat_connection_id > 0 && chat_to_user > 0){
+        if (chat_connection_id > 0 && chat_to_user > 0) {
 
-        $.ajax({
-            type: "POST",
-            url: base_url + 'admin/chat/newMessage',
-            data: {'chat_connection_id': chat_connection_id, 'message': message, 'chat_to_user': chat_to_user, 'time': date_time_temp},
-            dataType: "JSON",
-            beforeSend: function () {
+            $.ajax({
+                type: "POST",
+                url: base_url + 'admin/chat/newMessage',
+                data: {'chat_connection_id': chat_connection_id, 'message': message, 'chat_to_user': chat_to_user, 'time': date_time_temp},
+                dataType: "JSON",
+                beforeSend: function () {
 
-            },
-            success: function (data) {
-                var last_chat_id = $("input[name='last_chat_id']").val(data.last_insert_id);
-                $('<li class="replies"><p>' + message + '</p> <span class="time_date_send"> ' + date_time_temp + '</span></li>').appendTo($('.messages ul'));
-                $('.chat_input').val(null);
-                $('.contact.active .preview').html('<span>You: </span>' + message);
-                // $(".messages").animate({scrollTop: $(document).height()}, "fast");
+                },
+                success: function (data) {
+                    var last_chat_id = $("input[name='last_chat_id']").val(data.last_insert_id);
+                    $('<li class="replies"><p>' + message + '</p> <span class="time_date_send"> ' + date_time_temp + '</span></li>').appendTo($('.messages ul'));
+                    $('.chat_input').val(null);
+                    $('.contact.active .preview').html('<span>You: </span>' + message);
+                    // $(".messages").animate({scrollTop: $(document).height()}, "fast");
 
-                $('.messages').animate({
-                    scrollTop: $('.messages')[0].scrollHeight}, "slow");
+                    $('.messages').animate({
+                        scrollTop: $('.messages')[0].scrollHeight}, "slow");
 
-            },
-            error: function (jqXHR, textStatus, errorThrown) {
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
 
-            },
-            complete: function (data) {
+                },
+                complete: function (data) {
 
-            }
-        })
-}
+                }
+            })
+        }
 
     }
     ;
@@ -423,8 +428,6 @@ if(chat_connection_id > 0 && chat_to_user > 0){
                     $("input[name='chat_to_user']").val(data.new_user.chat_user_id);
                     $("input[name='last_chat_id']").val(data.user_last_chat.id);
                     $(".chat_input").val("");
-                    console.log(data.new_user);
-
 
                     if (data.new_user.user_type == "student") {
                         new_user_type = "Student";
@@ -485,7 +488,7 @@ if(chat_connection_id > 0 && chat_to_user > 0){
         newli += "<p class='preview'></p>";
         newli += "</div>";
         newli += "</div>";
-         newli += "<span class='chatbadge notification_count' style='display: none;'>0</span>";
+        newli += "<span class='chatbadge notification_count' style='display: none;'>0</span>";
         newli += "</li>";
         return newli;
 
@@ -528,16 +531,14 @@ if(chat_connection_id > 0 && chat_to_user > 0){
 
 
     function js_yyyy_mm_dd_hh_mm_ss(now) {
-        var month = [
-            "Jan", "Feb", "Marh", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Octr", "Nov", "Dec"
-        ];
+
+        var date_format = '<?php echo$this->customlib->getSchoolDateFormat() ?>';
+        var new_str = date_format;
+        var month_String = new Array("Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec");
         now = new Date();
-        year = "" + now.getFullYear();
-        month = "" + month[now.getMonth()];
-        day = "" + now.getDate();
-        if (day.length == 1) {
-            day = "0" + day;
-        }
+        var day = String(now.getDate()).padStart(2, '0');
+        var month = String(now.getMonth() + 1).padStart(2, '0'); //January is 0!
+        var year = now.getFullYear();
         hour = "" + now.getHours();
         if (hour.length == 1) {
             hour = "0" + hour;
@@ -550,12 +551,20 @@ if(chat_connection_id > 0 && chat_to_user > 0){
         if (second.length == 1) {
             second = "0" + second;
         }
-         var ampm = hour >= 12 ? 'PM' : 'AM';
-           hour = hour % 12;
-           hour = hour ? hour : 12; // the hour '0' should be '12'
-        // return year + "-" + month + "-" + day + " " + hour + ":" + minute + ":" + second;
+        var inputAttr = {};
+        inputAttr["m"] = month;
+        inputAttr["M"] = month_String[now.getMonth()];
+        inputAttr["d"] = day;
+        inputAttr["Y"] = year;
+        for (var key in inputAttr) {
+            if (!inputAttr.hasOwnProperty(key)) {
+                continue;
+            }
 
-        return day + " " + month + " " + year + ", " + hour + ":" + minute + ":" + ampm;
+            new_str = new_str.replace(key, inputAttr[key]);
+        }
+
+        return new_str + " " + hour + ":" + minute + ":" + second;
     }
 
     function mynewUser() {

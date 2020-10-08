@@ -26,8 +26,8 @@
                 <th class=""><?php echo $this->lang->line('duration')?></th>
                 <th class=""><?php echo $this->lang->line('credit')." ".$this->lang->line('hours') ?></th>
                 <th class=""><?php echo $this->lang->line('room')." ".$this->lang->line('no')?></th>
-                <th class=""><?php echo $this->lang->line('marks')." (".$this->lang->line('max').".)";?></th>
-                <th class=""><?php echo $this->lang->line('marks')." (".$this->lang->line('min').".)";?></th>
+                <th class="tddm150"><?php echo $this->lang->line('marks')." (".$this->lang->line('max').".)";?></th>
+                <th class="tddm150"><?php echo $this->lang->line('marks')." (".$this->lang->line('min').".)";?></th>
                 <?php
         if ($examgroupDetail->exam_group_type == "coll_grade_system") {
             ?>
@@ -40,11 +40,12 @@
         </thead>
         <?php
         if (!empty($exam_subjects)) {
+   
             $count = 1;
             foreach ($exam_subjects as $exam_subject_key => $exam_subject_value) {
                 ?>
                 <tr>
-                    <td>
+                    <td width="160">
                         <select class="form-control item_unit tddm200" name="subject_<?php echo $count; ?>">
                             <option value=""><?php echo $this->lang->line('select')?></option>
 
@@ -66,8 +67,9 @@
                         </select>
                     </td>
                     <td>
+                       
                         <div class="input-group datepicker_init">
-                            <input class="form-control tddm200" name="date_from_<?php echo $count; ?>" type="text" value="<?php echo $this->customlib->dateyyyymmddToDateTimeformat($exam_subject_value->date_from); ?>">
+                            <input class="form-control tddm200" name="date_from_<?php echo $count; ?>" type="text" value="<?php echo $this->customlib->dateformat($exam_subject_value->date_from); ?>">
                             <span class="input-group-addon" id="basic-addon2">
                                 <i class="fa fa-calendar">
                                 </i>
@@ -89,23 +91,23 @@
 </td>
 
                     <td>
-                        <input class="form-control credit_hours" name="credit_hours_<?php echo $count; ?>" type="text" value="<?php echo $exam_subject_value->credit_hours; ?>"/>
+                        <input class="form-control credit_hours tddm150" name="credit_hours_<?php echo $count; ?>" type="text" value="<?php echo $exam_subject_value->credit_hours; ?>"/>
                     </td>
                          <td>
                         <input class="form-control room_no" name="room_no_<?php echo $count; ?>" type="text" value="<?php echo $exam_subject_value->room_no ?>"/>
                     </td>
                     <td>
-                        <input class="form-control max_marks" name="max_marks_<?php echo $count; ?>" type="number" value="<?php echo $exam_subject_value->max_marks; ?>"/>
+                        <input class="form-control max_marks tddm150" name="max_marks_<?php echo $count; ?>" type="number" value="<?php echo $exam_subject_value->max_marks; ?>"/>
                     </td>
                     <td>
                         <input name="rows[]" type="hidden" value="<?php echo $count; ?>">
                         <input name="prev_row[<?php echo $count; ?>]" type="hidden" value="<?php echo $exam_subject_value->id; ?>">
-                        <input class="form-control min_marks" name="min_marks_<?php echo $count; ?>" type="number" value="<?php echo $exam_subject_value->min_marks; ?>"/>
+                        <input class="form-control min_marks tddm150" name="min_marks_<?php echo $count; ?>" type="number" value="<?php echo $exam_subject_value->min_marks; ?>"/>
 
                     </td>
                     
                     <td class="text-center" style="vertical-align: middle; cursor: pointer;">
-                        <span class="text text-danger remove glyphicon glyphicon-remove"></span>
+                        <span class="text text-danger remove fa fa-times"></span>
                     </td>
         
                    

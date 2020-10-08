@@ -34,9 +34,7 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                 <tbody>
                                     <?php if (empty($listroute)) {
                                         ?>
-                                        <tr>
-                                            <td colspan="12" class="text-danger text-center"><?php echo $this->lang->line('no_record_found'); ?></td>
-                                        </tr>
+                                       
                                         <?php
                                     } else {
                                         $count = 1;

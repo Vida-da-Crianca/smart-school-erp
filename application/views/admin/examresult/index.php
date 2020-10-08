@@ -1,8 +1,8 @@
-
 <div class="content-wrapper" style="min-height: 946px;">
     <section class="content-header">
         <h1>
-            <i class="fa fa-map-o"></i> <?php echo $this->lang->line('examinations'); ?> <small><?php echo $this->lang->line('student_fee1'); ?></small>  </h1>
+            <i class="fa fa-map-o"></i> <?php echo $this->lang->line('examinations'); ?> <small><?php echo $this->lang->line('student_fee1'); ?></small>  
+        </h1>
     </section>
     <!-- Main content -->
     <section class="content">
@@ -13,12 +13,9 @@
                         <h3 class="box-title"><i class="fa fa-search"></i> <?php echo $this->lang->line('select_criteria'); ?></h3>
                     </div>
                     <div class="box-body">
-
                         <form role="form" action="<?php echo site_url('admin/examresult') ?>" method="post" >
-
                             <?php echo $this->customlib->getCSRF(); ?>
-
-                            <div class="row"> 
+                            <div class="row">
                                 <div class="col-sm-6 col-lg-3 col-md-3 col20">
                                     <div class="form-group">
                                         <label><?php echo $this->lang->line('exam') . " " . $this->lang->line('group'); ?></label><small class="req"> *</small>
@@ -38,18 +35,20 @@
                                         </select>
                                         <span class="text-danger"><?php echo form_error('exam_group_id'); ?></span>
                                     </div>
-                                </div><!--./col-md-3-->    
+                                </div>
+                                <!--./col-md-3-->    
                                 <div class="col-sm-6 col-lg-3 col-md-3 col20">
-                                    <div class="form-group">  
+                                    <div class="form-group">
                                         <label><?php echo $this->lang->line('exam') ?></label><small class="req"> *</small>
                                         <select  id="exam_id" name="exam_id" class="form-control" >
                                             <option value=""><?php echo $this->lang->line('select'); ?></option>
                                         </select>
                                         <span class="text-danger"><?php echo form_error('exam_id'); ?></span>
-                                    </div>  
-                                </div><!--./col-md-3-->
+                                    </div>
+                                </div>
+                                <!--./col-md-3-->
                                 <div class="col-sm-6 col-lg-3 col-md-3 col20">
-                                    <div class="form-group">   
+                                    <div class="form-group">
                                         <label><?php echo $this->lang->line('session'); ?></label><small class="req"> *</small>
                                         <select  id="session_id" name="session_id" class="form-control" >
                                             <option value=""><?php echo $this->lang->line('select'); ?></option>
@@ -66,10 +65,11 @@
                                                     ?>
                                         </select>
                                         <span class="text-danger"><?php echo form_error('session_id'); ?></span>
-                                    </div>  
-                                </div><!--./col-md-3-->
+                                    </div>
+                                </div>
+                                <!--./col-md-3-->
                                 <div class="col-sm-6 col-lg-3 col-md-12 col20">
-                                    <div class="form-group">    
+                                    <div class="form-group">
                                         <label><?php echo $this->lang->line('class'); ?></label><small class="req"> *</small>
                                         <select id="class_id" name="class_id" class="form-control" >
                                             <option value=""><?php echo $this->lang->line('select'); ?></option>
@@ -86,11 +86,10 @@
                                                     ?>
                                         </select>
                                         <span class="text-danger"><?php echo form_error('class_id'); ?></span>
-                                    </div>  
+                                    </div>
                                 </div>
-
                                 <div class="col-sm-6 col-lg-3 col-md-12 col20">
-                                    <div class="form-group">    
+                                    <div class="form-group">
                                         <label for="exampleInputEmail1"><?php echo $this->lang->line('section'); ?></label><small class="req"> *</small>
                                         <select  id="section_id" name="section_id" class="form-control" >
                                             <option value=""><?php echo $this->lang->line('select'); ?></option>
@@ -98,31 +97,23 @@
                                         <span class="text-danger"><?php echo form_error('section_id'); ?></span>
                                     </div>
                                 </div>
-
-
-
-
-
                                 <div class="col-sm-12">
                                     <div class="form-group">
                                         <button type="submit" name="search" value="search_filter" class="btn btn-primary pull-right btn-sm checkbox-toggle"><i class="fa fa-search"></i> <?php echo $this->lang->line('search'); ?></button>
                                     </div>
                                 </div>
-                            </div>  
+                            </div>
                         </form>
-
                     </div>
-
                     <?php
                     if (isset($studentList)) {
                         ?>
                         <form method="post" action="<?php echo base_url('admin/examresult/printmarksheet') ?>" id="printMarksheet">
                             <input type="hidden" name="marksheet_template" value="<?php echo $marksheet_template; ?>">
                             <div class="" >
-                                <div class="box-header ptbnull"></div>  
+                                <div class="box-header ptbnull"></div>
                                 <div class="box-header ptbnull">
                                     <h3 class="box-title titlefix"><i class="fa fa-users"></i> <?php echo $this->lang->line('exam') . " " . $this->lang->line('result'); ?></h3>
-
                                 </div>
                                 <div class="box-body">
                                     <input type="hidden" name="post_exam_id" value="<?php echo $exam_id; ?>">
@@ -132,7 +123,6 @@
                                         <table class="table table-striped table-bordered table-hover example" cellspacing="0" width="100%">
                                             <thead>
                                                 <tr>
-
                                                     <th><?php echo $this->lang->line('admission_no'); ?></th>
                                                     <th><?php echo $this->lang->line('roll_no'); ?></th>
                                                     <th><?php echo $this->lang->line('student_name'); ?></th>
@@ -152,14 +142,12 @@
                                                                     <?php
                                                                 }
                                                                 ?>
-
                                                             </th>
                                                             <?php
                                                         }
 
                                                         if ($exam_details->exam_group_type == "school_grade_system" || $exam_details->exam_group_type == "basic_system" || $exam_details->exam_group_type == "coll_grade_system") {
                                                             ?>
-
                                                             <th><?php echo $this->lang->line('grand') . " " . $this->lang->line('total'); ?></th>
                                                             <th><?php echo $this->lang->line('percent') ?> (%)</th>
                                                             <?php
@@ -169,7 +157,6 @@
                                                                 <?php
                                                             }
                                                             ?>
-
                                                             <?php
                                                         } elseif ($exam_details->exam_group_type == "gpa") {
                                                             ?>
@@ -184,7 +171,6 @@
                                                 <?php
                                                 if (empty($studentList)) {
                                                     ?>
-
                                                     <?php
                                                 } else {
                                                     $count = 1;
@@ -194,14 +180,12 @@
                                                         $no_subject_result = 0;
                                                         ?>
                                                         <tr>
-
                                                             <td><?php echo $student_value->admission_no; ?></td>
                                                             <td><?php echo ($student_value->exam_roll_no != 0) ? $student_value->exam_roll_no : "-"; ?> </td>
                                                             <td>
                                                                 <a href="<?php echo base_url(); ?>student/view/<?php echo $student_value->student_id; ?>"><?php echo $student_value->firstname . " " . $student_value->lastname; ?>
                                                                 </a>
                                                             </td>
-
                                                             <?php
                                                             if (!empty($subjectList)) {
                                                                 $total_marks = 0;
@@ -220,6 +204,7 @@
                                                                         if ($result) {
                                                                             $no_subject_result = 1;
                                                                             if ($exam_details->exam_group_type == "gpa") {
+                                                                                $get_marks = $get_marks + $result->get_marks;
                                                                                 $subject_credit_hour = $subject_value->credit_hours;
                                                                                 $total_credit_hour = $total_credit_hour + $subject_value->credit_hours;
 
@@ -233,7 +218,7 @@
                                                                                     ?>  
                                                                                     <p class="text">
                                                                                         <?php echo $this->lang->line($result->attendence); ?>
-                                                                                    </p>        
+                                                                                    </p>
                                                                                     <?php
                                                                                 }
                                                                                 ?>
@@ -265,7 +250,7 @@
                                                                                     ?>  
                                                                                     <p class="text">
                                                                                         <?php echo $this->lang->line($result->attendence); ?>
-                                                                                    </p>        
+                                                                                    </p>
                                                                                     <?php
                                                                                 }
                                                                                 ?>
@@ -276,7 +261,6 @@
                                                                             
                                                                         }
                                                                         ?>
-
                                                                     </td>
                                                                     <?php
                                                                 }
@@ -293,18 +277,26 @@
                                                                     <?php
                                                                 }
                                                                 ?>
-
-
                                                                 <?php
                                                             }
                                                             ?>
-
                                                             <?php
                                                             if ($exam_details->exam_group_type == "gpa") {
-                                                                echo "<td>";
-                                                                $exam_qulity_point = number_format($total_quality_point / $total_credit_hour, 2, '.', '');
-                                                                echo $total_quality_point . "/" . $total_credit_hour . "=" . $exam_qulity_point;
-                                                                echo "</td>";
+                                                                ?>
+                                                                <td>
+                                                                    <?php
+                                                                    if ($total_credit_hour > 0) {
+
+                                                                        $percentage_grade = ($get_marks * 100) / $total_marks;
+
+                                                                        $exam_qulity_point = number_format($total_quality_point / $total_credit_hour, 2, '.', '');
+                                                                        echo $total_quality_point . "/" . $total_credit_hour . "=" . $exam_qulity_point . " [" . get_ExamGrade($exam_grades, $percentage_grade) . "]";
+                                                                    } else {
+                                                                        echo "--";
+                                                                    }
+                                                                    ?>
+                                                                </td>
+                                                                <?php
                                                             } elseif ($exam_details->exam_group_type == "school_grade_system" || $exam_details->exam_group_type == "basic_system" || $exam_details->exam_group_type == "coll_grade_system") {
                                                                 echo "<td>";
                                                                 if ($no_subject_result) {
@@ -322,8 +314,6 @@
                                                         echo "</td>";
                                                     }
                                                     ?>
-
-
                                                     </tr>
                                                     <?php
                                                     $count++;
@@ -336,7 +326,7 @@
                                 </div>
                             </div>
                         </form>
-                    </div>    
+                    </div>
                     <?php
                 }
                 ?>
@@ -344,7 +334,6 @@
         </div>
     </section>
 </div>
-
 <?php
 
 function getSubjectMarks($subject_results, $subject_id) {
@@ -385,7 +374,6 @@ function findGradePoints($exam_grades, $percentage) {
     return 0;
 }
 ?>
-
 <script type="text/javascript">
     $(document).ready(function () {
         $.extend($.fn.dataTable.defaults, {
@@ -489,4 +477,3 @@ function findGradePoints($exam_grades, $percentage) {
         }
     }
 </script>
-

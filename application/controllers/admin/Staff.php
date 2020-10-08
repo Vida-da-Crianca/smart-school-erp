@@ -10,7 +10,7 @@ class Staff extends Admin_Controller {
 
     public function __construct() {
         parent::__construct();
- 
+
         $this->config->load("payroll");
         $this->config->load("app-config");
         $this->load->library('Enc_lib');
@@ -31,6 +31,8 @@ class Staff extends Admin_Controller {
         if (!$this->rbac->hasPrivilege('staff', 'can_view')) {
             access_denied();
         }
+
+
         $data['title'] = 'Staff Search';
         $data['fields'] = $this->customfield_model->get_custom_fields('staff', 1);
         $this->session->set_userdata('top_menu', 'HR');
@@ -122,7 +124,7 @@ class Staff extends Admin_Controller {
         $this->load->view('admin/staff/disablestaff', $data);
         $this->load->view('layout/footer', $data);
     }
- 
+
     public function profile($id) {
         $data['enable_disable'] = 1;
         if ($this->customlib->getStaffID() == $id) {
@@ -206,8 +208,7 @@ class Staff extends Admin_Controller {
         $attendence_count = array();
         $attendencetypes = $this->attendencetype_model->getStaffAttendanceType();
         foreach ($attendencetypes as $att_key => $att_value) {
-            $attendence_count[$att_value['type']]=array();
-            
+            $attendence_count[$att_value['type']] = array();
         }
 
         foreach ($monthlist as $key => $value) {
@@ -220,15 +221,15 @@ class Staff extends Admin_Controller {
             for ($n = $date_start; $n <= $date_end; $n++) {
                 $att_dates = $year . "-" . $datemonth . "-" . sprintf("%02d", $n);
                 $date_array[] = $att_dates;
-                $staff_attendence = $this->staffattendancemodel->searchStaffattendance($id, $att_dates,false);
-                
-                if($staff_attendence['att_type'] != ""){
-                    $attendence_count[$staff_attendence['att_type']][]=1;
+                $staff_attendence = $this->staffattendancemodel->searchStaffattendance($id, $att_dates, false);
+
+                if ($staff_attendence['att_type'] != "") {
+                    $attendence_count[$staff_attendence['att_type']][] = 1;
                 }
                 $res[$att_dates] = $staff_attendence;
             }
         }
-       
+
 
         $session = $this->setting_model->getCurrentSessionName();
 
@@ -308,12 +309,10 @@ class Staff extends Admin_Controller {
     }
 
     public function download($staff_id, $doc) {
-
         $this->load->helper('download');
         $filepath = "./uploads/staff_documents/$staff_id/" . $this->uri->segment(5);
         $data = file_get_contents($filepath);
         $name = $this->uri->segment(5);
-
         force_download($name, $data);
     }
 
@@ -408,13 +407,11 @@ class Staff extends Admin_Controller {
         $this->form_validation->set_rules('role', $this->lang->line('role'), 'trim|required|xss_clean');
         $this->form_validation->set_rules('gender', $this->lang->line('gender'), 'trim|required|xss_clean');
         $this->form_validation->set_rules('dob', $this->lang->line('date_of_birth'), 'trim|required|xss_clean');
-
         $this->form_validation->set_rules('file', $this->lang->line('image'), 'callback_handle_upload');
         $this->form_validation->set_rules('first_doc', $this->lang->line('image'), 'callback_handle_first_upload');
         $this->form_validation->set_rules('second_doc', $this->lang->line('image'), 'callback_handle_second_upload');
         $this->form_validation->set_rules('third_doc', $this->lang->line('image'), 'callback_handle_third_upload');
         $this->form_validation->set_rules('fourth_doc', $this->lang->line('image'), 'callback_handle_fourth_upload');
-
         $this->form_validation->set_rules(
                 'email', $this->lang->line('email'), array('required', 'valid_email',
             array('check_exists', array($this->staff_model, 'valid_email_id')),
@@ -483,33 +480,6 @@ class Staff extends Admin_Controller {
             $epf_no = $this->input->post("epf_no");
 
             $password = $this->role->get_random_password($chars_min = 6, $chars_max = 6, $use_upper_case = false, $include_numbers = true, $include_special_chars = false);
-
-            // 'department'           => $department,
-            // 'designation'          => $designation,
-            // 'mother_name'          => $mother_name,
-            // 'father_name'          => $father_name,
-            // 'contact_no'           => $contact_no,
-            // 'emergency_contact_no' => $emergency_no,
-            // 'marital_status'       => $marital_status,
-            // 'local_address'        => $address,
-            // 'permanent_address'    => $permanent_address,
-            // 'qualification'        => $qualification,
-            // 'work_exp'             => $work_exp,
-            // 'note'                 => $note,
-            // 'epf_no'               => $epf_no,
-            // 'basic_salary'         => $basic_salary,
-            // 'contract_type'        => $contract_type,
-            // 'shift'                => $shift,
-            // 'location'             => $location,
-            // 'bank_account_no'      => $bank_account_no,
-            // 'bank_name'            => $bank_name,
-            // 'account_title'        => $account_title,
-            // 'ifsc_code'            => $ifsc_code,
-            // 'bank_branch'          => $bank_branch,
-            // 'facebook'             => $facebook,
-            // 'twitter'              => $twitter,
-            // 'linkedin'             => $linkedin,
-            // 'instagram'            => $instagram,
 
             $data_insert = array(
                 'password' => $this->enc_lib->passHashEnc($password),
@@ -729,7 +699,7 @@ class Staff extends Admin_Controller {
                     $first_title = 'resume';
                     $filename = "resume" . $staff_id . '.' . $fileInfo['extension'];
                     $img_name = $uploaddir . $filename;
-                    $resume = 'uploads/staff_images/' . $filename;
+                    $resume = $filename;
                     move_uploaded_file($_FILES["first_doc"]["tmp_name"], $img_name);
                 } else {
 
@@ -745,7 +715,7 @@ class Staff extends Admin_Controller {
                     $first_title = 'joining_letter';
                     $filename = "joining_letter" . $staff_id . '.' . $fileInfo['extension'];
                     $img_name = $uploaddir . $filename;
-                    $joining_letter = 'uploads/staff_images/' . $filename;
+                    $joining_letter = $filename;
                     move_uploaded_file($_FILES["second_doc"]["tmp_name"], $img_name);
                 } else {
 
@@ -761,7 +731,7 @@ class Staff extends Admin_Controller {
                     $first_title = 'resignation_letter';
                     $filename = "resignation_letter" . $staff_id . '.' . $fileInfo['extension'];
                     $img_name = $uploaddir . $filename;
-                    $resignation_letter = 'uploads/staff_images/' . $filename;
+                    $resignation_letter = $filename;
                     move_uploaded_file($_FILES["third_doc"]["tmp_name"], $img_name);
                 } else {
 
@@ -844,135 +814,149 @@ class Staff extends Admin_Controller {
         }
         return true;
     }
- 
+
     public function handle_first_upload() {
-        // $image_validate = $this->config->item('file_validate');
+        $file_validate = $this->config->item('file_validate');
 
-        // if (isset($_FILES["first_doc"]) && !empty($_FILES['first_doc']['name'])) {
+        if (isset($_FILES["first_doc"]) && !empty($_FILES['first_doc']['name'])) {
 
-        //     $file_type         = $_FILES["first_doc"]['type'];
-        //     $file_size         = $_FILES["first_doc"]["size"];
-        //     $file_name         = $_FILES["first_doc"]["name"];
-        //     $allowed_extension = $image_validate['allowed_extension'];
-        //     $ext               = pathinfo($file_name, PATHINFO_EXTENSION);
-        //     $allowed_mime_type = $image_validate['allowed_mime_type'];
-        //     if ($files = @getimagesize($_FILES['first_doc']['tmp_name'])) {
+            $file_type = $_FILES["first_doc"]['type'];
+            $file_size = $_FILES["first_doc"]["size"];
+            $file_name = $_FILES["first_doc"]["name"];
+            $allowed_extension = $file_validate['allowed_extension'];
+            $ext = pathinfo($file_name, PATHINFO_EXTENSION);
+            $allowed_mime_type = $file_validate['allowed_mime_type'];
+            $finfo = finfo_open(FILEINFO_MIME_TYPE);
+            $mtype = finfo_file($finfo, $_FILES['first_doc']['tmp_name']);
+            finfo_close($finfo);
 
-        //         if (!in_array($files['mime'], $allowed_mime_type)) {
-        //             $this->form_validation->set_message('handle_first_upload', 'File Type Not Allowed');
-        //             return false;
-        //         }
 
-        //         if (!in_array($ext, $allowed_extension) || !in_array($file_type, $allowed_mime_type)) {
-        //             $this->form_validation->set_message('handle_first_upload', 'Extension Not Allowed');
-        //             return false;
-        //         }
-        //         if ($file_size > $image_validate['upload_size']) {
-        //             $this->form_validation->set_message('handle_first_upload', $this->lang->line('file_size_shoud_be_less_than') . number_format($image_validate['upload_size'] / 1048576, 2) . " MB");
-        //             return false;
-        //         }
-        //     } else {
-        //         $this->form_validation->set_message('handle_first_upload', "File Type / Extension Error Uploading  Image");
-        //         return false;
-        //     }
-
-        //     return true;
-        // }else{
-        //    // $this->form_validation->set_message('handle_first_upload', "The File Field is required");
-        //        // return false;
-        // }
-        // return true;
-
-         if (isset($_FILES["first_doc"]) && !empty($_FILES['first_doc']['name'])) {
-            $allowedExts = array('jpg', 'jpeg', 'png', "pdf", "doc", "docx", "rar", "zip");
-            $temp = explode(".", $_FILES["first_doc"]["name"]);
-            $extension = end($temp);
-            
-            if ($_FILES["first_doc"]["error"] > 0) {
-                $error .= "Error opening the file<br />";
-            }
-            if (($_FILES["first_doc"]["type"] != "application/pdf") && ($_FILES["first_doc"]["type"] != "image/gif") && ($_FILES["first_doc"]["type"] != "image/jpeg") && ($_FILES["first_doc"]["type"] != "image/jpg") && ($_FILES["first_doc"]["type"] != "application/vnd.openxmlformats-officedocument.wordprocessingml.document") && ($_FILES["first_doc"]["type"] != "application/vnd.openxmlformats-officedocument.wordprocessingml.document") && ($_FILES["first_doc"]["type"] != "image/pjpeg") && ($_FILES["first_doc"]["type"] != "image/x-png") && ($_FILES["first_doc"]["type"] != "application/x-rar-compressed") && ($_FILES["first_doc"]["type"] != "application/octet-stream") && ($_FILES["first_doc"]["type"] != "application/zip") && ($_FILES["first_doc"]["type"] != "application/octet-stream") && ($_FILES["first_doc"]["type"] != "image/png")) {
+            if (!in_array($mtype, $allowed_mime_type)) {
                 $this->form_validation->set_message('handle_first_upload', $this->lang->line('file_type_not_allowed'));
                 return false;
             }
-            if (!in_array($extension, $allowedExts)) {
+
+            if (!in_array($ext, $allowed_extension) || !in_array($file_type, $allowed_mime_type)) {
                 $this->form_validation->set_message('handle_first_upload', $this->lang->line('extension_not_allowed'));
                 return false;
             }
+            if ($file_size > $file_validate['upload_size']) {
+                $this->form_validation->set_message('handle_first_upload', $this->lang->line('file_size_shoud_be_less_than') . number_format($file_validate['upload_size'] / 1048576, 2) . " MB");
+                return false;
+            }
+
+
             return true;
-        } else {
-            //$this->form_validation->set_message('handle_upload', $this->lang->line('the_file_field_is_required'));
-            //return false;
         }
+        return true;
     }
 
     public function handle_second_upload() {
+        $file_validate = $this->config->item('file_validate');
+
         if (isset($_FILES["second_doc"]) && !empty($_FILES['second_doc']['name'])) {
-            $allowedExts = array('jpg', 'jpeg', 'png', "pdf", "doc", "docx", "rar", "zip");
-            $temp = explode(".", $_FILES["second_doc"]["name"]);
-            $extension = end($temp);
-            
-            if ($_FILES["second_doc"]["error"] > 0) {
-                $error .= "Error opening the file<br />";
-            }
-            if (($_FILES["second_doc"]["type"] != "application/pdf") && ($_FILES["second_doc"]["type"] != "image/gif") && ($_FILES["second_doc"]["type"] != "image/jpeg") && ($_FILES["second_doc"]["type"] != "image/jpg") && ($_FILES["second_doc"]["type"] != "application/vnd.openxmlformats-officedocument.wordprocessingml.document") && ($_FILES["second_doc"]["type"] != "application/vnd.openxmlformats-officedocument.wordprocessingml.document") && ($_FILES["second_doc"]["type"] != "image/pjpeg") && ($_FILES["second_doc"]["type"] != "image/x-png") && ($_FILES["second_doc"]["type"] != "application/x-rar-compressed") && ($_FILES["second_doc"]["type"] != "application/octet-stream") && ($_FILES["second_doc"]["type"] != "application/zip") && ($_FILES["second_doc"]["type"] != "application/octet-stream") && ($_FILES["second_doc"]["type"] != "image/png")) {
+
+            $file_type = $_FILES["second_doc"]['type'];
+            $file_size = $_FILES["second_doc"]["size"];
+            $file_name = $_FILES["second_doc"]["name"];
+            $allowed_extension = $file_validate['allowed_extension'];
+            $ext = pathinfo($file_name, PATHINFO_EXTENSION);
+            $allowed_mime_type = $file_validate['allowed_mime_type'];
+            $finfo = finfo_open(FILEINFO_MIME_TYPE);
+            $mtype = finfo_file($finfo, $_FILES['second_doc']['tmp_name']);
+            finfo_close($finfo);
+
+
+            if (!in_array($mtype, $allowed_mime_type)) {
                 $this->form_validation->set_message('handle_second_upload', $this->lang->line('file_type_not_allowed'));
                 return false;
             }
-            if (!in_array($extension, $allowedExts)) {
+
+            if (!in_array($ext, $allowed_extension) || !in_array($file_type, $allowed_mime_type)) {
                 $this->form_validation->set_message('handle_second_upload', $this->lang->line('extension_not_allowed'));
                 return false;
             }
+            if ($file_size > $file_validate['upload_size']) {
+                $this->form_validation->set_message('handle_second_upload', $this->lang->line('file_size_shoud_be_less_than') . number_format($file_validate['upload_size'] / 1048576, 2) . " MB");
+                return false;
+            }
+
+
             return true;
-        } else {
-            //$this->form_validation->set_message('handle_upload', $this->lang->line('the_file_field_is_required'));
-            //return false;
         }
+        return true;
     }
 
     public function handle_third_upload() {
-        
-         if (isset($_FILES["third_doc"]) && !empty($_FILES['third_doc']['name'])) {
-            $allowedExts = array('jpg', 'jpeg', 'png', "pdf", "doc", "docx", "rar", "zip");
-            $temp = explode(".", $_FILES["third_doc"]["name"]);
-            $extension = end($temp);
-            
-            if ($_FILES["third_doc"]["error"] > 0) {
-                $error .= "Error opening the file<br />";
-            }
-            if (($_FILES["third_doc"]["type"] != "application/pdf") && ($_FILES["third_doc"]["type"] != "image/gif") && ($_FILES["third_doc"]["type"] != "image/jpeg") && ($_FILES["third_doc"]["type"] != "image/jpg") && ($_FILES["third_doc"]["type"] != "application/vnd.openxmlformats-officedocument.wordprocessingml.document") && ($_FILES["third_doc"]["type"] != "application/vnd.openxmlformats-officedocument.wordprocessingml.document") && ($_FILES["third_doc"]["type"] != "image/pjpeg") && ($_FILES["third_doc"]["type"] != "image/x-png") && ($_FILES["third_doc"]["type"] != "application/x-rar-compressed") && ($_FILES["third_doc"]["type"] != "application/octet-stream") && ($_FILES["third_doc"]["type"] != "application/zip") && ($_FILES["third_doc"]["type"] != "application/octet-stream") && ($_FILES["third_doc"]["type"] != "image/png")) {
+        $file_validate = $this->config->item('file_validate');
+
+        if (isset($_FILES["third_doc"]) && !empty($_FILES['third_doc']['name'])) {
+
+            $file_type = $_FILES["third_doc"]['type'];
+            $file_size = $_FILES["third_doc"]["size"];
+            $file_name = $_FILES["third_doc"]["name"];
+            $allowed_extension = $file_validate['allowed_extension'];
+            $ext = pathinfo($file_name, PATHINFO_EXTENSION);
+            $allowed_mime_type = $file_validate['allowed_mime_type'];
+            $finfo = finfo_open(FILEINFO_MIME_TYPE);
+            $mtype = finfo_file($finfo, $_FILES['third_doc']['tmp_name']);
+            finfo_close($finfo);
+
+
+            if (!in_array($mtype, $allowed_mime_type)) {
                 $this->form_validation->set_message('handle_third_upload', $this->lang->line('file_type_not_allowed'));
                 return false;
             }
-            if (!in_array($extension, $allowedExts)) {
+
+            if (!in_array($ext, $allowed_extension) || !in_array($file_type, $allowed_mime_type)) {
                 $this->form_validation->set_message('handle_third_upload', $this->lang->line('extension_not_allowed'));
                 return false;
             }
+            if ($file_size > $file_validate['upload_size']) {
+                $this->form_validation->set_message('handle_third_upload', $this->lang->line('file_size_shoud_be_less_than') . number_format($file_validate['upload_size'] / 1048576, 2) . " MB");
+                return false;
+            }
+
+
             return true;
         }
-
-
+        return true;
     }
 
     public function handle_fourth_upload() {
-         if (isset($_FILES["fourth_doc"]) && !empty($_FILES['fourth_doc']['name'])) {
-            $allowedExts = array('jpg', 'jpeg', 'png', "pdf", "doc", "docx", "rar", "zip");
-            $temp = explode(".", $_FILES["fourth_doc"]["name"]);
-            $extension = end($temp);
-            
-            if ($_FILES["fourth_doc"]["error"] > 0) {
-                $error .= "Error opening the file<br />";
-            }
-            if (($_FILES["fourth_doc"]["type"] != "application/pdf") && ($_FILES["fourth_doc"]["type"] != "image/gif") && ($_FILES["fourth_doc"]["type"] != "image/jpeg") && ($_FILES["fourth_doc"]["type"] != "image/jpg") && ($_FILES["fourth_doc"]["type"] != "application/vnd.openxmlformats-officedocument.wordprocessingml.document") && ($_FILES["fourth_doc"]["type"] != "application/vnd.openxmlformats-officedocument.wordprocessingml.document") && ($_FILES["fourth_doc"]["type"] != "image/pjpeg") && ($_FILES["fourth_doc"]["type"] != "image/x-png") && ($_FILES["fourth_doc"]["type"] != "application/x-rar-compressed") && ($_FILES["fourth_doc"]["type"] != "application/octet-stream") && ($_FILES["fourth_doc"]["type"] != "application/zip") && ($_FILES["fourth_doc"]["type"] != "application/octet-stream") && ($_FILES["fourth_doc"]["type"] != "image/png")) {
+        $file_validate = $this->config->item('file_validate');
+
+        if (isset($_FILES["fourth_doc"]) && !empty($_FILES['fourth_doc']['name'])) {
+
+            $file_type = $_FILES["fourth_doc"]['type'];
+            $file_size = $_FILES["fourth_doc"]["size"];
+            $file_name = $_FILES["fourth_doc"]["name"];
+            $allowed_extension = $file_validate['allowed_extension'];
+            $ext = pathinfo($file_name, PATHINFO_EXTENSION);
+            $allowed_mime_type = $file_validate['allowed_mime_type'];
+            $finfo = finfo_open(FILEINFO_MIME_TYPE);
+            $mtype = finfo_file($finfo, $_FILES['fourth_doc']['tmp_name']);
+            finfo_close($finfo);
+
+
+            if (!in_array($mtype, $allowed_mime_type)) {
                 $this->form_validation->set_message('handle_fourth_upload', $this->lang->line('file_type_not_allowed'));
                 return false;
             }
-            if (!in_array($extension, $allowedExts)) {
+
+            if (!in_array($ext, $allowed_extension) || !in_array($file_type, $allowed_mime_type)) {
                 $this->form_validation->set_message('handle_fourth_upload', $this->lang->line('extension_not_allowed'));
                 return false;
             }
+            if ($file_size > $file_validate['upload_size']) {
+                $this->form_validation->set_message('handle_fourth_upload', $this->lang->line('file_size_shoud_be_less_than') . number_format($file_validate['upload_size'] / 1048576, 2) . " MB");
+                return false;
+            }
+
+
             return true;
         }
+        return true;
     }
 
     public function username_check($str) {
@@ -1075,8 +1059,8 @@ class Staff extends Admin_Controller {
             $this->load->view('layout/header', $data);
             $this->load->view('admin/staff/staffedit', $data);
             $this->load->view('layout/footer', $data);
-        } else { 
- 
+        } else {
+
             $employee_id = $this->input->post("employee_id");
             $department = $this->input->post("department");
             $designation = $this->input->post("designation");
@@ -1191,6 +1175,7 @@ class Staff extends Admin_Controller {
 
             $alloted_leave = $this->input->post("alloted_leave");
             $altid = $this->input->post("altid");
+
             if (!empty($leave_type)) {
                 $i = 0;
                 foreach ($leave_type as $key => $value) {
@@ -1307,20 +1292,6 @@ class Staff extends Admin_Controller {
             $a = 1;
         }
 
-        // print_r($userdata);
-        //    // if ($userdata["email"] == $staff["email"]) {
-        //    //   echo   $a = 1;
-        //    //  }
-        // exit();
-        // if ($staff["role_id"] == 7) {
-        //     $a = 0;
-        //     if ($userdata["email"] == $staff["email"]) {
-        //         $a = 1;
-        //     }
-        // } else {
-        //     $a = 1;
-        // }
-
         if ($a == 1) {
             access_denied();
         }
@@ -1334,6 +1305,8 @@ class Staff extends Admin_Controller {
 
             access_denied();
         }
+
+
         $a = 0;
         $sessionData = $this->session->userdata('admin');
         $userdata = $this->customlib->getUserData();
@@ -1350,8 +1323,10 @@ class Staff extends Admin_Controller {
         if ($a != 1) {
             access_denied();
         }
-        $this->staff_model->disablestaff($id);
-        redirect('admin/staff/profile/' . $id);
+        $data = array('id' => $id, 'disable_at' => date('Y-m-d', $this->customlib->datetostrtotime($_POST['date'])), 'is_active' => 0);
+        $this->staff_model->disablestaff($data);
+        $array = array('status' => 'success', 'error' => '', 'message' => $this->lang->line('success_message'));
+        echo json_encode($array);
     }
 
     public function enablestaff($id) {
@@ -1444,21 +1419,19 @@ class Staff extends Admin_Controller {
     }
 
     public function leaverequest() {
+
         if (!$this->rbac->hasPrivilege('apply_leave', 'can_view')) {
             access_denied();
         }
 
         $this->session->set_userdata('top_menu', 'HR');
         $this->session->set_userdata('sub_menu', 'admin/staff/leaverequest');
-
         $userdata = $this->customlib->getUserData();
         $leave_request = $this->leaverequest_model->user_leave_request($userdata["id"]);
         $data["leave_request"] = $leave_request;
         $LeaveTypes = $this->leaverequest_model->allotedLeaveType($userdata["id"]);
-
         $data["staff_id"] = $userdata["id"];
         $data["leavetype"] = $LeaveTypes;
-
         $staffRole = $this->staff_model->getStaffRole();
         $data["staffrole"] = $staffRole;
         $data["status"] = $this->status;

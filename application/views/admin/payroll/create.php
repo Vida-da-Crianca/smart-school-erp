@@ -50,43 +50,39 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                                 <tbody>
                                                     <tr>
                                                         <th class="bozero"><?php echo $this->lang->line("name"); ?></th>
-                                                        <td class="bozero"><?php echo $result["name"] . " " . $result["surname"] ?></td>
-												
+                                                        <td class="bozero"><?php echo $result["name"] . " " . $result["surname"] ?></td>												
                                                         <th class="bozero"><?php echo $this->lang->line('staff_id'); ?></th>
-                                                        <td class="bozero"><?php echo $result["employee_id"] ?></td>
-													
+                                                        <td class="bozero"><?php echo $result["employee_id"] ?></td>												
                                                     </tr>
-
                                                     <tr>
-														<?php if ($sch_setting->staff_phone) {  ?>
-                                                        <th><?php echo $this->lang->line('phone'); ?></th>
-														<?php } ?>
+                                                        <?php if ($sch_setting->staff_phone) { ?>
+                                                            <th><?php echo $this->lang->line('phone'); ?></th>
+                                                        <?php } ?>
                                                         <td><?php echo $result["contact_no"] ?></td>
                                                         <th><?php echo $this->lang->line('email'); ?></th>
                                                         <td><?php echo $result["email"] ?>                                   </td>
                                                     </tr>
                                                     <tr>
-														<?php if ($sch_setting->staff_epf_no) {  ?>
-                                                        <th><?php echo $this->lang->line('epf_no'); ?></th>
-                                                        <td><?php echo $result["epf_no"] ?></td>
-														<?php } ?>
+                                                        <?php if ($sch_setting->staff_epf_no) { ?>
+                                                            <th><?php echo $this->lang->line('epf_no'); ?></th>
+                                                            <td><?php echo $result["epf_no"] ?></td>
+                                                        <?php } ?>
                                                         <th><?php echo $this->lang->line('role'); ?></th>
                                                         <td><?php echo $result["user_type"] ?></td>                                  
                                                     </tr>
                                                     <tr>
-														<?php if ($sch_setting->staff_department) {  ?>
-                                                        <th><?php echo $this->lang->line('department'); ?></th>
-                                                        <td><?php echo $result["department"] ?></td>
-														<?php } if ($sch_setting->staff_designation) {  ?>
-                                                        <th><?php echo $this->lang->line('designation'); ?></th>
-                                                        <td><?php echo $result["designation"] ?>   </td>
-														<?php } ?>
+                                                        <?php if ($sch_setting->staff_department) { ?>
+                                                            <th><?php echo $this->lang->line('department'); ?></th>
+                                                            <td><?php echo $result["department"] ?></td>
+                                                        <?php } if ($sch_setting->staff_designation) { ?>
+                                                            <th><?php echo $this->lang->line('designation'); ?></th>
+                                                            <td><?php echo $result["designation"] ?>   </td>
+                                                        <?php } ?>
                                                     </tr>
                                                 </tbody>
                                             </table>
                                         </div>
                                     </div>
-
 
                                 </div></div><!--./col-md-8-->
                             <div class="col-md-4 col-sm-12">
@@ -256,8 +252,12 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
         var basic_pay = $("#basic").val();
         var allowance_type = document.getElementsByName('allowance_type[]');
         var allowance_amount = document.getElementsByName('allowance_amount[]');
-		//var leave_deduction = $("#leave_deduction").val();
+        //var leave_deduction = $("#leave_deduction").val();
         var tax = $("#tax").val();
+        if (tax == '') {
+            var tax = 0;
+        }
+
         var total_allowance = 0;
 
         var deduction_type = document.getElementsByName('deduction_type[]');
@@ -276,7 +276,7 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                 var inpvalue = inp.value;
             }
 
-            total_allowance += parseInt(inpvalue);
+            total_allowance += parseFloat(inpvalue);
 
         }
 
@@ -293,22 +293,22 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
 
                 var inpdvalue = inpd.value;
             }
-            total_deduction += parseInt(inpdvalue);
+            total_deduction += parseFloat(inpdvalue);
         }
 
 
 //total_deduction += parseInt(leave_deduction) ;
 
-        var gross_salary = parseInt(basic_pay) + parseInt(total_allowance) - parseInt(total_deduction);
+        var gross_salary = parseFloat(basic_pay) + parseFloat(total_allowance) - parseFloat(total_deduction);
 
-        var net_salary = parseInt(basic_pay) + parseInt(total_allowance) - parseInt(total_deduction) - parseInt(tax);
+        var net_salary = parseFloat(basic_pay) + parseFloat(total_allowance) - parseFloat(total_deduction) - parseFloat(tax);
 
-        $("#total_allowance").val(total_allowance);
-        $("#total_deduction").val(total_deduction);
-        $("#total_allow").html(total_allowance);
-        $("#total_deduc").html(total_deduction);
-        $("#gross_salary").val(gross_salary);
-        $("#net_salary").val(net_salary);
+        $("#total_allowance").val(total_allowance.toFixed(2));
+        $("#total_deduction").val(total_deduction.toFixed(2));
+        $("#total_allow").html(total_allowance.toFixed(2));
+        $("#total_deduc").html(total_deduction.toFixed(2));
+        $("#gross_salary").val(gross_salary.toFixed(2));
+        $("#net_salary").val(net_salary.toFixed(2));
 
     }
     function add_more() {
@@ -346,15 +346,15 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
         $("#deduction_row" + id).html("");
 //table.deleteRow(id);
     }
-  
-  
-  
+
+
+
     $("#contact_submit").click(function (event) {
 
         var net = $("#net_salary").val();
         if (net == "") {
 
-            $("#err").html("<?php echo $this->lang->line('net_salary').' '.$this->lang->line('should_not_be_empty');?>");
+            $("#err").html("<?php echo $this->lang->line('net_salary') . ' ' . $this->lang->line('should_not_be_empty'); ?>");
             $("#net_salary").focus();
             return false;
             event.preventDefault();

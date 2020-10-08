@@ -16,7 +16,7 @@ class Users extends Admin_Controller {
         $this->session->set_userdata('top_menu', 'System Settings');
         $this->session->set_userdata('sub_menu', 'users/index');
         $studentList = $this->student_model->getStudents();
-        $staffList = $this->staff_model->getAll();
+        $staffList = $this->staff_model->getAll_users();
         $parentList = $this->student_model->getParentList();
 
         $data['studentList'] = $studentList;

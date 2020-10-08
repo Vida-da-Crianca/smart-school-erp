@@ -56,122 +56,122 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                     </div>
                                 </div>
                             </div>
-                       
-                        <div class="">
-                            <button type="submit" name="action" value ="search" class="btn btn-primary pull-right"><?php echo $this->lang->line('search'); ?></button>
-                        </div>
-                       </div>  
-                    
-                    <?php
-                    if (isset($student_due_fee)) {
-                        ?>
-                      <div class="box-header ptbnull"></div>   
-                        <div class="">
-                            <div class="box-header with-border">
-                                <h3 class="box-title titlefix"><?php echo $this->lang->line('previous_session_balance_fees'); ?></h3>
-                                <div class="pull-right">
-                                    <span class="text text-danger pt6 bolds"><?php echo $this->lang->line('due_date'); ?>:</span> <?php echo set_value('due_date', $due_date_formated); ?>
-                                    <input id="due_date" name="due_date" placeholder="" type="hidden" class="form-control date"  value="<?php echo set_value('due_date', $due_date_formated); ?>" readonly /> 
-                                </div>  
+
+                            <div class="">
+                                <button type="submit" name="action" value ="search" class="btn btn-primary pull-right"><?php echo $this->lang->line('search'); ?></button>
                             </div>
-                            <div class="box-body">
-                                <?php
-                                if (!empty($student_due_fee)) {
-                                    ?>
+                        </div>  
 
-                                    <div class="row">
-                                        <div class="col-md-12">
-                                            <?php
-                                            if ($is_update) {
-                                                ?>
-                                                <div class="alert alert-info"><?php echo $this->lang->line('previous_balance_already_forwarded'); ?></div>
+                        <?php
+                        if (isset($student_due_fee)) {
+                            ?>
+                            <div class="box-header ptbnull"></div>   
+                            <div class="">
+                                <div class="box-header with-border">
+                                    <h3 class="box-title titlefix"><?php echo $this->lang->line('previous_session_balance_fees'); ?></h3>
+                                    <div class="pull-right">
+                                        <span class="text text-danger pt6 bolds"><?php echo $this->lang->line('due_date'); ?>:</span> <?php echo set_value('due_date', $due_date_formated); ?>
+                                        <input id="due_date" name="due_date" placeholder="" type="hidden" class="form-control date"  value="<?php echo set_value('due_date', $due_date_formated); ?>" readonly /> 
+                                    </div>  
+                                </div>
+                                <div class="box-body">
+                                    <?php
+                                    if (!empty($student_due_fee)) {
+                                        ?>
+
+                                        <div class="row">
+                                            <div class="col-md-12">
                                                 <?php
-                                            }
-                                            ?>
-                                        </div>
-                                        <div class="row col-xs-12">
+                                                if ($is_update) {
+                                                    ?>
+                                                    <div class="alert alert-info"><?php echo $this->lang->line('previous_balance_already_forwarded'); ?></div>
+                                                    <?php
+                                                }
+                                                ?>
+                                            </div>
+                                            <div class="row col-xs-12">
 
-                                            <div class="col-md-4">
-                                                <!-- <div class="pull-right">
-                                                    <h4 class="box-title"><span class="text text-danger"><?php //echo $this->lang->line('due_date');   ?>:</span> <?php //echo set_value('due_date', $due_date_formated);   ?></h4>
-                                                    <input id="due_date" name="due_date" placeholder="" type="hidden" class="form-control date"  value="<?php //echo set_value('due_date', $due_date_formated);   ?>" readonly /> 
-                                                </div> -->
+                                                <div class="col-md-4">
+                                                    <!-- <div class="pull-right">
+                                                        <h4 class="box-title"><span class="text text-danger"><?php //echo $this->lang->line('due_date');     ?>:</span> <?php //echo set_value('due_date', $due_date_formated);     ?></h4>
+                                                        <input id="due_date" name="due_date" placeholder="" type="hidden" class="form-control date"  value="<?php //echo set_value('due_date', $due_date_formated);     ?>" readonly /> 
+                                                    </div> -->
+
+                                                </div>
 
                                             </div>
 
-                                        </div>
-
-                                        <div class="col-xs-12 table-responsive">
-
-                                            <table class="table table-striped example">
-                                                <thead>
-                                                    <tr>
-                                                        <th class="text text-left"><?php echo $this->lang->line('student_name'); ?></th> 
-														
-                                                        <th class="text text-left"><?php echo $this->lang->line('admission_no'); ?></th>
-														<?php  if ($sch_setting->admission_date) {  ?>
-                                                        <th class="text text-left"><?php echo $this->lang->line('admission_date'); ?></th>
-														<?php }  if ($sch_setting->roll_no) {  ?>
-                                                        <th class="text text-left"><?php echo $this->lang->line('roll_no'); ?></th>
-														<?php } if ($sch_setting->father_name) {  ?>
-                                                        <th class="text text-left"><?php echo $this->lang->line('father_name'); ?></th><?php } ?>
-
-                                                        <th class="text-right"><?php echo $this->lang->line('balance'); ?> <span><?php echo "(" . $currency_symbol . ")"; ?></span></th>
-                                                    </tr>
-
-                                                </thead>
-                                                <tbody>
-                                                    <?php
-                                                    $i = 1;
-                                                    foreach ($student_due_fee as $due_fee_key => $due_fee_value) {
-                                                        ?>
+                                            <div class="col-xs-12 table-responsive">
+                                                <div class="download_label"><?php echo $this->lang->line('previous_session_balance_fees'); ?></div>
+                                                <table class="table table-striped example">
+                                                    <thead>
                                                         <tr>
-                                                            <td>
-                                                                <input type="hidden" name="student_counter[]" value="<?php echo $i; ?>">
-                                                                <input type="hidden" name="student_sesion[<?php echo $i; ?>]" value="<?php echo $due_fee_value->student_session_id; ?>">
-                                                                <?php echo $due_fee_value->name ?></td>  
-															
-                                                            <td><?php echo $due_fee_value->admission_no; ?></td>
-															<?php if ($sch_setting->admission_date) {  ?>
-                                                            <td><?php echo $due_fee_value->admission_date; ?></td>
-															<?php } if ($sch_setting->roll_no) {  ?>
-                                                            <td><?php echo $due_fee_value->roll_no; ?></td>
-															<?php } if ($sch_setting->father_name) {  ?>
-                                                            <td><?php echo $due_fee_value->father_name; ?></td>
-															<?php } ?>
-                                                            <td class="text text-right">
+                                                            <th class="text text-left"><?php echo $this->lang->line('student_name'); ?></th> 
 
-                                                                <input type="text" name="amount[<?php echo $i; ?>]" class="form-control tddm200" value="<?php echo $due_fee_value->balance; ?>">
-                                                            </td>
+                                                            <th class="text text-left"><?php echo $this->lang->line('admission_no'); ?></th>
+                                                            <?php if ($sch_setting->admission_date) { ?>
+                                                                <th class="text text-left"><?php echo $this->lang->line('admission_date'); ?></th>
+                                                            <?php } if ($sch_setting->roll_no) { ?>
+                                                                <th class="text text-left"><?php echo $this->lang->line('roll_no'); ?></th>
+                                                            <?php } if ($sch_setting->father_name) { ?>
+                                                                <th class="text text-left"><?php echo $this->lang->line('father_name'); ?></th><?php } ?>
+
+                                                            <th class="text-right"><?php echo $this->lang->line('balance'); ?> <span><?php echo "(" . $currency_symbol . ")"; ?></span></th>
                                                         </tr>
+
+                                                    </thead>
+                                                    <tbody>
                                                         <?php
-                                                        $i++;
-                                                    }
-                                                    ?>
-                                                </tbody>
+                                                        $i = 1;
+                                                        foreach ($student_due_fee as $due_fee_key => $due_fee_value) {
+                                                            ?>
+                                                            <tr>
+                                                                <td>
+                                                                    <input type="hidden" name="student_counter[]" value="<?php echo $i; ?>">
+                                                                    <input type="hidden" name="student_sesion[<?php echo $i; ?>]" value="<?php echo $due_fee_value->student_session_id; ?>">
+                                                                    <?php echo $due_fee_value->name ?></td>  
 
-                                            </table>
+                                                                <td><?php echo $due_fee_value->admission_no; ?></td>
+                                                                <?php if ($sch_setting->admission_date) { ?>
+                                                                    <td><?php echo $due_fee_value->admission_date; ?></td>
+                                                                <?php } if ($sch_setting->roll_no) { ?>
+                                                                    <td><?php echo $due_fee_value->roll_no; ?></td>
+                                                                <?php } if ($sch_setting->father_name) { ?>
+                                                                    <td><?php echo $due_fee_value->father_name; ?></td>
+                                                                <?php } ?>
+                                                                <td class="text text-right">
 
+                                                                    <input type="text" name="amount[<?php echo $i; ?>]" class="form-control tddm200" value="<?php echo $due_fee_value->balance; ?>">
+                                                                </td>
+                                                            </tr>
+                                                            <?php
+                                                            $i++;
+                                                        }
+                                                        ?>
+                                                    </tbody>
+
+                                                </table>
+
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="box-footer">
-                                            <button type="submit" name="action" value="fee_submit" class="btn btn-primary pull-right"><?php echo $this->lang->line('save'); ?></button>
+                                        <div class="row">
+                                            <div class="box-footer">
+                                                <button type="submit" name="action" value="fee_submit" class="btn btn-primary pull-right"><?php echo $this->lang->line('save'); ?></button>
+                                            </div>
                                         </div>
-                                    </div>
 
-                                    <?php
-                                } else {
+                                        <?php
+                                    } else {
+                                        ?>
+                                        <div class="alert alert-info"><?php echo $this->lang->line('no_record_found'); ?>
+                                        </div>
+                                        <?php
+                                    }
                                     ?>
-                                    <div class="alert alert-info"><?php echo $this->lang->line('no_record_found'); ?>
-                                    </div>
-                                    <?php
-                                }
-                                ?>
-                            </div>
+                                </div>
 
-                        </div>
-                       </div> 
+                            </div>
+                        </div> 
                         <?php
                     }
                     ?>

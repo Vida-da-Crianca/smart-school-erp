@@ -25,9 +25,7 @@
                             <tbody>
                                 <?php if (empty($examSchedule)) {
     ?>
-                                    <tr>
-                                        <td colspan="12" class="text-danger text-center"><?php echo $this->lang->line('no_record_found'); ?></td>
-                                    </tr>
+                                   
 
                                     <?php
 } else {

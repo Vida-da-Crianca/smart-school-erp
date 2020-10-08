@@ -8,8 +8,8 @@ if (!empty($updated_chat)) {
         ?>
 
         <li class="<?php echo $chat_type; ?>">
-           <p><?php echo $chat_value->message; ?></p>
-            <span class="<?php echo $date_time; ?>"> <?php echo date('d M Y, h:i A', strtotime($chat_value->created_at)); ?></span>
+            <p><?php echo $chat_value->message; ?></p>
+            <span class="<?php echo $date_time; ?>"> <?php echo $this->customlib->dateyyyymmddToDateTimeformat($chat_value->created_at); ?></span>
         </li>
         <?php
     }

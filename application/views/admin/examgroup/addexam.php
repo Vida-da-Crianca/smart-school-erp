@@ -467,9 +467,9 @@ if (set_value('class_id') == $class['id']) {
 
     var batch_subjects = "";
     var x = 1;
-    var date_format = '<?php echo $result = strtr($this->customlib->getSchoolDateFormat(), ['d' => 'dd', 'm' => 'mm', 'Y' => 'yyyy']) ?>';
+    var date_format = '<?php echo $result = strtr($this->customlib->getSchoolDateFormat(), ['d' => 'dd', 'm' => 'mm', 'Y' => 'yyyy','M'=>'MM']) ?>';
 
-    var date_format_time = '<?php echo $result = strtr($this->customlib->getSchoolDateFormat(), ['d' => 'DD', 'm' => 'MM', 'Y' => 'YYYY']) ?>';
+    var date_format_time = '<?php echo $result = strtr($this->customlib->getSchoolDateFormat(), ['d' => 'DD', 'm' => 'MM', 'Y' => 'YYYY','M'=>'MMM']) ?>';
     $(document).ready(function () {
         $('#examconnectModal,#subjectmarkModal,#allotStudentModal').modal({
             backdrop: 'static',
@@ -865,16 +865,16 @@ if (set_value('class_id') == $class['id']) {
         var html = '';
         html += '<tr>';
 
-        html += '<td class="col-sm-3"><select name="subject_' + x + '" class="form-control item_unit">' + batch_subjects + '</select></td>';
-        html += '<td class="col-sm-2"><div class="input-group datepicker_init"><input type="text" name="date_from_' + x + '" class="form-control"/><span class="input-group-addon" id="basic-addon2"><i class="fa fa-calendar"></i></span></div></td>';
-        html += '<td class="col-sm-2"><div class="input-group datepicker_init_time"><input type="text" name="time_from' + x + '" class="form-control"/><span class="input-group-addon" id="basic-addon2"><i class="fa fa-calendar"></i></span></div></td>';
+        html += '<td width="150"><select name="subject_' + x + '" class="form-control item_unit tddm200">' + batch_subjects + '</select></td>';
+        html += '<td><div class="input-group datepicker_init"><input type="text" name="date_from_' + x + '" class="form-control"/><span class="input-group-addon" id="basic-addon2"><i class="fa fa-calendar"></i></span></div></td>';
+        html += '<td><div class="input-group datepicker_init_time"><input type="text" name="time_from' + x + '" class="form-control"/><span class="input-group-addon" id="basic-addon2"><i class="fa fa-calendar"></i></span></div></td>';
 
-        html += '<td class="col-sm-1"><input type="text" name="duration' + x + '" class="form-control duration" value="0"/></td>';
-        html += '<td class="col-sm-1"><input type="number" name="credit_hours' + x + '" class="form-control credit_hours" value="0"/></td>';
+        html += '<td><input type="text" name="duration' + x + '" class="form-control duration" value="0"/></td>';
+        html += '<td><input type="number" name="credit_hours' + x + '" class="form-control credit_hours" value="0"/></td>';
         html += '<td class=""><input type="text" name="room_no_' + x + '" class="form-control room_no" /></td>';
         html += '<td class=""><input type="number" name="max_marks_' + x + '" class="form-control max_marks" /></td>';
         html += '<td class=""><input type="hidden" name="rows[]" value="' + x + '"> <input name="prev_row[' + x + ']" type="hidden" value="0"><input type="number" name="min_marks_' + x + '" class="form-control min_marks" /></td>';
-        html += '<td class="text-center"><span class="text text-danger remove glyphicon glyphicon-remove"></span></td></tr>';
+        html += '<td class="text-center" style="vertical-align: middle; cursor: pointer;"><span class="text text-danger remove fa fa-times mt5"></span></td></tr>';
         var tmp_row = $('#item_table').append(html);
 
         $('.datepicker_init', tmp_row).datetimepicker({

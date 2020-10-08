@@ -37,91 +37,91 @@
                             </div><!-- /.pull-right -->
                         </div>
                         <div class="mailbox-messages">
-                           <div class="table-responsive"> 
-                            <div class="download_label"><?php echo $this->lang->line('page'); ?></div>
-                            <table class="table table-striped table-bordered table-hover example" >
-                                <thead>
-                                    <tr>
-                                        <th><?php echo $this->lang->line('title'); ?></th>
-                                        <th><?php echo $this->lang->line('url'); ?></th>
-                                        <th><?php echo $this->lang->line('page_type'); ?></th>
-                                        <th class="text-right no-print">
-                                            <?php echo $this->lang->line('action'); ?>
-                                        </th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <?php if (empty($listPages)) {
-                                        ?>
-
-                                        <?php
-                                    } else {
-                                        $count = 1;
-                                        foreach ($listPages as $page) {
+                            <div class="table-responsive"> 
+                                <div class="download_label"><?php echo $this->lang->line('page_list'); ?></div>
+                                <table class="table table-striped table-bordered table-hover example" >
+                                    <thead>
+                                        <tr>
+                                            <th><?php echo $this->lang->line('title'); ?></th>
+                                            <th><?php echo $this->lang->line('url'); ?></th>
+                                            <th><?php echo $this->lang->line('page_type'); ?></th>
+                                            <th class="text-right no-print">
+                                                <?php echo $this->lang->line('action'); ?>
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <?php if (empty($listPages)) {
                                             ?>
-                                            <tr id="<?php echo $page["id"]; ?>">
 
-                                                <td class="mailbox-name">
-                                                    <a href="#" ><?php echo $page['title'] ?></a>
+                                            <?php
+                                        } else {
+                                            $count = 1;
+                                            foreach ($listPages as $page) {
+                                                ?>
+                                                <tr id="<?php echo $page["id"]; ?>">
+
+                                                    <td class="mailbox-name">
+                                                        <a href="#" ><?php echo $page['title'] ?></a>
 
 
-                                                </td>
+                                                    </td>
 
-                                                <td class="mailbox-name"> <a href="<?php echo base_url() . $page['url'] ?>" target="_blank"><?php echo base_url() . $page['url'] ?></a></td>
-                                                <td class="mailbox-name">
-                                                    <?php
-                                                    if ($page['content_type'] == "gallery") {
-                                                        ?>
-                                                        <span class="label bg-green"><?php echo $this->lang->line($page['content_type']); ?></span>
+                                                    <td class="mailbox-name"> <a href="<?php echo base_url() . $page['url'] ?>" target="_blank"><?php echo base_url() . $page['url'] ?></a></td>
+                                                    <td class="mailbox-name">
                                                         <?php
-                                                    } elseif ($page['content_type'] == "events") {
-                                                        ?>
-                                                        <span class="label label-info"><?php echo $this->lang->line('event'); ?></span>
-                                                        <?php
-                                                    } elseif ($page['content_type'] == "notice") {
-                                                        ?>
-                                                        <span class="label label-warning"><?php echo $this->lang->line($page['content_type']); ?></span>
-                                                        <?php
-                                                    } else {
-                                                        ?>
-
-                                                        <span class="label label-default"><?php echo $this->lang->line('standard'); ?></span>
-                                                    <?php } ?>
-
-
-
-                                                </td>
-                                                <td class="mailbox-date pull-right no-print">
-                                                    <?php
-                                                    if ($this->rbac->hasPrivilege('pages', 'can_edit')) {
-                                                        ?>
-                                                        <a data-placement="left" href="<?php echo site_url('admin/front/page/edit/' . $page['slug']); ?>" class="btn btn-default btn-xs"  data-toggle="tooltip" title="<?php echo $this->lang->line('edit'); ?>">
-                                                            <i class="fa fa-pencil"></i>
-                                                        </a>
-                                                        <?php
-                                                    }
-                                                    if ($this->rbac->hasPrivilege('pages', 'can_delete')) {
-
-                                                        if ($page['page_type'] != "default") {
+                                                        if ($page['content_type'] == "gallery") {
                                                             ?>
-                                                            <a data-placement="left" href="<?php echo site_url('admin/front/page/delete/' . $page['slug']); ?>" class="btn btn-default btn-xs"  data-toggle="tooltip" title="<?php echo $this->lang->line('delete'); ?>" onclick="return confirm('<?php echo $this->lang->line('delete_confirm') ?>');">
-                                                                <i class="fa fa-remove"></i>
+                                                            <span class="label bg-green"><?php echo $this->lang->line($page['content_type']); ?></span>
+                                                            <?php
+                                                        } elseif ($page['content_type'] == "events") {
+                                                            ?>
+                                                            <span class="label label-info"><?php echo $this->lang->line('event'); ?></span>
+                                                            <?php
+                                                        } elseif ($page['content_type'] == "notice") {
+                                                            ?>
+                                                            <span class="label label-warning"><?php echo $this->lang->line($page['content_type']); ?></span>
+                                                            <?php
+                                                        } else {
+                                                            ?>
+
+                                                            <span class="label label-default"><?php echo $this->lang->line('standard'); ?></span>
+                                                        <?php } ?>
+
+
+
+                                                    </td>
+                                                    <td class="mailbox-date pull-right no-print">
+                                                        <?php
+                                                        if ($this->rbac->hasPrivilege('pages', 'can_edit')) {
+                                                            ?>
+                                                            <a data-placement="left" href="<?php echo site_url('admin/front/page/edit/' . $page['slug']); ?>" class="btn btn-default btn-xs"  data-toggle="tooltip" title="<?php echo $this->lang->line('edit'); ?>">
+                                                                <i class="fa fa-pencil"></i>
                                                             </a>
                                                             <?php
                                                         }
-                                                    }
-                                                    ?>
+                                                        if ($this->rbac->hasPrivilege('pages', 'can_delete')) {
 
-                                                </td>
-                                            </tr>
-                                            <?php
+                                                            if ($page['page_type'] != "default") {
+                                                                ?>
+                                                                <a data-placement="left" href="<?php echo site_url('admin/front/page/delete/' . $page['slug']); ?>" class="btn btn-default btn-xs"  data-toggle="tooltip" title="<?php echo $this->lang->line('delete'); ?>" onclick="return confirm('<?php echo $this->lang->line('delete_confirm') ?>');">
+                                                                    <i class="fa fa-remove"></i>
+                                                                </a>
+                                                                <?php
+                                                            }
+                                                        }
+                                                        ?>
+
+                                                    </td>
+                                                </tr>
+                                                <?php
+                                            }
+                                            $count++;
                                         }
-                                        $count++;
-                                    }
-                                    ?>
-                                </tbody>
-                            </table><!-- /.table -->
-                          </div>  
+                                        ?>
+                                    </tbody>
+                                </table><!-- /.table -->
+                            </div>  
                         </div><!-- /.mail-box-messages -->
                     </div><!-- /.box-body -->
                 </div>

@@ -1,6 +1,11 @@
 <?php
 
 
+require_once(__DIR__.'/vendor/autoload.php');
+
+
+$dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
+$dotenv->load();
 /**
  * CodeIgniter
  *
@@ -64,7 +69,7 @@
 	ini_set('file_uploads', 'On');
  
 
-	define('ENVIRONMENT', 'development');
+	define('ENVIRONMENT', getenv('ENVIRONMENT'));
 	
 	
 	if( ! ini_get('date.timezone') )

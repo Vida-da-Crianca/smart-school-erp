@@ -216,7 +216,7 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
 
                             <td style="height: 100px;width: 850px;">
                                 <div ><img src="<?php echo base_url() ?>/uploads/print_headerfooter/staff_payslip/<?php $this->setting_model->get_payslipheader(); ?>" style="height: 100px;width: 100%;" /></div>
-                                
+
                             </td>
                         </tr>
                         <tr>
@@ -240,14 +240,14 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                             <td width="25%"><?php echo $result["name"] . " " . $result["surname"] ?></td>
                         </tr>
                         <tr>
-                            <?php if($sch_setting->staff_department){ ?>
+                            <?php if ($sch_setting->staff_department) { ?>
                                 <th><?php echo $this->lang->line('department'); ?></th>
-                            <td><?php echo $result["department"] ?></td>
-                            <?php } if($sch_setting->staff_designation){ ?>
-                            
-                            <th><?php echo $this->lang->line('designation'); ?></th>
-                            <td><?php echo $result["designation"] ?></td>
-                        <?php } ?>
+                                <td><?php echo $result["department"] ?></td>
+                            <?php } if ($sch_setting->staff_designation) { ?>
+
+                                <th><?php echo $this->lang->line('designation'); ?></th>
+                                <td><?php echo $result["designation"] ?></td>
+                            <?php } ?>
                         </tr>
                     </table>
                     <br/>
@@ -260,6 +260,7 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                         </tr>
                         <?php
                         $j = 0;
+
                         foreach ($allowance as $key => $value) {
                             ?>
                             <tr>
@@ -274,7 +275,8 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                     <td class="text-right"><?php echo $negative_allowance[$j]["amount"]; ?></td>
                                 <?php } ?>
                             </tr>
-                            <?php $j++;
+                            <?php
+                            $j++;
                         }
                         ?>
 
@@ -298,9 +300,9 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
 
                         <tr>
                             <th width="20%"><?php echo $this->lang->line('gross_salary'); ?>(<?php echo $currency_symbol; ?>)</th> 
-                            <td><?php echo $result["basic"] + $result["total_allowance"] ?></td>
+                            <td><?php echo $result["basic"] + $result["total_allowance"] - $result["total_deduction"]; ?></td>
                         </tr>
-<?php if (!empty($result["tax"])) { ?>
+                        <?php if (!empty($result["tax"])) { ?>
 
                             <tr>
                                 <th width="20%"><?php echo $this->lang->line('tax'); ?>(<?php echo $currency_symbol; ?>)</th> 
@@ -314,17 +316,17 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                             <th width="20%"><?php echo $this->lang->line('net_salary'); ?>(<?php echo $currency_symbol; ?>)</th> 
                             <td><?php echo $result["net_salary"] ?></td>
                         </tr>
-                          <tr>
+                        <tr>
 
 
                             <td align="center">
                                 <div style="position: absolute;left:15px"><?php $this->setting_model->get_payslipfooter(); ?> <p ></p></div>
-                                
+
                             </td>
                         </tr>
-                        
+
                     </table>  
-                   
+
                 </div>
             </div>
             <!--/.col (left) -->

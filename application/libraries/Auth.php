@@ -49,7 +49,7 @@ class Auth
             if ($role == "student") {
                 redirect('user/user/dashboard');
             } else if ($role == "parent") {
-                redirect('parent/parents/dashboard');
+                redirect('user/user/dashboard');
             } else if ($role == "teacher") {
                 redirect('teacher/teacher/dashboard');
             } else if ($role == "accountant") {
@@ -75,14 +75,24 @@ class Auth
 
             return false;
         } else {
+            $active_status = $this->CI->db->select('is_active')->from('staff')->where('id', $admin['id'])->get()->row_array();
 
-            $this->app_routine();
+            if ($active_status['is_active'] == 1) {
+                $this->app_routine();
 
-            if ($default_redirect) {
+                if ($default_redirect) {
 
-                redirect('admin/admin/dashboard');
+                    redirect('admin/admin/dashboard');
+                }
+                return true;
+            } else {
+
+                $_SESSION['redirect_to'] = current_url();
+                $this->logout();
+                redirect('site/login');
+                return false;
             }
-            return true;
+
         }
     }
 
@@ -399,6 +409,7 @@ class Auth
         $output   = curl_exec($ch);
         $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
         curl_close($ch);
+       
         $json_response = json_decode($output);
         if ($httpcode != 200) {
             return $this->CI->output
@@ -427,6 +438,55 @@ class Auth
         }
     }
 
+    public function andapp_update()
+    {
+        $email                       = $this->CI->input->post('app-email');
+        $envato_market_purchase_code = $this->CI->input->post('app-envato_market_purchase_code');
+        $sslk                        = $this->CI->config->item('SSLK');       
+        $url                         = $this->CI->enc_lib->dycrypt(DEBUG_SYSTEM_APP);     
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_POST, true);
+        $data = array(
+            'email'         => $email,
+            'sslk'          => $sslk,
+            'purchase_code' => $envato_market_purchase_code,
+            'base_url'      => base_url(),
+        );
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+        $output   = curl_exec($ch);
+        $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        curl_close($ch);
+        $json_response = json_decode($output);
+        if ($httpcode != 200) {
+            return $this->CI->output
+                ->set_content_type('application/json')
+                ->set_status_header($httpcode)
+                ->set_output(json_encode(array(
+                    'response' => $json_response->response, true,
+                )));
+
+        } else {
+            $fname         = APPPATH . 'config/license.php';
+            $update_handle = fopen($fname, "r");
+            $content       = fread($update_handle, filesize($fname));
+            $file_contents = str_replace('$config[\'app_ver\'] = 0', '$config[\'app_ver\'] = 1', $content);
+            $update_handle = fopen($fname, 'w') or die("can't open file");
+            if (fwrite($update_handle, $file_contents)) {
+
+            }
+            fclose($update_handle);
+            $array = array('status' => 1, 'message' => 'Thank you for registering your product');
+            return $this->CI->output
+                ->set_content_type('application/json')
+                ->set_status_header($httpcode)
+                ->set_output(json_encode($array));
+
+        }
+    }
     public function autoupdate()
     {
         if (!$this->CI->session->has_userdata('version')) {
@@ -438,11 +498,11 @@ class Auth
         $fd_name     = $this->filename($dw_filename);
         $url         = $this->CI->enc_lib->dycrypt(DEBUG_SYSTEM_AUTO_UPDATE);
         $file        = './temp/' . $dw_filename;
-        $sslk        = $this->CI->config->item('SSLK');        
+        $sslk        = $this->CI->config->item('SSLK');
         $app_version = $this->CI->customlib->getAppVersion();
-        $post_data = [
+        $post_data   = [
             'sslk'        => $sslk,
-            'site_url'    => site_url(),        
+            'site_url'    => site_url(),
             'app_version' => $app_version,
         ];
         $curl = curl_init();
@@ -456,7 +516,7 @@ class Auth
         ]);
 
         $response = curl_exec($curl);
-        $info = curl_getinfo($curl);
+        $info     = curl_getinfo($curl);
         curl_close($curl);
         $this->CI->session->unset_userdata('version');
         if ($info['http_code'] == 0 && $info['header_size'] == 0) {
@@ -468,12 +528,12 @@ class Auth
             if ($info['content_type'] == "application/zip") {
 //=========
                 file_put_contents($file, $response);
-                if (filesize($file) > 0) {                   
+                if (filesize($file) > 0) {
                     $zip = new ZipArchive;
-                    $res = $zip->open('./temp/' . $dw_filename); 
+                    $res = $zip->open('./temp/' . $dw_filename);
                     if ($res === true) {
-                        $zip->extractTo('./temp/'); 
-                        $zip->close();                       
+                        $zip->extractTo('./temp/');
+                        $zip->close();
                         if (!$this->import_dump($fd_name)) {
                             unlink('./temp/' . $fd_name . '/db_import.sql');
                             unlink('./temp/' . $dw_filename);
@@ -501,7 +561,6 @@ class Auth
 
             }
 
-            
         } else {
             $result = json_decode($response);
             $this->set_error($result->response);
@@ -511,12 +570,12 @@ class Auth
 
     public function import_dump($fd_name)
     {
-       
+
         $filename = './temp/' . $fd_name . '/db_import.sql';
         if (file_exists($filename)) {
-            $progressFilename = $filename . '_filepointer'; 
-            $errorFilename    = $filename . '_error'; 
-            $fp = fopen($filename, 'r');
+            $progressFilename = $filename . '_filepointer';
+            $errorFilename    = $filename . '_error';
+            $fp               = fopen($filename, 'r');
             if (!$fp) {
                 $this->set_error('Update error! There is some issue occurred during update, please contact to support.');
                 return false;
@@ -524,7 +583,7 @@ class Auth
             $queryCount = 0;
             $query      = '';
 
-            $db_debug = $this->CI->db->db_debug; 
+            $db_debug               = $this->CI->db->db_debug;
             $this->CI->db->db_debug = false;
             while ($line = fgets($fp, 1024000)) {
                 if (substr($line, 0, 2) == '--' or trim($line) == '') {
@@ -546,7 +605,7 @@ class Auth
                 }
 
             }
-            $this->CI->db->db_debug = $db_debug; 
+            $this->CI->db->db_debug = $db_debug;
             if (feof($fp)) {
                 return true;
             } else {
@@ -638,13 +697,12 @@ class Auth
     public function checkupdate()
     {
         $this->CI->session->unset_userdata('version');
-        $url = $this->CI->enc_lib->dycrypt(DEBUG_SYSTEM_CHECK_UPDATE);
-        $sslk = $this->CI->config->item('SSLK');        
+        $url         = $this->CI->enc_lib->dycrypt(DEBUG_SYSTEM_CHECK_UPDATE);
+        $sslk        = $this->CI->config->item('SSLK');
         $app_version = $this->CI->customlib->getAppVersion();
-        $post_data = [
+        $post_data   = [
             'sslk'        => $sslk,
             'site_url'    => site_url(),
-        
             'app_version' => $app_version,
         ];
         $ch = curl_init();

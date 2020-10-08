@@ -92,31 +92,39 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
 
                                         <select autofocus="" id="class_id" name="year" class="form-control" >
                                             <option value="select"><?php echo $this->lang->line('select'); ?></option>
-                                            <option <?php if($year == date("Y", strtotime("-1 year")) ){ echo "selected"; } ?>  value="<?php echo date("Y", strtotime("-1 year")) ?>"><?php echo date("Y", strtotime("-1 year")) ?></option>
-                                            <option <?php if($year == date("Y") ){ echo "selected"; } ?>  value="<?php echo date("Y") ?>"><?php echo date("Y") ?></option>
+                                            <option <?php
+                                            if ($year == date("Y", strtotime("-1 year"))) {
+                                                echo "selected";
+                                            }
+                                            ?>  value="<?php echo date("Y", strtotime("-1 year")) ?>"><?php echo date("Y", strtotime("-1 year")) ?></option>
+                                            <option <?php
+                                            if ($year == date("Y")) {
+                                                echo "selected";
+                                            }
+                                            ?>  value="<?php echo date("Y") ?>"><?php echo date("Y") ?></option>
                                         </select>
 
                                     </div>
                                 </div>
 
-                        <div class="col-md-12">        
-                           <div class="form-group">
-                            <button type="submit" name="search" value="search" class="btn btn-primary btn-sm pull-right checkbox-toggle"><i class="fa fa-search"></i> <?php echo $this->lang->line('search'); ?></button>
-                           </div>
-                        </div>   
-                      </div>
-
-
+                                <div class="col-md-12">        
+                                    <div class="form-group">
+                                        <button type="submit" name="search" value="search" class="btn btn-primary btn-sm pull-right checkbox-toggle"><i class="fa fa-search"></i> <?php echo $this->lang->line('search'); ?></button>
+                                    </div>
+                                </div>   
                             </div>
-                        
-                       
+
+
+                        </div>
+
+
                     </form>
-                
-                <?php
-                if (isset($resultlist)) {
-                    ?>
-                   <div class="box-header ptbnull"></div> 
-                    
+
+<?php
+if (isset($resultlist)) {
+    ?>
+                        <div class="box-header ptbnull"></div> 
+
                         <div class="box-header ptbnull">
                             <h3 class="box-title titlefix"><i class="fa fa-users"></i> <?php echo $this->lang->line('staff'); ?> <?php echo $this->lang->line('list'); ?>
                                 </i></h3>
@@ -133,13 +141,13 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                         <th><?php echo $this->lang->line('staff_id'); ?></th>
                                         <th><?php echo $this->lang->line('name'); ?></th>
                                         <th><?php echo $this->lang->line('role'); ?></th>
-										<?php if ($sch_setting->staff_department) {  ?>
-                                        <th><?php echo $this->lang->line('department'); ?></th>
-										<?php } if ($sch_setting->staff_designation) {  ?>
-                                        <th><?php echo $this->lang->line('designation'); ?></th>
-										<?php } if ($sch_setting->staff_phone) {  ?>
-                                        <th><?php echo $this->lang->line('phone'); ?></th>
-										<?php } ?>
+                                        <?php if ($sch_setting->staff_department) { ?>
+                                            <th><?php echo $this->lang->line('department'); ?></th>
+                                        <?php } if ($sch_setting->staff_designation) { ?>
+                                            <th><?php echo $this->lang->line('designation'); ?></th>
+    <?php } if ($sch_setting->staff_phone) { ?>
+                                            <th><?php echo $this->lang->line('phone'); ?></th>
+    <?php } ?>
                                         <th><?php echo $this->lang->line('status'); ?></th>
                                         <th class="text-right no-print"><?php echo $this->lang->line('action'); ?></th>
 
@@ -166,44 +174,45 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                             <td><?php echo $staff['employee_id']; ?></td>
                                             <td><?php echo $staff['name'] . " " . $staff['surname']; ?></td>
                                             <td><?php echo $staff['user_type']; ?></td>
-											<?php if ($sch_setting->staff_department) {  ?>
-                                            <td><?php echo $staff['department']; ?></td>
-											<?php } if ($sch_setting->staff_designation) {  ?>
-                                            <td><?php echo $staff['designation']; ?></td>
-											<?php } if ($sch_setting->staff_phone) {  ?>
-                                            <td><?php echo $staff['contact_no']; ?></td>
-											<?php } ?>
+                                            <?php if ($sch_setting->staff_department) { ?>
+                                                <td><?php echo $staff['department']; ?></td>
+                                            <?php } if ($sch_setting->staff_designation) { ?>
+                                                <td><?php echo $staff['designation']; ?></td>
+                                            <?php } if ($sch_setting->staff_phone) { ?>
+                                                <td><?php echo $staff['contact_no']; ?></td>
+                                                <?php } ?>
                                             <td><small <?php echo $label; ?>><?php echo $wstatus; ?></small></td>
                                                 <?php if ($status == "paid") { ?>
 
                                                 <td class="pull-right no-print">
-                                                    <?php
-                                                    if ($this->rbac->hasPrivilege('staff_payroll', 'can_add')) {
-                                                        ?>
+            <?php
+            if ($this->rbac->hasPrivilege('staff_payroll', 'can_add')) {
+                ?>
                                                         <a class="btn btn-default btn-xs" onclick="return confirm('Are you sure you want to revert this record')" href="<?php echo base_url() . "admin/payroll/revertpayroll/" . $staff["payslip_id"] . "/" . $month_selected . "/" . date("Y") . "/" . $role_selected ?>" title="Revert">
                                                             <i class="fa fa-undo"> </i>
                                                         </a>
-            <?php } ?>
+                                                    <?php } ?>
                                                     <a href="javascript:void" onclick="getPayslip('<?php echo $staff["payslip_id"]; ?>')"  role="button" class="btn btn-primary btn-xs checkbox-toggle edit_setting" data-toggle="tooltip" title="<?php echo $this->lang->line('Payslip View'); ?>" ><?php echo $this->lang->line('view'); ?> <?php echo $this->lang->line('payslip'); ?></a>
 
 
-        <?php } ?></td>
+                                                <?php } ?></td>
                                                 <?php if ($status == "generated") { ?>
 
                                                 <td class="pull-right no-print">
-                                                    <?php
-                                                    if ($this->rbac->hasPrivilege('staff_payroll', 'can_delete')) {
-                                                        ?>
+            <?php
+            if ($this->rbac->hasPrivilege('staff_payroll', 'can_delete')) {
+                ?>
                                                         <a href="<?php echo base_url() ?>admin/payroll/deletepayroll/<?php echo $staff["payslip_id"] . "/" . $month_selected . "/" . date("Y") . "/" . $role_selected ?>" class="btn btn-default btn-xs" onclick="return confirm('Are you sure you want to revert this record')" title="Revert">
                                                             <i class="fa fa-undo"> </i>
                                                         </a>
-                                                        <?php
-                                                    }
-                                                    if ($this->rbac->hasPrivilege('staff_payroll', 'can_add')) {
-                                                        ?>
-                                                        <a href="#" onclick="getRecord('<?php echo $staff["id"] ?>','<?php echo $year ?>')" role="button" class="btn btn-primary btn-xs checkbox-toggle edit_setting" data-toggle="tooltip" title="<?php echo $this->lang->line('Proceed to payment'); ?>" ><?php echo $this->lang->line('proceed_to_pay'); ?></a>
+                <?php
+            }
+            if ($this->rbac->hasPrivilege('staff_payroll', 'can_add')) {
+                ?>
+                                                        <a href="#" onclick="getRecord('<?php echo $staff["id"] ?>', '<?php echo $year ?>')" role="button" class="btn btn-primary btn-xs checkbox-toggle edit_setting" data-toggle="tooltip" title="<?php echo $this->lang->line('Proceed to payment'); ?>" ><?php echo $this->lang->line('proceed_to_pay'); ?></a>
 
-                                                <?php }
+                                                    <?php
+                                                }
                                             }
                                             ?></td>
 
@@ -218,10 +227,10 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                                 </td>
                                         <?php } ?>
                                         </tr>
-                                        <?php
-                                    }
-                                    $count++;
-                                    ?>
+        <?php
+    }
+    $count++;
+    ?>
                                 </tbody></table>
                         </div>
                     </div>
@@ -288,7 +297,7 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                             <input name="paymentid" placeholder="" type="hidden" class="form-control" />
                         </div>
                         <div class="form-group col-xs-12 col-sm-12 col-md-12 col-lg-6">
-                            <label for="exampleInputEmail1"><?php echo $this->lang->line('payment'); ?> <?php echo $this->lang->line('mode'); ?></label><br/><span id="remark">
+                            <label for="exampleInputEmail1"><?php echo $this->lang->line('payment'); ?> <?php echo $this->lang->line('mode'); ?></label><small class="req"> *</small><br/><span id="remark">
                             </span>
                             <select name="payment_mode" id="payment_mode"  class="form-control">
                                 <option value=""><?php echo $this->lang->line('select'); ?></option>
@@ -332,8 +341,8 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
 <script type="text/javascript">
 
 
-    function getRecord(id,year) {
-          //  alert(year);
+    function getRecord(id, year) {
+        //  alert(year);
         $('input[name="amount"]').val('');
         $('input[name="emp_name"]').val('');
         $('input[name="paymentid"]').val('');
@@ -342,7 +351,7 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
         $('#monthid').val('');
 
         var month = '<?php echo $month_selected ?>';
-       // var year = '<?php echo date('Y'); ?>';
+        // var year = '<?php echo date('Y'); ?>';
         var date_format = '<?php echo $result = strtr($this->customlib->getSchoolDateFormat(), ['d' => 'dd', 'm' => 'mm', 'Y' => 'yyyy',]) ?>';
         var base_url = '<?php echo base_url() ?>';
         $.ajax({
@@ -428,8 +437,8 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
             data: {payslipid: id},
             //dataType: "json",
             success: function (result) {
-                $("#print1").html("<a href='#'  class='pull-right modal-title moprintblack'  onclick='printData("+id+")'  title='Print' ><i class='fa fa-print'></i></a>");
-              //$("#print1").html("<a  class='pull-right modal-title moprint'  onclick='printData("+id+")'  title='Print' ><i class='fa fa-print'></i></a>"); remove moprint class  
+                $("#print1").html("<a href='#'  class='pull-right modal-title moprintblack'  onclick='printData(" + id + ")'  title='Print' ><i class='fa fa-print'></i></a>");
+                //$("#print1").html("<a  class='pull-right modal-title moprint'  onclick='printData("+id+")'  title='Print' ><i class='fa fa-print'></i></a>"); remove moprint class  
                 $("#testdata").html(result);
 
             }

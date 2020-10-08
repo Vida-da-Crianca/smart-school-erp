@@ -1,5 +1,5 @@
 <style type="text/css">
-  .wrapper {overflow: visible;}
+    .wrapper {overflow: visible;}
 </style>
 
 <!-- Content Wrapper. Contains page content -->
@@ -16,60 +16,60 @@
                 <div class="box box-primary">
                     <div class="box-body text-center">
                         <?php
-                        if ($settinglist[0]['image'] == "") {
+                        if ($result->image == "") {
                             ?>
                             <img src="<?php echo base_url() ?>uploads/school_content/logo/images.png" class="img-thumbnail" alt="Cinque Terre" width="304" height="236">
                             <?php
                         } else {
                             ?>
-                            <img src="<?php echo base_url() ?>uploads/school_content/logo/<?php echo $settinglist[0]['image']; ?>" class="img-thumbnail" alt="Cinque Terre" width="304" height="236">
+                            <img src="<?php echo base_url() ?>uploads/school_content/logo/<?php echo $result->image; ?>" class="img-thumbnail" alt="Cinque Terre" width="304" height="236">
                             <?php
                         }
                         ?>
                         <br/>
                         <br/>
-                        <a href="#schsetting" role="button" class="btn btn-primary btn-sm upload_logo" data-toggle="tooltip" title="<?php echo $this->lang->line('edit')." ".$this->lang->line('print')." ".$this->lang->line('logo'); ?>" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> Processing"><i class="fa fa-picture-o"></i> <?php echo $this->lang->line('edit')." ".$this->lang->line('print')." ".$this->lang->line('logo'); ?></a>
+                        <a href="#schsetting" role="button" class="btn btn-primary btn-sm upload_logo" data-toggle="tooltip" title="<?php echo $this->lang->line('edit') . " " . $this->lang->line('print') . " " . $this->lang->line('logo'); ?>" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> Processing"><i class="fa fa-picture-o"></i> <?php echo $this->lang->line('edit') . " " . $this->lang->line('print') . " " . $this->lang->line('logo'); ?></a>
                     </div>
                 </div>
-                    
+
                 <div class="box box-primary">
                     <div class="box-body text-center">
                         <?php
-                        if ($settinglist[0]['admin_logo'] == "") {
+                        if ($result->admin_logo == "") {
                             ?>
                             <img src="<?php echo base_url() ?>uploads/school_content/admin_logo/images.png" class="img-thumbnail " alt="Cinque Terre" width="204" height="60">
                             <?php
                         } else {
                             ?>
-                            <img src="<?php echo base_url() ?>uploads/school_content/admin_logo/<?php echo $settinglist[0]['admin_logo']; ?>" class="img-thumbnail" alt="" width="204" height="60">
+                            <img src="<?php echo base_url() ?>uploads/school_content/admin_logo/<?php echo $result->admin_logo; ?>" class="img-thumbnail" alt="" width="204" height="60">
                             <?php
                         }
                         ?>
                         <br/>
                         <br/>
-                        <a href="#admin_logo" role="button" class="btn btn-primary btn-sm upload_admin_logo" data-toggle="tooltip" title="<?php echo $this->lang->line('edit')." ".$this->lang->line('admin')." ".$this->lang->line('logo'); ?>" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> Processing"><i class="fa fa-picture-o"></i> <?php echo $this->lang->line('edit')." ".$this->lang->line('admin')." ".$this->lang->line('logo'); ?></a>
+                        <a href="#admin_logo" role="button" class="btn btn-primary btn-sm upload_admin_logo" data-toggle="tooltip" title="<?php echo $this->lang->line('edit') . " " . $this->lang->line('admin') . " " . $this->lang->line('logo'); ?>" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> Processing"><i class="fa fa-picture-o"></i> <?php echo $this->lang->line('edit') . " " . $this->lang->line('admin') . " " . $this->lang->line('logo'); ?></a>
                     </div>
                 </div>
                 <div class="box box-primary">
                     <div class="box-body text-center">
                         <?php
-                        if ($settinglist[0]['admin_small_logo'] == "") {
+                        if ($result->admin_small_logo == "") {
                             ?>
                             <img src="<?php echo base_url() ?>uploads/school_content/logo/images.png" class="img-thumbnail" alt="Cinque Terre" width="" height="">
                             <?php
                         } else {
                             ?>
-                            <img src="<?php echo base_url() ?>uploads/school_content/admin_small_logo/<?php echo $settinglist[0]['admin_small_logo']; ?>" class="" alt="Cinque Terre" width="" height="">
+                            <img src="<?php echo base_url() ?>uploads/school_content/admin_small_logo/<?php echo $result->admin_small_logo; ?>" class="" alt="Cinque Terre" width="" height="">
                             <?php
                         }
                         ?>
                         <br/>
                         <br/>
-                        <a href="#admin_small_logo" role="button" class="btn btn-primary btn-sm upload_admin_small_logo" data-toggle="tooltip" title="<?php echo $this->lang->line('edit')." ".$this->lang->line('admin')." ".$this->lang->line('small')." ".$this->lang->line('logo'); ?>" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> Processing"><i class="fa fa-picture-o"></i> <?php echo $this->lang->line('edit')." ".$this->lang->line('admin')." ".$this->lang->line('small')." ".$this->lang->line('logo'); ?></a>
+                        <a href="#admin_small_logo" role="button" class="btn btn-primary btn-sm upload_admin_small_logo" data-toggle="tooltip" title="<?php echo $this->lang->line('edit') . " " . $this->lang->line('admin') . " " . $this->lang->line('small') . " " . $this->lang->line('logo'); ?>" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> Processing"><i class="fa fa-picture-o"></i> <?php echo $this->lang->line('edit') . " " . $this->lang->line('admin') . " " . $this->lang->line('small') . " " . $this->lang->line('logo'); ?></a>
                     </div>
                 </div>
-                
-                 <div class="box box-primary">
+
+                <div class="box box-primary">
                     <div class="box-body text-center">
                         <?php
                         if ($result->app_logo == "") {
@@ -83,7 +83,7 @@
                         }
                         ?>
                         <br/>
-                        <a href="#app_logo" role="button" class="btn btn-primary btn-sm upload_app_logo" data-toggle="tooltip" title="<?php echo $this->lang->line('edit_app_logo'); ?>" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> Processing"><i class="fa fa-picture-o"></i> <?php echo $this->lang->line('edit_app_logo');?></a>
+                        <a href="#app_logo" role="button" class="btn btn-primary btn-sm upload_app_logo" data-toggle="tooltip" title="<?php echo $this->lang->line('edit_app_logo'); ?>" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> Processing"><i class="fa fa-picture-o"></i> <?php echo $this->lang->line('edit_app_logo'); ?></a>
                     </div>
                 </div>
             </div>
@@ -97,10 +97,10 @@
                         </div><!-- /.box-tools -->
                     </div><!-- /.box-header -->
                     <div class="">
-                        <form role="form" id="schsetting_form" action="<?php //echo site_url('schsettings/ajax_schedit_new')    ?>" class="" method="post" enctype="multipart/form-data">
+                        <form role="form" id="schsetting_form" action="<?php //echo site_url('schsettings/ajax_schedit_new')      ?>" class="" method="post" enctype="multipart/form-data">
 
                             <div class="box-body">
-                                
+
                                 <div class="row">
 
                                     <div class="col-md-6">
@@ -216,7 +216,7 @@
                                                     if (!$result->attendence_type) {
                                                         echo "checked";
                                                     }
-                                                    ?> ><?php echo $this->lang->line('day')." ".$this->lang->line('wise'); ?>
+                                                    ?> ><?php echo $this->lang->line('day') . " " . $this->lang->line('wise'); ?>
                                                 </label>
                                                 <label class="radio-inline">
                                                     <input type="radio" name="attendence_type" value="1" <?php
@@ -232,7 +232,7 @@
 
                                     <div class="col-md-6">
                                         <div class="form-group row">
-                                            <label class="col-sm-6"> <?php echo $this->lang->line('biometric')." ".$this->lang->line('attendance'); ?></label>
+                                            <label class="col-sm-6"> <?php echo $this->lang->line('biometric') . " " . $this->lang->line('attendance'); ?></label>
                                             <div class="col-sm-6">
                                                 <label class="radio-inline">
                                                     <input type="radio" name="biometric" value="0" <?php
@@ -256,14 +256,14 @@
                                     <div class="row">
                                         <div class="col-md-12">
                                             <div class="form-group">
-                                                <label class="col-sm-3"> <?php echo $this->lang->line('devices')." (".$this->lang->line('seprate')." ".$this->lang->line('by')." ".$this->lang->line('coma').")"; ?> </label>
+                                                <label class="col-sm-3"> <?php echo $this->lang->line('devices') . " (" . $this->lang->line('seprate') . " " . $this->lang->line('by') . " " . $this->lang->line('coma') . ")"; ?> </label>
                                                 <div class="col-sm-9">
-                                                   
-                                                        <input type="text" class="form-control" id="name" name="biometric_device" value="<?php echo $result->biometric_device; ?>">
-                                                        <span class="text-danger"><?php echo form_error('biometric_device'); ?></span> 
-                                                    </div>
 
-                                               
+                                                    <input type="text" class="form-control" id="name" name="biometric_device" value="<?php echo $result->biometric_device; ?>">
+                                                    <span class="text-danger"><?php echo form_error('biometric_device'); ?></span>
+                                                </div>
+
+
                                             </div>
                                         </div>
 
@@ -278,7 +278,7 @@
                                     </div><!--./col-md-12-->
 
                                     <div class="col-md-6">
-                                         <div class="form-group row">
+                                        <div class="form-group row">
                                             <label class="col-sm-4"><?php echo $this->lang->line('language'); ?><small class="req"> *</small></label>
                                             <div class="col-sm-8">
                                                 <select  id="language_id" name="sch_lang_id" class="form-control" >
@@ -439,7 +439,7 @@
                                                 <label class="radio-inline">
                                                     <input type="radio" name="adm_auto_insert" value="0" <?php
                                                     if ($result->adm_auto_insert == 0) {
-                                                        echo "checked"; 
+                                                        echo "checked";
                                                     }
                                                     ?>  ><?php echo $this->lang->line('disabled'); ?>
                                                 </label>
@@ -602,6 +602,31 @@
                                         </div>
                                     </div>
 
+
+                                    <div class="col-md-6">
+                                        <div class="form-group row">
+                                            <label class="col-sm-4"><?php echo $this->lang->line('online') . " " . $this->lang->line('admission'); ?></label>
+                                            <div class="col-sm-8">
+                                                <label class="radio-inline">
+                                                    <input type="radio" name="online_admission" value="0" <?php
+                                                    if ($result->online_admission == 0) {
+                                                        echo "checked";
+                                                    }
+                                                    ?> ><?php echo $this->lang->line('disabled'); ?>
+                                                </label>
+                                                <label class="radio-inline">
+                                                    <input type="radio" name="online_admission" value="1" <?php
+                                                    if ($result->online_admission == 1) {
+                                                        echo "checked";
+                                                    }
+                                                    ?>><?php echo $this->lang->line('enabled'); ?>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+
                                     <div class="col-md-6">
                                         <div class="form-group row">
                                             <label class="col-sm-4"><?php echo $this->lang->line('teacher_restricted_mode'); ?></label>
@@ -625,60 +650,45 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-md-6">
-                                        <div class="form-group row">
-                                            <label class="col-sm-4"><?php echo $this->lang->line('online') . " " . $this->lang->line('admission'); ?></label>
-                                            <div class="col-sm-8">
-                                                <label class="radio-inline">
-                                                    <input type="radio" name="online_admission" value="0" <?php
-                                                    if ($result->online_admission == 0) {
-                                                        echo "checked";
-                                                    }
-                                                    ?> ><?php echo $this->lang->line('disabled'); ?>
-                                                </label>
-                                                <label class="radio-inline">
-                                                    <input type="radio" name="online_admission" value="1" <?php
-                                                    if ($result->online_admission == 1) {
-                                                        echo "checked";
-                                                    }
-                                                    ?>><?php echo $this->lang->line('enabled'); ?>
-                                                </label>
-                                            </div>
-                                         </div>
-                                    </div>
 
-
-
-
-                                 
                                 </div><!--./row-->
 
                                 <div class="row">
                                     <div class="col-md-12">
                                         <div class="settinghr"></div>
-                                        <h4 class="session-head"><?php echo $this->lang->line('mobile_app'); ?></h4>
+                                        <div class="relative">     
+                                            <h4 class="session-head"><?php echo $this->lang->line('mobile_app'); ?></h4>
+                                            <?php if (!$app_ver) {
+                                                ?>
+                                                <button type="button" class="btn btn-info btn-sm impbtntitle3" data-toggle="modal" data-target="#andappModal">Register Your Android App</button>
+                                                <?php
+                                            }
+                                            ?>
+                                        </div>
+
+
                                     </div><!--./col-md-12-->
 
                                     <div class="col-md-12">
                                         <div class="form-group row">
-                                            <label class="col-sm-2"> <?php  echo $this->lang->line('mobile_app_api_url')?></label>
+                                            <label class="col-sm-2"> <?php echo $this->lang->line('mobile_app_api_url') ?></label>
                                             <div class="col-sm-10">
                                                 <input type="text" name="mobile_api_url" id="mobile_api_url" class="form-control" value="<?php echo $result->mobile_api_url; ?>">
                                                 <span class="text-danger"><?php echo form_error('mobile_api_url'); ?></span>
                                             </div>
                                         </div>
-                                    </div> 
-                                         
-                                     <div class="col-md-6">
+                                    </div>
+
+                                    <div class="col-md-6">
                                         <div class="form-group row">
-                                            <label class="col-sm-5"> <?php  echo $this->lang->line('mobile_app_primary_color_code')?></label>
+                                            <label class="col-sm-5"> <?php echo $this->lang->line('mobile_app_primary_color_code') ?></label>
                                             <div class="col-sm-7">
                                                 <input type="text" name="app_primary_color_code" id="app_primary_color_code" class="form-control" value="<?php echo $result->app_primary_color_code; ?>">
                                                 <span class="text-danger"><?php echo form_error('app_primary_color_code'); ?></span>
                                             </div>
                                         </div>
-                                    </div>  
-                                     <div class="col-md-6">
+                                    </div>
+                                    <div class="col-md-6">
                                         <div class="form-group row">
                                             <label class="col-sm-6"> <?php echo $this->lang->line('mobile_app_secondary_color_code'); ?></label>
                                             <div class="col-sm-6">
@@ -686,7 +696,7 @@
                                                 <span class="text-danger"><?php echo form_error('app_secondary_color_code'); ?></span>
                                             </div>
                                         </div>
-                                    </div> 
+                                    </div>
 
 
                                 </div><!--./row-->
@@ -703,7 +713,7 @@
                                                 <div class="col-sm-3 col-xs-6 col20">
                                                     <label class="radio-img">
                                                         <input name="theme" <?php
-                                                        if ($settinglist[0]['theme'] == "white.jpg") {
+                                                        if ($result->theme == "white.jpg") {
                                                             echo "checked";
                                                         }
                                                         ?> value="white.jpg" type="radio" />
@@ -713,7 +723,7 @@
                                                 <div class="col-sm-3 col-xs-6 col20">
                                                     <label class="radio-img">
                                                         <input name="theme" <?php
-                                                        if ($settinglist[0]['theme'] == "default.jpg") {
+                                                        if ($result->theme == "default.jpg") {
                                                             echo "checked";
                                                         }
                                                         ?>  value="default.jpg" type="radio" />
@@ -723,7 +733,7 @@
                                                 <div class="col-sm-3 col-xs-6 col20">
                                                     <label class="radio-img">
                                                         <input name="theme" <?php
-                                                        if ($settinglist[0]['theme'] == "red.jpg") {
+                                                        if ($result->theme == "red.jpg") {
                                                             echo "checked";
                                                         }
                                                         ?> value="red.jpg" type="radio" />
@@ -733,7 +743,7 @@
                                                 <div class="col-sm-3 col-xs-6 col20">
                                                     <label class="radio-img">
                                                         <input name="theme" <?php
-                                                        if ($settinglist[0]['theme'] == "blue.jpg") {
+                                                        if ($result->theme == "blue.jpg") {
                                                             echo "checked";
                                                         }
                                                         ?> value="blue.jpg" type="radio" />
@@ -743,7 +753,7 @@
                                                 <div class="col-sm-3 col-xs-6 col20">
                                                     <label class="radio-img">
                                                         <input name="theme" <?php
-                                                        if ($settinglist[0]['theme'] == "gray.jpg") {
+                                                        if ($result->theme == "gray.jpg") {
                                                             echo "checked";
                                                         }
                                                         ?> value="gray.jpg" type="radio" />
@@ -759,14 +769,14 @@
                                 </div>
                             </div><!-- /.box-body -->
                             <div class="box-footer">
-                                <?php 
-                                if($this->rbac->hasPrivilege('general_settings','can_edit')){
+                                <?php
+                                if ($this->rbac->hasPrivilege('general_setting', 'can_edit')) {
                                     ?>
                                     <button type="button" class="btn btn-primary submit_schsetting pull-right edit_setting" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> Processing"> <?php echo $this->lang->line('save'); ?></button>
                                     <?php
                                 }
                                 ?>
-                                
+
 
                             </div>
                         </form>
@@ -784,12 +794,12 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title" id="myModalLabel"><?php echo $this->lang->line('edit')." ".$this->lang->line('admin')." ".$this->lang->line('logo'); ?></h4>
+                <h4 class="modal-title" id="myModalLabel"><?php echo $this->lang->line('edit') . " " . $this->lang->line('admin') . " " . $this->lang->line('logo'); ?></h4>
             </div>
             <div class="modal-body upload_logo_body">
                 <!-- ==== -->
                 <form class="box_upload boxupload has-advanced-upload" method="post" action="<?php echo site_url('schsettings/ajax_editlogo') ?>" enctype="multipart/form-data">
-                    <input value="<?php echo $settinglist[0]['id'] ?>" type="hidden" name="id" id="id_logo_admin"/>
+                    <input value="<?php echo $result->id ?>" type="hidden" name="id" id="id_logo_admin"/>
                     <input type="file" name="file" id="file_admin">
                     <!-- Drag and Drop container-->
                     <div class="box__input upload-admin_area"  id="uploadfile_admin">
@@ -809,7 +819,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title" id="myModalLabel"><?php echo $this->lang->line('edit_app_logo');?></h4>
+                <h4 class="modal-title" id="myModalLabel"><?php echo $this->lang->line('edit_app_logo'); ?></h4>
             </div>
             <div class="modal-body upload_logo_body">
                 <!-- ==== -->
@@ -835,12 +845,12 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title" id="myModalLabel"><?php echo $this->lang->line('edit')." ".$this->lang->line('admin')." ".$this->lang->line('small')." ".$this->lang->line('logo'); ?></h4>
+                <h4 class="modal-title" id="myModalLabel"><?php echo $this->lang->line('edit') . " " . $this->lang->line('admin') . " " . $this->lang->line('small') . " " . $this->lang->line('logo'); ?></h4>
             </div>
             <div class="modal-body upload_logo_body">
                 <!-- ==== -->
                 <form class="box_upload boxupload has-advanced-upload" method="post" action="<?php echo site_url('schsettings/ajax_editlogo') ?>" enctype="multipart/form-data">
-                    <input value="<?php echo $settinglist[0]['id'] ?>" type="hidden" name="id" id="id_logo_small"/>
+                    <input value="<?php echo $result->id ?>" type="hidden" name="id" id="id_logo_small"/>
                     <input type="file" name="file" id="file_small">
                     <!-- Drag and Drop container-->
                     <div class="box__input upload-small_area"  id="uploadfile_small">
@@ -867,7 +877,7 @@
             <div class="modal-body upload_logo_body">
                 <!-- ==== -->
                 <form class="box_upload boxupload has-advanced-upload" method="post" action="<?php echo site_url('schsettings/ajax_editlogo') ?>" enctype="multipart/form-data">
-                    <input value="<?php echo $settinglist[0]['id'] ?>" type="hidden" name="id" id="id_logo"/>
+                    <input value="<?php echo $result->id ?>" type="hidden" name="id" id="id_logo"/>
                     <input type="file" name="file" id="file">
                     <!-- Drag and Drop container-->
                     <div class="box__input upload-area"  id="uploadfile">
@@ -884,7 +894,37 @@
 </div>
 
 
+<div id="andappModal" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">Register your Android App purchase code</h4>
+            </div>
+            <form action="<?php echo site_url('admin/admin/updateandappCode') ?>" method="POST" id="andapp_code">
+                <div class="modal-body andapp_modal-body">
+                    <div class="error_message">
 
+                    </div>
+                    <div class="form-group">
+                        <label class="ainline"><span>Envato Market Purchase Code for Smart School Android App ( <a target="_blank" href="https://help.market.envato.com/hc/en-us/articles/202822600-Where-Is-My-Purchase-Code-"> How to find it?</a> )</span></label>
+                        <input type="text" class="form-control" id="input-app-envato_market_purchase_code" name="app-envato_market_purchase_code">
+                        <div id="error" class="input-error text text-danger"></div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="exampleInputEmail1">Your Email registered with Envato</label>
+                        <input type="text" class="form-control" id="input-app-email" name="app-email">
+                        <div id="error" class="input-error text text-danger"></div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-info" data-loading-text="<i class='fa fa-spinner fa-spin '></i> Saving...">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 
 <script type="text/javascript">
     var base_url = '<?php echo base_url(); ?>';
@@ -922,7 +962,7 @@
         $('.upload_admin_logo').button('reset');
     });
 
- $('.upload_admin_small_logo').on('click', function (e) {
+    $('.upload_admin_small_logo').on('click', function (e) {
         e.preventDefault();
         var $this = $(this);
         logo_type = $this.data('logo_type');
@@ -933,7 +973,7 @@
             backdrop: 'static',
             keyboard: false
         });
-    }); 
+    });
 // set focus when modal is opened
     $('#modal-upload_admin_small_logo').on('shown.bs.modal', function () {
         $('.upload_admin_small_logo').button('reset');
@@ -1064,7 +1104,7 @@
         });
     }
 
-     $(function () {
+    $(function () {
 
 
 
@@ -1133,7 +1173,7 @@
                 $('#modal-upload_admin_small_logo').addClass('modal_loading');
             },
             success: function (response) {
-                
+
                 if (response.success) {
                     successMsg(response.message);
                     window.location.reload(true);
@@ -1224,7 +1264,7 @@
                 $('#modal-upload_admin_logo').addClass('modal_loading');
             },
             success: function (response) {
-                
+
                 if (response.success) {
                     successMsg(response.message);
                     window.location.reload(true);
@@ -1250,7 +1290,7 @@
 
 
 <script type="text/javascript">
-     $('.upload_app_logo').on('click', function (e) {
+    $('.upload_app_logo').on('click', function (e) {
         e.preventDefault();
         var $this = $(this);
         logo_type = $this.data('logo_type');
@@ -1269,7 +1309,7 @@
 
 
 
- $(function () {
+    $(function () {
 
 
 
@@ -1339,7 +1379,7 @@
                 $('#modal-upload_app_logo').addClass('modal_loading');
             },
             success: function (response) {
-                
+
                 if (response.success) {
                     successMsg(response.message);
                     window.location.reload(true);
@@ -1363,3 +1403,4 @@
 
 
 </script>
+

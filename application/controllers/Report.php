@@ -276,6 +276,7 @@ class Report extends Admin_Controller {
         $this->m_pdf->pdf->WriteHTML($html);
         $this->m_pdf->pdf->Output($pdfFilePath, "D");
     }
+
     function get_betweendate($type){
 
     $this->load->view('reports/betweenDate');
@@ -902,15 +903,16 @@ public function onlineexams(){
      $data['resultlist']=$this->onlineexamresult_model->getStudentResult($exam_id, $class_id, $section_id);
    
      foreach($data['resultlist'] as $examresult_key => $examresult_value) {
-
+          //echo "<pre>";  print_r($examresult_value); echo "</pre>";die;
         $studentrecord[$examresult_value['onlineexam_student_id']]=$examresult_value;
         $onlineexam_student_id=$examresult_value['onlineexam_student_id'];
         $examid=$examresult_value['exam_id'];
         $getResultByStudent=$this->onlineexamresult_model->onlineexamrank($onlineexam_student_id,$examid);
-
+ 
      if(!empty($getResultByStudent) && $getResultByStudent[0]['total_questions']>0){
 
         $rank_array=array(
+            'publish_result'=>$examresult_value['publish_result'],
             'onlineexam_student_id'=>$getResultByStudent[0]['onlineexam_student_id'],
             'correct_answer'=>$getResultByStudent[0]['correct_answer'],
             'incorrect_answer'=>$getResultByStudent[0]['incorrect_answer'],
@@ -930,7 +932,7 @@ $getResultByStudent=array();
      if(!empty($getResultByStudent1)){
  usort($getResultByStudent1, function($a,$b){return $a['percentage']-$b['percentage'];});
      }
-//echo "<pre>"; print_r($getResultByStudent1); echo "<pre>";die;
+
      $this->form_validation->set_rules('exam_id', $this->lang->line('exam'), 'required');
        
 
@@ -959,18 +961,34 @@ $getResultByStudent=array();
             $data['final_result']=$fdata;  
 
          }
+       
     $this->load->view('layout/header',$data);
     $this->load->view('reports/onlineexamrank',$data);
     $this->load->view('layout/footer',$data);
 
-    }
+    } 
 
     public function inventorystock(){
         $this->session->set_userdata('top_menu', 'Reports');
         $this->session->set_userdata('sub_menu', 'Reports/inventory');
         $this->session->set_userdata('subsub_menu', 'Reports/inventory/inventorystock');
-        $data['stockresult']=$this->itemstock_model->get_currentstock();
-     
+        $data['stockresult1']=$this->itemstock_model->get_currentstock();
+         
+        foreach ($data['stockresult1'] as $key => $value) {
+          $available_stock=  $this->getAvailQuantity($value['id']);
+        
+            $data['stockresult'][]=array(
+                'available_stock'=>$value['available_stock'],
+                'available'=>$this->getAvailQuantity($value['id']),
+                'name'=>$value['name'],
+                'des'=>$value['des'],
+                'item_category'=>$value['item_category'],
+                'item_supplier'=>$value['item_supplier'],
+                'item_store'=>$value['item_store'],
+                'total_not_returned'=>$value['total_not_returned']
+            );
+        }
+
        $this->load->view('layout/header',$data);
         $this->load->view('reports/inventorystock',$data);
         $this->load->view('layout/footer',$data); 
@@ -1235,7 +1253,7 @@ public function expensegroup(){
 
 public function student_profile(){
 
-       
+        
          $this->session->set_userdata('top_menu', 'Reports');
         $this->session->set_userdata('sub_menu', 'Reports/student_information');
         $this->session->set_userdata('subsub_menu', 'Reports/student_information/student_profile');
@@ -1255,10 +1273,12 @@ public function student_profile(){
         $between_date=$this->customlib->get_betweendate($_POST['search_type']);
          $data['search_type']=$search_type=$_POST['search_type'];
         }else{
-
+ 
         $between_date=$this->customlib->get_betweendate('this_year');
         $data['search_type']=$search_type='';
         }
+
+   //  print_r($between_date);die;
         $from_date=date('Y-m-d',strtotime($between_date['from_date']));
         $to_date=date('Y-m-d',strtotime($between_date['to_date']));
         $condition.=" date_format(admission_date,'%Y-%m-%d') between  '".$from_date."' and '".$to_date."'";
@@ -1276,13 +1296,13 @@ public function student_profile(){
 
             $data['resultlist']=$this->student_model->student_profile($condition);
         }
-
+       // echo $this->db->last_query();die;
         $this->load->view('layout/header',$data);
         $this->load->view('reports/student_profile',$data);
         $this->load->view('layout/footer',$data); 
 } 
 
-public function staff_report(){
+	public function staff_report(){
 
         $this->session->set_userdata('top_menu', 'Reports');
         $this->session->set_userdata('sub_menu', 'Reports/human_resource');
@@ -1538,6 +1558,7 @@ $attd=array();
     
    
 
+  
     public function lesson_plan(){
          $this->session->set_userdata('top_menu', 'Reports');
         $this->session->set_userdata('sub_menu', 'Reports/lesson_plan');
@@ -1551,7 +1572,7 @@ $attd=array();
         $data['subject_group_id'] = "";
         $data['subject_id']       = "";
         $data['lessons']=array();
-		$lebel="";
+        $lebel="";
 
         $this->form_validation->set_rules('class_id', $this->lang->line('class'), 'trim|required|xss_clean');
         $this->form_validation->set_rules('section_id', $this->lang->line('section'), 'trim|required|xss_clean');
@@ -1575,16 +1596,14 @@ $attd=array();
         $complete=0;
         $incomplete=0;
         $array[]=$value;
+        $lebel=($value->code=='')? $value->name: $value->name.' ('.$value->code.')';
+      
          $subject_details=   $this->syllabus_model->get_subjectstatus($value->id,$subject_group_class_sectionsId['id']);
         if($subject_details[0]->total!=0){
 
          $complete=($subject_details[0]->complete/$subject_details[0]->total)*100;
          $incomplete=($subject_details[0]->incomplete/$subject_details[0]->total)*100;
-          if($value->code==''){
-            $lebel=$value->name;
-         }else{
-            $lebel=$value->name.' ('.$value->code.')';
-         }
+         
          $data['subjects_data'][$value->id]=array(
                                         'lebel'=>$lebel,
                                         'complete'=>round($complete),
@@ -1648,6 +1667,7 @@ $attd=array();
         $this->load->view('reports/syllabus',$data);
         $this->load->view('layout/footer',$data); 
     }
+
 
  public function teachersyllabusstatus(){
         $this->session->set_userdata('top_menu', 'Reports');
@@ -1733,7 +1753,7 @@ $data['subject_name'] =  $teachers_reportvalue['subject_name'];
 
               $staff_periods=$this->syllabus_model->get_subjectsyllabusbyid($syllabus_idvalue);
               $staff_periodsdata[]=$staff_periods;
-
+ 
           }
          //print_r($staff_periodsdata);die;
           $teacher_summary[]=array(
@@ -1830,7 +1850,175 @@ $data['subject_name'] =  $teachers_reportvalue['subject_name'];
             $this->load->view('reports/alumnireport', $data);
             $this->load->view('layout/footer');
         }
+ 
+    }
 
+    public function boys_girls_ratio(){
+        $this->session->set_userdata('top_menu', 'Reports');
+        $this->session->set_userdata('sub_menu', 'Reports/student_information');
+        $this->session->set_userdata('subsub_menu', 'Reports/student_information/boys_girls_ratio');
+        $data['title'] = 'Add Fees Type';
+        $data['searchlist']=$this->search_type;
+        $data['sch_setting']        = $this->sch_setting_detail;
+        $data['adm_auto_insert']    = $this->sch_setting_detail->adm_auto_insert;
+        $searchterm='';
+        $class = $this->class_model->get();
+        $data['classlist'] = $class;
+        foreach ($data['classlist'] as $key => $value) {
+           $carray[]=$value['id'];
+        }
+         
+        $data['resultlist']=$this->student_model->student_ratio();
+        $total_boys=$total_girls=0;
+            foreach ($data['resultlist'] as $key => $value) {
+
+                $total_boys+=$value['male'];
+                $total_girls+=$value['female'];              
+
+				$data['result'][]=array('total_student'=>$value['total_student'],'male'=>$value['male'],'female'=>$value['female'],'class'=>$value['class'],'section'=>$value['section'],'class_id'=>$value['class_id'],'section_id'=>$value['section_id'],'boys_girls_ratio'=>$this->getRatio($value['male'], $value['female']));
+            }
+
+            $data['all_boys_girls_ratio']=$this->getRatio($total_boys,$total_girls);
+            $data['all_student_teacher_ratio']=$this->getRatio($total_boys,$total_girls);
+      
+        $this->load->view('layout/header', $data);
+        $this->load->view('reports/student_ratio_report', $data);
+        $this->load->view('layout/footer', $data);
+    }
+
+     public function student_teacher_ratio(){
+        $this->session->set_userdata('top_menu', 'Reports');
+        $this->session->set_userdata('sub_menu', 'Reports/student_information');
+        $this->session->set_userdata('subsub_menu', 'Reports/student_information/student_teacher_ratio');
+        $data['title'] = 'Add Fees Type';
+        $data['searchlist']=$this->search_type;
+        $data['sch_setting']        = $this->sch_setting_detail;
+        $data['adm_auto_insert']    = $this->sch_setting_detail->adm_auto_insert;
+        $searchterm='';
+        $class = $this->class_model->get();
+        $data['classlist'] = $class;
+        foreach ($data['classlist'] as $key => $value) {
+           $carray[]=$value['id'];
+        } 
+         
+         $data['resultlist']=$this->student_model->student_ratio();
+         $total_boys=$total_girls=$all_teacher=$all_student=0;
+            foreach ($data['resultlist'] as $key => $value) {                
+                
+                $all_student+=$value['total_student'];
+                 $count_classteachers=array();
+              $count_classteachers=$this->student_model->count_classteachers($value['class_id'],$value['section_id']);
+             
+              if(!empty($count_classteachers)){
+                $total_teacher=$count_classteachers;
+              }else{
+                $total_teacher=0;
+              }
+
+              $data['result'][]=array('total_student'=>$value['total_student'],'male'=>$value['male'],'female'=>$value['female'],'class'=>$value['class'],'section'=>$value['section'],'class_id'=>$value['class_id'],'section_id'=>$value['section_id'],'total_teacher'=>$total_teacher,'boys_girls_ratio'=>$this->getRatio($value['male'], $value['female']),'teacher_ratio'=>$this->getRatio($value['total_student'], $total_teacher));
+
+              $all_teacher+=$total_teacher;
+            }
+        
+            $data['all_student_teacher_ratio']=$this->getRatio($all_student,$all_teacher);
+        $this->load->view('layout/header', $data);
+        $this->load->view('reports/teacher_ratio_report', $data);
+        $this->load->view('layout/footer', $data);
+    }
+
+    public function getRatio($num1, $num2){
+        if($num2>0 && $num1>0 ){
+            $num=round($num2/$num1,2);
+          
+        }else{
+            $num=0;
+        }
+	   
+    if($num1=='0'){
+        $by=0;
+        return "$by:$num2";
+    }else{
+        $by=1;
+        return "$by:$num";
+    }
+    
+}
+ 
+public function daily_attendance_report(){
+       $data=array();
+        $this->session->set_userdata('top_menu', 'Reports');
+        $this->session->set_userdata('sub_menu', 'Reports/attendance');
+        $this->session->set_userdata('subsub_menu', 'Reports/attendance/daily_attendance_report');
+        $date=""; 
+        $data['date']="";
+         $this->form_validation->set_rules('date', $this->lang->line('date'), 'trim|required|xss_clean');
+        
+        if ($this->form_validation->run() == FALSE) {
+            $date=" and student_attendences.date='".date('Y-m-d')."'";
+         $data['date']=date($this->customlib->getSchoolDateFormat());
+        }else{
+            $date=" and student_attendences.date='".date('Y-m-d',$this->customlib->datetostrtotime($_POST['date']))."'";
+         $data['date']=date($this->customlib->getSchoolDateFormat(),$this->customlib->datetostrtotime($_POST['date']));
+        }    
+       
+           $resultlist = array();
+           $data['result']=$this->stuattendence_model->get_attendancebydate($date);          
+           if(!empty($data['result'])){
+           $all_student=$all_present=$all_absent=0;
+        foreach ($data['result'] as $key => $value) {
+            $total_present=$value->present+$value->excuse+$value->late+$value->half_day;
+            $total_student=$total_present+$value->absent;
+            if($total_present>0){
+                $presnt_percent=round(($total_present/$total_student)*100);
+           
+            }else{
+                $presnt_percent=0;
+               
+            } 
+             if($value->absent>0){
+               
+               $presnt_absent=round(($value->absent/$total_student)*100);
+            }else{
+               
+               $presnt_absent=0;
+            } 
+            $all_student+=$total_student;
+            $all_present+=$total_present;
+            $all_absent+=$value->absent;
+
+            $data['resultlist'][]=array('class_section' =>$value->class_name." (".$value->section_name.")",'total_present'=>$total_present,'total_absent'=>$value->absent,'present_percent'=>$presnt_percent."%",'absent_persent'=>$presnt_absent."%" );
+            # code...
+        }
+        $data['all_student']=$all_student;
+        $data['all_present']=$all_present;
+        $data['all_absent']=$all_absent;
+        if($all_student>0){
+            $data['all_present_percent']=round(($data['all_present']/$data['all_student'])*100)."%";
+        $data['all_absent_percent']=round(($data['all_absent']/$data['all_student'])*100)."%";
+        }else{
+            $data['all_present_percent']="0%";
+        $data['all_absent_percent']="0%";
+        }
+        
+    }
+      
+            $this->load->view('layout/header', $data);
+            $this->load->view('reports/daily_attendance_report', $data);
+            $this->load->view('layout/footer', $data);       
+    
+}
+
+ function getAvailQuantity($item_id) {
+       
+        $data = $this->item_model->getItemAvailable($item_id);
+        
+        $available = ($data['added_stock'] - $data['issued']);
+        if($available>=0){
+             return $available;
+        }else{
+             return 0;
+        }
+       
     }
 
 }

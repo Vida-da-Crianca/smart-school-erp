@@ -17,6 +17,8 @@ class User extends Student_Controller
         parent::__construct();
         $this->payment_method     = $this->paymentsetting_model->getActiveMethod();
         $this->sch_setting_detail = $this->setting_model->getSetting();
+        $this->load->model("student_edit_field_model");
+        $this->config->load('mailsms');
     }
 
     public function unauthorized()
@@ -30,7 +32,6 @@ class User extends Student_Controller
     public function choose()
     {
         if ($this->session->has_userdata('current_class')) {
-
             redirect('user/user/dashboard');
         }
         $role         = $this->customlib->getUserRole();
@@ -52,6 +53,9 @@ class User extends Student_Controller
             $student        = $this->student_model->getByStudentSession($student_session_id);
             $logged_In_User = $this->customlib->getLoggedInUserData();
 
+            if ($logged_In_User['role'] == "student") {
+                $this->customlib->setUserLog($logged_In_User['login_username'], $logged_In_User['role'], $student['class_section_id']);
+            }
             $logged_In_User['student_id'] = $student['id'];
 
             $this->session->set_userdata('student', $logged_In_User);
@@ -87,29 +91,29 @@ class User extends Student_Controller
             $data["timeline_list"]        = $timeline;
             $data['sch_setting']          = $this->sch_setting_detail;
             $data['adm_auto_insert']      = $this->sch_setting_detail->adm_auto_insert;
-            $data['examSchedule'] = array();
-            $data['exam_result']  = $this->examgroupstudent_model->searchStudentExams($student['student_session_id'], true, true);
-            $ss = $this->grade_model->getGradeDetails();
-            $data['exam_grade'] = $this->grade_model->getGradeDetails();
-            $student_doc            = $this->student_model->getstudentdoc($student_id);
-            $data['student_doc']    = $student_doc;
-            $data['student_doc_id'] = $student_id;
-            $category_list          = $this->category_model->get();
-            $data['category_list']  = $category_list;
-            $data['gradeList']      = $gradeList;
-            $data['student']        = $student;
+            $data['examSchedule']         = array();
+            $data['exam_result']          = $this->examgroupstudent_model->searchStudentExams($student['student_session_id'], true, true);
+            $ss                           = $this->grade_model->getGradeDetails();
+            $data['exam_grade']           = $this->grade_model->getGradeDetails();
+            $student_doc                  = $this->student_model->getstudentdoc($student_id);
+            $data['student_doc']          = $student_doc;
+            $data['student_doc_id']       = $student_id;
+            $category_list                = $this->category_model->get();
+            $data['category_list']        = $category_list;
+            $data['gradeList']            = $gradeList;
+            $data['student']              = $student;
 
         }
 
         $unread_notifications = $this->notification_model->getUnreadStudentNotification();
-        $notification_bydate=array();
-         foreach ($unread_notifications as $unread_notifications_key => $unread_notifications_value) {
-          if(date($this->customlib->getSchoolDateFormat()) >= date($this->customlib->getSchoolDateFormat(), $this->customlib->dateyyyymmddTodateformat($unread_notifications_value->publish_date))){
-            $notification_bydate[]=$unread_notifications_value;
-          }
+        $notification_bydate  = array();
+        foreach ($unread_notifications as $unread_notifications_key => $unread_notifications_value) {
+            if (date($this->customlib->getSchoolDateFormat()) >= date($this->customlib->getSchoolDateFormat(), $this->customlib->dateyyyymmddTodateformat($unread_notifications_value->publish_date))) {
+                $notification_bydate[] = $unread_notifications_value;
+            }
         }
-        $data['unread_notifications']=$notification_bydate;
-       
+        $data['unread_notifications'] = $notification_bydate;
+
         $this->load->view('layout/student/header', $data);
         $this->load->view('user/dashboard', $data);
         $this->load->view('layout/student/footer', $data);
@@ -224,9 +228,17 @@ class User extends Student_Controller
         }
         $language_array      = array('lang_id' => $lang_id, 'language' => $language_name['language']);
         $student['language'] = $language_array;
+        $setting_result      = $this->setting_model->get();
+        $language_result1    = $this->language_model->get($lang_id);
+        $student['is_rtl']   = $setting_result[0]['is_rtl'];
+        if ($this->customlib->get_rtl_languages($language_result1['short_code'])) {
+            $student['is_rtl'] = 'enabled';
+
+        }
         $this->session->set_userdata('student', $student);
 
-        $session         = $this->session->userdata('student');
+        $session = $this->session->userdata('student');
+
         $id              = $session['student_id'];
         $data['lang_id'] = $lang_id;
         $language_result = $this->language_model->set_studentlang($id, $data);
@@ -313,10 +325,10 @@ class User extends Student_Controller
     }
 
     public function create_doc()
-    { 
+    {
 
         $this->form_validation->set_rules('first_title', $this->lang->line('title'), 'trim|required|xss_clean');
-        $this->form_validation->set_rules('first_doc', $this->lang->line('document'), 'callback_handle_upload');
+        $this->form_validation->set_rules('first_doc', $this->lang->line('document'), 'callback_std_handle_upload');
 
         if ($this->form_validation->run() == false) {
             $msg = array(
@@ -351,10 +363,49 @@ class User extends Student_Controller
         echo json_encode($array);
 
     }
+
+    public function std_handle_upload()
+    {
+
+        $image_validate = $this->config->item('file_validate');
+
+        if (isset($_FILES["first_doc"]) && !empty($_FILES["first_doc"]['name'])) {
+
+            $file_type         = $_FILES["first_doc"]['type'];
+            $file_size         = $_FILES["first_doc"]["size"];
+            $file_name         = $_FILES["first_doc"]["name"];
+            $allowed_extension = $image_validate['allowed_extension'];
+            $ext               = pathinfo($file_name, PATHINFO_EXTENSION);
+            $allowed_mime_type = $image_validate['allowed_mime_type'];
+            if ($files = filesize($_FILES['first_doc']['tmp_name'])) {
+
+                if (!in_array($file_type, $allowed_mime_type)) {
+                    $this->form_validation->set_message('std_handle_upload', $this->lang->line('file_type_not_allowed'));
+                    return false;
+                }
+                if (!in_array($ext, $allowed_extension) || !in_array($file_type, $allowed_mime_type)) {
+                    $this->form_validation->set_message('std_handle_upload', $this->lang->line('file_type_not_allowed'));
+                    return false;
+                }
+                if ($file_size > $image_validate['upload_size']) {
+                    $this->form_validation->set_message('std_handle_upload', $this->lang->line('file_size_shoud_be_less_than') . number_format($image_validate['upload_size'] / 1048576, 2) . " MB");
+                    return false;
+                }
+            } else {
+                $this->form_validation->set_message('std_handle_upload', $this->lang->line('file_type_not_allowed'));
+                return false;
+            }
+
+            return true;
+        } else {
+            $this->form_validation->set_message('std_handle_upload', $this->lang->line('the_file_field_is_required'));
+            return false;
+        }
+    }
     public function handle_upload()
     {
         $image_validate = $this->config->item('file_validate');
-      
+
         if (isset($_FILES["first_doc"]) && !empty($_FILES['first_doc']['name'])) {
 
             $file_type         = $_FILES["first_doc"]['type'];
@@ -363,32 +414,365 @@ class User extends Student_Controller
             $allowed_extension = $image_validate['allowed_extension'];
             $ext               = pathinfo($file_name, PATHINFO_EXTENSION);
             $allowed_mime_type = $image_validate['allowed_mime_type'];
-            $finfo = finfo_open(FILEINFO_MIME_TYPE);
-            $mtype = finfo_file($finfo, $_FILES['first_doc']['tmp_name']);
+            $finfo             = finfo_open(FILEINFO_MIME_TYPE);
+            $mtype             = finfo_file($finfo, $_FILES['first_doc']['tmp_name']);
             finfo_close($finfo);
 
+            if (!in_array($mtype, $allowed_mime_type)) {
+                $this->form_validation->set_message('handle_uploadcreate_doc', 'File Type Not Allowed');
+                return false;
+            }
 
-                if (!in_array($mtype, $allowed_mime_type)) {
-                    $this->form_validation->set_message('handle_uploadcreate_doc', 'File Type Not Allowed');
+            if (!in_array($ext, $allowed_extension) || !in_array($file_type, $allowed_mime_type)) {
+                $this->form_validation->set_message('handle_uploadcreate_doc', 'Extension Not Allowed');
+                return false;
+            }
+            if ($file_size > $image_validate['upload_size']) {
+                $this->form_validation->set_message('handle_uploadcreate_doc', $this->lang->line('file_size_shoud_be_less_than') . number_format($image_validate['upload_size'] / 1048576, 2) . " MB");
+                return false;
+            }
+
+            return true;
+        } else {
+            $this->form_validation->set_message('handle_uploadcreate_doc', "The File Field is required");
+            return false;
+        }
+        return true;
+
+    }
+
+    public function edit()
+    {
+        $data['title']              = 'Edit Student';
+        $id                         = $this->customlib->getStudentSessionUserID();
+        $data['id']                 = $id;
+        $student                    = $this->student_model->get($id);
+        $genderList                 = $this->customlib->getGender();
+        $data['student']            = $student;
+        $data['genderList']         = $genderList;
+        $session                    = $this->setting_model->getCurrentSession();
+        $vehroute_result            = $this->vehroute_model->get();
+        $data['vehroutelist']       = $vehroute_result;
+        $category                   = $this->category_model->get();
+        $data['categorylist']       = $category;
+        $data["bloodgroup"]         = $this->config->item('bloodgroup');
+        $data['inserted_fields']    = $this->student_edit_field_model->get();
+        $data['sch_setting_detail'] = $this->sch_setting_detail;
+        $houses                     = $this->student_model->gethouselist();
+        $data['houses']             = $houses;
+
+        if ($this->input->post('firstname')) {
+            $this->form_validation->set_rules('firstname', $this->lang->line('first_name'), 'trim|required|xss_clean');
+        }
+        if ($this->input->post('guardian_is')) {
+            $this->form_validation->set_rules('guardian_is', $this->lang->line('guardian'), 'trim|required|xss_clean');
+        }
+        if ($this->input->post('dob')) {
+            $this->form_validation->set_rules('dob', $this->lang->line('date_of_birth'), 'trim|required|xss_clean');
+        }
+        if ($this->input->post('gender')) {
+            $this->form_validation->set_rules('gender', $this->lang->line('gender'), 'trim|required|xss_clean');
+        }
+        if ($this->input->post('guardian_name')) {
+            $this->form_validation->set_rules('guardian_name', $this->lang->line('guardian_name'), 'trim|required|xss_clean');
+        }
+
+        if ($this->input->post('guardian_phone')) {
+            $this->form_validation->set_rules('guardian_phone', $this->lang->line('guardian_phone'), 'trim|required|xss_clean');
+        }
+
+        $this->form_validation->set_rules('file', $this->lang->line('image'), 'callback_edit_handle_upload[file]');
+        $this->form_validation->set_rules('father_pic', $this->lang->line('image'), 'callback_edit_handle_upload[father_pic]');
+        $this->form_validation->set_rules('mother_pic', $this->lang->line('image'), 'callback_edit_handle_upload[mother_pic]');
+        $this->form_validation->set_rules('guardian_pic', $this->lang->line('image'), 'callback_edit_handle_upload[guardian_pic]');
+
+        if ($this->form_validation->run() == false) {
+            $this->load->view('layout/student/header', $data);
+            $this->load->view('user/edit', $data);
+            $this->load->view('layout/student/footer', $data);
+        } else {
+
+            $student_id = $id;
+            $data       = array(
+                'id' => $id,
+            );
+
+            $firstname = $this->input->post('firstname');
+            if (isset($firstname)) {
+                $data['firstname'] = $this->input->post('firstname');
+            }
+            $rte = $this->input->post('rte');
+            if (isset($rte)) {
+                $data['rte'] = $this->input->post('rte');
+            }
+            $pincode = $this->input->post('pincode');
+            if (isset($pincode)) {
+                $data['pincode'] = $this->input->post('pincode');
+            }
+            $cast = $this->input->post('cast');
+            if (isset($cast)) {
+                $data['cast'] = $this->input->post('cast');
+            }
+            $guardian_is = $this->input->post('guardian_is');
+            if (isset($guardian_is)) {
+                $data['guardian_is'] = $this->input->post('guardian_is');
+            }
+            $previous_school = $this->input->post('previous_school');
+            if (isset($previous_school)) {
+                $data['previous_school'] = $this->input->post('previous_school');
+            }
+            $dob = $this->input->post('dob');
+            if (isset($dob)) {
+                $data['dob'] = date('Y-m-d', $this->customlib->datetostrtotime($this->input->post('dob')));
+            }
+            $current_address = $this->input->post('current_address');
+            if (isset($current_address)) {
+                $data['current_address'] = $this->input->post('current_address');
+            }
+            $permanent_address = $this->input->post('permanent_address');
+            if (isset($permanent_address)) {
+                $data['permanent_address'] = $this->input->post('permanent_address');
+            }
+
+              $previous_school_details = $this->input->post('previous_school_details');
+            if (isset($previous_school_details)) {
+                $data['previous_school_details'] = $this->input->post('previous_school_details');
+            }
+
+
+            $bank_account_no = $this->input->post('bank_account_no');
+            if (isset($bank_account_no)) {
+                $data['bank_account_no'] = $this->input->post('bank_account_no');
+            }
+            $bank_name = $this->input->post('bank_name');
+            if (isset($bank_name)) {
+                $data['bank_name'] = $this->input->post('bank_name');
+            }
+            $ifsc_code = $this->input->post('ifsc_code');
+            if (isset($ifsc_code)) {
+                $data['ifsc_code'] = $this->input->post('ifsc_code');
+            }
+            $guardian_occupation = $this->input->post('guardian_occupation');
+            if (isset($guardian_occupation)) {
+                $data['guardian_occupation'] = $this->input->post('guardian_occupation');
+            }
+            $guardian_email = $this->input->post('guardian_email');
+            if (isset($guardian_email)) {
+                $data['guardian_email'] = $this->input->post('guardian_email');
+            }
+            $gender = $this->input->post('gender');
+            if (isset($gender)) {
+                $data['gender'] = $this->input->post('gender');
+            }
+            $guardian_name = $this->input->post('guardian_name');
+            if (isset($guardian_name)) {
+                $data['guardian_name'] = $this->input->post('guardian_name');
+            }
+            $guardian_relation = $this->input->post('guardian_relation');
+            if (isset($guardian_relation)) {
+                $data['guardian_relation'] = $this->input->post('guardian_relation');
+            }
+            $guardian_phone = $this->input->post('guardian_phone');
+            if (isset($guardian_phone)) {
+                $data['guardian_phone'] = $this->input->post('guardian_phone');
+            }
+            $guardian_address = $this->input->post('guardian_address');
+            if (isset($guardian_address)) {
+                $data['guardian_address'] = $this->input->post('guardian_address');
+            }
+            $adhar_no = $this->input->post('adhar_no');
+            if (isset($adhar_no)) {
+                $data['adhar_no'] = $this->input->post('adhar_no');
+            }
+            $samagra_id = $this->input->post('samagra_id');
+            if (isset($samagra_id)) {
+                $data['samagra_id'] = $this->input->post('samagra_id');
+            }
+
+            $house             = $this->input->post('is_student_house');
+            $blood_group       = $this->input->post('blood_group');
+            $measurement_date  = $this->input->post('measure_date');
+            $roll_no           = $this->input->post('roll_no');
+            $lastname          = $this->input->post('lastname');
+            $category_id       = $this->input->post('category_id');
+            $religion          = $this->input->post('religion');
+            $mobileno          = $this->input->post('mobileno');
+            $email             = $this->input->post('email');
+            $admission_date    = $this->input->post('admission_date');
+            $height            = $this->input->post('height');
+            $weight            = $this->input->post('weight');
+            $father_name       = $this->input->post('father_name');
+            $father_phone      = $this->input->post('father_phone');
+            $father_occupation = $this->input->post('father_occupation');
+            $mother_name       = $this->input->post('mother_name');
+            $mother_phone      = $this->input->post('mother_phone');
+            $mother_occupation = $this->input->post('mother_occupation');
+
+            if (isset($measurement_date)) {
+                $data['measurement_date'] = date('Y-m-d', $this->customlib->datetostrtotime($this->input->post('measure_date')));
+            }
+
+            if (isset($house)) {
+                $data['school_house_id'] = $this->input->post('is_student_house');
+            }
+            if (isset($blood_group)) {
+
+                $data['blood_group'] = $this->input->post('blood_group');
+            }
+
+            if (isset($lastname)) {
+
+                $data['lastname'] = $this->input->post('lastname');
+            }
+
+            if (isset($category_id)) {
+
+                $data['category_id'] = $this->input->post('category_id');
+            }
+
+            if (isset($religion)) {
+
+                $data['religion'] = $this->input->post('religion');
+            }
+
+            if (isset($mobileno)) {
+
+                $data['mobileno'] = $this->input->post('mobileno');
+            }
+
+            if (isset($email)) {
+
+                $data['email'] = $this->input->post('email');
+            }
+
+            if (isset($admission_date)) {
+
+                $data['admission_date'] = date('Y-m-d', $this->customlib->datetostrtotime($this->input->post('admission_date')));
+            }
+
+            if (isset($height)) {
+
+                $data['height'] = $this->input->post('height');
+            }
+
+            if (isset($weight)) {
+
+                $data['weight'] = $this->input->post('weight');
+            }
+
+            if (isset($father_name)) {
+
+                $data['father_name'] = $this->input->post('father_name');
+            }
+
+            if (isset($father_phone)) {
+
+                $data['father_phone'] = $this->input->post('father_phone');
+            }
+
+            if (isset($father_occupation)) {
+
+                $data['father_occupation'] = $this->input->post('father_occupation');
+            }
+
+            if (isset($mother_name)) {
+
+                $data['mother_name'] = $this->input->post('mother_name');
+            }
+
+            if (isset($mother_phone)) {
+
+                $data['mother_phone'] = $this->input->post('mother_phone');
+            }
+
+            if (isset($mother_occupation)) {
+
+                $data['mother_occupation'] = $this->input->post('mother_occupation');
+            }
+              $default_image=array('uploads/student_images/default_female.jpg','uploads/student_images/default_male.jpg');
+            if (in_array($student['image'], $default_image)) 
+              { 
+              if($this->input->post('gender')=='Female'){
+                $data['image']='uploads/student_images/default_female.jpg';
+            }else{
+                $data['image']='uploads/student_images/default_male.jpg';
+            }
+              } 
+            $this->student_model->add($data);
+
+            if (isset($_FILES["file"]) && !empty($_FILES['file']['name'])) {
+                $fileInfo = pathinfo($_FILES["file"]["name"]);
+                $img_name = $id . '.' . $fileInfo['extension'];
+                move_uploaded_file($_FILES["file"]["tmp_name"], "./uploads/student_images/" . $img_name);
+                $data_img = array('id' => $id, 'image' => 'uploads/student_images/' . $img_name);
+                $this->student_model->add($data_img);
+            }
+
+            if (isset($_FILES["father_pic"]) && !empty($_FILES['father_pic']['name'])) {
+                $fileInfo = pathinfo($_FILES["father_pic"]["name"]);
+                $img_name = $id . "father" . '.' . $fileInfo['extension'];
+                move_uploaded_file($_FILES["father_pic"]["tmp_name"], "./uploads/student_images/" . $img_name);
+                $data_img = array('id' => $id, 'father_pic' => 'uploads/student_images/' . $img_name);
+                $this->student_model->add($data_img);
+            }
+
+            if (isset($_FILES["mother_pic"]) && !empty($_FILES['mother_pic']['name'])) {
+                $fileInfo = pathinfo($_FILES["mother_pic"]["name"]);
+                $img_name = $id . "mother" . '.' . $fileInfo['extension'];
+                move_uploaded_file($_FILES["mother_pic"]["tmp_name"], "./uploads/student_images/" . $img_name);
+                $data_img = array('id' => $id, 'mother_pic' => 'uploads/student_images/' . $img_name);
+                $this->student_model->add($data_img);
+            }
+
+            if (isset($_FILES["guardian_pic"]) && !empty($_FILES['guardian_pic']['name'])) {
+                $fileInfo = pathinfo($_FILES["guardian_pic"]["name"]);
+                $img_name = $id . "guardian" . '.' . $fileInfo['extension'];
+                move_uploaded_file($_FILES["guardian_pic"]["tmp_name"], "./uploads/student_images/" . $img_name);
+                $data_img = array('id' => $id, 'guardian_pic' => 'uploads/student_images/' . $img_name);
+                $this->student_model->add($data_img);
+            }
+
+            $this->session->set_flashdata('msg', '<div class="alert alert-success text-left">' . $this->lang->line('update_message') . '</div>');
+            redirect('user/user/edit');
+        }
+    }
+
+    public function edit_handle_upload($value, $field_name)
+    {
+
+        $image_validate = $this->config->item('image_validate');
+
+        if (isset($_FILES[$field_name]) && !empty($_FILES[$field_name]['name'])) {
+
+            $file_type         = $_FILES[$field_name]['type'];
+            $file_size         = $_FILES[$field_name]["size"];
+            $file_name         = $_FILES[$field_name]["name"];
+            $allowed_extension = $image_validate['allowed_extension'];
+            $ext               = pathinfo($file_name, PATHINFO_EXTENSION);
+            $allowed_mime_type = $image_validate['allowed_mime_type'];
+            if ($files = @getimagesize($_FILES[$field_name]['tmp_name'])) {
+
+                if (!in_array($files['mime'], $allowed_mime_type)) {
+                    $this->form_validation->set_message('edit_handle_upload', 'File Type Not Allowed');
                     return false;
                 }
 
                 if (!in_array($ext, $allowed_extension) || !in_array($file_type, $allowed_mime_type)) {
-                    $this->form_validation->set_message('handle_uploadcreate_doc', 'Extension Not Allowed');
+                    $this->form_validation->set_message('edit_handle_upload', 'Extension Not Allowed');
                     return false;
                 }
                 if ($file_size > $image_validate['upload_size']) {
-                    $this->form_validation->set_message('handle_uploadcreate_doc', $this->lang->line('file_size_shoud_be_less_than') . number_format($image_validate['upload_size'] / 1048576, 2) . " MB");
+                    $this->form_validation->set_message('edit_handle_upload', $this->lang->line('file_size_shoud_be_less_than') . number_format($image_validate['upload_size'] / 1048576, 2) . " MB");
                     return false;
                 }
-     
+            } else {
+                $this->form_validation->set_message('edit_handle_upload', "File Type / Extension Error Uploading  Image");
+                return false;
+            }
 
             return true;
-        }else{
-            $this->form_validation->set_message('handle_uploadcreate_doc', "The File Field is required");
-                return false;
         }
         return true;
-       
     }
+
 }

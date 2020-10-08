@@ -1,17 +1,16 @@
 <?php
-defined('BASEPATH') or exit('No direct script access allowed');
-class MY_Model extends CI_Model
-{
 
-    public function __construct()
-    {
+defined('BASEPATH') or exit('No direct script access allowed');
+
+class MY_Model extends CI_Model {
+
+    public function __construct() {
         parent::__construct();
         $this->load->library('user_agent');
     }
 
-    public function log($message=NULL,$record_id= NULL,$action= NULL)
-    {
-    	$user_id= $this->customlib->getStaffID();
+    public function log($message = null, $record_id = null, $action = null) {
+        $user_id = $this->customlib->getStaffID();
 
         $ip = $this->input->ip_address();
 
@@ -29,15 +28,17 @@ class MY_Model extends CI_Model
         $platform = $this->agent->platform(); // Platform info (Windows, Linux, Mac, etc.)
 
         $insert = array(
-            'message'    => $message,
-            'user_id'    => $user_id,
-            'record_id'    => $record_id,
+            'message' => $message,
+            'user_id' => $user_id,
+            'record_id' => $record_id,
             'ip_address' => $ip,
-            'platform'   => $platform,
-            'agent'      => $agent,
-            'action'     => $action,
+            'platform' => $platform,
+            'agent' => $agent,
+            'action' => $action,
+            'time' => date('Y-m-d H:i:s'),
         );
 
         $this->db->insert('logs', $insert);
     }
+
 }

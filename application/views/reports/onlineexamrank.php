@@ -80,40 +80,41 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
     </section>
     <!-- Main content -->
     <section class="content">
-        <?php $this->load->view('reports/_online_examinations');?>
+        <?php $this->load->view('reports/_online_examinations'); ?>
         <div class="row">
             <div class="col-md-12">
                 <div class="box removeboxmius">
                     <div class="box-header ptbnull"></div>
-                      <div class="box-header with-border">
+                    <div class="box-header with-border">
                         <h3 class="box-title"><i class="fa fa-search"></i> <?php echo $this->lang->line('select_criteria'); ?></h3>
                     </div>
 
-                     <form role="form" action="<?php echo site_url('report/onlineexamrank') ?>" method="post" class="">
-                         <div class="box-body">
+                    <form role="form" action="<?php echo site_url('report/onlineexamrank') ?>" method="post" class="">
+                        <div class="box-body">
                             <?php echo $this->customlib->getCSRF(); ?>
                             <div class="row">
                                 <div class="col-md-12">
-                                    <?php if ($this->session->flashdata('msg')) {?>
+                                    <?php if ($this->session->flashdata('msg')) { ?>
                                         <?php echo $this->session->flashdata('msg') ?>
-                                    <?php }?>
+                                    <?php } ?>
                                 </div>
                                 <div class="col-md-4">
                                     <div class="form-group">
-                                        <label><?php echo $this->lang->line('exam')?><small class="req"> *</small></label>
+                                        <label><?php echo $this->lang->line('exam') ?><small class="req"> *</small></label>
                                         <select  id="exam_id" name="exam_id" class="form-control"  >
                                             <option value=""><?php echo $this->lang->line('select'); ?></option>
-                                                                                            <?php
-                                                foreach ($examList as $exam_key => $exam_value) {
-                                                    ?>
-                                                                                                <option value="<?php echo $exam_value->id; ?>"<?php if (set_value('exam_id') == $exam_value->id) {
-                                                        echo "selected=selected";
-                                                    }
-                                                    ?>><?php echo $exam_value->exam; ?></option>
-                                                                                                <?php
-                                                $count++;
-                                                }
+                                            <?php
+                                            foreach ($examList as $exam_key => $exam_value) {
                                                 ?>
+                                                <option value="<?php echo $exam_value->id; ?>"<?php
+                                                if (set_value('exam_id') == $exam_value->id) {
+                                                    echo "selected=selected";
+                                                }
+                                                ?>><?php echo $exam_value->exam; ?></option>
+                                                        <?php
+                                                        $count++;
+                                                    }
+                                                    ?>
                                         </select>
                                         <span class="text-danger"><?php echo form_error('exam_id'); ?></span>
                                     </div>
@@ -124,16 +125,17 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                         <select  id="class_id" name="class_id" class="form-control"  >
                                             <option value=""><?php echo $this->lang->line('select'); ?></option>
                                             <?php
-foreach ($classlist as $class) {
-    ?>
-                                                <option value="<?php echo $class['id'] ?>"<?php if (set_value('class_id') == $class['id']) {
-        echo "selected=selected";
-    }
-    ?>><?php echo $class['class'] ?></option>
-                                                <?php
-$count++;
-}
-?>
+                                            foreach ($classlist as $class) {
+                                                ?>
+                                                <option value="<?php echo $class['id'] ?>"<?php
+                                                if (set_value('class_id') == $class['id']) {
+                                                    echo "selected=selected";
+                                                }
+                                                ?>><?php echo $class['class'] ?></option>
+                                                        <?php
+                                                        $count++;
+                                                    }
+                                                    ?>
                                         </select>
                                         <span class="text-danger"><?php echo form_error('class_id'); ?></span>
                                     </div>
@@ -147,107 +149,136 @@ $count++;
                                         <span class="text-danger"><?php echo form_error('section_id'); ?></span>
                                     </div>
                                 </div>
-                            
-                        
-                        <div class="col-sm-12">
-                          <div class="form-group">  
-                            <button type="submit" name="action" value ="search" class="btn btn-primary pull-right btn-sm"><i class="fa fa-search"></i> <?php echo $this->lang->line('search'); ?></button>
-                          </div>  
-                        </div>
-                      </div>
-                    </div>
-                    </form>
-             
 
-            <div class="">
-                <div class="box-header ptbnull"></div>
-                <div class="box-header ptbnull">
-                    <h3 class="box-title titlefix"><i class="fa fa-money"></i> <?php echo $this->lang->line('online')." ".$this->lang->line('exam')." ".$this->lang->line('rank')." ".$this->lang->line('report'); ?></h3>
-                </div>
-                <div class="box-body table-responsive">
-                 <div class="download_label"><?php echo $this->lang->line('online')." ".$this->lang->line('exam')." ".$this->lang->line('rank')." ".$this->lang->line('report')."<br>";$this->customlib->get_postmessage(); ?></div>
-                     <table class="table table-striped table-bordered table-hover example">
+
+                                <div class="col-sm-12">
+                                    <div class="form-group">  
+                                        <button type="submit" name="action" value ="search" class="btn btn-primary pull-right btn-sm"><i class="fa fa-search"></i> <?php echo $this->lang->line('search'); ?></button>
+                                    </div>  
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+
+
+                    <div class="">
+                        <div class="box-header ptbnull"></div>
+                        <div class="box-header ptbnull">
+                            <h3 class="box-title titlefix"><i class="fa fa-money"></i> <?php echo $this->lang->line('online') . " " . $this->lang->line('exam') . " " . $this->lang->line('rank') . " " . $this->lang->line('report'); ?></h3>
+                        </div>
+                        <div class="box-body table-responsive">
+                            <div class="download_label"><?php echo $this->lang->line('online') . " " . $this->lang->line('exam') . " " . $this->lang->line('rank') . " " . $this->lang->line('report') . "<br>";
+                                                    $this->customlib->get_postmessage();
+                                                    ?></div>
+                            <table class="table table-striped table-bordered table-hover example">
                                 <thead>
                                     <tr>
-                                        <th><?php echo $this->lang->line('rank')?></th>
-                                        <th><?php echo $this->lang->line('student')?></th>
-                                        <th><?php  echo $this->lang->line('admission_no')?></th>
-                                        <th><?php  echo $this->lang->line('class'); ?></th>
+                                        <th><?php echo $this->lang->line('rank') ?></th>
+                                        <th><?php echo $this->lang->line('student') ?></th>
+                                        <th><?php echo $this->lang->line('admission_no') ?></th>
+                                        <th><?php echo $this->lang->line('class'); ?></th>
                                         <th><?php echo $this->lang->line('section') ?></th>
                                         <th><?php echo $this->lang->line('exam') ?></th>
-                                        <th><?php echo $this->lang->line('correct')." ".$this->lang->line('answer') ?></th>
-                                        <th><?php echo $this->lang->line('incorrect')." ".$this->lang->line('answer') ?></th>
-                                        <th><?php echo $this->lang->line('total')." ".$this->lang->line('question')?></th>
-                                        <th><?php echo $this->lang->line('percentage')?></th>
+                                        <th><?php echo $this->lang->line('correct') . " " . $this->lang->line('answer') ?></th>
+                                        <th><?php echo $this->lang->line('incorrect') . " " . $this->lang->line('answer') ?></th>
+                                        <th><?php echo $this->lang->line('total') . " " . $this->lang->line('question') ?></th>
+                                        <th><?php echo $this->lang->line('percentage') ?></th>
                                         <th><?php echo $this->lang->line('result'); ?></th>
 
                                     </tr>
-                                </thead>
+                                </thead> 
                                 <tbody>
-                                    <?php 
-                                    if(!empty($final_result)){
- $s=1;
-                                 
-                                   $getrecord=count($final_result)-1;
+                                    <?php
+                                    if (!empty($final_result)) {
+                                        $s = 1;
 
-                                    $last=$getrecord;
-                                    $status="";
-                                    for($i=1;$i<=count($final_result);$i++){
-                                        $onlineexam_student_id=$final_result[$last]['onlineexam_student_id'];
-                                        if(!empty($final_result[$last]['percentage'])){
-                                             if($final_result[$last]['percentage']>=$studentrecord[$onlineexam_student_id]['passing_percentage']){
-                                            $status="Pass";
-                                        }else{
-                                             $status="Fail";
-                                        }
-                                        }
-                                       
-                                    ?>
-                                    <tr>
-                                        <td><?php echo $s++;?></td>
-                                        <td><?php if(!empty($studentrecord[$onlineexam_student_id]['firstname'])){
-                                            echo  $studentrecord[$onlineexam_student_id]['firstname']." "; } if(!empty($studentrecord[$onlineexam_student_id]['lastname'])){
-                                            echo  $studentrecord[$onlineexam_student_id]['lastname']; }?></td>
-                                        <td><?php if(!empty($studentrecord[$onlineexam_student_id]['admission_no'])){ echo  $studentrecord[$onlineexam_student_id]['admission_no']; }?></td>
-                                        <td><?php if(!empty($studentrecord[$onlineexam_student_id]['class'])){ echo  $studentrecord[$onlineexam_student_id]['class']; }?></td>
-                                        <td><?php if(!empty($studentrecord[$onlineexam_student_id]['section'])){ echo  $studentrecord[$onlineexam_student_id]['section']; }?></td>
-                                         <td><?php if(!empty($studentrecord[$onlineexam_student_id]['exam'])){ echo  $studentrecord[$onlineexam_student_id]['exam']; }?></td>
-                                        <td><?php echo $final_result[$last]['correct_answer'] ?></td>
-                                        <td><?php echo $final_result[$last]['incorrect_answer'] ?></td>
-                                        <td><?php echo $final_result[$last]['total_questions'] ?></td>
-                                        <td><?php echo round($final_result[$last]['percentage'],1) ?></td>
-                                        <td><?php echo $status; ?></td>
-                                    </tr>
-                                  <?php
-                                   $last--;
-                                    }
-                                     } ?>
+                                        $getrecord = count($final_result) - 1;
+
+                                        $last = $getrecord;
+
+
+                                        for ($i = 1; $i <= count($final_result); $i++) {
+                                            $onlineexam_student_id = $final_result[$last]['onlineexam_student_id'];
+
+
+                                            $status = $this->lang->line('fail');
+                                            if (!empty($final_result[$last]['percentage'])) {
+
+                                                if ($final_result[$last]['percentage'] >= $studentrecord[$onlineexam_student_id]['passing_percentage']) {
+                                                    $status = $this->lang->line('pass');
+                                                } else {
+                                                    $status = $this->lang->line('fail');
+                                                }
+                                            }
+                                            ?>
+                                            <tr>
+                                                <td><?php echo $s++; ?></td>
+                                                <td><?php
+                                                    if (!empty($studentrecord[$onlineexam_student_id]['firstname'])) {
+                                                        echo $studentrecord[$onlineexam_student_id]['firstname'] . " ";
+                                                    } if (!empty($studentrecord[$onlineexam_student_id]['lastname'])) {
+                                                        echo $studentrecord[$onlineexam_student_id]['lastname'];
+                                                    }
+                                                    ?></td>
+                                                <td><?php
+                                                    if (!empty($studentrecord[$onlineexam_student_id]['admission_no'])) {
+                                                        echo $studentrecord[$onlineexam_student_id]['admission_no'];
+                                                    }
+                                                    ?></td>
+                                                <td><?php
+                                                    if (!empty($studentrecord[$onlineexam_student_id]['class'])) {
+                                                        echo $studentrecord[$onlineexam_student_id]['class'];
+                                                    }
+                                                    ?></td>
+                                                <td><?php
+                                                    if (!empty($studentrecord[$onlineexam_student_id]['section'])) {
+                                                        echo $studentrecord[$onlineexam_student_id]['section'];
+                                                    }
+                                                    ?></td>
+                                                <td><?php
+                                                    if (!empty($studentrecord[$onlineexam_student_id]['exam'])) {
+                                                        echo $studentrecord[$onlineexam_student_id]['exam'];
+                                                    }
+                                                    ?></td>
+                                                <td><?php echo $final_result[$last]['correct_answer'] ?></td>
+                                                <td><?php echo $final_result[$last]['incorrect_answer'] ?></td>
+                                                <td><?php echo $final_result[$last]['total_questions'] ?></td>
+                                                <td><?php echo round($final_result[$last]['percentage'], 1) ?></td>
+                                                <td><?php echo $status; ?></td>
+                                            </tr>
+        <?php
+        $last--;
+    }
+}
+?>
                                 </tbody>
                             </table>
+                        </div>
+                    </div>
                 </div>
-            </div>
-        </div>
-      </div>
-    </div>   
+            </div> 
+        </div>   
 </div>  
 </section>
 </div>
+
+
 <script>
-    <?php 
-    if($search_type=='period'){
-        ?>
-
-          $(document).ready(function () {
-            showdate('period');
-          });
-
-        <?php
-    }
+<?php
+if ($search_type == 'period') {
     ?>
-   
-    </script>
 
-    <script type="text/javascript">
+        $(document).ready(function () {
+            showdate('period');
+        });
+
+    <?php
+}
+?>
+
+</script>
+
+<script type="text/javascript">
 
 
     $(document).ready(function () {

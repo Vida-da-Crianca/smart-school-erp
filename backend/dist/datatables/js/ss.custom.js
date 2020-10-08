@@ -130,3 +130,78 @@ $(document).ready(function(){
     NProgress.start();
     setTimeout(function() { NProgress.done(); $('.fade').removeClass('out'); }, 1000);
 /*--nprogress--*/    
+
+
+   function initDatatable(_selector,_url,rm_export_btn=[],pageLength=5,aoColumnDefs=[{ "bSortable": false, "aTargets": [ -1 ] ,'sClass': 'dt-body-right'}],searching=true,aaSorting=[]){
+        if ($.fn.DataTable.isDataTable('.'+_selector)) { // if exist datatable it will destrory first
+         $('.'+_selector).DataTable().destroy();
+       }
+        table= $('.'+_selector)
+    .on( 'preInit.dt', function (e, settings ) {
+     var api = new $.fn.dataTable.Api( settings );
+     $.each(rm_export_btn, function(key, expt_select) {
+     if(expt_select === "btn-all"){
+       api.buttons().remove();
+
+     }else{
+       api.buttons('.'+expt_select).remove();
+
+     }
+    });
+
+    }).DataTable({
+        "scrollX": true,
+         dom: 'fBrtip<"clear">',
+          buttons: [
+            {
+                extend:    'copy',
+                text:      '<i class="fa fa-files-o"></i>',
+                titleAttr: 'Copy',
+                 className: "btn-copy",
+                title: $('.'+_selector).data("exportTitle")
+            },
+            {
+                extend:    'excel',
+                text:      '<i class="fa fa-file-excel-o"></i>',
+                titleAttr: 'Excel',
+                     className: "btn-excel",
+                title: $('.'+_selector).data("exportTitle")
+            },
+            {
+                extend:    'csv',
+                text:      '<i class="fa fa-file-text-o"></i>',
+                titleAttr: 'CSV',
+                className: "btn-csv",
+                title: $('.'+_selector).data("exportTitle")
+            },
+            {
+                extend:    'pdf',
+                text:      '<i class="fa fa-file-pdf-o"></i>',
+                titleAttr: 'PDF',
+                         className: "btn-pdf",
+                title: $('.'+_selector).data("exportTitle")
+            },
+            {
+                extend:    'print',
+                text:      '<i class="fa fa-print"></i>',
+                titleAttr: 'Print',
+                         className: "btn-print",
+                title: $('.'+_selector).data("exportTitle")
+            }
+        ],
+
+        "pageLength": pageLength,
+        "searching": searching,
+        "aaSorting": aaSorting, // default sorting [ [0,'asc'], [1,'asc'] ]
+        "aoColumnDefs": aoColumnDefs, //disable sorting { "bSortable": false, "aTargets": [ 1,2 ] }
+         "processing": true,
+        "serverSide": true,
+         "ajax":{
+         "url": baseurl+_url,
+         "type": "POST",
+
+
+     }
+     
+    });
+    }

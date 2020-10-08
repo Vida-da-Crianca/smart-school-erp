@@ -46,14 +46,12 @@ class Language_model extends CI_Model {
         }
     }
 
-    public function getEnable_languages(){
-        $languages_id=$this->db->select('languages')->from('sch_settings')->get()->row_array();
-       // print_r(json_decode($languages_id['languages']));
-        
-        $query=$this->db->select()->from('languages')->where_in('id',json_decode($languages_id['languages']))->get()->result_array();
+    public function getEnable_languages() {
+        $languages_id = $this->db->select('languages')->from('sch_settings')->get()->row_array();
+        // print_r(json_decode($languages_id['languages']));
+
+        $query = $this->db->select()->from('languages')->where_in('id', json_decode($languages_id['languages']))->get()->result_array();
         return $query;
-
-
     }
 
     /**
@@ -80,22 +78,23 @@ class Language_model extends CI_Model {
         }
     }
 
-    function set_userlang($id,$data){
+    function set_userlang($id, $data) {
 
-            $this->db->where('id', $id);          
-            $this->db->update('staff', $data);
-    }
-    function set_studentlang($id,$data){
-        $this->db->where('user_id', $id);          
-            $this->db->update('users', $data);
+        $this->db->where('id', $id);
+        $this->db->update('staff', $data);
     }
 
-    
-    function set_parentlang($id,$data){
-       
-        $this->db->where('id', $id);          
-            $this->db->update('users', $data);
+    function set_studentlang($id, $data) {
+        $this->db->where('user_id', $id);
+        $this->db->update('users', $data);
     }
+
+    function set_parentlang($id, $data) {
+
+        $this->db->where('id', $id);
+        $this->db->update('users', $data);
+    }
+
     public function valid_check_exists($str) {
         $language = $this->input->post('language');
         $id = $this->input->post('id');
@@ -123,8 +122,8 @@ class Language_model extends CI_Model {
         }
     }
 
-    function update_520(){
-       return $this->db->select('*')->from('languages')->get()->result_array();
+    function update_520() {
+        return $this->db->select('*')->from('languages')->where('id', 82)->get()->result_array();
     }
 
 }

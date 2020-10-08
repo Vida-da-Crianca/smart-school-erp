@@ -51,18 +51,18 @@ class Payment extends Student_Controller {
                 }
             }
 
-           $amount_balance = $result->amount - ($amount + $amount_discount);
+            $amount_balance = $result->amount - ($amount + $amount_discount);
             if ($result->is_system) {
 
                 $amount_balance = $result->student_fees_master_amount - ($amount + $amount_discount);
             }
-            
+
             $student_record = $this->student_model->get($student_id);
             $pay_method = $this->paymentsetting_model->getActiveMethod();
             if ($pay_method->payment_type == "paypal") {
                 //==========Start Paypal==========
                 if ($pay_method->api_username == "" || $pay_method->api_password == "" || $pay_method->api_signature == "") {
-                    $this->session->set_flashdata('error', 'Paypal settings not available');
+                    $this->session->set_flashdata('error', '<div class="alert alert-danger">Paypal settings not available</div>');
                     redirect($_SERVER['HTTP_REFERER']);
                 } else {
 
@@ -90,191 +90,232 @@ class Payment extends Student_Controller {
                 //==========End Paypal==========
             } else if ($pay_method->payment_type == "paystack") {
                 ///=====================
+                if ($pay_method->api_secret_key == "") {
+                    $this->session->set_flashdata('error', '<div class="alert alert-danger">Paystack settings not available</div>');
+                    redirect($_SERVER['HTTP_REFERER']);
+                } else {
+                    $payment_details = $this->feegrouptype_model->getFeeGroupByID($fee_groups_feetype_id);
+                    $page = new stdClass();
+                    $page->symbol = $this->setting[0]['currency_symbol'];
+                    $page->currency_name = $this->setting[0]['currency'];
+                    $params = array(
+                        'key' => $pay_method->api_secret_key,
+                        'api_publishable_key' => $pay_method->api_publishable_key,
+                        'invoice' => $page,
+                        'total' => $amount_balance,
+                        'student_session_id' => $student_record['student_session_id'],
+                        'guardian_phone' => $student_record['guardian_phone'],
+                        'name' => $student_record['firstname'] . " " . $student_record['lastname'],
+                        'student_fees_master_id' => $student_fees_master_id,
+                        'fee_groups_feetype_id' => $fee_groups_feetype_id,
+                        'student_id' => $student_id,
+                        'payment_detail' => $payment_details
+                    );
 
-                $payment_details = $this->feegrouptype_model->getFeeGroupByID($fee_groups_feetype_id);
-                $page = new stdClass();
-                $page->symbol = $this->setting[0]['currency_symbol'];
-                $page->currency_name = $this->setting[0]['currency'];
-                $params = array(
-                    'key' => $pay_method->api_secret_key,
-                    'api_publishable_key' => $pay_method->api_publishable_key,
-                    'invoice' => $page,
-                    'total' => $amount_balance,
-                    'student_session_id' => $student_record['student_session_id'],
-                    'guardian_phone' => $student_record['guardian_phone'],
-                    'name' => $student_record['firstname'] . " " . $student_record['lastname'],
-                    'student_fees_master_id' => $student_fees_master_id,
-                    'fee_groups_feetype_id' => $fee_groups_feetype_id,
-                    'student_id' => $student_id,
-                    'payment_detail' => $payment_details
-                );
 
-              
 
-                $this->session->set_userdata("params", $params);
-                redirect(base_url("students/paystack"));
+                    $this->session->set_userdata("params", $params);
+                    redirect(base_url("students/paystack"));
+                }
+
                 //=======================
-            }else if ($pay_method->payment_type == "stripe") {
+            } else if ($pay_method->payment_type == "stripe") {
                 ///=====================
+                if ($pay_method->api_secret_key == "" || $pay_method->api_publishable_key == "") {
+                    $this->session->set_flashdata('error', '<div class="alert alert-danger">Stripe settings not available</div>');
+                    redirect($_SERVER['HTTP_REFERER']);
+                } else {
+                    $payment_details = $this->feegrouptype_model->getFeeGroupByID($fee_groups_feetype_id);
+                    $page = new stdClass();
+                    $page->symbol = $this->setting[0]['currency_symbol'];
+                    $page->currency_name = $this->setting[0]['currency'];
+                    $params = array(
+                        'key' => $pay_method->api_secret_key,
+                        'api_publishable_key' => $pay_method->api_publishable_key,
+                        'invoice' => $page,
+                        'total' => $amount_balance,
+                        'student_session_id' => $student_record['student_session_id'],
+                        'guardian_phone' => $student_record['guardian_phone'],
+                        'name' => $student_record['firstname'] . " " . $student_record['lastname'],
+                        'student_fees_master_id' => $student_fees_master_id,
+                        'fee_groups_feetype_id' => $fee_groups_feetype_id,
+                        'student_id' => $student_id,
+                        'payment_detail' => $payment_details
+                    );
 
-                $payment_details = $this->feegrouptype_model->getFeeGroupByID($fee_groups_feetype_id);
-                $page = new stdClass();
-                $page->symbol = $this->setting[0]['currency_symbol'];
-                $page->currency_name = $this->setting[0]['currency'];
-                $params = array(
-                    'key' => $pay_method->api_secret_key,
-                    'api_publishable_key' => $pay_method->api_publishable_key,
-                    'invoice' => $page,
-                    'total' => $amount_balance,
-                    'student_session_id' => $student_record['student_session_id'],
-                    'guardian_phone' => $student_record['guardian_phone'],
-                    'name' => $student_record['firstname'] . " " . $student_record['lastname'],
-                    'student_fees_master_id' => $student_fees_master_id,
-                    'fee_groups_feetype_id' => $fee_groups_feetype_id,
-                    'student_id' => $student_id,
-                    'payment_detail' => $payment_details
-                );
+                    $this->session->set_userdata("params", $params);
+                    redirect(base_url("students/stripe"));
+                }
 
-                $this->session->set_userdata("params", $params);
-                redirect(base_url("students/stripe"));
                 //=======================
             } else if ($pay_method->payment_type == "payu") {
-                $payment_details = $this->feegrouptype_model->getFeeGroupByID($fee_groups_feetype_id);
-                $page = new stdClass();
-                $page->symbol = $this->setting[0]['currency_symbol'];
-                $page->currency_name = $this->setting[0]['currency'];
 
-                $params = array(
-                    'key' => $pay_method->api_secret_key,
-                    'api_publishable_key' => $pay_method->api_publishable_key,
-                    'invoice' => $page,
-                    'total' => $amount_balance,
-                    'student_session_id' => $student_record['student_session_id'],
-                    'name' => $student_record['firstname'] . " " . $student_record['lastname'],
-                    'email' => $student_record['email'],
-                    'guardian_phone' => $student_record['guardian_phone'],
-                    'address' => $student_record['permanent_address'],
-                    'student_fees_master_id' => $student_fees_master_id,
-                    'fee_groups_feetype_id' => $fee_groups_feetype_id,
-                    'student_id' => $student_id,
-                    'payment_detail' => $payment_details
-                );
- 
-                $this->session->set_userdata("params", $params);
-                redirect(base_url("students/payu"));
+                if ($pay_method->api_secret_key == "") {
+                    $this->session->set_flashdata('error', '<div class="alert alert-danger">Payu settings not available</div>');
+                    redirect($_SERVER['HTTP_REFERER']);
+                } else {
+                    $payment_details = $this->feegrouptype_model->getFeeGroupByID($fee_groups_feetype_id);
+                    $page = new stdClass();
+                    $page->symbol = $this->setting[0]['currency_symbol'];
+                    $page->currency_name = $this->setting[0]['currency'];
+
+                    $params = array(
+                        'key' => $pay_method->api_secret_key,
+                        'api_publishable_key' => $pay_method->api_publishable_key,
+                        'invoice' => $page,
+                        'total' => $amount_balance,
+                        'student_session_id' => $student_record['student_session_id'],
+                        'name' => $student_record['firstname'] . " " . $student_record['lastname'],
+                        'email' => $student_record['email'],
+                        'guardian_phone' => $student_record['guardian_phone'],
+                        'address' => $student_record['permanent_address'],
+                        'student_fees_master_id' => $student_fees_master_id,
+                        'fee_groups_feetype_id' => $fee_groups_feetype_id,
+                        'student_id' => $student_id,
+                        'payment_detail' => $payment_details
+                    );
+
+                    $this->session->set_userdata("params", $params);
+                    redirect(base_url("students/payu"));
+                }
             } else if ($pay_method->payment_type == "ccavenue") {
-                $payment_details = $this->feegrouptype_model->getFeeGroupByID($fee_groups_feetype_id);
-                $page = new stdClass();
-                $page->symbol = $this->setting[0]['currency_symbol'];
-                $page->currency_name = $this->setting[0]['currency'];
-                $params = array(
-                    'key' => $pay_method->api_secret_key,
-                    'api_publishable_key' => $pay_method->api_publishable_key,
-                    'invoice' => $page,
-                    'total' => $amount_balance,
-                    'student_session_id' => $student_record['student_session_id'],
-                    'guardian_phone' => $student_record['guardian_phone'],
-                    'name' => $student_record['firstname'] . " " . $student_record['lastname'],
-                    'student_fees_master_id' => $student_fees_master_id,
-                    'fee_groups_feetype_id' => $fee_groups_feetype_id,
-                    'student_id' => $student_id,
-                    'payment_detail' => $payment_details
-                );
-  
-                $this->session->set_userdata("params", $params);
-                redirect(base_url("students/ccavenue"));
-            }  else if ($pay_method->payment_type == "instamojo") {
-                $payment_details = $this->feegrouptype_model->getFeeGroupByID($fee_groups_feetype_id);
-                $page = new stdClass();
-                $page->symbol = $this->setting[0]['currency_symbol'];
-                $page->currency_name = $this->setting[0]['currency'];
-                $params = array(
-                    'key' => $pay_method->api_secret_key,
-                    'api_publishable_key' => $pay_method->api_publishable_key,
-                    'invoice' => $page,
-                    'total' => $amount_balance,
-                    'student_session_id' => $student_record['student_session_id'],
-                    'guardian_phone' => $student_record['guardian_phone'],
-                    'name' => $student_record['firstname'] . " " . $student_record['lastname'],
-                    'student_fees_master_id' => $student_fees_master_id,
-                    'fee_groups_feetype_id' => $fee_groups_feetype_id,
-                    'student_id' => $student_id,
-                    'payment_detail' => $payment_details
-                );
+                if ($pay_method->api_secret_key == "" || $pay_method->salt == "") {
+                    $this->session->set_flashdata('error', '<div class="alert alert-danger">Ccavenue settings not available</div>');
+                    redirect($_SERVER['HTTP_REFERER']);
+                } else {
+                    $payment_details = $this->feegrouptype_model->getFeeGroupByID($fee_groups_feetype_id);
+                    $page = new stdClass();
+                    $page->symbol = $this->setting[0]['currency_symbol'];
+                    $page->currency_name = $this->setting[0]['currency'];
+                    $params = array(
+                        'key' => $pay_method->api_secret_key,
+                        'api_publishable_key' => $pay_method->api_publishable_key,
+                        'invoice' => $page,
+                        'total' => $amount_balance,
+                        'student_session_id' => $student_record['student_session_id'],
+                        'guardian_phone' => $student_record['guardian_phone'],
+                        'name' => $student_record['firstname'] . " " . $student_record['lastname'],
+                        'student_fees_master_id' => $student_fees_master_id,
+                        'fee_groups_feetype_id' => $fee_groups_feetype_id,
+                        'student_id' => $student_id,
+                        'payment_detail' => $payment_details
+                    );
 
-                $this->session->set_userdata("params", $params);
-                redirect(base_url("students/instamojo"));
-            }else if ($pay_method->payment_type == "razorpay") {
-                $payment_details = $this->feegrouptype_model->getFeeGroupByID($fee_groups_feetype_id);
-                $page = new stdClass();
-                $page->symbol = $this->setting[0]['currency_symbol'];
-                $page->currency_name = $this->setting[0]['currency'];
-                $params = array(
-                    'key' => $pay_method->api_publishable_key,
-                    'api_publishable_key' => $pay_method->api_secret_key,
-                    'invoice' => $page,
-                    'total' => $amount_balance,
-                    'student_session_id' => $student_record['student_session_id'],
-                    'guardian_phone' => $student_record['guardian_phone'],
-                    'name' => $student_record['firstname'] . " " . $student_record['lastname'],
-                    'student_fees_master_id' => $student_fees_master_id,
-                    'fee_groups_feetype_id' => $fee_groups_feetype_id,
-                    'student_id' => $student_id,
-                    'payment_detail' => $payment_details
-                );
+                    $this->session->set_userdata("params", $params);
+                    redirect(base_url("students/ccavenue"));
+                }
+            } else if ($pay_method->payment_type == "instamojo") {
 
-                $this->session->set_userdata("params", $params);
-                redirect(base_url("students/razorpay"));
-            }else if ($pay_method->payment_type == "paytm") {
-              
-                $payment_details = $this->feegrouptype_model->getFeeGroupByID($fee_groups_feetype_id);
-                $page = new stdClass();
-                $page->symbol = $this->setting[0]['currency_symbol'];
-                $page->currency_name = $this->setting[0]['currency'];
-                $params = array(
-                    'key' => $pay_method->api_publishable_key,
-                    'api_publishable_key' => $pay_method->api_secret_key,
-                    'invoice' => $page,
-                    'total' => $amount_balance,
-                    'student_session_id' => $student_record['student_session_id'],
-                    'guardian_phone' => $student_record['guardian_phone'],
-                    'name' => $student_record['firstname'] . " " . $student_record['lastname'],
-                    'student_fees_master_id' => $student_fees_master_id,
-                    'fee_groups_feetype_id' => $fee_groups_feetype_id,
-                    'student_id' => $student_id,
-                    'payment_detail' => $payment_details
-                );
+                if ($pay_method->api_secret_key == "" || $pay_method->api_publishable_key == "" || $pay_method->salt == "") {
+                    $this->session->set_flashdata('error', '<div class="alert alert-danger">Instamojo settings not available</div>');
+                    redirect($_SERVER['HTTP_REFERER']);
+                } else {
+                    $payment_details = $this->feegrouptype_model->getFeeGroupByID($fee_groups_feetype_id);
+                    $page = new stdClass();
+                    $page->symbol = $this->setting[0]['currency_symbol'];
+                    $page->currency_name = $this->setting[0]['currency'];
+                    $params = array(
+                        'key' => $pay_method->api_secret_key,
+                        'api_publishable_key' => $pay_method->api_publishable_key,
+                        'invoice' => $page,
+                        'total' => $amount_balance,
+                        'student_session_id' => $student_record['student_session_id'],
+                        'guardian_phone' => $student_record['guardian_phone'],
+                        'name' => $student_record['firstname'] . " " . $student_record['lastname'],
+                        'student_fees_master_id' => $student_fees_master_id,
+                        'fee_groups_feetype_id' => $fee_groups_feetype_id,
+                        'student_id' => $student_id,
+                        'payment_detail' => $payment_details
+                    );
 
-                $this->session->set_userdata("params", $params);
-                redirect(base_url("students/paytm"));
-            }else if ($pay_method->payment_type == "midtrans") {
-              
-                $payment_details = $this->feegrouptype_model->getFeeGroupByID($fee_groups_feetype_id);
-                $page = new stdClass();
-                $page->symbol = $this->setting[0]['currency_symbol'];
-                $page->currency_name = $this->setting[0]['currency'];
-                $params = array(
-                    'key' => $pay_method->api_secret_key,
-                    //'api_publishable_key' => $pay_method->api_secret_key,
-                    'invoice' => $page,
-                    'total' => $amount_balance,
-                    'student_session_id' => $student_record['student_session_id'],
-                    'guardian_phone' => $student_record['guardian_phone'],
-                    'name' => $student_record['firstname'] . " " . $student_record['lastname'],
-                    'student_fees_master_id' => $student_fees_master_id,
-                    'fee_groups_feetype_id' => $fee_groups_feetype_id,
-                    'student_id' => $student_id,
-                    'payment_detail' => $payment_details
-                );
+                    $this->session->set_userdata("params", $params);
+                    redirect(base_url("students/instamojo"));
+                }
+            } else if ($pay_method->payment_type == "razorpay") {
 
-                $this->session->set_userdata("params", $params);
-                redirect(base_url("students/midtrans"));
-            }else {
+                if ($pay_method->api_secret_key == "" || $pay_method->api_publishable_key == "") {
+                    $this->session->set_flashdata('error', '<div class="alert alert-danger">Razorpay settings not available</div>');
+                    redirect($_SERVER['HTTP_REFERER']);
+                } else {
+                    $payment_details = $this->feegrouptype_model->getFeeGroupByID($fee_groups_feetype_id);
+                    $page = new stdClass();
+                    $page->symbol = $this->setting[0]['currency_symbol'];
+                    $page->currency_name = $this->setting[0]['currency'];
+                    $params = array(
+                        'key' => $pay_method->api_publishable_key,
+                        'api_publishable_key' => $pay_method->api_secret_key,
+                        'invoice' => $page,
+                        'total' => $amount_balance,
+                        'student_session_id' => $student_record['student_session_id'],
+                        'guardian_phone' => $student_record['guardian_phone'],
+                        'name' => $student_record['firstname'] . " " . $student_record['lastname'],
+                        'student_fees_master_id' => $student_fees_master_id,
+                        'fee_groups_feetype_id' => $fee_groups_feetype_id,
+                        'student_id' => $student_id,
+                        'payment_detail' => $payment_details
+                    );
+
+                    $this->session->set_userdata("params", $params);
+                    redirect(base_url("students/razorpay"));
+                }
+            } else if ($pay_method->payment_type == "paytm") {
+                if ($pay_method->api_secret_key == "" || $pay_method->api_publishable_key == "" || $pay_method->paytm_website == "") {
+                    $this->session->set_flashdata('error', '<div class="alert alert-danger">Paytm settings not available</div>');
+                    redirect($_SERVER['HTTP_REFERER']);
+                } else {
+                    $payment_details = $this->feegrouptype_model->getFeeGroupByID($fee_groups_feetype_id);
+                    $page = new stdClass();
+                    $page->symbol = $this->setting[0]['currency_symbol'];
+                    $page->currency_name = $this->setting[0]['currency'];
+                    $params = array(
+                        'key' => $pay_method->api_publishable_key,
+                        'api_publishable_key' => $pay_method->api_secret_key,
+                        'invoice' => $page,
+                        'total' => $amount_balance,
+                        'student_session_id' => $student_record['student_session_id'],
+                        'guardian_phone' => $student_record['guardian_phone'],
+                        'name' => $student_record['firstname'] . " " . $student_record['lastname'],
+                        'student_fees_master_id' => $student_fees_master_id,
+                        'fee_groups_feetype_id' => $fee_groups_feetype_id,
+                        'student_id' => $student_id,
+                        'payment_detail' => $payment_details
+                    );
+
+                    $this->session->set_userdata("params", $params);
+                    redirect(base_url("students/paytm"));
+                }
+            } else if ($pay_method->payment_type == "midtrans") {
+                if ($pay_method->api_secret_key == "") {
+                    $this->session->set_flashdata('error', '<div class="alert alert-danger">Midtrans settings not available</div>');
+                    redirect($_SERVER['HTTP_REFERER']);
+                } else {
+                    $payment_details = $this->feegrouptype_model->getFeeGroupByID($fee_groups_feetype_id);
+                    $page = new stdClass();
+                    $page->symbol = $this->setting[0]['currency_symbol'];
+                    $page->currency_name = $this->setting[0]['currency'];
+                    $params = array(
+                        'key' => $pay_method->api_secret_key,
+                        //'api_publishable_key' => $pay_method->api_secret_key,
+                        'invoice' => $page,
+                        'total' => $amount_balance,
+                        'student_session_id' => $student_record['student_session_id'],
+                        'guardian_phone' => $student_record['guardian_phone'],
+                        'name' => $student_record['firstname'] . " " . $student_record['lastname'],
+                        'student_fees_master_id' => $student_fees_master_id,
+                        'fee_groups_feetype_id' => $fee_groups_feetype_id,
+                        'student_id' => $student_id,
+                        'payment_detail' => $payment_details
+                    );
+
+                    $this->session->set_userdata("params", $params);
+                    redirect(base_url("students/midtrans"));
+                }
+            } else {
                 $this->session->set_flashdata('error', 'Something wrong');
                 redirect($_SERVER['HTTP_REFERER']);
             }
         } else {
-            $this->session->set_flashdata('error', 'Payment settings not available');
+            $this->session->set_flashdata('error', '<div class="alert alert-danger">Payment settings not available</div>');
             redirect($_SERVER['HTTP_REFERER']);
         }
     }

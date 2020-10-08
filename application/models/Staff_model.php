@@ -95,7 +95,35 @@ class Staff_model extends MY_Model
             if ($is_active != null) {
 
                 $this->db->where('staff.is_active', $is_active);
+            } 
+            $this->db->order_by('staff.id');
+        }
+        $query = $this->db->get();
+        if ($id != null) {
+            return $query->row_array();
+        } else {
+            return $query->result_array();
+        }
+    }
+
+     public function getAll_users($id = null, $is_active = null)
+    {
+
+        $this->db->select("staff.*,staff_designation.designation,department.department_name as department, roles.id as role_id, roles.name as role");
+        $this->db->from('staff');
+        $this->db->join('staff_designation', "staff_designation.id = staff.designation", "left");
+        $this->db->join('staff_roles', "staff_roles.staff_id = staff.id", "left");
+        $this->db->join('roles', "roles.id = staff_roles.role_id", "left");
+        $this->db->join('department', "department.id = staff.department", "left");
+
+        if ($id != null) {
+            $this->db->where('staff.id', $id);
+        } else {
+            if ($is_active != null) {
+
+                $this->db->where('staff.is_active', $is_active);
             }
+             $this->db->where('roles.id!=', 7);
             $this->db->order_by('staff.id');
         }
         $query = $this->db->get();
@@ -592,7 +620,7 @@ class Staff_model extends MY_Model
 
         return $query->result_array();
     }
-
+ 
     public function getStaffDesignation()
     {
 
@@ -611,7 +639,7 @@ class Staff_model extends MY_Model
     public function getLeaveRecord($id)
     {
 
-        $query = $this->db->select('leave_types.type,leave_types.id as lid,staff_roles.id as staff_role,staff.name,staff.surname,staff.id as staff_id,roles.name as user_type,staff.employee_id,staff_leave_request.*')->join("leave_types", "leave_types.id = staff_leave_request.leave_type_id")->join("staff", "staff.id = staff_leave_request.staff_id")->join("staff_roles", "staff.id = staff_roles.staff_id")->join("roles", "staff_roles.role_id = roles.id")->where("staff_leave_request.id", $id)->get("staff_leave_request");
+        $query = $this->db->select('leave_types.type,leave_types.id as lid,roles.id as staff_role,staff.name,staff.surname,staff.id as staff_id,roles.name as user_type,staff.employee_id,staff_leave_request.*')->join("leave_types", "leave_types.id = staff_leave_request.leave_type_id")->join("staff", "staff.id = staff_leave_request.staff_id")->join("staff_roles", "staff.id = staff_roles.staff_id")->join("roles", "staff_roles.role_id = roles.id")->where("staff_leave_request.id", $id)->get("staff_leave_request");
 
         return $query->row();
     }
@@ -745,20 +773,55 @@ class Staff_model extends MY_Model
         return $query->result_array();
     }
 
-    public function disablestaff($id)
+    public function disablestaff($data)
     {
+           $this->db->trans_start(); # Starting Transaction
+        $this->db->trans_strict(false); # See Note 01. If you wish can remove as well
+       
+           $query = $this->db->where("id", $data['id'])->update("staff", $data);
 
-        $data = array('is_active' => 0);
+         
+                
+                  $message   = UPDATE_RECORD_CONSTANT . " On  disable Staff id " .$data['id'];
+            $action    = "Update";
+            $record_id = $insert_id = $data['id'];
+            $this->log($message, $record_id, $action);
+           
 
-        $query = $this->db->where("id", $id)->update("staff", $data);
+        if ($this->db->trans_status() === false) {
+            $this->db->trans_rollback();
+        } else {
+            $this->db->trans_commit();
+        }
+
+        
     }
 
     public function enablestaff($id)
     {
 
-        $data = array('is_active' => 1);
+       
+
+         $this->db->trans_start(); # Starting Transaction
+        $this->db->trans_strict(false); # See Note 01. If you wish can remove as well
+       
+           $data = array('is_active' => 1,'disable_at'=>'');
 
         $query = $this->db->where("id", $id)->update("staff", $data);
+
+         
+                
+                  $message   = UPDATE_RECORD_CONSTANT . " On  Enable Staff id " .$id;
+            $action    = "Update";
+            $record_id = $insert_id = $id;
+            $this->log($message, $record_id, $action);
+           
+
+        if ($this->db->trans_status() === false) {
+            $this->db->trans_rollback();
+        } else {
+            $this->db->trans_commit();
+        }
     }
 
     public function getByEmail($email)
@@ -766,6 +829,7 @@ class Staff_model extends MY_Model
         $this->db->select('staff.*,languages.language,languages.id as language_id');
         $this->db->from('staff')->join('languages', 'languages.id=staff.lang_id', 'left');
         $this->db->where('email', $email);
+        
         $query = $this->db->get();
         
         if ($query->num_rows() == 1) {

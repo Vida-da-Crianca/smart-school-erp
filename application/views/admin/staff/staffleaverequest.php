@@ -17,10 +17,10 @@
                 <div class="box box-primary">
                     <div class="box-header ptbnull">
                         <h3 class="box-title titlefix"><?php echo $this->lang->line('approve_leave_request'); ?></h3> <?php
-            if ($this->rbac->hasPrivilege('approve_leave_request', 'can_add')) {
-                ?>
-                <small class="pull-right"><a href="#addleave" onclick="addLeave()" role="button" class="btn btn-primary btn-sm checkbox-toggle pull-right edit_setting" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> Processing"><?php echo $this->lang->line('add'); ?> <?php echo $this->lang->line('leave_request'); ?></a></small>
-            <?php } ?>
+                        if ($this->rbac->hasPrivilege('approve_leave_request', 'can_add')) {
+                            ?>
+                            <small class="pull-right"><a href="#addleave" onclick="addLeave()" role="button" class="btn btn-primary btn-sm checkbox-toggle pull-right edit_setting" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> Processing"><?php echo $this->lang->line('add'); ?> <?php echo $this->lang->line('leave_request'); ?></a></small>
+                        <?php } ?>
                     </div><!-- /.box-header -->
                     <div class="box-body">
                         <div class="row">
@@ -74,21 +74,35 @@
                                                                 ?> 
                                                                 <a data-placement="left" href="#addleave" onclick="editRecord('<?php echo $value["id"] ?>')" role="button" class="btn btn-default btn-xs" data-toggle="tooltip" title="<?php echo $this->lang->line('edit'); ?>" ><i class="fa fa-pencil"></i></a>
                                                             <?php } ?>
-                                                            <?php if (!empty($value['document_file'])) { ?>
-                                                                <a data-placement="left" href="<?php echo base_url(); ?>admin/staff/download/<?php echo $value['staff_id'] . "/" . $value['document_file']; ?>" class="btn btn-default btn-xs"  data-toggle="tooltip" title="<?php echo $this->lang->line('download'); ?>">
-                                                                    <i class="fa fa-download"></i>
-                                                                </a>  
-                                                            <?php } ?>                               
+
                                                         <?php } ?>
+                                                        <?php if (!empty($value['document_file'])) { ?>
+                                                            <a data-placement="left" href="<?php echo base_url(); ?>admin/staff/download/<?php echo $value['staff_id'] . "/" . $value['document_file']; ?>" class="btn btn-default btn-xs"  data-toggle="tooltip" title="<?php echo $this->lang->line('download'); ?>">
+                                                                <i class="fa fa-download"></i>
+                                                            </a>  
+                                                        <?php }
+                                                        ?>
+                                                        <?php if ($value["applied_by"] == $this->customlib->getAdminSessionUserName()) { ?>
+
+                                                            <a onclick="getDelete('<?php echo $value["id"] ?>')"  class="btn btn-default btn-xs" data-toggle="tooltip" title="<?php echo $this->lang->line('delete'); ?>" ><i class="fa fa-remove"></i></a>
+
+
+                                                            <?php
+                                                        } else {
+
+                                                            if ($this->rbac->hasPrivilege('approve_leave_request', 'can_delete')) {
+                                                                ?> 
+                                                                <a onclick="getDelete('<?php echo $value["id"] ?>')"  class="btn btn-default btn-xs" data-toggle="tooltip" title="<?php echo $this->lang->line('delete'); ?>" ><i class="fa fa-remove"></i></a>
+                                                            <?php } ?>
+                                                        <?php }
+                                                        ?>
                                                     </td>
 
                                                 </tr>
                                                 <?php
                                                 $i++;
                                             }
-                                            ?>                         
-
-
+                                            ?> 
                                         </tbody>
                                     </table>
                                 </div>
@@ -96,8 +110,8 @@
                         </div>
                     </div>               
                 </div>
-            </div> </div>
-
+            </div> 
+        </div>
     </section>
 </div>
 
@@ -121,10 +135,8 @@
                                     <td width="35%"><span id="employee_id"></span>
                                         <span class="text-danger"><?php echo form_error('leave_request_id'); ?></span>
                                     </td>
-
                                 </tr>
                                 <tr>
-
                                     <th><?php echo $this->lang->line('submitted_by'); ?></th>
                                     <td><span id="appliedby"></span></td>
                                     <th><?php echo $this->lang->line('leave_type'); ?></th>
@@ -140,30 +152,28 @@
                                     <td><span id="applied_date"></span></td>
                                 </tr>
                                 <tr>
-                                    <?php if($this->rbac->hasPrivilege('approve_leave_request','can_edit')){
+                                    <?php if ($this->rbac->hasPrivilege('approve_leave_request', 'can_edit')) {
                                         ?>
-                                         <th><?php echo $this->lang->line('status'); ?></th>
-                                    <td>
-                                        <label class="radio-inline">
-                                            <input type="radio" value="<?php echo "pending"; ?>" name="status" checked ><?php echo $status["pending"]; ?>
-                                        </label>
-                                        <label class="radio-inline">
-                                            <input type="radio" value="<?php echo "approve"; ?>" name="status"><?php echo $status["approve"]; ?>
-                                        </label>
-                                        <label class="radio-inline">
-                                            <input type="radio" value="<?php echo "disapprove"; ?>" name="status"><?php echo $status["disapprove"]; ?> 
-                                        </label>
-                                        <span class="text-danger"><?php echo form_error('status'); ?></span>
-                                    </td>
-                                        <?php
-                                    }?>
-                                   
+                                        <th><?php echo $this->lang->line('status'); ?></th>
+                                        <td>
+                                            <label class="radio-inline">
+                                                <input type="radio" value="<?php echo "pending"; ?>" name="status" checked ><?php echo $status["pending"]; ?>
+                                            </label>
+                                            <label class="radio-inline">
+                                                <input type="radio" value="<?php echo "approve"; ?>" name="status"><?php echo $status["approve"]; ?>
+                                            </label>
+                                            <label class="radio-inline">
+                                                <input type="radio" value="<?php echo "disapprove"; ?>" name="status"><?php echo $status["disapprove"]; ?> 
+                                            </label>
+                                            <span class="text-danger"><?php echo form_error('status'); ?></span>
+                                        </td>
+                                    <?php }
+                                    ?>
+
                                     <th><?php echo $this->lang->line('reason'); ?></th>
                                     <td><span id="remark"> </span></td>
                                 </tr> 
                                 <tr>
-
-
                                     <th><?php echo $this->lang->line('note'); ?></th>
                                 </tr>
                                 <tr>
@@ -192,7 +202,6 @@
     </div>
 </div>
 
-
 <div id="addleave" class="modal fade " role="dialog">
     <div class="modal-dialog modal-dialog2 modal-lg">
         <div class="modal-content">
@@ -201,10 +210,8 @@
                 <h4 class="modal-title"><?php echo $this->lang->line('add'); ?>&nbsp;<?php echo $this->lang->line('details'); ?></h4>
             </div>
             <div class="modal-body">
-
                 <div class="row">
                     <form role="form" id="addleave_form" method="post" enctype="multipart/form-data" action="">
-
                         <div class="form-group  col-xs-12 col-sm-12 col-md-12 col-lg-6">
                             <label>
                                 <?php echo $this->lang->line('role'); ?></label><small class="req"> *</small>
@@ -227,9 +234,7 @@
                         <div class="form-group  col-xs-12 col-sm-12 col-md-12 col-lg-6">
                             <label><?php echo $this->lang->line('apply'); ?> <?php echo $this->lang->line('date'); ?></label>
                             <input type="text" id="applieddate" name="applieddate" value="<?php echo date($this->customlib->getSchoolDateFormat()) ?>" class="form-control date">
-
                         </div>
-
                         <div class="form-group  col-xs-12 col-sm-12 col-md-12 col-lg-6 ">
                             <label>
                                 <?php echo $this->lang->line('leave_type'); ?></label><small class="req"> *</small>
@@ -247,17 +252,14 @@
                         </div>
                         <div class="form-group col-xs-12 col-sm-12 col-md-12 col-lg-12">
                             <label><?php echo $this->lang->line('leave'); ?> <?php echo $this->lang->line('date'); ?>:</label>
-
                             <div class="input-group">
                                 <div class="input-group-addon">
                                     <i class="fa fa-calendar"></i>
                                 </div>
                                 <input type="text" readonly name="leavedates" class="form-control pull-right" id="reservation">
                             </div>
-
                             <!-- /.input group -->
                         </div>
-
 
                         <div class="form-group col-xs-12 col-sm-12 col-md-12 col-lg-6">
                             <label><?php echo $this->lang->line('reason'); ?></label><br/>
@@ -292,23 +294,15 @@
 
                                 <input type="radio" value="<?php echo "disapprove" ?>"  name="addstatus"><?php echo $status["disapprove"] ?></label>
 
-
                             <span class="text-danger"><?php echo form_error('addstatus'); ?></span>
                         </div>
-
-
                         <div class="clearfix"></div>
-
                         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                             <button type="submit" class="btn btn-primary submit_addLeave pull-right" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> Processing"> <?php echo $this->lang->line('save'); ?></button>
                             <input type="reset"  name="resetbutton" id="resetbutton" style="display:none">
                             <button type="button" style="display: none;" id="clearform" onclick="clearForm(this.form)" class="btn btn-primary submit_addLeave pull-right" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> Processing"> <?php echo $this->lang->line('clear'); ?></button>
 
                         </div>
-
-
-
-
                     </form>                  
                 </div>
             </div>
@@ -326,6 +320,28 @@
 </script>
 
 <script type="text/javascript">
+
+    function getDelete(id) {
+        var result = confirm("<?php echo $this->lang->line('delete_confirm'); ?>");
+        if (result) {
+            $.ajax({
+                url: "<?php echo base_url(); ?>admin/leaverequest/remove/" + id,
+                type: "POST",
+
+                success: function (res)
+                {
+                    successMsg('<?php echo $this->lang->line("delete_message"); ?>');
+                    window.location.reload(true);
+                },
+                error: function (xhr) { // if error occured
+                    alert("Error occured.please try again");
+                },
+                complete: function () {
+
+                }
+            });
+        }
+    }
 
     $(document).ready(function () {
         $('.detail_popover').popover({
@@ -345,24 +361,27 @@
             format: date_format,
             autoclose: true
         });
-        $('#reservation').daterangepicker();
+        $('#reservation').daterangepicker({
+            timePickerIncrement: 5, locale: {
+                format: calendar_date_time_format
+            }});
     });
 
     function addLeave() {
-        $('input:radio[name=addstatus]').attr('checked', false);
+
         $('input[type=text]').val('');
         $('textarea[name="reason"]').text('');
-        $('textarea[name="remark"]').text('');
         $("#resetbutton").click();
         $("#clearform").click();
-        $('input:radio[name=addstatus]')[0].checked = true;
 
         var date_format = '<?php echo $result = strtr($this->customlib->getSchoolDateFormat(), ['d' => 'dd', 'm' => 'mm', 'Y' => 'yyyy',]) ?>';
 
-        
-        $('#reservation').daterangepicker();
-        var date = '<?php echo date("Y-m-d") ?>';
-        $('input[type=text][name=applieddate]').val(new Date(date).toString("MM/dd/yyyy"));
+        $('#reservation').daterangepicker({
+            timePickerIncrement: 5, locale: {
+                format: calendar_date_time_format
+            }});
+        var date = '<?php echo set_value('date', date($this->customlib->getSchoolDateFormat())); ?>';
+        $('input[type=text][name=applieddate]').val(date);
 
         $('#addleave').modal({
             show: true,
@@ -371,8 +390,8 @@
         });
     }
 
-
     function getRecord(id) {
+
         $('input:radio[name=status]').attr('checked', false);
         var base_url = '<?php echo base_url() ?>';
         $.ajax({
@@ -381,22 +400,20 @@
             data: {id: id},
             dataType: "json",
             success: function (result) {
-                
+
                 $('input[name="leave_request_id"]').val(result.id);
                 $('#employee_id').html(result.employee_id);
-               
-                $('#name').html(result.name+' '+result.surname);
-                $('#leave_from').html(new Date(result.leave_from).toString("MM/dd/yyyy"));
-                $('#leave_to').html(new Date(result.leave_to).toString("MM/dd/yyyy"));
+                $('#name').html(result.name + ' ' + result.surname);
+                $('#leave_from').html(result.leavefrom);
+                $('#leave_to').html(result.leaveto);
                 $('#leave_type').html(result.type);
                 $('#days').html(result.leave_days + ' Days');
                 $('#remark').html(result.employee_remark);
-                $('#applied_date').html(new Date(result.date).toString("MM/dd/yyyy"));
+                $('#applied_date').html(result.date);
                 $('#appliedby').html(result.applied_by);
                 $("#detailremark").text(result.admin_remark);
-                
-                if (result.status == 'approve') {
 
+                if (result.status == 'approve') {
                     $('input:radio[name=status]')[1].checked = true;
 
                 } else if (result.status == 'pending') {
@@ -406,8 +423,6 @@
                     $('input:radio[name=status]')[2].checked = true;
 
                 }
-
-
             }
         });
 
@@ -418,8 +433,6 @@
         });
     }
     ;
-
-
 
     $(document).on('click', '.submit_schsetting', function (e) {
         var $this = $(this);
@@ -451,21 +464,14 @@
     });
 
     function checkStatus(status) {
-
-
         if (status == 'approve') {
-
             $("#reason").hide();
         } else if (status == 'pending') {
-
             $("#reason").hide();
         } else if (status == 'disapprove') {
-
             $("#reason").show();
         }
-
     }
-
 
     $(document).ready(function (e) {
         $("#addleave_form").on('submit', (function (e) {
@@ -481,27 +487,20 @@
                 processData: false,
                 success: function (data)
                 {
-                    //alert(data);
                     if (data.status == "fail") {
-
                         var message = "";
                         $.each(data.error, function (index, value) {
-
                             message += value;
                         });
                         errorMsg(message);
                     } else {
-
                         successMsg(data.message);
                         window.location.reload(true);
                     }
                 }
             });
         }));
-
-
     });
-
 
     function getEmployeeName(role) {
         var ne = "";
@@ -516,8 +515,6 @@
             success: function (data) {
                 $.each(data, function (i, obj)
                 {
-
-
                     div_data += "<option value='" + obj.id + "' >" + obj.name + " " + obj.surname + " " + "(" + obj.employee_id + ")</option>";
                 });
 
@@ -549,10 +546,8 @@
                 });
 
                 $('#empname').append(div_data);
-
             }
         });
-
     }
 
     function getLeaveTypeDDL(id, lid = '') {
@@ -561,23 +556,16 @@
             url: base_url + 'admin/leaverequest/countLeave/' + id,
             type: 'POST',
             data: {lid: lid},
-            //dataType: "json",
             success: function (result) {
-
                 $("#leavetypeddl").html(result);
-
-
             }
-
         });
     }
-    function editRecord(id) {
 
+    function editRecord(id) {
         var leave_from = '05/01/2018';
         var leave_to = '05/10/2018';
-        
         $('textarea[name="reason"]').text('');
-
         $('textarea[name="remark"]').text('');
         $('input:radio[name=addstatus]').attr('checked', false);
 
@@ -589,26 +577,24 @@
             dataType: "json",
             success: function (result) {
 
-
                 leave_from = result.leavefrom;
                 leave_to = result.leaveto;
-
 
                 setEmployeeName(result.staff_role, result.employee_id);
                 getLeaveTypeDDL(result.staff_id, result.lid);
                 $('#role').val(result.staff_role);
-                
-                $('input[name="applieddate"]').val(new Date(result.date).toString("MM/dd/yyyy"));
-                $('input[name="leavefrom"]').val(new Date(result.leave_from).toString("MM/dd/yyyy"));
+
+                $('input[name="applieddate"]').val(result.date);
+                $('input[name="leavefrom"]').val(new Date(result.leave_from).toString(calendar_date_time_format));
                 $('input[name="filename"]').val(result.document_file);
-                $('input[name="leavedates"]').val(result.leavefrom + '-' + result.leaveto);
+
+                $('input[name="leavedates"]').val(result.leavefrom + ' - ' + result.leaveto);
 
                 $('input[name="leaverequestid"]').val(id);
                 $('textarea[name="reason"]').text(result.employee_remark);
                 $('textarea[name="remark"]').text(result.admin_remark);
 
                 if (result.status == 'approve') {
-
                     $('input:radio[name=addstatus]')[1].checked = true;
 
                 } else if (result.status == 'pending') {
@@ -621,13 +607,14 @@
 
                 $('#reservation').daterangepicker({
                     startDate: leave_from,
-                    endDate: leave_to
+                    endDate: leave_to,
+                    timePickerIncrement: 5, locale: {
+                        format: calendar_date_time_format
+                    }
                 });
             }
         });
         var date_format = '<?php echo $result = strtr($this->customlib->getSchoolDateFormat(), ['m' => 'mm', 'd' => 'dd', 'Y' => 'yyyy',]) ?>';
-
-      
 
 
         $('#addleave').modal({
@@ -639,15 +626,9 @@
     ;
 
     function clearForm(oForm) {
-
         var elements = oForm.elements;
-
-
-
         for (i = 0; i < elements.length; i++) {
-
             field_type = elements[i].type.toLowerCase();
-
             switch (field_type) {
 
                 case "text":

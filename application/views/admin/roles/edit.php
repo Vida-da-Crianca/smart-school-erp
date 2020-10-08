@@ -88,15 +88,29 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
 
 
                                                 <td class="mailbox-date pull-right no-print">
-                                                    <a data-placement="left" href="<?php echo site_url('admin/roles/permission/' . $data['id']); ?>" class="btn btn-default btn-xs"  data-toggle="tooltip" title="<?php echo $this->lang->line('assign_permission'); ?>">
-                                                        <i class="fa fa-tag"></i>
-                                                    </a>
-                                                    <a data-placement="left" href="<?php echo site_url('admin/roles/edit/' . $data['id']); ?>" class="btn btn-default btn-xs"  data-toggle="tooltip" title="<?php echo $this->lang->line('edit'); ?>">
-                                                        <i class="fa fa-pencil"></i>
-                                                    </a>
-                                                    <a data-placement="left" href="<?php echo site_url('admin/roles/delete/' . $data['id']); ?>"class="btn btn-default btn-xs"  data-toggle="tooltip" title="<?php echo $this->lang->line('delete'); ?>" onclick="return confirm('<?php echo $this->lang->line('delete_confirm') ?>');">
-                                                        <i class="fa fa-remove"></i>
-                                                    </a>
+                                                    <?php
+                                                    if (!$data['is_superadmin']) {
+                                                        ?>
+                                                        <a data-placement="left" href="<?php echo site_url('admin/roles/permission/' . $data['id']); ?>" class="btn btn-default btn-xs"  data-toggle="tooltip" title="<?php echo $this->lang->line('assign_permission'); ?>">
+                                                            <i class="fa fa-tag"></i>
+                                                        </a>
+                                                        <a data-placement="left" href="<?php echo site_url('admin/roles/edit/' . $data['id']); ?>" class="btn btn-default btn-xs"  data-toggle="tooltip" title="<?php echo $this->lang->line('edit'); ?>">
+                                                            <i class="fa fa-pencil"></i>
+                                                        </a>
+                                                        <?php
+                                                        if (!$data['is_system']) {
+                                                            ?>
+                                                            <a data-placement="left" href="<?php echo site_url('admin/roles/delete/' . $data['id']); ?>"class="btn btn-default btn-xs"  data-toggle="tooltip" title="<?php echo $this->lang->line('delete'); ?>" onclick="return confirm('<?php echo $this->lang->line('delete_confirm') ?>');">
+                                                                <i class="fa fa-remove"></i>
+                                                            </a>
+
+                                                            <?php
+                                                        }
+                                                        ?>
+                                                        <?php
+                                                    }
+                                                    ?>
+
                                                 </td>
                                             </tr>
                                             <?php

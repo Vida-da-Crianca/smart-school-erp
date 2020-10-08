@@ -29,7 +29,7 @@ class Module_lib {
             }
         }
     }
- 
+
     function hasActive($module = null) {
 
         if ($this->modules[$module]) {
@@ -39,15 +39,15 @@ class Module_lib {
         return false;
     }
 
-    function hasModule($module_shortcode){
+    function hasModule($module_shortcode) {
 
-       $count= $this->CI->Module_model->hasModule($module_shortcode);
-      // echo $count;die; 
-        if($count>0){
-        return true;
-     }else{
-        return false;
-     }
+        $count = $this->CI->Module_model->hasModule($module_shortcode);
+
+        if ($count > 0) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
 }

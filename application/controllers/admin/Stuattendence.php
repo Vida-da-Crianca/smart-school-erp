@@ -13,12 +13,12 @@ class Stuattendence extends Admin_Controller {
         $this->config_attendance = $this->config->item('attendence');
         $this->load->model("classteacher_model");
     }
- 
+
     function index() {
-     if (!$this->rbac->hasPrivilege('student_attendance', 'can_view')) {
+        if (!$this->rbac->hasPrivilege('student_attendance', 'can_view')) {
             access_denied();
         }
-    
+
         $this->session->set_userdata('top_menu', 'Attendance');
         $this->session->set_userdata('sub_menu', 'stuattendence/index');
         $data['title'] = 'Add Fees Type';
@@ -28,7 +28,7 @@ class Stuattendence extends Admin_Controller {
 
 
         $class = $this->class_model->get('', $classteacher = 'yes');
-        
+
         $userdata = $this->customlib->getUserData();
         $carray = array();
 
@@ -40,22 +40,20 @@ class Stuattendence extends Admin_Controller {
         }
 
         $userdata = $this->customlib->getUserData();
-       
+
         $role_id = $userdata["role_id"];
-        
+
 
         if (isset($role_id) && ($userdata["role_id"] == 2) && ($userdata["class_teacher"] == "yes")) {
             if ($userdata["class_teacher"] == 'yes') {
-                $carray  = array();
+                $carray = array();
                 $class = array();
-                $class =$this->teacher_model->get_daywiseattendanceclass($userdata["id"]);
-                
-            } 
-
+                $class = $this->teacher_model->get_daywiseattendanceclass($userdata["id"]);
+            }
         }
 
         $data['classlist'] = $class;
-       
+
         $data['class_id'] = "";
         $data['section_id'] = "";
         $data['date'] = "";
@@ -79,7 +77,7 @@ class Stuattendence extends Admin_Controller {
             if ($search == "saveattendence") {
                 $session_ary = $this->input->post('student_session');
                 $absent_student_list = array();
-                 foreach ($session_ary as $key => $value) {
+                foreach ($session_ary as $key => $value) {
                     $checkForUpdate = $this->input->post('attendendence_id' . $value);
                     if ($checkForUpdate != 0) {
                         if (isset($holiday)) {
@@ -130,14 +128,14 @@ class Stuattendence extends Admin_Controller {
                     $this->mailsmsconf->mailsms('absent_attendence', $absent_student_list, $date);
                 }
 
-                $this->session->set_flashdata('msg', '<div class="alert alert-success text-left">'.$this->lang->line('success_message').'</div>');
-                redirect('admin/stuattendence/index','refresh');
+                $this->session->set_flashdata('msg', '<div class="alert alert-success text-left">' . $this->lang->line('success_message') . '</div>');
+                redirect('admin/stuattendence/index', 'refresh');
             }
             $attendencetypes = $this->attendencetype_model->get();
             $data['attendencetypeslist'] = $attendencetypes;
             $resultlist = $this->stuattendence_model->searchAttendenceClassSection($class, $section, date('Y-m-d', $this->customlib->datetostrtotime($date)));
             $data['resultlist'] = $resultlist;
-            
+
             // echo "<pre>";
             // print_r($data);
             // echo "<pre>";die;
@@ -152,25 +150,23 @@ class Stuattendence extends Admin_Controller {
         if (!$this->rbac->hasPrivilege('attendance_by_date', 'can_view')) {
             access_denied();
         }
-        
+
         $this->session->set_userdata('top_menu', 'Attendance');
         $this->session->set_userdata('sub_menu', 'stuattendence/attendenceReport');
         $data['title'] = 'Add Fees Type';
         $data['title_list'] = 'Fees Type List';
         $class = $this->class_model->get();
         $userdata = $this->customlib->getUserData();
-       
+
         $role_id = $userdata["role_id"];
-        
+
 
         if (isset($role_id) && ($userdata["role_id"] == 2) && ($userdata["class_teacher"] == "yes")) {
             if ($userdata["class_teacher"] == 'yes') {
-                $carray  = array();
+                $carray = array();
                 $class = array();
-                $class =$this->teacher_model->get_daywiseattendanceclass($userdata["id"]);
-                
-            } 
-
+                $class = $this->teacher_model->get_daywiseattendanceclass($userdata["id"]);
+            }
         }
         $data['classlist'] = $class;
         $data['class_id'] = "";
@@ -184,7 +180,6 @@ class Stuattendence extends Admin_Controller {
             $this->load->view('layout/header', $data);
             $this->load->view('admin/stuattendence/attendencereport', $data);
             $this->load->view('layout/footer', $data);
-
         } else {
             $class = $this->input->post('class_id');
             $section = $this->input->post('section_id');
@@ -220,6 +215,7 @@ class Stuattendence extends Admin_Controller {
             $attendencetypes = $this->attendencetype_model->get();
             $data['attendencetypeslist'] = $attendencetypes;
             $resultlist = $this->stuattendence_model->searchAttendenceClassSectionPrepare($class, $section, date('Y-m-d', $this->customlib->datetostrtotime($date)));
+
             $data['resultlist'] = $resultlist;
             $this->load->view('layout/header', $data);
             $this->load->view('admin/stuattendence/attendencereport', $data);
@@ -232,7 +228,7 @@ class Stuattendence extends Admin_Controller {
         if (!$this->rbac->hasPrivilege('attendance_report', 'can_view')) {
             access_denied();
         }
-       
+
         $this->session->set_userdata('top_menu', 'Reports');
         $this->session->set_userdata('sub_menu', 'Reports/attendance');
         $this->session->set_userdata('subsub_menu', 'Reports/attendance/attendance_report');
@@ -242,22 +238,20 @@ class Stuattendence extends Admin_Controller {
         $data['title_list'] = 'Fees Type List';
         $class = $this->class_model->get();
         $userdata = $this->customlib->getUserData();
-       
+
         $role_id = $userdata["role_id"];
-        
+
 
         if (isset($role_id) && ($userdata["role_id"] == 2) && ($userdata["class_teacher"] == "yes")) {
             if ($userdata["class_teacher"] == 'yes') {
-                $carray  = array();
+                $carray = array();
                 $class = array();
-                $class =$this->teacher_model->get_daywiseattendanceclass($userdata["id"]);
-                
-            } 
-
+                $class = $this->teacher_model->get_daywiseattendanceclass($userdata["id"]);
+            }
         }
         $data['classlist'] = $class;
         $userdata = $this->customlib->getUserData();
-        
+
         $data['monthlist'] = $this->customlib->getMonthDropdown();
         $data['yearlist'] = $this->stuattendence_model->attendanceYearCount();
         $data['class_id'] = "";
@@ -320,7 +314,7 @@ class Stuattendence extends Admin_Controller {
                 }
                 $date_result[$att_date] = $s;
             }
-       
+
             $monthAttendance = array();
             foreach ($res as $result_k => $result_v) {
 
@@ -334,7 +328,7 @@ class Stuattendence extends Admin_Controller {
             $data['resultlist'] = $date_result;
             $data['attendence_array'] = $attendence_array;
             $data['student_array'] = $student_result;
-          
+
             $this->load->view('layout/header', $data);
             $this->load->view('admin/stuattendence/classattendencereport', $data);
             $this->load->view('layout/footer', $data);
@@ -364,8 +358,6 @@ class Stuattendence extends Admin_Controller {
 
         return $record;
     }
-
-    
 
 }
 

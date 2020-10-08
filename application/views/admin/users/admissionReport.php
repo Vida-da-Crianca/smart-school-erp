@@ -86,150 +86,153 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
             <div class="col-md-12">
                 <div class="box removeboxmius">
                     <div class="box-header ptbnull"></div>
-                      <div class="box-header with-border">
+                    <div class="box-header with-border">
                         <h3 class="box-title"><i class="fa fa-search"></i> <?php echo $this->lang->line('select_criteria'); ?></h3>
                     </div>
-                 <div class="box-body">   
-                    <form role="form" action="<?php echo site_url('admin/users/admissionreport') ?>" method="post" class="">
-                        <div class="row">
+                    <div class="box-body">   
+                        <form role="form" action="<?php echo site_url('admin/users/admissionreport') ?>" method="post" class="">
+                            <div class="row">
 
-                            <?php echo $this->customlib->getCSRF(); ?>
+                                <?php echo $this->customlib->getCSRF(); ?>
 
-                            <div class="col-sm-6 col-md-6">
-                                <div class="form-group">
-                                    <label><?php echo $this->lang->line('class'); ?></label><small class="req"> *</small>
-                                    <select autofocus="" id="class_id" name="class_id" class="form-control" >
-                                        <option value=""><?php echo $this->lang->line('select'); ?></option>
-                                        <?php
-                                        foreach ($classlist as $class) {
-                                            ?>
-                                            <option value="<?php echo $class['id'] ?>" <?php if (set_value('class_id') == $class['id']) echo "selected=selected" ?> ><?php echo $class['class'] ?></option>
+                                <div class="col-sm-6 col-md-6">
+                                    <div class="form-group">
+                                        <label><?php echo $this->lang->line('class'); ?></label><small class="req"> *</small>
+                                        <select autofocus="" id="class_id" name="class_id" class="form-control" >
+                                            <option value=""><?php echo $this->lang->line('select'); ?></option>
                                             <?php
+                                            foreach ($classlist as $class) {
+                                                ?>
+                                                <option value="<?php echo $class['id'] ?>" <?php if (set_value('class_id') == $class['id']) echo "selected=selected" ?> ><?php echo $class['class'] ?></option>
+                                                <?php
+                                                $count++;
+                                            }
+                                            ?>
+                                        </select>
+                                        <span class="text-danger"><?php echo form_error('class_id'); ?></span>
+                                    </div>
+                                </div> 
+
+                                <div class="col-sm-6 col-md-6">
+                                    <div class="form-group">  
+                                        <label><?php echo $this->lang->line('admission_year'); ?></label>
+                                        <select  id="year" name="year" class="form-control" >
+                                            <option value=""><?php echo $this->lang->line('select'); ?></option>
+                                            <?php foreach ($admission_year as $key => $value) { ?>
+
+                                                <option value="<?php echo $value["year"] ?>" <?php
+                                                if (isset($_POST['year']) && $_POST['year'] != '') {
+                                                    if ($_POST['year'] == $value["year"]) {
+                                                        echo "selected";
+                                                    }
+                                                }
+                                                ?>><?php echo $value["year"] ?></option>   
+
+                                            <?php } ?>
+
+                                        </select>
+                                        <span class="text-danger"><?php echo form_error('year'); ?></span>
+                                    </div>  
+                                </div>
+
+                                <div class="form-group">
+                                    <div class="col-sm-12">
+                                        <button type="submit" name="search" value="search_filter" class="btn btn-primary btn-sm checkbox-toggle pull-right"><i class="fa fa-search"></i> <?php echo $this->lang->line('search'); ?></button>
+                                    </div>
+                                </div>
+                            </div><!--./row-->      
+                        </form>
+                    </div><!--./box-body-->    
+
+                    <div class="box-header ptbnull">
+
+                    </div>
+                    <div class="">
+                        <div class="box-header ptbnull">
+                            <h3 class="box-title titlefix"><i class="fa fa-users"></i> <?php echo form_error('student'); ?> <?php echo $this->lang->line('student_history'); ?></h3>
+                        </div>
+                        <div class="box-body table-responsive">
+                            <div class="download_label"><?php
+                                echo $this->lang->line('student_history');
+                                $this->customlib->get_postmessage();
+                                ?></div>
+                            <table class="table table-striped table-bordered table-hover example">
+                                <thead>
+                                    <tr>
+
+                                        <th><?php echo $this->lang->line('admission_no'); ?></th>
+
+                                        <th><?php echo $this->lang->line('student_name'); ?></th>
+                                        <?php if ($sch_setting->admission_date) { ?>
+                                            <th><?php echo $this->lang->line('admission_date'); ?></th>
+<?php } ?>
+                                        <th><?php echo $this->lang->line('class') . " (" . $this->lang->line('start') . " - " . $this->lang->line('end') . ")"; ?></th>
+                                        <th><?php echo $this->lang->line('session') ?> (<?php echo $this->lang->line('start') ?> - <?php echo $this->lang->line('end') ?>)</th>
+                                        <th><?php echo $this->lang->line('years'); ?></th>
+                                        <?php if ($sch_setting->mobile_no) { ?>
+                                            <th><?php echo $this->lang->line('mobile_no'); ?></th>
+<?php } ?>
+                                        <th><?php echo $this->lang->line('guardian_name'); ?></th>
+                                        <th><?php echo $this->lang->line('guardian_phone'); ?></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <?php
+                                    if (empty($resultlist)) {
+                                        ?>
+
+                                        <?php
+                                    } else {
+                                        $count = 1;
+                                        $i = 0;
+                                        foreach ($resultlist as $student) {
+
+                                            $startsession = $sessionlist[$i]['start'];
+                                            $findstartyear = explode("-", $startsession);
+                                            $startyear = $findstartyear[0];
+
+                                            $endsession = $sessionlist[$i]['end'];
+                                            $findendyear = explode("-", $endsession);
+                                            $endyear = $findendyear[0];
+                                            ?>
+                                            <tr <?php
+                                            if ($student["is_active"] == "no") {
+                                                echo "class='danger'";
+                                            }
+                                            ?>>
+
+                                                <td><?php echo $student['admission_no']; ?></td>
+
+                                                <td>
+                                                    <a href="#"><?php echo $student['firstname'] . " " . $student['lastname']; ?>
+                                                    </a>
+                                                </td> 
+                                                <?php if ($sch_setting->admission_date) { ?>
+                                                    <td><?php echo date($this->customlib->getSchoolDateFormat(), $this->customlib->dateyyyymmddTodateformatFront($student["admission_date"])) ?></td>
+        <?php } ?>
+                                                <td><?php echo $sessionlist[$i]['startclass'] . "  -  " . $sessionlist[$i]['endclass']; ?></td>
+                                                <td><?php echo $sessionlist[$i]['start'] . "  -  " . $sessionlist[$i]['end']; ?></td>
+                                                <td><?php echo ($endyear - $startyear) + 1; ?></td>
+                                                <?php if ($sch_setting->mobile_no) { ?>
+                                                    <td><?php echo $student['mobileno']; ?></td>
+        <?php } ?>
+                                                <td><?php echo $student['guardian_name']; ?></td>
+                                                <td><?php echo $student['guardian_phone']; ?></td>
+                                            </tr>
+                                            <?php
+                                            $i++;
                                             $count++;
                                         }
-                                        ?>
-                                    </select>
-                                    <span class="text-danger"><?php echo form_error('class_id'); ?></span>
-                                </div>
-                            </div> 
-
-                            <div class="col-sm-6 col-md-6">
-                                <div class="form-group">  
-                                    <label><?php echo $this->lang->line('admission_year'); ?></label>
-                                    <select  id="year" name="year" class="form-control" >
-                                        <option value=""><?php echo $this->lang->line('select'); ?></option>
-                                        <?php foreach ($admission_year as $key => $value) { ?>
-
-                                            <option value="<?php echo $value["year"] ?>" <?php if (isset($_POST['year']) && $_POST['year']!='') {
-                                                if($_POST['year']==$value["year"]){
-                                                    echo "selected";
-                                                }
-                                               
-                                            }?>><?php echo $value["year"] ?></option>   
-
-                                        <?php } ?>
-
-                                    </select>
-                                    <span class="text-danger"><?php echo form_error('year'); ?></span>
-                                </div>  
-                            </div>
-
-                            <div class="form-group">
-                                <div class="col-sm-12">
-                                    <button type="submit" name="search" value="search_filter" class="btn btn-primary btn-sm checkbox-toggle pull-right"><i class="fa fa-search"></i> <?php echo $this->lang->line('search'); ?></button>
-                                </div>
-                            </div>
-                        </div><!--./row-->      
-                    </form>
-                  </div><!--./box-body-->    
-               
-            <div class="box-header ptbnull">
-                
-            </div>
-            <div class="">
-                <div class="box-header ptbnull">
-                    <h3 class="box-title titlefix"><i class="fa fa-users"></i> <?php echo form_error('student'); ?> <?php echo $this->lang->line('student_history'); ?></h3>
-                </div>
-                <div class="box-body table-responsive">
-                    <div class="download_label"><?php echo $this->lang->line('student_history');
-                    $this->customlib->get_postmessage(); ?></div>
-                    <table class="table table-striped table-bordered table-hover example">
-                        <thead>
-                            <tr>
-								
-                                <th><?php echo $this->lang->line('admission_no'); ?></th>
-								
-                                <th><?php echo $this->lang->line('student_name'); ?></th>
-								<?php if($sch_setting->admission_date) {  ?>
-                                <th><?php echo $this->lang->line('admission_date'); ?></th>
-								<?php } ?>
-                                <th><?php echo $this->lang->line('class') . " (".$this->lang->line('start')." - ".$this->lang->line('end').")"; ?></th>
-                                <th><?php echo $this->lang->line('session') ?> (<?php echo $this->lang->line('start') ?> - <?php echo $this->lang->line('end') ?>)</th>
-                                <th><?php echo $this->lang->line('years'); ?></th>
-								<?php if ($sch_setting->mobile_no) {  ?>
-                                <th><?php echo $this->lang->line('mobile_no'); ?></th>
-								<?php } ?>
-                                <th><?php echo $this->lang->line('guardian_name'); ?></th>
-                                <th><?php echo $this->lang->line('guardian_phone'); ?></th>
-							</tr>
-                        </thead>
-                        <tbody>
-                            <?php
-                            if (empty($resultlist)) {
-                                ?>
-
-                                <?php
-                            } else {
-                                $count = 1;
-                                $i = 0;
-                                foreach ($resultlist as $student) {
-
-                                    $startsession = $sessionlist[$i]['start'];
-                                    $findstartyear = explode("-", $startsession);
-                                    $startyear = $findstartyear[0];
-
-                                    $endsession = $sessionlist[$i]['end'];
-                                    $findendyear = explode("-", $endsession);
-                                    $endyear = $findendyear[0];
-                                    ?>
-                                    <tr <?php
-                                    if ($student["is_active"] == "no") {
-                                        echo "class='danger'";
                                     }
-                                    ?>>
-										
-                                        <td><?php echo $student['admission_no']; ?></td>
-									
-                                        <td>
-                                            <a href="#"><?php echo $student['firstname'] . " " . $student['lastname']; ?>
-                                            </a>
-                                        </td>
-										<?php if ($sch_setting->admission_date) {  ?>
-                                        <td><?php echo date("m/d/Y", strtotime($student["admission_date"])) ?></td>
-										<?php } ?>
-                                        <td><?php echo $sessionlist[$i]['startclass'] . "  -  " . $sessionlist[$i]['endclass']; ?></td>
-                                        <td><?php echo $sessionlist[$i]['start'] . "  -  " . $sessionlist[$i]['end']; ?></td>
-                                        <td><?php echo ($endyear - $startyear) + 1; ?></td>
-										<?php if ($sch_setting->mobile_no) {  ?>
-                                        <td><?php echo $student['mobileno']; ?></td>
-										<?php } ?>
-                                        <td><?php echo $student['guardian_name']; ?></td>
-                                        <td><?php echo $student['guardian_phone']; ?></td>
-                                    </tr>
-                                    <?php
-                                    $i++;
-                                    $count++;
-                                }
-                            }
-                            ?>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-           </div><!--./box box-primary-->
-         </div><!--./col-md-12-->  
-      </div>   
-    </div>  
+                                    ?>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div><!--./box box-primary-->
+            </div><!--./col-md-12-->  
+        </div>   
+</div>  
 </section>
 </div>
 

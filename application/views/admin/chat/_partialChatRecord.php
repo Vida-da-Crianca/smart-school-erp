@@ -10,14 +10,14 @@ if (!empty($chatList)) {
             ?>
             <li class="text text-center" style="margin: 0px;">
 
-                <h4 class="chattitle"><span class=""><?php echo $this->lang->line('you_are_now_connected_on_chat')?></span></h4>
+                <h4 class="chattitle"><span class=""><?php echo $this->lang->line('you_are_now_connected_on_chat') ?></span></h4>
             </li>
             <?php
         } else {
             ?>
             <li class="<?php echo $chat_type; ?>">
                 <p><?php echo $chat_value->message; ?></p>
-                <span class="<?php echo $date_time; ?>"> <?php echo date('d M Y, h:i A', strtotime($chat_value->created_at)); ?></span>
+                <span class="<?php echo $date_time; ?>"> <?php echo $this->customlib->dateyyyymmddToDateTimeformat($chat_value->created_at); ?></span>
             </li>
             <?php
         }

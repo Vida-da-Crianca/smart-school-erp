@@ -74,6 +74,8 @@
                                 <dd class="col-sm-9 col-xs-8 col-md-10"><?php echo $exam->passing_percentage; ?></dd>
                                 <dt class="col-sm-3 col-xs-4 col-md-2"><?php echo $this->lang->line('total') . " " . $this->lang->line('questions') ?></dt>
                                 <dd class="col-sm-9 col-xs-8 col-md-10"><?php echo $total_question; ?></dd>
+                                <dt class="col-sm-3 col-xs-4 col-md-2"><?php echo $this->lang->line('description'); ?></dt>
+                                <dd class="col-sm-9 col-xs-8 col-md-10"><?php echo $exam->description; ?></dd>
 
                                 <?php
                                 if ($exam->publish_result) {
@@ -88,15 +90,16 @@
 
                                     <dt class="col-sm-3 col-xs-4 col-md-2"><?php echo $this->lang->line('score'); ?> (%)</dt>
                                     <dd class="col-sm-10"><?php
-                           echo number_format((($correct_ans * 100) / $total_question),2,'.', '');
-                                     ?></dd>
+                                        echo number_format((($correct_ans * 100) / $total_question), 2, '.', '');
+                                        ?></dd>
+
                                     <?php
                                 }
                                 ?>
-                        
+
                             </dl>
                             <?php
-                            if (!empty($question_result) && ($exam->publish_result) ) {
+                            if (!empty($question_result) && ($exam->publish_result)) {
 
                                 foreach ($question_result as $result_key => $question_value) {
                                     ?>
@@ -115,7 +118,7 @@
 
                                                 <p><b><?php echo $this->lang->line('subject') ?>:</b>
                                                     <?php echo $question_value->subject_name; ?></p>
- <p>
+                                                <p>
                                                     <b><?php echo $this->lang->line('answer') ?>:</b>
                                                     <?php echo $question_value->{$question_value->correct}; ?>
                                                 </p>
@@ -149,7 +152,6 @@
                             }
                             ?>
                             <?php
-                          
                             if (empty($result_prepare) && !($exam->publish_result) && $role == 'student') {
                                 ?>
                                 <div class="row no-print">
@@ -233,8 +235,7 @@
                 <p><?php echo $this->lang->line('are_you_sure_you_want_to_submit_this_exam') ?></p>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-success btn-ok"><?php echo $this->lang->line('save'); ?></button>
-
+                <button type="button" class="btn btn-success btn-ok" data-loading-text="<i class='fa fa-spinner fa-spin'></i> Please wait"><?php echo $this->lang->line('save'); ?></button>
             </div>
         </div>
 
@@ -245,13 +246,26 @@
 
     $('#saveModal').on('click', '.btn-ok', function (e) {
         $("#regiration_form").submit();
+        var $this = $(this);
+        $this.button('loading');
+        setTimeout(function () {
+            $this.button('reset');
+        }, 800000);
+
+
+    });
+
+    $("#regiration_form").submit(function () {
+        // submit more than once return false
+        $(this).submit(function () {
+            return false;
+        });
+        // submit once return true
+        return true;
     });
 
 
     $(document).ready(function () {
-
-
-
         var current = 1, current_step, next_step, steps, elapsed_seconds;
         steps = 0;
         elapsed_seconds = 0;

@@ -33,55 +33,53 @@ class Payroll_model extends MY_Model {
     }
 
     function createPayslip($data) {
-		
+
         if (isset($data['id'])) {
             $this->db->trans_start(); # Starting Transaction
-        $this->db->trans_strict(false); # See Note 01. If you wish can remove as well
-        //=======================Code Start===========================
+            $this->db->trans_strict(false); # See Note 01. If you wish can remove as well
+            //=======================Code Start===========================
             $this->db->where('id', $data['id']);
             $this->db->update('staff_payslip', $data);
-			$message      = UPDATE_RECORD_CONSTANT." On staff payslip id ".$data['id'];
-			$action       = "Update";
-			$record_id    = $data['id'];
-			$this->log($message, $record_id, $action);
-			//======================Code End==============================
+            $message = UPDATE_RECORD_CONSTANT . " On staff payslip id " . $data['id'];
+            $action = "Update";
+            $record_id = $data['id'];
+            $this->log($message, $record_id, $action);
+            //======================Code End==============================
 
-			$this->db->trans_complete(); # Completing transaction
-			/*Optional*/
+            $this->db->trans_complete(); # Completing transaction
+            /* Optional */
 
-			if ($this->db->trans_status() === false) {
-				# Something went wrong.
-				$this->db->trans_rollback();
-				return false;
-
-			} else {
-				//return $return_value;
-			}
+            if ($this->db->trans_status() === false) {
+                # Something went wrong.
+                $this->db->trans_rollback();
+                return false;
+            } else {
+                //return $return_value;
+            }
         } else {
             $this->db->trans_start(); # Starting Transaction
-        $this->db->trans_strict(false); # See Note 01. If you wish can remove as well
-        //=======================Code Start===========================
+            $this->db->trans_strict(false); # See Note 01. If you wish can remove as well
+            //=======================Code Start===========================
             $this->db->insert('staff_payslip', $data);
             $id = $this->db->insert_id();
-			
-			$message      = INSERT_RECORD_CONSTANT." On staff payslip id ".$id;
-			$action       = "Insert";
-			$record_id    = $id;
-			$this->log($message, $record_id, $action);
-			//echo $this->db->last_query();die;
-			//======================Code End==============================
 
-			$this->db->trans_complete(); # Completing transaction
-			/*Optional*/
+            $message = INSERT_RECORD_CONSTANT . " On staff payslip id " . $id;
+            $action = "Insert";
+            $record_id = $id;
+            $this->log($message, $record_id, $action);
+            //echo $this->db->last_query();die;
+            //======================Code End==============================
 
-			if ($this->db->trans_status() === false) {
-				# Something went wrong.
-				$this->db->trans_rollback();
-				return false;
+            $this->db->trans_complete(); # Completing transaction
+            /* Optional */
 
-			} else {
-				return $id ;
-			}
+            if ($this->db->trans_status() === false) {
+                # Something went wrong.
+                $this->db->trans_rollback();
+                return false;
+            } else {
+                return $id;
+            }
         }
     }
 
@@ -98,50 +96,81 @@ class Payroll_model extends MY_Model {
     }
 
     function add_allowance($data) {
-		$this->db->trans_start(); # Starting Transaction
+        $this->db->trans_start(); # Starting Transaction
         $this->db->trans_strict(false); # See Note 01. If you wish can remove as well
         //=======================Code Start===========================
         if (isset($data['id'])) {
             $this->db->where('id', $data['id']);
             $this->db->update('payslip_allowance', $data);
-			$message      = UPDATE_RECORD_CONSTANT." On payslip allowance id ".$data['id'];
-			$action       = "Update";
-			$record_id    = $data['id'];
-			$this->log($message, $record_id, $action);
-			//======================Code End==============================
+            $message = UPDATE_RECORD_CONSTANT . " On payslip allowance id " . $data['id'];
+            $action = "Update";
+            $record_id = $data['id'];
+            $this->log($message, $record_id, $action);
+        } else {
+            $this->db->insert('payslip_allowance', $data);
+            $id = $this->db->insert_id();
 
-			$this->db->trans_complete(); # Completing transaction
-			/*Optional*/
+            $message = INSERT_RECORD_CONSTANT . " On payslip allowance id " . $id;
+            $action = "Insert";
+            $record_id = $id;
+            $this->log($message, $record_id, $action);
+        }
 
-			if ($this->db->trans_status() === false) {
-				# Something went wrong.
-				$this->db->trans_rollback();
-				return false;
+        $this->db->trans_complete(); # Completing transaction
+        /* Optional */
 
-			} else {
-				//return $return_value;
-			}
+        if ($this->db->trans_status() === false) {
+            # Something went wrong.
+            $this->db->trans_rollback();
+            return false;
+        } else {
+            //return $return_value;
+        }
+    }
+
+    function add_allowance_old($data) {
+        $this->db->trans_start(); # Starting Transaction
+        $this->db->trans_strict(false); # See Note 01. If you wish can remove as well
+        //=======================Code Start===========================
+        if (isset($data['id'])) {
+            $this->db->where('id', $data['id']);
+            $this->db->update('payslip_allowance', $data);
+            $message = UPDATE_RECORD_CONSTANT . " On payslip allowance id " . $data['id'];
+            $action = "Update";
+            $record_id = $data['id'];
+            $this->log($message, $record_id, $action);
+            //======================Code End==============================
+
+            $this->db->trans_complete(); # Completing transaction
+            /* Optional */
+
+            if ($this->db->trans_status() === false) {
+                # Something went wrong.
+                $this->db->trans_rollback();
+                return false;
+            } else {
+                //return $return_value;
+            }
         } else {
             $this->db->insert('payslip_allowance', $data);
             return $id = $this->db->insert_id();
-			$message      = INSERT_RECORD_CONSTANT." On payslip allowance id ".$id;
-			$action       = "Insert";
-			$record_id    = $id;
-			$this->log($message, $record_id, $action);
-			//echo $this->db->last_query();die;
-			//======================Code End==============================
+            $message = INSERT_RECORD_CONSTANT . " On payslip allowance id " . $id;
+            $action = "Insert";
+            $record_id = $id;
+            $this->log($message, $record_id, $action);
+            //echo $this->db->last_query();die;
+            //======================Code End==============================
 
-			$this->db->trans_complete(); # Completing transaction
-			/*Optional*/
+            $this->db->trans_complete(); # Completing transaction
+            /* Optional */
 
-			if ($this->db->trans_status() === false) {
-				# Something went wrong.
-				$this->db->trans_rollback();
-				return false;
-
-			} else {
-				//return $return_value;
-			}
+            if ($this->db->trans_status() === false) {
+                # Something went wrong.
+                $this->db->trans_rollback();
+                return false;
+            } else {
+                //return $return_value;
+            }
         }
     }
 
@@ -164,7 +193,7 @@ class Payroll_model extends MY_Model {
 
         $query = $this->db->select('count(*) as attendence')->where(array('staff_id' => $staff_id, 'month(date)' => $month, 'year(date)' => $year, 'staff_attendance_type_id' => $attendance_type))->get("staff_attendance");
 
-        return $query->row()->attendence;        
+        return $query->row()->attendence;
     }
 
     function updatePaymentStatus($status, $id) {
@@ -187,32 +216,31 @@ class Payroll_model extends MY_Model {
     }
 
     function paymentSuccess($data, $payslipid) {
-		$this->db->trans_start(); # Starting Transaction
+        $this->db->trans_start(); # Starting Transaction
         $this->db->trans_strict(false); # See Note 01. If you wish can remove as well
         //=======================Code Start===========================
         $this->db->where("id", $payslipid)->update("staff_payslip", $data);
-		$message      = UPDATE_RECORD_CONSTANT." On staff payslip id ".$payslipid;
-			$action       = "Update";
-			$record_id    = $payslipid;
-			$this->log($message, $record_id, $action);
-			//======================Code End==============================
+        $message = UPDATE_RECORD_CONSTANT . " On staff payslip id " . $payslipid;
+        $action = "Update";
+        $record_id = $payslipid;
+        $this->log($message, $record_id, $action);
+        //======================Code End==============================
 
-			$this->db->trans_complete(); # Completing transaction
-			/*Optional*/
+        $this->db->trans_complete(); # Completing transaction
+        /* Optional */
 
-			if ($this->db->trans_status() === false) {
-				# Something went wrong.
-				$this->db->trans_rollback();
-				return false;
-
-			} else {
-				//return $return_value;
-			}
+        if ($this->db->trans_status() === false) {
+            # Something went wrong.
+            $this->db->trans_rollback();
+            return false;
+        } else {
+            //return $return_value;
+        }
     }
 
     function getPayslip($id) {
 
-        $query = $this->db->select("staff.name,staff.surname,department.department_name as department,staff_designation.designation,staff.employee_id,staff_payslip.*")->join("staff", "staff.id = staff_payslip.staff_id")->join("staff_designation", "staff.designation = staff_designation.id","left")->join("department", "staff.department = department.id","left")->where("staff_payslip.id", $id)->get("staff_payslip");
+        $query = $this->db->select("staff.name,staff.surname,department.department_name as department,staff_designation.designation,staff.employee_id,staff_payslip.*")->join("staff", "staff.id = staff_payslip.staff_id")->join("staff_designation", "staff.designation = staff_designation.id", "left")->join("department", "staff.department = department.id", "left")->where("staff_payslip.id", $id)->get("staff_payslip");
 
         return $query->row_array();
     }
@@ -251,8 +279,8 @@ class Payroll_model extends MY_Model {
 
             $data = array('staff_payslip.month' => $month, 'staff_payslip.year' => $year, 'roles.name' => $role, 'staff_payslip.status' => 'paid');
         }
-        $data['staff.is_active']=1;
-       
+        $data['staff.is_active'] = 1;
+
         $query = $this->db->select('staff.id,staff.employee_id,staff.name,roles.name as user_type,staff.surname,staff_designation.designation,department.department_name as department,staff_payslip.*')->join("staff_payslip", "staff_payslip.staff_id = staff.id", "inner")->join("staff_designation", "staff.designation = staff_designation.id", "left")->join("department", "staff.department = department.id", "left")->join("staff_roles", "staff_roles.staff_id = staff.id", "left")->join("roles", "staff_roles.role_id = roles.id", "left")->where($data)->get("staff");
 
         return $query->result_array();
@@ -271,24 +299,23 @@ class Payroll_model extends MY_Model {
         $this->db->where("id", $payslipid)->update("staff_payslip", $data);
     }
 
-     function payrollYearCount() {
+    function payrollYearCount() {
 
         $query = $this->db->select("distinct(year) as year")->get("staff_payslip");
 
         return $query->result_array();
     }
 
-     function getbetweenpayrollReport($start_date, $end_date) {
+    function getbetweenpayrollReport($start_date, $end_date) {
 
-      
-            
-        
-        $condition="date_format(staff_payslip.payment_date,'%Y-%m-%d') between '".$start_date."' and '".$end_date."'";
+
+
+
+        $condition = "date_format(staff_payslip.payment_date,'%Y-%m-%d') between '" . $start_date . "' and '" . $end_date . "'";
         $query = $this->db->select('staff.id,staff.employee_id,staff.name,roles.name as user_type,staff.surname,staff_designation.designation,department.department_name as department,staff_payslip.*')->join("staff_payslip", "staff_payslip.staff_id = staff.id", "inner")->join("staff_designation", "staff.designation = staff_designation.id", "left")->join("department", "staff.department = department.id", "left")->join("staff_roles", "staff_roles.staff_id = staff.id", "left")->join("roles", "staff_roles.role_id = roles.id", "left")->where($condition)->get("staff");
 
         return $query->result_array();
     }
-
 
 }
 

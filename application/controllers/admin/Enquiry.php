@@ -14,7 +14,7 @@ class Enquiry extends Admin_Controller {
     }
 
     public function index() {
-        
+
 
         if (!$this->rbac->hasPrivilege('admission_enquiry', 'can_view')) {
             access_denied();
@@ -42,12 +42,11 @@ class Enquiry extends Admin_Controller {
             $data["source_select"] = $source;
             $data["status"] = $status;
             $enquiry_list = $this->enquiry_model->searchEnquiry($source, $status, $date_from, $date_to);
-           
         } else {
 
             $enquiry_list = $this->enquiry_model->getenquiry_list();
         }
-       
+
         foreach ($enquiry_list as $key => $value) {
 
             $follow_up = $this->enquiry_model->getFollowByEnquiry($value["id"]);
@@ -59,9 +58,7 @@ class Enquiry extends Admin_Controller {
             $enquiry_list[$key]["followup_by"] = $follow_up["followup_by"];
         }
         $data['enquiry_list'] = $enquiry_list;
-        
         $data['enquiry_status'] = $this->enquiry_status;
-      
         $data['Reference'] = $this->enquiry_model->get_reference();
         $data['sourcelist'] = $this->enquiry_model->getComplaintSource();
 
@@ -92,7 +89,6 @@ class Enquiry extends Admin_Controller {
             $array = array('status' => 'fail', 'error' => $msg, 'message' => '');
         } else {
             $enquiry = array(
-               
                 'name' => $this->input->post('name'),
                 'contact' => $this->input->post('contact'),
                 'address' => $this->input->post('address'),
@@ -123,20 +119,17 @@ class Enquiry extends Admin_Controller {
             $array = array('status' => 'success', 'error' => '', 'message' => $this->lang->line('delete_message'));
         }
         echo json_encode($array);
-        
     }
 
+    public function follow_up($enquiry_id, $status) {
 
-
- public function follow_up($enquiry_id, $status) {
-   
-         if(!$this->rbac->hasPrivilege('follow_up_admission_enquiry','can_view')){
-        access_denied();
+        if (!$this->rbac->hasPrivilege('follow_up_admission_enquiry', 'can_view')) {
+            access_denied();
         }
         $data['id'] = $enquiry_id;
         $data['enquiry_data'] = $this->enquiry_model->getenquiry_list($enquiry_id, $status);
-        $data['next_date']=$this->enquiry_model->next_follow_up_date($enquiry_id);
-        $data['enquiry_status'] = $this->enquiry_status ;
+        $data['next_date'] = $this->enquiry_model->next_follow_up_date($enquiry_id);
+        $data['enquiry_status'] = $this->enquiry_status;
 
         $this->load->view('admin/frontoffice/follow_up_modal', $data);
     }
@@ -184,7 +177,7 @@ class Enquiry extends Admin_Controller {
         $this->load->view('admin/frontoffice/followuplist', $data);
     }
 
-    function details($id,$status) {
+    function details($id, $status) {
 
         if (!$this->rbac->hasPrivilege('admission_enquiry', 'can_view')) {
             access_denied();
@@ -194,10 +187,9 @@ class Enquiry extends Admin_Controller {
         $data['enquiry_type'] = $this->enquiry_model->get_enquiry_type();
         $data['Reference'] = $this->enquiry_model->get_reference();
         $data['class_list'] = $this->enquiry_model->getclasses();
-        $data['enquiry_data'] = $this->enquiry_model->getenquiry_list($id,$status);
+        $data['enquiry_data'] = $this->enquiry_model->getenquiry_list($id, $status);
 
         $this->load->view('admin/frontoffice/enquiryeditmodalview', $data);
-
     }
 
     function editpost($id) {
@@ -205,7 +197,7 @@ class Enquiry extends Admin_Controller {
         if (!$this->rbac->hasPrivilege('admission_enquiry', 'can_edit')) {
             access_denied();
         }
-        
+
         $this->form_validation->set_rules('name', $this->lang->line('name'), 'trim|required|xss_clean');
         $this->form_validation->set_rules('contact', $this->lang->line('contact'), 'trim|required|xss_clean');
         $this->form_validation->set_rules('source', $this->lang->line('source'), 'trim|required|xss_clean');
@@ -242,7 +234,6 @@ class Enquiry extends Admin_Controller {
         }
 
         echo json_encode($array);
-        
     }
 
     public function follow_up_delete($follow_up_id, $enquiry_id) {
@@ -252,7 +243,7 @@ class Enquiry extends Admin_Controller {
         $this->enquiry_model->delete_follow_up($follow_up_id);
         $data['id'] = $enquiry_id;
         $data['follow_up_list'] = $this->enquiry_model->getfollow_up_list($enquiry_id);
-       
+
         $this->load->view('admin/frontoffice/followuplist', $data);
     }
 
@@ -272,7 +263,7 @@ class Enquiry extends Admin_Controller {
             $array = array('status' => 'success', 'error' => '', 'message' => $this->lang->line('success_message'));
         } else {
 
-            $array = array('status' => 'fail', 'error' => '', 'message' =>$this->lang->line('update_message'));
+            $array = array('status' => 'fail', 'error' => '', 'message' => $this->lang->line('update_message'));
         }
 
         echo json_encode($array);

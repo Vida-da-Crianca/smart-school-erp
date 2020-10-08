@@ -3,18 +3,15 @@
 define('THEMES_DIR', 'themes');
 define('BASE_URI', str_replace('index.php', '', $_SERVER['SCRIPT_NAME']));
 
-class MY_Controller extends CI_Controller
-{
+class MY_Controller extends CI_Controller {
 
     protected $langs = array();
 
-    public function __construct()
-    {
+    public function __construct() {
 
         parent::__construct();
         $this->config->load('license');
         $this->load->helper('language');
-
         $this->load->library('auth');
         $this->load->library('module_lib');
         $this->load->library('pushnotification');
@@ -24,23 +21,20 @@ class MY_Controller extends CI_Controller
 
         if ($this->session->has_userdata('admin')) {
 
-            $admin    = $this->session->userdata('admin');
+            $admin = $this->session->userdata('admin');
             $language = ($admin['language']['language']);
-
         } else if ($this->session->has_userdata('student')) {
 
-            $student  = $this->session->userdata('student');
+            $student = $this->session->userdata('student');
             $language = ($student['language']['language']);
-
         } else {
             $this->school_details = $this->setting_model->getSchoolDetail();
             $language = ($this->school_details->language);
-
         }
 
         $this->config->set_item('language', strtotime($language));
         $lang_array = array('form_validation_lang');
-        $map        = directory_map(APPPATH . "./language/" . $language . "/app_files");
+        $map = directory_map(APPPATH . "./language/" . $language . "/app_files");
         foreach ($map as $lang_key => $lang_value) {
             $lang_array[] = 'app_files/' . str_replace(".php", "", $lang_value);
         }
@@ -50,11 +44,11 @@ class MY_Controller extends CI_Controller
 
 }
 
-class Admin_Controller extends MY_Controller
-{
+class Admin_Controller extends MY_Controller {
+
     protected $aaaa = false;
-    public function __construct()
-    {
+
+    public function __construct() {
         parent::__construct();
         $this->auth->is_logged_in();
         $this->check_license();
@@ -66,8 +60,7 @@ class Admin_Controller extends MY_Controller
         $this->config->load('custom_filed-config');
     }
 
-    public function check_license()
-    {
+    public function check_license() {
 
         $license = $this->config->item('SSLK');
 
@@ -87,23 +80,20 @@ class Admin_Controller extends MY_Controller
             } else {
 
                 $this->update_ss_routine();
-
             }
-
         }
-
     }
-    public function update_ss_routine()
-    {
 
-        $license       = $this->config->item('SSLK');
-        $fname         = APPPATH . 'config/license.php';
+    public function update_ss_routine() {
+
+        $license = $this->config->item('SSLK');
+        $fname = APPPATH . 'config/license.php';
         $update_handle = fopen($fname, "r");
-        $content       = fread($update_handle, filesize($fname));
+        $content = fread($update_handle, filesize($fname));
         $file_contents = str_replace('$config[\'SSLK\'] = \'' . $license . '\'', '$config[\'SSLK\'] = \'\'', $content);
         $update_handle = fopen($fname, 'w') or die("can't open file");
         if (fwrite($update_handle, $file_contents)) {
-
+            
         }
         fclose($update_handle);
 
@@ -112,11 +102,9 @@ class Admin_Controller extends MY_Controller
 
 }
 
-class Student_Controller extends MY_Controller
-{
+class Student_Controller extends MY_Controller {
 
-    public function __construct()
-    {
+    public function __construct() {
         parent::__construct();
         $this->load->library('studentmodule_lib');
         $this->config->load('app-config');
@@ -125,21 +113,17 @@ class Student_Controller extends MY_Controller
 
 }
 
-class Public_Controller extends MY_Controller
-{
+class Public_Controller extends MY_Controller {
 
-    public function __construct()
-    {
+    public function __construct() {
         parent::__construct();
     }
 
 }
 
-class Parent_Controller extends MY_Controller
-{
+class Parent_Controller extends MY_Controller {
 
-    public function __construct()
-    {
+    public function __construct() {
         parent::__construct();
         $this->auth->is_logged_in_user('parent');
         $this->config->load('app-config');
@@ -148,18 +132,16 @@ class Parent_Controller extends MY_Controller
 
 }
 
-class Front_Controller extends CI_Controller
-{
+class Front_Controller extends CI_Controller {
 
-    protected $data           = array();
+    protected $data = array();
     protected $school_details = array();
-    protected $parent_menu    = '';
-    protected $page_title     = '';
-    protected $theme_path     = '';
-    protected $front_setting  = '';
+    protected $parent_menu = '';
+    protected $page_title = '';
+    protected $theme_path = '';
+    protected $front_setting = '';
 
-    public function __construct()
-    {
+    public function __construct() {
 
         parent::__construct();
 
@@ -179,13 +161,11 @@ class Front_Controller extends CI_Controller
         if (!$this->front_setting) {
 
             redirect('site/userlogin');
-
         } else {
 
             if (!$this->front_setting->is_active_front_cms) {
 
                 redirect('site/userlogin');
-
             }
         }
 
@@ -194,7 +174,7 @@ class Front_Controller extends CI_Controller
         $language = ($this->school_details->language);
         $this->load->helper('directory');
         $lang_array = array('form_validation_lang');
-        $map        = directory_map(APPPATH . "./language/" . $language . "/app_files");
+        $map = directory_map(APPPATH . "./language/" . $language . "/app_files");
         foreach ($map as $lang_key => $lang_value) {
             $lang_array[] = 'app_files/' . str_replace(".php", "", $lang_value);
         }
@@ -205,13 +185,12 @@ class Front_Controller extends CI_Controller
         $this->load->config('ci-blog');
     }
 
-    protected function load_theme($content = null, $layout = true)
-    {
+    protected function load_theme($content = null, $layout = true) {
 
-        $this->data['main_menus']     = '';
+        $this->data['main_menus'] = '';
         $this->data['school_setting'] = $this->school_details;
-        $this->data['front_setting']  = $this->front_setting;
-        $menu_list                    = $this->cms_menu_model->getBySlug('main-menu');
+        $this->data['front_setting'] = $this->front_setting;
+        $menu_list = $this->cms_menu_model->getBySlug('main-menu');
 
         $footer_menu_list = $this->cms_menu_model->getBySlug('bottom-menu');
         if (count($menu_list) > 0) {
@@ -239,14 +218,13 @@ class Front_Controller extends CI_Controller
         // }
     }
 
-    protected function load_theme_form($content = null, $layout = true)
-    {
+    protected function load_theme_form($content = null, $layout = true) {
 
-        $this->data['main_menus']     = '';
+        $this->data['main_menus'] = '';
         $this->data['school_setting'] = $this->school_details;
-        $this->data['front_setting']  = $this->front_setting;
-        $menu_list                    = $this->cms_menu_model->getBySlug('main-menu');
-        $footer_menu_list             = $this->cms_menu_model->getBySlug('bottom-menu');
+        $this->data['front_setting'] = $this->front_setting;
+        $menu_list = $this->cms_menu_model->getBySlug('main-menu');
+        $footer_menu_list = $this->cms_menu_model->getBySlug('bottom-menu');
         if (count($menu_list > 0)) {
             $this->data['main_menus'] = $this->cms_menuitems_model->getMenus($menu_list['id']);
         }
@@ -272,8 +250,7 @@ class Front_Controller extends CI_Controller
         // }
     }
 
-    private function check_installation()
-    {
+    private function check_installation() {
 
         if ($this->uri->segment(1) !== 'install') {
             $this->load->config('migration');

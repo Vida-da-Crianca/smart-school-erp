@@ -191,16 +191,23 @@ if($this->studentmodule_lib->hasActive('multi_class')){
                                 ?>
                                  <li class="cal15"><a data-placement="bottom" data-toggle="tooltip" title="" href="<?php echo base_url()?>user/chat" data-original-title="Chat" class="todoicon"><i class="fa fa-whatsapp"></i></a></li> 
                                 <?php }
+
+
                                     $student_data = $this->customlib->getLoggedInUserData();
+                                   
                                     $file = $student_data["image"];
 
                                     $image = $student_data["image"];
                                     if (!empty($image)) {
 
-                                        $file = $image;
+                                        $file = $image; 
                                     } else {
-
-                                        $file = "uploads/student_images/no_image.png";
+                                            if($student_data['gender']=='Female'){
+                                                             $file= "uploads/student_images/default_female.jpg";
+                                                        }else{
+                                                             $file ="uploads/student_images/default_male.jpg";
+                                                        }
+                                       
                                     }
                                     ?>
                                     <li class="dropdown user-menu">
@@ -268,6 +275,12 @@ if($this->studentmodule_lib->hasActive('multi_class')){
                        if ($this->studentmodule_lib->hasActive('live_classes')) {
                             ?>
  <li class="<?php echo set_topmenu('Conference'); ?>"><a href="<?php echo base_url('user/conference'); ?>"><i class="fa fa-video-camera ftlayer"></i> <?php echo $this->lang->line('live_class'); ?></a></li>
+<?php } } ?>
+ <?php
+                         if($this->module_lib->hasModule('gmeet_live_classes')){
+                       if ($this->studentmodule_lib->hasActive('gmeet_live_classes')) {
+                            ?>
+  <li class="<?php echo set_topmenu('Gmeet'); ?>"><a href="<?php echo base_url('user/gmeet'); ?>"><i class="fa fa-video-camera ftlayer"></i> <?php echo $this->lang->line('gmeet')." ".$this->lang->line('live_class'); ?></a></li>
 <?php } } ?>
                         <?php
 
@@ -345,7 +358,7 @@ if($this->studentmodule_lib->hasActive('multi_class')){
                                 <a href="<?php echo base_url(); ?>user/notification">
                                     <i class="fa fa-envelope ftlayer"></i> <span><?php echo $this->lang->line('notice_board'); ?></span>
                                     <?php
-                                    $ntf = $this->customlib->getStudentunreadNotification();
+                                    $ntf = $this->customlib->getUserunreadNotification();
                                     if ($ntf) {
                                         ?>
                                         <small class="label pull-right bg-red" style="margin-top: -7px;">
@@ -355,7 +368,7 @@ if($this->studentmodule_lib->hasActive('multi_class')){
                                     }
                                     ?>
                                 </a>
-                            </li>
+                            </li> 
                             <?php
                         }
 
@@ -399,7 +412,7 @@ if($this->studentmodule_lib->hasActive('multi_class')){
                     </ul>
                 </section>              
             </aside> 
-            <script>
+            <script> 
  
                  function set_languages(lang_id){
                    
@@ -410,7 +423,7 @@ if($this->studentmodule_lib->hasActive('multi_class')){
                     //dataType: "json",
                     success: function (data) {
                         successMsg("Status Change Successfully");
-                        window.location.reload('true');
+                       window.location.reload('true');
 
                     }
                 });

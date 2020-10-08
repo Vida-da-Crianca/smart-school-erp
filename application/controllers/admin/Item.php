@@ -40,7 +40,7 @@ class Item extends Admin_Controller {
             );
             $insert_id = $this->item_model->add($data);
 
-            $this->session->set_flashdata('msg', '<div class="alert alert-success text-left">'.$this->lang->line('success_message').'</div>');
+            $this->session->set_flashdata('msg', '<div class="alert alert-success text-left">' . $this->lang->line('success_message') . '</div>');
             redirect('admin/item/index');
         }
         $item_result = $this->item_model->get();
@@ -76,14 +76,13 @@ class Item extends Admin_Controller {
     function getAvailQuantity() {
         $item_id = $this->input->get('item_id');
         $data = $this->item_model->getItemAvailable($item_id);
-        
+
         $available = ($data['added_stock'] - $data['issued']);
-        if($available>=0){
-             echo json_encode(array('available' => $available));
-        }else{
-             echo json_encode(array('available' => 0));
+        if ($available >= 0) {
+            echo json_encode(array('available' => $available));
+        } else {
+            echo json_encode(array('available' => 0));
         }
-       
     }
 
     function handle_upload() {
@@ -163,8 +162,8 @@ class Item extends Admin_Controller {
                 $data_img = array('id' => $id, 'item_photo' => 'uploads/inventory_items/' . $img_name);
                 $this->item_model->add($data_img);
             }
-          
-            $this->session->set_flashdata('msg', '<div class="alert alert-success text-left">'.$this->lang->line('success_message').'</div>');
+
+            $this->session->set_flashdata('msg', '<div class="alert alert-success text-left">' . $this->lang->line('success_message') . '</div>');
             redirect('admin/item/index');
         }
     }

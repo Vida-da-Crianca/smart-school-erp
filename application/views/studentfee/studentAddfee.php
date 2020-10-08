@@ -10,7 +10,8 @@ $language_name = $language["short_code"];
                 <h1>
                     <i class="fa fa-money"></i> <?php echo $this->lang->line('fees_collection'); ?><small><?php echo $this->lang->line('student_fee'); ?></small></h1>
             </section>
-        </div>
+
+        </div> 
         <div>
             <a id="sidebarCollapse" class="studentsideopen"><i class="fa fa-navicon"></i></a>
             <aside class="studentsidebar">
@@ -85,6 +86,7 @@ $language_name = $language["short_code"];
                                         <i class="fa fa-arrow-left"></i> <?php echo $this->lang->line('back'); ?></a>
                                 </div>
                             </div>
+
                         </div>
                     </div><!--./box-header-->
                     <div class="box-body" style="padding-top:0;">
@@ -136,12 +138,11 @@ $language_name = $language["short_code"];
                                                             }
                                                             ?>
                                                         </td>
-                                                        <?php 
-                            if ($sch_setting->rte) { ?> 
-                                                        <th><?php echo $this->lang->line('rte'); ?></th>
-                                                        <td><b class="text-danger"> <?php echo $student['rte']; ?> </b>
-                                                        </td>
-                                                    <?php } ?>
+                                                        <?php if ($sch_setting->rte) { ?> 
+                                                            <th><?php echo $this->lang->line('rte'); ?></th>
+                                                            <td><b class="text-danger"> <?php echo $student['rte']; ?> </b>
+                                                            </td>
+                                                        <?php } ?>
                                                     </tr>
 
                                                 </tbody>
@@ -159,13 +160,13 @@ $language_name = $language["short_code"];
                             <div class="col-md-12 mDMb10">
                                 <a href="#" class="btn btn-sm btn-info printSelected"><i class="fa fa-print"></i> <?php echo $this->lang->line('print_selected'); ?> </a>
 
-                                <button type="button" class="btn btn-sm btn-warning collectSelected" id="load" data-loading-text="<i class='fa fa-spinner fa-spin '></i> Please Wait.."><i class="fa fa-money"></i> <?php echo $this->lang->line('collect')." ".$this->lang->line('selected')?></button>
+                                <button type="button" class="btn btn-sm btn-warning collectSelected" id="load" data-loading-text="<i class='fa fa-spinner fa-spin '></i> Please Wait.."><i class="fa fa-money"></i> <?php echo $this->lang->line('collect') . " " . $this->lang->line('selected') ?></button>
 
                                 <span class="pull-right"><?php echo $this->lang->line('date'); ?>: <?php echo date($this->customlib->getSchoolDateFormat()); ?></span>
                             </div>
                         </div>
                         <div class="table-responsive">
-                            <div class="download_label"><?php echo $this->lang->line('student_fees') . ": " . $student['firstname'] . " " . $student['lastname'] ?> </div>
+                            <div class="download_label "><?php echo $this->lang->line('student_fees') . ": " . $student['firstname'] . " " . $student['lastname'] ?> </div>
                             <table class="table table-striped table-bordered table-hover example table-fixed-header">
                                 <thead class="header">
                                     <tr>
@@ -231,7 +232,7 @@ $language_name = $language["short_code"];
                                                 ?>
                                                 <td><input class="checkbox" type="checkbox" name="fee_checkbox" data-fee_master_id="<?php echo $fee_value->id ?>" data-fee_session_group_id="<?php echo $fee_value->fee_session_group_id ?>" data-fee_groups_feetype_id="<?php echo $fee_value->fee_groups_feetype_id ?>"></td>
                                                 <td align="left"><?php
-                                                    echo $fee_value->name;
+                                                    echo $fee_value->name . " (" . $fee_value->type . ")";
                                                     ?></td>
                                                 <td align="left"><?php echo $fee_value->code; ?></td>
                                                 <td align="left" class="text text-left">
@@ -333,9 +334,7 @@ $language_name = $language["short_code"];
 
 
                                                         </td>
-                                                        <td class="text text-left"><?php 
-
-                                                        echo $this->lang->line(strtolower($fee_deposits_value->payment_mode)); ?></td>
+                                                        <td class="text text-left"><?php echo $this->lang->line(strtolower($fee_deposits_value->payment_mode)); ?></td>
                                                         <td class="text text-left">
 
                                                             <?php echo date($this->customlib->getSchoolDateFormat(), $this->customlib->dateyyyymmddTodateformat($fee_deposits_value->date)); ?>
@@ -502,6 +501,8 @@ $language_name = $language["short_code"];
             <div class="modal-body pb0">
                 <div class="form-horizontal balanceformpopup">
                     <div class="box-body">
+
+                        <input  type="hidden" class="form-control" id="std_id" value="<?php echo $student["student_session_id"]; ?>" readonly="readonly"/>
                         <input  type="hidden" class="form-control" id="parent_app_key" value="<?php echo $student['parent_app_key'] ?>" readonly="readonly"/>
                         <input  type="hidden" class="form-control" id="guardian_phone" value="<?php echo $student['guardian_phone'] ?>" readonly="readonly"/>
                         <input  type="hidden" class="form-control" id="guardian_email" value="<?php echo $student['guardian_email'] ?>" readonly="readonly"/>
@@ -537,25 +538,25 @@ $language_name = $language["short_code"];
                         <div class="form-group">
                             <label for="inputPassword3" class="col-sm-3 control-label"><?php echo $this->lang->line('discount'); ?><small class="req"> *</small></label>
                             <div class="col-sm-9">
-                              <div class="row">  
-                                <div class="col-md-5 col-sm-5">
-                                    <div class="">
-                                        <input type="text" class="form-control" id="amount_discount" value="0">
+                                <div class="row">  
+                                    <div class="col-md-5 col-sm-5">
+                                        <div class="">
+                                            <input type="text" class="form-control" id="amount_discount" value="0">
 
-                                        <span class="text-danger" id="amount_error"></span></div>
-                                </div>
-                                <div class="col-md-2 col-sm-2 ltextright">
-
-                                    <label for="inputPassword3" class="control-label"><?php echo $this->lang->line('fine'); ?><small class="req">*</small></label>
-                                </div>
-                                <div class="col-md-5 col-sm-5">
-                                    <div class="">
-                                        <input type="text" class="form-control" id="amount_fine" value="0">
-
-                                        <span class="text-danger" id="amount_fine_error"></span>
+                                            <span class="text-danger" id="amount_error"></span></div>
                                     </div>
-                                </div>
-                              </div>  
+                                    <div class="col-md-2 col-sm-2 ltextright">
+
+                                        <label for="inputPassword3" class="control-label"><?php echo $this->lang->line('fine'); ?><small class="req">*</small></label>
+                                    </div>
+                                    <div class="col-md-5 col-sm-5">
+                                        <div class="">
+                                            <input type="text" class="form-control" id="amount_fine" value="0">
+
+                                            <span class="text-danger" id="amount_fine_error"></span>
+                                        </div>
+                                    </div>
+                                </div>  
                             </div><!--./col-sm-9-->
                         </div>
 
@@ -574,13 +575,13 @@ $language_name = $language["short_code"];
                                 <label class="radio-inline">
                                     <input type="radio" name="payment_mode_fee" value="DD"><?php echo $this->lang->line('dd'); ?>
                                 </label>
-                                  <label class="radio-inline">
+                                <label class="radio-inline">
                                     <input type="radio" name="payment_mode_fee" value="bank_transfer"><?php echo $this->lang->line('bank_transfer'); ?>
                                 </label>
-                                  <label class="radio-inline">
+                                <label class="radio-inline">
                                     <input type="radio" name="payment_mode_fee" value="upi"><?php echo $this->lang->line('upi'); ?>
                                 </label>
-                                 <label class="radio-inline">
+                                <label class="radio-inline">
                                     <input type="radio" name="payment_mode_fee" value="card"><?php echo $this->lang->line('card'); ?>
                                 </label>
                                 <span class="text-danger" id="payment_mode_error"></span>
@@ -597,12 +598,13 @@ $language_name = $language["short_code"];
                 </div>
             </div>
             <div class="modal-footer">
-                
-                    <button type="button" class="btn btn-default pull-left" data-dismiss="modal"><?php echo $this->lang->line('cancel'); ?></button>
-                    <button type="button" class="btn cfees save_button" id="load" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> Processing"> <?php echo $currency_symbol; ?> <?php echo $this->lang->line('collect_fees'); ?> </button>
-               
+
+                <button type="button" class="btn btn-default pull-left" data-dismiss="modal"><?php echo $this->lang->line('cancel'); ?></button>
+                <button type="button" class="btn cfees save_button" id="load" data-action="collect" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> Processing"> <?php echo $currency_symbol; ?> <?php echo $this->lang->line('collect_fees'); ?> </button>
+                <button type="button" class="btn cfees save_button" id="load" data-action="print" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> Processing"> <?php echo $currency_symbol; ?> <?php echo $this->lang->line('collect') . " & " . $this->lang->line('print') ?></button>
+
             </div>
-        </div>
+        </div> 
 
     </div>
 </div>
@@ -731,13 +733,13 @@ $language_name = $language["short_code"];
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                    <h4 class="modal-title"><?php echo $this->lang->line('collect')." ".$this->lang->line('fees');?></h4>
+                    <h4 class="modal-title"><?php echo $this->lang->line('collect') . " " . $this->lang->line('fees'); ?></h4>
                 </div>
                 <div class="modal-body">
-                    
+
                 </div>
                 <div class="modal-footer">
-                    <button type="submit" class="btn btn-primary payment_collect" data-loading-text="<i class='fa fa-spinner fa-spin '></i> Processing"><i class="fa fa-money"></i> <?php echo $this->lang->line('pay');?></button>
+                    <button type="submit" class="btn btn-primary payment_collect" data-loading-text="<i class='fa fa-spinner fa-spin '></i> Processing"><i class="fa fa-money"></i> <?php echo $this->lang->line('pay'); ?></button>
                 </div>
             </div>
         </form>
@@ -749,13 +751,13 @@ $language_name = $language["short_code"];
 
 <script type="text/javascript">
     $(document).ready(function () {
-    $(".date_fee").datepicker({
-                        format: date_format,
-                        autoclose: true,
-                        language: '<?php echo $language_name; ?>',
-                        endDate: '+0d',
-                        todayHighlight: true
-                    });
+        $(".date_fee").datepicker({
+            format: date_format,
+            autoclose: true,
+            language: '<?php echo $language_name; ?>',
+            endDate: '+0d',
+            todayHighlight: true
+        });
 
         $(document).on('click', '.printDoc', function () {
             var main_invoice = $(this).data('main_invoice');
@@ -790,12 +792,13 @@ $language_name = $language["short_code"];
 <script type="text/javascript">
     $(document).on('click', '.save_button', function (e) {
         var $this = $(this);
+        var action = $this.data('action');
         $this.button('loading');
         var form = $(this).attr('frm');
         var feetype = $('#feetype_').val();
         var date = $('#date').val();
+        var student_session_id = $('#std_id').val();
         var amount = $('#amount').val();
-
         var amount_discount = $('#amount_discount').val();
         var amount_fine = $('#amount_fine').val();
         var description = $('#description').val();
@@ -809,13 +812,16 @@ $language_name = $language["short_code"];
         $.ajax({
             url: '<?php echo site_url("studentfee/addstudentfee") ?>',
             type: 'post',
-            data: {date: date, type: feetype, amount: amount, amount_discount: amount_discount, amount_fine: amount_fine, description: description, student_fees_master_id: student_fees_master_id, fee_groups_feetype_id: fee_groups_feetype_id, payment_mode: payment_mode, guardian_phone: guardian_phone, guardian_email: guardian_email, student_fees_discount_id: student_fees_discount_id,parent_app_key:parent_app_key},
+            data: {action: action, student_session_id: student_session_id, date: date, type: feetype, amount: amount, amount_discount: amount_discount, amount_fine: amount_fine, description: description, student_fees_master_id: student_fees_master_id, fee_groups_feetype_id: fee_groups_feetype_id, payment_mode: payment_mode, guardian_phone: guardian_phone, guardian_email: guardian_email, student_fees_discount_id: student_fees_discount_id, parent_app_key: parent_app_key},
             dataType: 'json',
             success: function (response) {
-                // console.log(response);
                 $this.button('reset');
                 if (response.status === "success") {
-                    location.reload(true);
+                    if (action === "collect") {
+                        location.reload(true);
+                    } else if (action === "print") {
+                        Popup(response.print, true);
+                    }
                 } else if (response.status === "fail") {
                     $.each(response.error, function (index, value) {
                         var errorDiv = '#' + index + '_error';
@@ -830,7 +836,8 @@ $language_name = $language["short_code"];
 
 <script>
     var base_url = '<?php echo base_url() ?>';
-    function Popup(data)
+
+    function Popup(data, winload = false)
     {
         var frame1 = $('<iframe />');
         frame1[0].name = "frame1";
@@ -862,6 +869,9 @@ $language_name = $language["short_code"];
             window.frames["frame1"].focus();
             window.frames["frame1"].print();
             frame1.remove();
+            if (winload) {
+                window.location.reload(true);
+            }
         }, 500);
 
 
@@ -971,7 +981,7 @@ $language_name = $language["short_code"];
     });
     var fee_amount = 0;
     var date_format = '<?php echo $result = strtr($this->customlib->getSchoolDateFormat(), ['d' => 'dd', 'm' => 'mm', 'Y' => 'yyyy']) ?>';
-   
+
 </script>
 <script type="text/javascript">
     $("#myFeesModal").on('shown.bs.modal', function (e) {
@@ -1202,7 +1212,7 @@ $language_name = $language["short_code"];
                 array_to_print.push(item);
             });
             if (array_to_print.length === 0) {
-                alert("<?php echo $this->lang->line('no_record_selected');?>");
+                alert("<?php echo $this->lang->line('no_record_selected'); ?>");
             } else {
                 $.ajax({
                     url: '<?php echo site_url("studentfee/printFeesByGroupArray") ?>',

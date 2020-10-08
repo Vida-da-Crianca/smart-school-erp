@@ -7,7 +7,7 @@ class Book extends Admin_Controller {
 
     function __construct() {
         parent::__construct();
-            $this->load->library('encoding_lib');
+        $this->load->library('encoding_lib');
     }
 
     public function index() {
@@ -26,8 +26,9 @@ class Book extends Admin_Controller {
         $this->load->view('admin/book/createbook', $data);
         $this->load->view('layout/footer');
     }
- 
+
     public function getall() {
+
 
         if (!$this->rbac->hasPrivilege('books', 'can_view')) {
             access_denied();
@@ -35,11 +36,11 @@ class Book extends Admin_Controller {
 
         $this->session->set_userdata('top_menu', 'Library');
         $this->session->set_userdata('sub_menu', 'book/getall');
-        
-      
+
+
         $listbook = $this->book_model->bookgetall();
         $data['listbook'] = $listbook;
-      
+
         $this->load->view('layout/header');
         $this->load->view('admin/book/getall', $data);
         $this->load->view('layout/footer');
@@ -69,15 +70,14 @@ class Book extends Admin_Controller {
                 'author' => $this->input->post('author'),
                 'qty' => $this->input->post('qty'),
                 'perunitcost' => $this->input->post('perunitcost'),
-               
                 'description' => $this->input->post('description')
             );
 
-            if(isset($_POST['postdate']) && $_POST['postdate']!=''){
-                $data['postdate']=date('Y-m-d', $this->customlib->datetostrtotime($this->input->post('postdate')));
+            if (isset($_POST['postdate']) && $_POST['postdate'] != '') {
+                $data['postdate'] = date('Y-m-d', $this->customlib->datetostrtotime($this->input->post('postdate')));
             }
             $this->book_model->addbooks($data);
-            $this->session->set_flashdata('msg', '<div class="alert alert-success text-left">'.$this->lang->line('success_message').'</div>');
+            $this->session->set_flashdata('msg', '<div class="alert alert-success text-left">' . $this->lang->line('success_message') . '</div>');
             redirect('admin/book/index');
         }
     }
@@ -86,7 +86,7 @@ class Book extends Admin_Controller {
         if (!$this->rbac->hasPrivilege('books', 'can_edit')) {
             access_denied();
         }
-       
+
         $data['title'] = 'Edit Book';
         $data['title_list'] = 'Book Details';
         $data['id'] = $id;
@@ -114,14 +114,14 @@ class Book extends Admin_Controller {
                 //'postdate' => date('Y-m-d', $this->customlib->datetostrtotime($this->input->post('postdate'))),
                 'description' => $this->input->post('description')
             );
-             if(isset($_POST['postdate']) && $_POST['postdate']!=''){
-                $data['postdate'] =date('Y-m-d', $this->customlib->datetostrtotime($this->input->post('postdate')));
-            }else{
-                $data['postdate'] ="";
+            if (isset($_POST['postdate']) && $_POST['postdate'] != '') {
+                $data['postdate'] = date('Y-m-d', $this->customlib->datetostrtotime($this->input->post('postdate')));
+            } else {
+                $data['postdate'] = "";
             }
-       
+
             $this->book_model->addbooks($data);
-            $this->session->set_flashdata('msg', '<div class="alert alert-success text-left">'.$this->lang->line('update_message').'</div>');
+            $this->session->set_flashdata('msg', '<div class="alert alert-success text-left">' . $this->lang->line('update_message') . '</div>');
             redirect('admin/book/index');
         }
     }
@@ -135,117 +135,108 @@ class Book extends Admin_Controller {
         redirect('admin/book/getall');
     }
 
-       public function getAvailQuantity() {
+    public function getAvailQuantity() {
 
         $book_id = $this->input->post('book_id');
-        $available=0;
+        $available = 0;
         if ($book_id != "") {
-            $result=$this->bookissue_model->getAvailQuantity($book_id);
-            $available=$result->qty-$result->total_issue;
+            $result = $this->bookissue_model->getAvailQuantity($book_id);
+            $available = $result->qty - $result->total_issue;
         }
         $result_final = array('status' => '1', 'qty' => $available);
         echo json_encode($result_final);
     }
-     function import(){
-        $data['fields']=array('book_title','book_no','isbn_no','subject','rack_no','publish','author','qty','perunitcost','postdate','description','available');
-         $this->form_validation->set_rules('file', 'Image', 'callback_handle_csv_upload');
-          if ($this->form_validation->run() == FALSE) {
 
-             $this->load->view('layout/header');
-            $this->load->view('admin/book/import',$data);
+    function import() {
+        $data['fields'] = array('book_title', 'book_no', 'isbn_no', 'subject', 'rack_no', 'publish', 'author', 'qty', 'perunitcost', 'postdate', 'description', 'available');
+        $this->form_validation->set_rules('file', 'Image', 'callback_handle_csv_upload');
+        if ($this->form_validation->run() == FALSE) {
+
+            $this->load->view('layout/header');
+            $this->load->view('admin/book/import', $data);
             $this->load->view('layout/footer');
-          }else{
- if (isset($_FILES["file"]) && !empty($_FILES['file']['name'])) {
+        } else {
+            if (isset($_FILES["file"]) && !empty($_FILES['file']['name'])) {
                 $ext = pathinfo($_FILES['file']['name'], PATHINFO_EXTENSION);
                 if ($ext == 'csv') {
                     $file = $_FILES['file']['tmp_name'];
                     $this->load->library('CSVReader');
                     $result = $this->csvreader->parse_file($file);
-                   
-                    $rowcount=0;
-                      if (!empty($result)) {
-                     foreach ($result as $r_key => $r_value) {
-                     $result[$r_key]['book_title']=$this->encoding_lib->toUTF8($result[$r_key]['book_title']);
-                     $result[$r_key]['book_no']=$this->encoding_lib->toUTF8($result[$r_key]['book_no']);
-                     $result[$r_key]['isbn_no']=$this->encoding_lib->toUTF8($result[$r_key]['isbn_no']);
-                     $result[$r_key]['subject']=$this->encoding_lib->toUTF8($result[$r_key]['subject']);
-                     $result[$r_key]['rack_no']=$this->encoding_lib->toUTF8($result[$r_key]['rack_no']);
-                     $result[$r_key]['publish']=$this->encoding_lib->toUTF8($result[$r_key]['publish']);
-                     $result[$r_key]['author']=$this->encoding_lib->toUTF8($result[$r_key]['author']);
-                     $result[$r_key]['qty']=$this->encoding_lib->toUTF8($result[$r_key]['qty']);
-                     $result[$r_key]['perunitcost']=$this->encoding_lib->toUTF8($result[$r_key]['perunitcost']);
-                     $result[$r_key]['postdate']=$this->encoding_lib->toUTF8($result[$r_key]['postdate']);
-                     $result[$r_key]['description']=$this->encoding_lib->toUTF8($result[$r_key]['description']);
-                     $rowcount++;
-                     }
-                    
-                    $this->db->insert_batch('books', $result);
-              
+
+                    $rowcount = 0;
+                    if (!empty($result)) {
+                        foreach ($result as $r_key => $r_value) {
+                            $result[$r_key]['book_title'] = $this->encoding_lib->toUTF8($result[$r_key]['book_title']);
+                            $result[$r_key]['book_no'] = $this->encoding_lib->toUTF8($result[$r_key]['book_no']);
+                            $result[$r_key]['isbn_no'] = $this->encoding_lib->toUTF8($result[$r_key]['isbn_no']);
+                            $result[$r_key]['subject'] = $this->encoding_lib->toUTF8($result[$r_key]['subject']);
+                            $result[$r_key]['rack_no'] = $this->encoding_lib->toUTF8($result[$r_key]['rack_no']);
+                            $result[$r_key]['publish'] = $this->encoding_lib->toUTF8($result[$r_key]['publish']);
+                            $result[$r_key]['author'] = $this->encoding_lib->toUTF8($result[$r_key]['author']);
+                            $result[$r_key]['qty'] = $this->encoding_lib->toUTF8($result[$r_key]['qty']);
+                            $result[$r_key]['perunitcost'] = $this->encoding_lib->toUTF8($result[$r_key]['perunitcost']);
+                            $result[$r_key]['postdate'] = $this->encoding_lib->toUTF8($result[$r_key]['postdate']);
+                            $result[$r_key]['description'] = $this->encoding_lib->toUTF8($result[$r_key]['description']);
+                            $rowcount++;
+                        }
+
+                        $this->db->insert_batch('books', $result);
                     }
-                    $array=array('status'=>'success','error'=>'','message'=>$this->lang->line('records_found_in_CSV_file_total').' '. $rowcount . ' '.$this->lang->line('records_imported_successfully'));
+                    $array = array('status' => 'success', 'error' => '', 'message' => $this->lang->line('records_found_in_CSV_file_total') . ' ' . $rowcount . ' ' . $this->lang->line('records_imported_successfully'));
                 }
-                     
-                }else{
-                    $msg=array(
-                        'e'=>'The File field is required.',
-                    );
-                    $array=array('status'=>'fail','error'=>$msg,'message'=>'');
-                }
+            } else {
+                $msg = array(
+                    'e' => 'The File field is required.',
+                );
+                $array = array('status' => 'fail', 'error' => $msg, 'message' => '');
+            }
 
-                  $this->session->set_flashdata('msg', '<div class="alert alert-success text-center">'.$this->lang->line('total').' ' . count($result) . "  ".$this->lang->line('records_found_in_CSV_file_total')." " . $rowcount .' '.$this->lang->line('records_imported_successfully').'</div>');
-              redirect('admin/book/import');
-          }
-
-            
-
-     }
-
-
-    function import_new(){
-          
-         if (isset($_FILES["file"]) && !empty($_FILES['file']['name'])) {
-                $ext = pathinfo($_FILES['file']['name'], PATHINFO_EXTENSION);
-                if ($ext == 'csv') {
-                    $file = $_FILES['file']['tmp_name'];
-                    $this->load->library('CSVReader');
-                    $result = $this->csvreader->parse_file($file);
-                   
-                    $rowcount=0;
-                      if (!empty($result)) {
-                     foreach ($result as $r_key => $r_value) {
-                     $result[$r_key]['book_title']=$this->encoding_lib->toUTF8($result[$r_key]['book_title']);
-                     $result[$r_key]['book_no']=$this->encoding_lib->toUTF8($result[$r_key]['book_no']);
-                     $result[$r_key]['isbn_no']=$this->encoding_lib->toUTF8($result[$r_key]['isbn_no']);
-                     $result[$r_key]['subject']=$this->encoding_lib->toUTF8($result[$r_key]['subject']);
-                     $result[$r_key]['rack_no']=$this->encoding_lib->toUTF8($result[$r_key]['rack_no']);
-                     $result[$r_key]['publish']=$this->encoding_lib->toUTF8($result[$r_key]['publish']);
-                     $result[$r_key]['author']=$this->encoding_lib->toUTF8($result[$r_key]['author']);
-                     $result[$r_key]['qty']=$this->encoding_lib->toUTF8($result[$r_key]['qty']);
-                     $result[$r_key]['perunitcost']=$this->encoding_lib->toUTF8($result[$r_key]['perunitcost']);
-                     $result[$r_key]['postdate']=$this->encoding_lib->toUTF8($result[$r_key]['postdate']);
-                     $result[$r_key]['description']=$this->encoding_lib->toUTF8($result[$r_key]['description']);
-                     $rowcount++;
-                     }
-                    
-                    $this->db->insert_batch('books', $result);
-              
-                    }
-                    $array=array('status'=>'success','error'=>'','message'=>'records found in CSV file. Total ' . $rowcount . 'records imported successfully.');
-                }
-                     
-                }else{
-                    $msg=array(
-                        'e'=>'The File field is required.',
-                    );
-                    $array=array('status'=>'fail','error'=>$msg,'message'=>'');
-                }
-
-                  echo json_encode($array);
-      
+            $this->session->set_flashdata('msg', '<div class="alert alert-success text-center">' . $this->lang->line('total') . ' ' . count($result) . "  " . $this->lang->line('records_found_in_CSV_file_total') . " " . $rowcount . ' ' . $this->lang->line('records_imported_successfully') . '</div>');
+            redirect('admin/book/import');
+        }
     }
 
+    function import_new() {
 
-function handle_csv_upload() {
+        if (isset($_FILES["file"]) && !empty($_FILES['file']['name'])) {
+            $ext = pathinfo($_FILES['file']['name'], PATHINFO_EXTENSION);
+            if ($ext == 'csv') {
+                $file = $_FILES['file']['tmp_name'];
+                $this->load->library('CSVReader');
+                $result = $this->csvreader->parse_file($file);
+
+                $rowcount = 0;
+                if (!empty($result)) {
+                    foreach ($result as $r_key => $r_value) {
+                        $result[$r_key]['book_title'] = $this->encoding_lib->toUTF8($result[$r_key]['book_title']);
+                        $result[$r_key]['book_no'] = $this->encoding_lib->toUTF8($result[$r_key]['book_no']);
+                        $result[$r_key]['isbn_no'] = $this->encoding_lib->toUTF8($result[$r_key]['isbn_no']);
+                        $result[$r_key]['subject'] = $this->encoding_lib->toUTF8($result[$r_key]['subject']);
+                        $result[$r_key]['rack_no'] = $this->encoding_lib->toUTF8($result[$r_key]['rack_no']);
+                        $result[$r_key]['publish'] = $this->encoding_lib->toUTF8($result[$r_key]['publish']);
+                        $result[$r_key]['author'] = $this->encoding_lib->toUTF8($result[$r_key]['author']);
+                        $result[$r_key]['qty'] = $this->encoding_lib->toUTF8($result[$r_key]['qty']);
+                        $result[$r_key]['perunitcost'] = $this->encoding_lib->toUTF8($result[$r_key]['perunitcost']);
+                        $result[$r_key]['postdate'] = $this->encoding_lib->toUTF8($result[$r_key]['postdate']);
+                        $result[$r_key]['description'] = $this->encoding_lib->toUTF8($result[$r_key]['description']);
+                        $rowcount++;
+                    }
+
+                    $this->db->insert_batch('books', $result);
+                }
+                $array = array('status' => 'success', 'error' => '', 'message' => 'records found in CSV file. Total ' . $rowcount . 'records imported successfully.');
+            }
+        } else {
+            $msg = array(
+                'e' => 'The File field is required.',
+            );
+            $array = array('status' => 'fail', 'error' => $msg, 'message' => '');
+        }
+
+        echo json_encode($array);
+    }
+
+    function handle_csv_upload() {
         $error = "";
         if (isset($_FILES["file"]) && !empty($_FILES['file']['name'])) {
             $allowedExts = array('csv');
@@ -292,45 +283,44 @@ function handle_csv_upload() {
         force_download($name, $data);
     }
 
-    public function issue_report(){
+    public function issue_report() {
 
         $this->session->set_userdata('top_menu', 'Library');
         $this->session->set_userdata('sub_menu', 'Library/book/issue_report');
-        $data['title']       = 'Add Teacher';
-        $teacher_result      = $this->teacher_model->getLibraryTeacher();
+        $data['title'] = 'Add Teacher';
+        $teacher_result = $this->teacher_model->getLibraryTeacher();
         $data['teacherlist'] = $teacher_result;
 
-        $genderList         = $this->customlib->getGender();
+        $genderList = $this->customlib->getGender();
         $data['genderList'] = $genderList;
-        $issued_books       = $this->bookissue_model->getissueMemberBooks();
-   
+        $issued_books = $this->bookissue_model->getissueMemberBooks();
+
         $data['issued_books'] = $issued_books;
 
         $this->load->view('layout/header', $data);
         $this->load->view('admin/book/issuereport', $data);
-               
-        $this->load->view('layout/footer', $data);
 
+        $this->load->view('layout/footer', $data);
     }
-     public function issue_returnreport(){
+
+    public function issue_returnreport() {
         $this->session->set_userdata('top_menu', 'Reports');
         $this->session->set_userdata('sub_menu', 'Reports/library');
         $this->session->set_userdata('subsub_menu', 'Reports/library/issue_returnreport');
-        $data['title']       = 'Add Teacher';
-        $teacher_result      = $this->teacher_model->getLibraryTeacher();
+        $data['title'] = 'Add Teacher';
+        $teacher_result = $this->teacher_model->getLibraryTeacher();
         $data['teacherlist'] = $teacher_result;
 
-        $genderList         = $this->customlib->getGender();
+        $genderList = $this->customlib->getGender();
         $data['genderList'] = $genderList;
-        $issued_books       = $this->bookissue_model->getissuereturnMemberBooks();
+        $issued_books = $this->bookissue_model->getissuereturnMemberBooks();
         $data['issued_books'] = $issued_books;
 
         $this->load->view('layout/header', $data);
-        $this->load->view('admin/book/issue_returnreport', $data);               
+        $this->load->view('admin/book/issue_returnreport', $data);
         $this->load->view('layout/footer', $data);
-
     }
 
 }
- 
+
 ?>

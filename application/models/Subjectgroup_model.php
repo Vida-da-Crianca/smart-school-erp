@@ -137,46 +137,44 @@ class Subjectgroup_model extends MY_Model {
         if (isset($data['id'])) {
             $this->db->where('id', $data['id']);
             $this->db->update('subject_groups', $data);
-            $subject_group_id = $data['id']; 
-			 
-			$message      = UPDATE_RECORD_CONSTANT." On subject groups id ".$data['id'];
-			$action       = "Update";
-			$record_id    = $data['id'];
-			$this->log($message, $record_id, $action);
-			//======================Code End==============================
+            $subject_group_id = $data['id'];
 
-			$this->db->trans_complete(); # Completing transaction
-			/*Optional*/
+            $message = UPDATE_RECORD_CONSTANT . " On subject groups id " . $data['id'];
+            $action = "Update";
+            $record_id = $data['id'];
+            $this->log($message, $record_id, $action);
+            //======================Code End==============================
 
-			if ($this->db->trans_status() === false) {
-				# Something went wrong.
-				$this->db->trans_rollback();
-				return false;
+            $this->db->trans_complete(); # Completing transaction
+            /* Optional */
 
-			} else {
-				//return $return_value;
-			}
-		} else {
+            if ($this->db->trans_status() === false) {
+                # Something went wrong.
+                $this->db->trans_rollback();
+                return false;
+            } else {
+                //return $return_value;
+            }
+        } else {
             $this->db->insert('subject_groups', $data);
             $subject_group_id = $this->db->insert_id();
-					
-			$message      = INSERT_RECORD_CONSTANT." On subject groups id ".$subject_group_id;
-			$action       = "Insert";
-			$record_id    = $subject_group_id;
-			$this->log($message, $record_id, $action);
-			//======================Code End==============================
 
-			$this->db->trans_complete(); # Completing transaction
-			/*Optional*/
+            $message = INSERT_RECORD_CONSTANT . " On subject groups id " . $subject_group_id;
+            $action = "Insert";
+            $record_id = $subject_group_id;
+            $this->log($message, $record_id, $action);
+            //======================Code End==============================
 
-			if ($this->db->trans_status() === false) {
-				# Something went wrong.
-				$this->db->trans_rollback();
-				return false;
+            $this->db->trans_complete(); # Completing transaction
+            /* Optional */
 
-			} else {
-				//return $return_value;
-			}
+            if ($this->db->trans_status() === false) {
+                # Something went wrong.
+                $this->db->trans_rollback();
+                return false;
+            } else {
+                //return $return_value;
+            }
         }
 
         $subject_group_subject_Array = array();
@@ -204,8 +202,6 @@ class Subjectgroup_model extends MY_Model {
             $section_group_array[] = $sections_array;
         }
         $this->db->insert_batch('subject_group_class_sections', $section_group_array);
-		
-			
     }
 
     public function getDetailbyClassSection($class_id, $section_id) {
@@ -222,7 +218,7 @@ class Subjectgroup_model extends MY_Model {
 
     public function getByID($id = null) {
         $this->db->select('subject_groups.*')->from('subject_groups');
-            $this->db->where('subject_groups.session_id', $this->current_session);
+        $this->db->where('subject_groups.session_id', $this->current_session);
 
         if ($id != null) {
             $this->db->where('subject_groups.id', $id);
@@ -248,57 +244,52 @@ class Subjectgroup_model extends MY_Model {
         return $query->result();
     }
 
-    
-
     public function getGroupsubjects($subject_group_id) {
-        $class_id="";
-        $subject_groupid_condition="";
+        $class_id = "";
+        $subject_groupid_condition = "";
         $userdata = $this->customlib->getUserData();
         $role_id = $userdata["role_id"];
-       
-        
+
+
         if (isset($role_id) && ($userdata["role_id"] == 2) && ($userdata["class_teacher"] == "yes")) {
-          if($userdata["class_teacher"] == 'yes') {
+            if ($userdata["class_teacher"] == 'yes') {
 
-           
-               $get_class=$this->teacher_model->get_classbysubject_group_id($subject_group_id);
-                if(!empty($get_class)){
-               $class_id=$get_class[0]['class_id'];
-           }
-               $my_classes=$this->teacher_model->my_classes($userdata['id']);
-               if(!empty($my_classes)){
-                if(in_array($class_id,$my_classes)){
 
-                 $subject_groupid_condition="";
-                  
+                $get_class = $this->teacher_model->get_classbysubject_group_id($subject_group_id);
+                if (!empty($get_class)) {
+                    $class_id = $get_class[0]['class_id'];
                 }
-               }else{
+                $my_classes = $this->teacher_model->my_classes($userdata['id']);
+                if (!empty($my_classes)) {
+                    if (in_array($class_id, $my_classes)) {
 
-               
+                        $subject_groupid_condition = "";
+                    }
+                } else {
 
-                    $my_subjects=$this->teacher_model->get_subjectby_staffid($userdata['id']);
-                    $subject_groupid_condition=" and subject_group_subjects.id in(".$my_subjects['subject'].")";
-  
-                 }
-             
-           } 
-       }
 
-        $sql = "SELECT subject_group_subjects.*,subjects.name,subjects.code,subjects.type FROM `subject_group_subjects` INNER JOIN subjects on subjects.id=subject_group_subjects.subject_id WHERE subject_group_id =" . $this->db->escape($subject_group_id) . " and session_id =" . $this->db->escape($this->current_session)."".$subject_groupid_condition;
+
+                    $my_subjects = $this->teacher_model->get_subjectby_staffid($userdata['id']);
+                    $subject_groupid_condition = " and subject_group_subjects.id in(" . $my_subjects['subject'] . ")";
+                }
+            }
+        }
+
+        $sql = "SELECT subject_group_subjects.*,subjects.name,subjects.code,subjects.type FROM `subject_group_subjects` INNER JOIN subjects on subjects.id=subject_group_subjects.subject_id WHERE subject_group_id =" . $this->db->escape($subject_group_id) . " and session_id =" . $this->db->escape($this->current_session) . "" . $subject_groupid_condition;
         $query = $this->db->query($sql);
-     
+
         return $query->result();
     }
 
     public function remove($id) {
-		$this->db->trans_start(); # Starting Transaction
+        $this->db->trans_start(); # Starting Transaction
         $this->db->trans_strict(false); # See Note 01. If you wish can remove as well
         //=======================Code Start===========================
-        $this->db->where('id', $id);       
+        $this->db->where('id', $id);
         $this->db->delete('subject_groups');
-		$message      = DELETE_RECORD_CONSTANT." On subject groups id ".$id;
-        $action       = "Delete";
-        $record_id    = $id;
+        $message = DELETE_RECORD_CONSTANT . " On subject groups id " . $id;
+        $action = "Delete";
+        $record_id = $id;
         $this->log($message, $record_id, $action);
         $this->db->trans_complete();
         if ($this->db->trans_status() === false) {
@@ -307,78 +298,69 @@ class Subjectgroup_model extends MY_Model {
             return true;
         }
     }
-    public function getSubjectgroupbyTeacherid($staff_id){
-        return $this->db->select('GROUP_CONCAT(subject_group_id) as subject_group_ids')->from('subject_timetable')->where('staff_id',$staff_id)->group_by('staff_id')->get()->result_array();
 
+    public function getSubjectgroupbyTeacherid($staff_id) {
+        return $this->db->select('GROUP_CONCAT(subject_group_id) as subject_group_ids')->from('subject_timetable')->where('staff_id', $staff_id)->group_by('staff_id')->get()->result_array();
     }
+
     public function getGroupByClassandSection($class_id, $section_id) {
-        $return=true;
+        $return = true;
         $userdata = $this->customlib->getUserData();
         $role_id = $userdata["role_id"];
-        $subject_groupid_condition="";
+        $subject_groupid_condition = "";
 
         if (isset($role_id) && ($userdata["role_id"] == 2) && ($userdata["class_teacher"] == "yes")) {
-          if($userdata["class_teacher"] == 'yes') {
+            if ($userdata["class_teacher"] == 'yes') {
 
-           
-                $subject_groupid=$this->subjectgroup_model->getSubjectgroupbyTeacherid($userdata['id']);
-     
-               $my_classes=$this->teacher_model->my_classes($userdata['id']);
 
-                if(in_array($class_id,$my_classes)){
+                $subject_groupid = $this->subjectgroup_model->getSubjectgroupbyTeacherid($userdata['id']);
 
-                 $subject_groupid_condition="";
-                  
-                }else{
+                $my_classes = $this->teacher_model->my_classes($userdata['id']);
 
-                    if(!empty($subject_groupid)){
+                if (in_array($class_id, $my_classes)) {
 
-                    $subject_groupid_condition=" and subject_groups.id in(".$subject_groupid[0]['subject_group_ids'].")";
+                    $subject_groupid_condition = "";
+                } else {
 
-                    }else{
+                    if (!empty($subject_groupid)) {
 
-                    $return=false; 
+                        $subject_groupid_condition = " and subject_groups.id in(" . $subject_groupid[0]['subject_group_ids'] . ")";
+                    } else {
 
-                    } 
-              }
-             
-
-           } 
-       }
-
-        if($return){
-                $sql = "SELECT subject_groups.name, subject_group_class_sections.* from subject_group_class_sections INNER JOIN class_sections on class_sections.id=subject_group_class_sections.class_section_id INNER JOIN subject_groups on subject_groups.id=subject_group_class_sections.subject_group_id WHERE class_sections.class_id=" . $this->db->escape($class_id) . " and class_sections.section_id=" . $this->db->escape($section_id) . " and subject_groups.session_id=" . $this->db->escape($this->current_session) . " ".$subject_groupid_condition." ORDER by subject_groups.id DESC";
-                $query = $this->db->query($sql);
-               
-                return $query->result_array();
-        }else{
-           return array(); 
+                        $return = false;
+                    }
+                }
+            }
         }
-        
-       
+
+        if ($return) {
+            $sql = "SELECT subject_groups.name, subject_group_class_sections.* from subject_group_class_sections INNER JOIN class_sections on class_sections.id=subject_group_class_sections.class_section_id INNER JOIN subject_groups on subject_groups.id=subject_group_class_sections.subject_group_id WHERE class_sections.class_id=" . $this->db->escape($class_id) . " and class_sections.section_id=" . $this->db->escape($section_id) . " and subject_groups.session_id=" . $this->db->escape($this->current_session) . " " . $subject_groupid_condition . " ORDER by subject_groups.id DESC";
+            $query = $this->db->query($sql);
+
+            return $query->result_array();
+        } else {
+            return array();
+        }
     }
 
     public function getClassandSectionTimetable($class_id, $section_id) {
 
-        $sql = "SELECT subject_group_class_sections.*,subject_group_subjects.id as `subject_group_id`,subject_group_subjects.subject_id,subjects.name,subjects.code,subject_timetable.day,subject_timetable.staff_id,subject_timetable.time_from,subject_timetable.time_to,subject_timetable.room_no,staff.name as `staff_name`,staff.surname FROM `class_sections` INNER JOIN subject_group_class_sections on subject_group_class_sections.class_section_id=class_sections.id INNER JOIN subject_group_subjects on subject_group_subjects.subject_group_id=subject_group_class_sections.subject_group_id INNER JOIN subjects on subjects.id=subject_group_subjects.subject_id INNER JOIN subject_timetable on subject_timetable.subject_group_subject_id=subject_group_subjects.id inner JOIN staff on staff.id= subject_timetable.staff_id WHERE class_sections.class_id=" . $this->db->escape($class_id) . " and class_sections.section_id=" . $this->db->escape($section_id) . " and subject_group_class_sections.session_id=". $this->db->escape($this->current_session);
-        
-         $query = $this->db->query($sql);
+        $sql = "SELECT subject_group_class_sections.*,subject_group_subjects.id as `subject_group_id`,subject_group_subjects.subject_id,subjects.name,subjects.code,subject_timetable.day,subject_timetable.staff_id,subject_timetable.time_from,subject_timetable.time_to,subject_timetable.room_no,staff.name as `staff_name`,staff.surname FROM `class_sections` INNER JOIN subject_group_class_sections on subject_group_class_sections.class_section_id=class_sections.id INNER JOIN subject_group_subjects on subject_group_subjects.subject_group_id=subject_group_class_sections.subject_group_id INNER JOIN subjects on subjects.id=subject_group_subjects.subject_id INNER JOIN subject_timetable on subject_timetable.subject_group_subject_id=subject_group_subjects.id inner JOIN staff on staff.id= subject_timetable.staff_id WHERE class_sections.class_id=" . $this->db->escape($class_id) . " and class_sections.section_id=" . $this->db->escape($section_id) . " and subject_group_class_sections.session_id=" . $this->db->escape($this->current_session);
+
+        $query = $this->db->query($sql);
         return $query->result();
     }
 
-
-
-
     public function check_section_exists($str) {
-         $sections = $this->input->post('sections');
-         if(!isset($sections)){
+        $sections = $this->input->post('sections');
+        if (!isset($sections)) {
             return true;
-         }
+        }
         $id = $this->input->post('id');
         if (!isset($id)) {
             $id = 0;
         }
-     
+
         if ($this->check_section_data_exists($sections, $id)) {
             $this->form_validation->set_message('check_section_exists', $this->lang->line('subjects_already_assigned'));
             return FALSE;
@@ -400,10 +382,5 @@ class Subjectgroup_model extends MY_Model {
             return FALSE;
         }
     }
-
-
-
-
-
 
 }

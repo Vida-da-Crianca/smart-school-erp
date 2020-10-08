@@ -10,40 +10,38 @@ class User_model extends MY_Model {
     }
 
     public function add($data) {
-		$this->db->trans_start(); # Starting Transaction
+        $this->db->trans_start(); # Starting Transaction
         $this->db->trans_strict(false); # See Note 01. If you wish can remove as well
         //=======================Code Start===========================
         if (isset($data['id'])) {
             $this->db->where('id', $data['id']);
             $this->db->update('users', $data);
-			$message      = UPDATE_RECORD_CONSTANT." On  users id ".$data['id'];
-			$action       = "Update";
-			$record_id    = $data['id'];
-			$this->log($message, $record_id, $action);
-			
+            $message = UPDATE_RECORD_CONSTANT . " On  users id " . $data['id'];
+            $action = "Update";
+            $record_id = $data['id'];
+            $this->log($message, $record_id, $action);
         } else {
             $this->db->insert('users', $data);
             $insert_id = $this->db->insert_id();
-			$message      = INSERT_RECORD_CONSTANT." On users id ".$insert_id;
-			$action       = "Insert";
-			$record_id    = $insert_id;
-			$this->log($message, $record_id, $action);
-			
-			// return $insert_id;
+            $message = INSERT_RECORD_CONSTANT . " On users id " . $insert_id;
+            $action = "Insert";
+            $record_id = $insert_id;
+            $this->log($message, $record_id, $action);
+
+            // return $insert_id;
         }//echo $this->db->last_query();die;
-			//======================Code End==============================
+        //======================Code End==============================
 
-			$this->db->trans_complete(); # Completing transaction
-			/*Optional*/
+        $this->db->trans_complete(); # Completing transaction
+        /* Optional */
 
-			if ($this->db->trans_status() === false) {
-				# Something went wrong.
-				$this->db->trans_rollback();
-				return false;
-
-			} else {
-				return $insert_id;
-			}
+        if ($this->db->trans_status() === false) {
+            # Something went wrong.
+            $this->db->trans_rollback();
+            return false;
+        } else {
+            return $insert_id;
+        }
     }
 
     public function addNewParent($data_parent_login, $student_data) {
@@ -53,7 +51,7 @@ class User_model extends MY_Model {
         $insert_id = $this->db->insert_id();
         $student_data['parent_id'] = $insert_id;
         $this->student_model->add($student_data);
-        $this->db->trans_complete(); 
+        $this->db->trans_complete();
         if ($this->db->trans_status() === FALSE) {
 
             $this->db->trans_rollback();
@@ -94,10 +92,10 @@ class User_model extends MY_Model {
     }
 
     public function read_user_information($users_id) {
-        $this->db->select('users.*,languages.language,students.firstname,students.image,students.lastname,students.guardian_name');
+        $this->db->select('users.*,languages.language,students.firstname,students.image,students.lastname,students.guardian_name,students.gender');
         $this->db->from('users');
         $this->db->join('students', 'students.id = users.user_id');
-        $this->db->join('languages', 'languages.id = users.lang_id','left');
+        $this->db->join('languages', 'languages.id = users.lang_id', 'left');
         $this->db->where('students.is_active', 'yes');
         $this->db->where('users.id', $users_id);
         $this->db->limit(1);
@@ -192,16 +190,16 @@ class User_model extends MY_Model {
     }
 
     public function changeStatus($data) {
-		$this->db->trans_start(); # Starting Transaction
+        $this->db->trans_start(); # Starting Transaction
         $this->db->trans_strict(false); # See Note 01. If you wish can remove as well
         //=======================Code Start===========================
         $this->db->where('id', $data['id']);
         $query = $this->db->update('users', $data);
-		$message      = UPDATE_RECORD_CONSTANT." On users id ". $data['id'];
-		$action       = "Update";
-		$record_id    =  $data['id'];
-		$this->log($message, $record_id, $action);
-		$this->db->trans_complete(); # Completing transaction
+        $message = UPDATE_RECORD_CONSTANT . " On users id " . $data['id'];
+        $action = "Update";
+        $record_id = $data['id'];
+        $this->log($message, $record_id, $action);
+        $this->db->trans_complete(); # Completing transaction
         if ($query) {
             return true;
         } else {
@@ -322,7 +320,7 @@ class User_model extends MY_Model {
         }
     }
 
-  public function getParentByEmail($table, $role, $email) {
+    public function getParentByEmail($table, $role, $email) {
         $this->db->select($table . '.*,users.id as `user_tbl_id`,users.username,users.password as `user_tbl_password`');
         $this->db->from($table);
         $this->db->join('users', 'users.id = ' . $table . '.parent_id', 'left');
@@ -355,7 +353,8 @@ class User_model extends MY_Model {
             return false;
         }
     }
-   public function getParentUserValidCode($table, $role, $code) {
+
+    public function getParentUserValidCode($table, $role, $code) {
         $this->db->select($table . '.*,users.id as `user_tbl_id`,users.username,users.password as `user_tbl_password`');
         $this->db->from($table);
         $this->db->join('users', 'users.id = ' . $table . '.parent_id', 'left');
@@ -370,7 +369,6 @@ class User_model extends MY_Model {
             return false;
         }
     }
-
 
     public function forgotPassword($usertype, $email) {
         $result = false;
@@ -436,7 +434,7 @@ class User_model extends MY_Model {
     }
 
     public function getParentLoginDetails($student_id) {
-        
+
         $sql = "SELECT users.* FROM `users` join students on students.parent_id = users.id WHERE students.id = " . $student_id;
         $query = $this->db->query($sql);
         return $query->row_array();

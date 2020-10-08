@@ -1,9 +1,9 @@
 <style type="text/css">
 
-}
+    }
 </style>
-    <!-- Content Wrapper. Contains page content -->
-    <div class="content-wrapper">
+<!-- Content Wrapper. Contains page content -->
+<div class="content-wrapper">
     <!-- Content Header (Page header) -->
 
 
@@ -15,7 +15,7 @@
             <div class="col-md-12">
                 <!-- general form elements -->
                 <div id="frame">
-                     <!-- <div class="chatloader"></div>  -->
+                    <!-- <div class="chatloader"></div>  -->
                     <div id="sidepanel">
                         <input type="hidden" name="chat_connection_id" value="0">
                         <input type="hidden" name="chat_to_user" value="0">
@@ -230,11 +230,11 @@
     $(document).on('keydown', '.chat_input', function (e) {
 
 
-         switch (e.which) {
-           case 13:
-            newChatMessage();
-            break;
-           }
+        switch (e.which) {
+            case 13:
+                newChatMessage();
+                break;
+        }
 
 
 
@@ -252,9 +252,14 @@
         e.preventDefault(); // To prevent the default
     });
 
+    function htmlEncode(str) {
+        return String(str).replace(/[^\w. ]/gi, function (c) {
+            return '&#' + c.charCodeAt(0) + ';';
+        });
+    }
 
     function newChatMessage() {
-        message = $(".message-input input").val();
+        message = htmlEncode($(".message-input input").val());
         if ($.trim(message) == '') {
             return false;
         }
@@ -383,9 +388,6 @@
                     $("input[name='chat_to_user']").val(data.new_user.chat_user_id);
                     $("input[name='last_chat_id']").val(data.user_last_chat.id);
                     $(".chat_input").val("");
-                    console.log(data.new_user);
-
-
                     if (data.new_user.user_type == "student") {
                         new_user_type = "Student";
                         img = baseurl + data.new_user.image;
@@ -518,16 +520,14 @@
     }
 
     function js_yyyy_mm_dd_hh_mm_ss(now) {
-        var month = [
-            "Jan", "Feb", "Marh", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Octr", "Nov", "Dec"
-        ];
+
+        var date_format = '<?php echo$this->customlib->getSchoolDateFormat() ?>';
+        var new_str = date_format;
+        var month_String = new Array("Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec");
         now = new Date();
-        year = "" + now.getFullYear();
-        month = "" + month[now.getMonth()];
-        day = "" + now.getDate();
-        if (day.length == 1) {
-            day = "0" + day;
-        }
+        var day = String(now.getDate()).padStart(2, '0');
+        var month = String(now.getMonth() + 1).padStart(2, '0'); //January is 0!
+        var year = now.getFullYear();
         hour = "" + now.getHours();
         if (hour.length == 1) {
             hour = "0" + hour;
@@ -540,12 +540,20 @@
         if (second.length == 1) {
             second = "0" + second;
         }
-        var ampm = hour >= 12 ? 'PM' : 'AM';
-        hour = hour % 12;
-        hour = hour ? hour : 12; // the hour '0' should be '12'
-        // return year + "-" + month + "-" + day + " " + hour + ":" + minute + ":" + second;
+        var inputAttr = {};
+        inputAttr["m"] = month;
+        inputAttr["M"] = month_String[now.getMonth()];
+        inputAttr["d"] = day;
+        inputAttr["Y"] = year;
+        for (var key in inputAttr) {
+            if (!inputAttr.hasOwnProperty(key)) {
+                continue;
+            }
 
-        return day + " " + month + " " + year + ", " + hour + ":" + minute + ":" + ampm;
+            new_str = new_str.replace(key, inputAttr[key]);
+        }
+
+        return new_str + " " + hour + ":" + minute + ":" + second;
     }
 
 </script>

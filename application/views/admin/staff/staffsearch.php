@@ -208,6 +208,7 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                         } else {
                                             $count = 1;
                                             foreach ($resultlist as $staff) {
+												
                                                 ?>
                                                 <div class="col-lg-3 col-md-4 col-sm-6 img_div_modal">
                                                     <div class="staffinfo-box">
@@ -216,7 +217,12 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                                             if (!empty($staff["image"])) {
                                                                 $image = $staff["image"];
                                                             } else {
-                                                                $image = "no_image.png";
+																if($staff['gender']=='Male'){
+																	$image = "default_male.jpg";
+																}else{
+																	$image = "default_female.jpg";
+																}
+                                                                
                                                             }
                                                             ?>
                                                             <img  src="<?php echo base_url() . "uploads/staff_images/" . $image ?>" />

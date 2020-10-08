@@ -2,7 +2,7 @@
 <!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper">
 
-    
+
 
     <!-- Main content -->
     <section class="content">
@@ -14,11 +14,11 @@
                     <!-- Horizontal Form -->
                     <div class="box box-primary">
                         <div class="box-header with-border">
-                            <h3 class="box-title"><?php echo $this->lang->line('add')." ".$this->lang->line('subject')." ".$this->lang->line('group'); ?></h3>
+                            <h3 class="box-title"><?php echo $this->lang->line('add') . " " . $this->lang->line('subject') . " " . $this->lang->line('group'); ?></h3>
                         </div><!-- /.box-header -->
                         <form id="form1" action="<?php echo site_url('admin/subjectgroup') ?>"  id="employeeform" name="employeeform" method="post" accept-charset="utf-8">
 
-                   <div class="box-body">
+                            <div class="box-body">
                                 <?php if ($this->session->flashdata('msg')) { ?>
                                     <?php echo $this->session->flashdata('msg') ?>
                                 <?php } ?>
@@ -56,15 +56,15 @@
                                     <span class="text-danger"><?php echo form_error('class_id'); ?></span>
                                 </div>
                                 <div class="form-group"> <!-- Radio group !-->
-                                    <label class="control-label"><?php echo $this->lang->line('sections');?></label><small class="req"> *</small>
+                                    <label class="control-label"><?php echo $this->lang->line('sections'); ?></label><small class="req"> *</small>
                                     <div class="section_checkbox">
-                                        <?php echo $this->lang->line('no')." ".$this->lang->line('section')?>
+                                        <?php echo $this->lang->line('no') . " " . $this->lang->line('section') ?>
                                     </div>
 
- <span class="text-danger"><?php echo form_error('sections[]'); ?></span>
+                                    <span class="text-danger"><?php echo form_error('sections[]'); ?></span>
                                 </div>
                                 <div class="form-group">
-                                    <label for="exampleInputEmail1"><?php echo $this->lang->line('subject')?></label><small class="req"> *</small>
+                                    <label for="exampleInputEmail1"><?php echo $this->lang->line('subject') ?></label><small class="req"> *</small>
 
 
                                     <?php
@@ -75,7 +75,7 @@
                                                 <input type="checkbox" name="subject[]" value="<?php echo $subject['id'] ?>" <?php echo set_checkbox('subject[]', $subject['id']); ?> ><?php echo $subject['name'] ?>
 
 
-                                                
+
                                             </label>
                                         </div>
                                         <?php
@@ -111,16 +111,16 @@
                 <!-- general form elements -->
                 <div class="box box-primary">
                     <div class="box-header ptbnull">
-                        <h3 class="box-title titlefix"><?php echo $this->lang->line('subject')." ".$this->lang->line('group')." ".$this->lang->line('list')?></h3>
+                        <h3 class="box-title titlefix"><?php echo $this->lang->line('subject') . " " . $this->lang->line('group') . " " . $this->lang->line('list') ?></h3>
                         <div class="box-tools pull-right">
                         </div><!-- /.box-tools -->
                     </div><!-- /.box-header -->
                     <div class="box-body">
-                        
+
                         <div class="table-responsive mailbox-messages" id="subject_list">
-                            <div class="download_label"><?php echo $this->lang->line('subject')." ".$this->lang->line('group')." ".$this->lang->line('list'); ?></div>
- 
-                        <a class="btn btn-default btn-xs pull-right" id="print" onclick="printDiv()" ><i class="fa fa-print"></i></a> <a class="btn btn-default btn-xs pull-right" id="btnExport" onclick="fnExcelReport();"> <i class="fa fa-file-excel-o"></i> </a>
+                            <div class="download_label"><?php echo $this->lang->line('subject') . " " . $this->lang->line('group') . " " . $this->lang->line('list'); ?></div>
+
+                            <a class="btn btn-default btn-xs pull-right" id="print" onclick="printDiv()" ><i class="fa fa-print"></i></a> <a class="btn btn-default btn-xs pull-right" id="btnExport" onclick="fnExcelReport();"> <i class="fa fa-file-excel-o"></i> </a>
                             <table class="table table-striped  table-hover " id="headerTable">
                                 <thead>
                                     <tr>
@@ -154,37 +154,32 @@
                                             </td>
                                             <td>
                                                 <table width="100%">
-                                                   
-                                                
-                                                <?php
-                                                foreach ($subjectgroup->sections as $group_section_key => $group_section_value) { ?>
-                                                     <tr><td><?php
-                                                    echo "<div>" . $group_section_value->class . " - " . $group_section_value->section . "</div>"; ?></td></tr>
-                                                    
-                                                    <?php
-                                                }
-                                                ?>
+
+
+                                                    <?php foreach ($subjectgroup->sections as $group_section_key => $group_section_value) { ?>
+                                                        <tr><td><?php echo "<div>" . $group_section_value->class . " - " . $group_section_value->section . "</div>"; ?></td></tr>
+
+                                                        <?php
+                                                    }
+                                                    ?>
                                                 </table>
                                             </td>
                                             <td>
                                                 <table width="100%">
-                                                <?php
-                                                foreach ($subjectgroup->group_subject as $group_subject_key => $group_subject_value) {
-
-                                                    ?>
-                                                    <tr><td>
-                                                    <?php echo "<div>" . $group_subject_value->name . "</div>"; ?>
-                                                </td></tr>
-                                                    
                                                     <?php
-                                                }
-                                                ?>
+                                                    foreach ($subjectgroup->group_subject as $group_subject_key => $group_subject_value) {
+                                                        ?>
+                                                        <tr><td>
+                                                                <?php echo "<div>" . $group_subject_value->name . "</div>"; ?>
+                                                            </td></tr>
+
+                                                        <?php
+                                                    }
+                                                    ?>
                                                 </table>
                                             </td>
                                             <td class="mailbox-date pull-right no_print">
-                                             <!--    <a href="<?php echo base_url(); ?>admin/subjectgroup/assign/<?php echo $subjectgroup->id; ?>" class="btn btn-default btn-xs"  data-toggle="tooltip" title="Assign / View --r">
-                                                    <i class="fa fa-tag"></i>
-                                                </a> -->
+
                                                 <?php
                                                 if ($this->rbac->hasPrivilege('subject_group', 'can_edit')) {
                                                     ?>
@@ -233,7 +228,7 @@
     var post_section_array = <?php echo json_encode($section_array); ?>;
     $(document).ready(function () {
         var post_class_id = '<?php echo set_value('class_id', 0) ?>';
-        // var post_sections= '<?php //print_r($section_array);      ?>';
+        // var post_sections= '<?php //print_r($section_array);        ?>';
 
 
         if (post_section_array !== null && post_section_array.length > 1) {
@@ -306,57 +301,57 @@
             });
         }
     }
-$(".no_print").css("display","block");
-document.getElementById("print").style.display = "block";
-  document.getElementById("btnExport").style.display = "block";
+    $(".no_print").css("display", "block");
+    document.getElementById("print").style.display = "block";
+    document.getElementById("btnExport").style.display = "block";
 
-        function printDiv() { 
-         $(".no_print").css("display","none");
-            document.getElementById("print").style.display = "none";
-             document.getElementById("btnExport").style.display = "none";
-            var divElements = document.getElementById('subject_list').innerHTML;
-            var oldPage = document.body.innerHTML;
-            document.body.innerHTML = 
-              "<html><head><title></title></head><body>" + 
-              divElements + "</body>";
-            window.print();
-            document.body.innerHTML = oldPage;
+    function printDiv() {
+        $(".no_print").css("display", "none");
+        document.getElementById("print").style.display = "none";
+        document.getElementById("btnExport").style.display = "none";
+        var divElements = document.getElementById('subject_list').innerHTML;
+        var oldPage = document.body.innerHTML;
+        document.body.innerHTML =
+                "<html><head><title></title></head><body>" +
+                divElements + "</body>";
+        window.print();
+        document.body.innerHTML = oldPage;
 
-            location.reload(true);
-        }
-    
- function fnExcelReport()
-{
-    var tab_text="<table border='2px'><tr >";
-    var textRange; var j=0;
-    tab = document.getElementById('headerTable'); // id of table
-
-    for(j = 0 ; j < tab.rows.length ; j++) 
-    {     
-        tab_text=tab_text+tab.rows[j].innerHTML+"</tr>";
-        //tab_text=tab_text+"</tr>";
+        location.reload(true);
     }
 
-    tab_text=tab_text+"</table>";
-    tab_text= tab_text.replace(/<A[^>]*>|<\/A>/g, "");//remove if u want links in your table
-    tab_text= tab_text.replace(/<img[^>]*>/gi,""); // remove if u want images in your table
-    tab_text= tab_text.replace(/<input[^>]*>|<\/input>/gi, ""); // reomves input params
-
-    var ua = window.navigator.userAgent;
-    var msie = ua.indexOf("MSIE "); 
-
-    if (msie > 0 || !!navigator.userAgent.match(/Trident.*rv\:11\./))      // If Internet Explorer
+    function fnExcelReport()
     {
-        txtArea1.document.open("txt/html","replace");
-        txtArea1.document.write(tab_text);
-        txtArea1.document.close();
-        txtArea1.focus(); 
-        sa=txtArea1.document.execCommand("SaveAs",true,"Say Thanks to Sumit.xls");
-    }  
-    else                 //other browser not tested on IE 11
-        sa = window.open('data:application/vnd.ms-excel,' + encodeURIComponent(tab_text));  
+        var tab_text = "<table border='2px'><tr >";
+        var textRange;
+        var j = 0;
+        tab = document.getElementById('headerTable'); // id of table
 
-    return (sa);
-}
+        for (j = 0; j < tab.rows.length; j++)
+        {
+            tab_text = tab_text + tab.rows[j].innerHTML + "</tr>";
+            //tab_text=tab_text+"</tr>";
+        }
+
+        tab_text = tab_text + "</table>";
+        tab_text = tab_text.replace(/<A[^>]*>|<\/A>/g, "");//remove if u want links in your table
+        tab_text = tab_text.replace(/<img[^>]*>/gi, ""); // remove if u want images in your table
+        tab_text = tab_text.replace(/<input[^>]*>|<\/input>/gi, ""); // reomves input params
+
+        var ua = window.navigator.userAgent;
+        var msie = ua.indexOf("MSIE ");
+
+        if (msie > 0 || !!navigator.userAgent.match(/Trident.*rv\:11\./))      // If Internet Explorer
+        {
+            txtArea1.document.open("txt/html", "replace");
+            txtArea1.document.write(tab_text);
+            txtArea1.document.close();
+            txtArea1.focus();
+            sa = txtArea1.document.execCommand("SaveAs", true, "Say Thanks to Sumit.xls");
+        } else                 //other browser not tested on IE 11
+            sa = window.open('data:application/vnd.ms-excel,' + encodeURIComponent(tab_text));
+
+        return (sa);
+    }
 
 </script>

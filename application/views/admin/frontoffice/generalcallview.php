@@ -102,7 +102,7 @@
                         </div><!-- /.box-tools -->
                     </div><!-- /.box-header -->
                     <div class="box-body">
-                        <div class="download_label"><?php echo $this->lang->line('phone_call_log'); ?></div>
+                        <div class="download_label"><?php echo $this->lang->line('phone_call_log'); ?>  <?php echo $this->lang->line('list'); ?></div>
                         <div class="mailbox-messages table-responsive">
                             <table class="table table-hover table-striped table-bordered example">
                                 <thead>
@@ -121,8 +121,6 @@
                                 </thead>
                                 <tbody>
                                     <?php
-
-
                                     if (empty($CallList)) {
                                         ?>
 
@@ -135,22 +133,24 @@
                                                 <td class="mailbox-name"><?php echo $value['name']; ?></td>
                                                 <td class="mailbox-name"><?php echo $value['contact']; ?></td>
                                                 <td class="mailbox-name"><?php echo date($this->customlib->getSchoolDateFormat(), $this->customlib->dateyyyymmddTodateformat($value['date'])); ?> </td>
-                                                <td class="mailbox-name"> <?php    if($value['follow_up_date']!='0000-00-00'){
+                                                <td class="mailbox-name"> <?php
+                                                    if ($value['follow_up_date'] != '0000-00-00') {
 
-                                                   echo date($this->customlib->getSchoolDateFormat(), $this->customlib->dateyyyymmddTodateformat($value['follow_up_date'])); 
-                                                }  ?></td>
+                                                        echo date($this->customlib->getSchoolDateFormat(), $this->customlib->dateyyyymmddTodateformat($value['follow_up_date']));
+                                                    }
+                                                    ?></td>
                                                 <td class="mailbox-name"> <?php echo $value['call_type']; ?></td>
                                                 <td class="mailbox-date pull-right">
                                                     <a data-placement="left" onclick="getRecord(<?php echo $value['id']; ?>)" class="btn btn-default btn-xs" data-target="#calldetails" data-toggle="modal"  title="<?php echo $this->lang->line('view'); ?>"><i class="fa fa-reorder"></i></a>   <?php if ($this->rbac->hasPrivilege('phone_call_log', 'can_edit')) { ?>
                                                         <a href="<?php echo base_url('admin/generalcall/edit/' . $value['id']) ?>" class="btn btn-default btn-xs" data-toggle="tooltip" title="" data-original-title="<?php echo $this->lang->line('edit'); ?>">
                                                             <i class="fa fa-pencil"></i>
                                                         </a>
-        <?php } ?>
-        <?php if ($this->rbac->hasPrivilege('phone_call_log', 'can_delete')) { ?>
+                                                    <?php } ?>
+                                                    <?php if ($this->rbac->hasPrivilege('phone_call_log', 'can_delete')) { ?>
                                                         <a data-placement="left" href="<?php echo base_url('admin/generalcall/delete/' . $value['id']) ?>" class="btn btn-default btn-xs" data-toggle="tooltip" title="" onclick="return confirm('<?php echo $this->lang->line('delete_confirm') ?>');" data-original-title="<?php echo $this->lang->line('delete'); ?>">
                                                             <i class="fa fa-remove"></i>
                                                         </a>
-        <?php } ?>
+                                                    <?php } ?>
                                                 </td>
 
 
@@ -183,7 +183,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
-                <h4 class="modal-title"><?php echo $this->lang->line('details')?></h4>
+                <h4 class="modal-title"><?php echo $this->lang->line('details') ?></h4>
             </div>
             <div class="modal-body" id="getdetails">
 
@@ -194,7 +194,7 @@
 </div>
 </div><!-- /.content-wrapper -->
 <script type="text/javascript">
-   
+
 
 
     function getRecord(id) {

@@ -182,30 +182,42 @@ class Content extends Admin_Controller {
         }
     }
 
-    function handle_upload() {
-
+   public function handle_upload()
+    {
+        $image_validate = $this->config->item('file_validate');
         if (isset($_FILES["file"]) && !empty($_FILES['file']['name'])) {
-            $allowedExts = array('jpg', 'jpeg', 'png', "pdf", "doc", "docx", "rar", "zip");
-            $temp = explode(".", $_FILES["file"]["name"]);
-            $extension = end($temp);
-            
-            if ($_FILES["file"]["error"] > 0) {
-                $error .= "Error opening the file<br />";
-            }
-            if (($_FILES["file"]["type"] != "application/pdf") && ($_FILES["file"]["type"] != "image/gif") && ($_FILES["file"]["type"] != "image/jpeg") && ($_FILES["file"]["type"] != "image/jpg") && ($_FILES["file"]["type"] != "application/vnd.openxmlformats-officedocument.wordprocessingml.document") && ($_FILES["file"]["type"] != "application/vnd.openxmlformats-officedocument.wordprocessingml.document") && ($_FILES["file"]["type"] != "image/pjpeg") && ($_FILES["file"]["type"] != "image/x-png") && ($_FILES["file"]["type"] != "application/x-rar-compressed") && ($_FILES["file"]["type"] != "application/octet-stream") && ($_FILES["file"]["type"] != "application/zip") && ($_FILES["file"]["type"] != "application/octet-stream") && ($_FILES["file"]["type"] != "image/png")) {
-                $this->form_validation->set_message('handle_upload', $this->lang->line('file_type_not_allowed'));
+
+            $file_type         = $_FILES["file"]['type'];
+            $file_size         = $_FILES["file"]["size"];
+            $file_name         = $_FILES["file"]["name"];
+            $allowed_extension = $image_validate['allowed_extension'];
+            $ext               = pathinfo($file_name, PATHINFO_EXTENSION);
+            $allowed_mime_type = $image_validate['allowed_mime_type'];
+            if ($files = filesize($_FILES['file']['tmp_name'])) {
+
+                if (!in_array($file_type, $allowed_mime_type)) {
+                    $this->form_validation->set_message('handle_upload', $this->lang->line('file_type_not_allowed'));
+                    return false;
+                }
+                if (!in_array($ext, $allowed_extension) || !in_array($file_type, $allowed_mime_type)) {
+                    $this->form_validation->set_message('handle_upload', $this->lang->line('file_type_not_allowed'));
+                    return false;
+                }
+                if ($file_size > $image_validate['upload_size']) {
+                    $this->form_validation->set_message('handle_upload', $this->lang->line('file_size_shoud_be_less_than') . number_format($image_validate['upload_size'] / 1048576, 2) . " MB");
+                    return false;
+                }
+            } else {
+                $this->form_validation->set_message('handle_upload', 'File size is too small');
                 return false;
             }
-            if (!in_array($extension, $allowedExts)) {
-                $this->form_validation->set_message('handle_upload', $this->lang->line('extension_not_allowed'));
-                return false;
-            }
+
             return true;
-        } else {
+        }else {
             $this->form_validation->set_message('handle_upload', $this->lang->line('the_file_field_is_required'));
             return false;
         }
-    } 
+    }
 
     public function download($file) {
 

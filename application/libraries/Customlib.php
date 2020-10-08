@@ -34,7 +34,7 @@ class Customlib
         $content_for              = array();
         $role_array               = $this->getStaffRole();
         $role                     = json_decode($role_array);
-        $content_for[$role->name] =  "All " . $role->name;
+        $content_for[$role->name] = "All " . $role->name;
         $content_for['student']   = "All Student";
         return $content_for;
     }
@@ -323,7 +323,7 @@ class Customlib
         return $status;
     }
 
-   public function getDaysnameWithoutLang()
+    public function getDaysnameWithoutLang()
     {
         $status              = array();
         $status['Monday']    = 'monday';
@@ -359,50 +359,51 @@ class Customlib
     public function getSchoolDateFormat($date_only = true, $time = false)
     {
 
-        $setting_result = $this->CI->setting_model->get();
+        $setting_result     = $this->CI->setting_model->get();
+        return $date_format = $setting_result[0]['date_format'];
+        // $hi_format = ' h:i A';
+        // $Hi_format = ' H:i';
 
-        $time_format = $setting_result[0]['time_format'];
+        // $admin = $this->CI->session->userdata('admin');
+        // if ($admin) {
+        //     if ($date_only && !$time) {
 
-        $hi_format = ' h:i A';
-        $Hi_format = ' H:i';
+        //         return $admin['date_format'];
+        //     } elseif ($time_format == "24-hour") {
 
-        $admin = $this->CI->session->userdata('admin');
-        if ($admin) {
-            if ($date_only && !$time) {
+        //         return $admin['date_format'] . $Hi_format;
+        //     } elseif ($time_format == "12-hour") {
 
-                return $admin['date_format'];
-            } elseif ($time_format == "24-hour") {
+        //         return $admin['date_format'] . $hi_format;
+        //     }
+        // } else if ($this->CI->session->userdata('student')) {
 
-                return $admin['date_format'] . $Hi_format;
-            } elseif ($time_format == "12-hour") {
+        //     $student = $this->CI->session->userdata('student');
+        //     if ($date_only && !$time) {
 
-                return $admin['date_format'] . $hi_format;
-            }
-        } else if ($this->CI->session->userdata('student')) {
+        //         return $student['date_format'];
+        //     } elseif ($time_format == "24-hour") {
 
-            $student = $this->CI->session->userdata('student');
-            if ($date_only && !$time) {
+        //         return $student['date_format'] . $Hi_format;
+        //     } elseif ($time_format == "12-hour") {
 
-                return $student['date_format'];
-            } elseif ($time_format == "24-hour") {
-
-                return $student['date_format'] . $Hi_format;
-            } elseif ($time_format == "12-hour") {
-
-                return $student['date_format'] . $hi_format;
-            }
-        }
+        //         return $student['date_format'] . $hi_format;
+        //     }
+        // }
     }
 
     public function getTimeZone()
     {
-        $admin = $this->CI->session->userdata('admin');
-        if ($admin) {
-            return $admin['timezone'];
-        } else if ($this->CI->session->userdata('student')) {
-            $student = $this->CI->session->userdata('student');
-            return $student['timezone'];
-        }
+        $setting_result = $this->CI->setting_model->getSchoolDetail();
+        return $setting_result->timezone;
+
+        // $admin = $this->CI->session->userdata('admin');
+        // if ($admin) {
+        //     return $admin['timezone'];
+        // } else if ($this->CI->session->userdata('student')) {
+        //     $student = $this->CI->session->userdata('student');
+        //     return $student['timezone'];
+        // }
     }
 
     public function getSchoolCurrencyFormat()
@@ -554,10 +555,20 @@ class Customlib
         return $payment_setting;
     }
 
-    public function getStudentunreadNotification()
+    public function getUserunreadNotification()
     {
-        $student_id    = $this->CI->customlib->getStudentSessionUserID();
-        $notifications = $this->CI->notification_model->countUnreadNotificationStudent($student_id);
+
+        $user_role = $this->getUserRole();
+        if ($user_role == "parent") {
+            $parent        = $this->CI->session->userdata;
+            $parent_id     = $parent['student']['id'];
+            $notifications = $this->CI->notification_model->countUnreadNotificationParent($parent_id);
+        }if ($user_role == "student") {
+
+            $student_id    = $this->CI->customlib->getStudentSessionUserID();
+            $notifications = $this->CI->notification_model->countUnreadNotificationStudent($student_id);
+        }
+
         if ($notifications > 0) {
             return $notifications;
         } else {
@@ -565,17 +576,18 @@ class Customlib
         }
     }
 
-    public function getParentunreadNotification()
-    {
-        $parent=$this->CI->session->userdata; $parent_id=$parent['student']['id'];
-       
-        $notifications = $this->CI->notification_model->countUnreadNotificationParent($parent_id);
-        if ($notifications > 0) {
-            return $notifications;
-        } else {
-            return false;
-        }
-    }
+    // public function getParentunreadNotification()
+    // {
+    //     $parent    = $this->CI->session->userdata;
+    //     $parent_id = $parent['student']['id'];
+
+    //     $notifications = $this->CI->notification_model->countUnreadNotificationParent($parent_id);
+    //     if ($notifications > 0) {
+    //         return $notifications;
+    //     } else {
+    //         return false;
+    //     }
+    // }
 
     public function getStudentSessionUserName()
     {
@@ -675,13 +687,16 @@ class Customlib
 
     public function getAppVersion()
     {
-        //Build: 200624
-        $appVersion = "6.0.0";
+        //Build: 201006
+        $appVersion = "6.1.0";
         return $appVersion;
     }
 
     public function datetostrtotime($date)
     {
+        if ($date == "") {
+            return "";
+        }
         $format = $this->getSchoolDateFormat();
         if ($format == 'd-m-Y') {
             list($day, $month, $year) = explode('-', $date);
@@ -720,160 +735,11 @@ class Customlib
         return strtotime($date);
     }
 
-    public function dateFormatToYYYYMMDD($date = null)
-    {
-
-        if (strtotime($date) == 0) {
-            return "";
-        }
-        $format = $this->getSchoolDateFormat();
-
-        $date_formated = date_parse_from_format($format, $date);
-        $year          = $date_formated['year'];
-        $month         = str_pad($date_formated['month'], 2, "0", STR_PAD_LEFT);
-        $day           = str_pad($date_formated['day'], 2, "0", STR_PAD_LEFT);
-        $hour          = $date_formated['hour'];
-        $minute        = $date_formated['minute'];
-        $second        = $date_formated['second'];
-        $date          = $year . "-" . $month . "-" . $day;
-
-        return $date;
-    }
-
-    public function dateYYYYMMDDtoStrtotime($date = null)
-    {
-
-        if (strtotime($date) == 0) {
-            return "";
-        }
-
-        $date_formated = date_parse_from_format('Y-m-d', $date);
-        $year          = $date_formated['year'];
-        $month         = $date_formated['month'];
-        $day           = $date_formated['day'];
-
-        $date = $year . "-" . $month . "-" . $day;
-
-        return strtotime($date);
-    }
-
-    public function dateformat($date = null)
-    {
-
-        if (strtotime($date) == 0) {
-            return "";
-        }
-
-        $format        = $this->getSchoolDateFormat();
-        $date_formated = date_parse_from_format('Y-m-d', $date);
-        $year          = $date_formated['year'];
-        $month         = str_pad($date_formated['month'], 2, "0", STR_PAD_LEFT);
-        $day           = str_pad($date_formated['day'], 2, "0", STR_PAD_LEFT);
-        $hour          = str_pad($date_formated['hour'], 2, "0", STR_PAD_LEFT);
-        $minute        = str_pad($date_formated['minute'], 2, "0", STR_PAD_LEFT);
-        $second        = str_pad($date_formated['second'], 2, "0", STR_PAD_LEFT);
-
-        $format_date = "";
-        if ($format == 'd-m-Y') {
-            $format_date = $day . "-" . $month . "-" . $year;
-        }
-
-        if ($format == 'd/m/Y') {
-            $format_date = $day . "/" . $month . "/" . $year;
-        }
-
-        if ($format == 'd-M-Y') {
-            $format_date = $day . "-" . $month . "-" . $year;
-        }
-
-        if ($format == 'd.m.Y') {
-            $format_date = $day . "." . $month . "." . $year;
-        }
-
-        if ($format == 'm-d-Y') {
-            $format_date = $month . "-" . $day . "-" . $year;
-        }
-
-        if ($format == 'm/d/Y') {
-            $format_date = $month . "/" . $day . "/" . $year;
-        }
-
-        if ($format == 'm.d.Y') {
-            $format_date = $month . "." . $day . "." . $year;
-        }
-
-        if ($format == 'Y/m/d') {
-            $format_date = $year . "/" . $month . "/" . $day;
-        }
-
-        return $format_date;
-    }
-
-    public function dateTimeformat($date)
-    {
-        $format        = $this->getSchoolDateFormat();
-        $date_formated = date_parse_from_format($format . ' H:i:s', $date);
-        $year          = $date_formated['year'];
-        $month         = $date_formated['month'];
-        $day           = $date_formated['day'];
-        $hour          = $date_formated['hour'];
-        $minute        = $date_formated['minute'];
-        $second        = $date_formated['second'];
-        $date          = $year . "-" . $month . "-" . $day . " " . $hour . ":" . $minute . ":" . $second;
-
-        return strtotime($date);
-    }
-
-    public function dateyyyymmddToDateTimeformat($date)
-    {
-        $format        = $this->getSchoolDateFormat();
-        $date_formated = date_parse_from_format('Y-m-d H:i:s', $date);
-        $year          = $date_formated['year'];
-        $month         = str_pad($date_formated['month'], 2, "0", STR_PAD_LEFT);
-        $day           = str_pad($date_formated['day'], 2, "0", STR_PAD_LEFT);
-        $hour          = str_pad($date_formated['hour'], 2, "0", STR_PAD_LEFT);
-        $minute        = str_pad($date_formated['minute'], 2, "0", STR_PAD_LEFT);
-        $second        = str_pad($date_formated['second'], 2, "0", STR_PAD_LEFT);
-
-        $format_date = "";
-        if ($format == 'd-m-Y') {
-            $format_date = $day . "-" . $month . "-" . $year . " " . $hour . ":" . $minute . ":" . $second;
-        }
-
-        if ($format == 'd/m/Y') {
-            $format_date = $day . "/" . $month . "/" . $year . " " . $hour . ":" . $minute . ":" . $second;
-        }
-
-        if ($format == 'd-M-Y') {
-            $format_date = $day . "-" . $month . "-" . $year . " " . $hour . ":" . $minute . ":" . $second;
-        }
-
-        if ($format == 'd.m.Y') {
-            $format_date = $day . "." . $month . "." . $year . " " . $hour . ":" . $minute . ":" . $second;
-        }
-
-        if ($format == 'm-d-Y') {
-            $format_date = $month . "-" . $day . "-" . $year . " " . $hour . ":" . $minute . ":" . $second;
-        }
-
-        if ($format == 'm/d/Y') {
-            $format_date = $month . "/" . $day . "/" . $year . " " . $hour . ":" . $minute . ":" . $second;
-        }
-
-        if ($format == 'm.d.Y') {
-            $format_date = $month . "." . $day . "." . $year . " " . $hour . ":" . $minute . ":" . $second;
-        }
-
-        if ($format == 'Y/m/d') {
-            $format_date = $year . "/" . $month . "/" . $day . " " . $hour . ":" . $minute . ":" . $second;
-        }
-
-        return $format_date;
-    }
-
     public function dateyyyymmddTodateformat($date)
     {
-
+        if ($date == "" || substr($date, 0, 10) == '0000-00-00') {
+            return "";
+        }
         $format = $this->getSchoolDateFormat();
 
         if ($format == 'd-m-Y') {
@@ -921,6 +787,9 @@ class Customlib
 
     public function dateyyyymmddTodateformatFront($date)
     {
+        if ($date == "" || substr($date, 0, 10) == '0000-00-00') {
+            return "";
+        }
         $format = $this->dateFront();
 
         if ($format == 'd-m-Y') {
@@ -954,6 +823,181 @@ class Customlib
         $date = $year . "-" . $day . "-" . $month;
 
         return strtotime($date);
+    }
+
+    public function dateFormatToYYYYMMDD($date = null)
+    {
+
+        if ($date == "") {
+            return "";
+        }
+        $format = $this->getSchoolDateFormat();
+
+        $date_formated = date_parse_from_format($format, $date);
+        $year          = $date_formated['year'];
+        $month         = str_pad($date_formated['month'], 2, "0", STR_PAD_LEFT);
+        $day           = str_pad($date_formated['day'], 2, "0", STR_PAD_LEFT);
+        $hour          = $date_formated['hour'];
+        $minute        = $date_formated['minute'];
+        $second        = $date_formated['second'];
+        $date          = $year . "-" . $month . "-" . $day;
+
+        return $date;
+    }
+
+    public function dateYYYYMMDDtoStrtotime($date = null)
+    {
+
+        if (trim($date) == "" || substr($date, 0, 10) == '0000-00-00') {
+            return "";
+        }
+
+        $date_formated = date_parse_from_format('Y-m-d', $date);
+        $year          = $date_formated['year'];
+        $month         = $date_formated['month'];
+        $day           = $date_formated['day'];
+
+        $date = $year . "-" . $month . "-" . $day;
+
+        return strtotime($date);
+    }
+
+    public function dateformat($date = null)
+    {
+
+        if (trim($date) == "" || substr($date, 0, 10) == '0000-00-00') {
+            return "";
+        }
+
+        $format        = $this->getSchoolDateFormat();
+        $date_formated = date_parse_from_format('Y-m-d', $date);
+        $year          = $date_formated['year'];
+        $month         = str_pad($date_formated['month'], 2, "0", STR_PAD_LEFT);
+        $day           = str_pad($date_formated['day'], 2, "0", STR_PAD_LEFT);
+        $hour          = str_pad($date_formated['hour'], 2, "0", STR_PAD_LEFT);
+        $minute        = str_pad($date_formated['minute'], 2, "0", STR_PAD_LEFT);
+        $second        = str_pad($date_formated['second'], 2, "0", STR_PAD_LEFT);
+
+        $format_date = "";
+        if ($format == 'd-m-Y') {
+            $format_date = $day . "-" . $month . "-" . $year;
+        }
+
+        if ($format == 'd/m/Y') {
+            $format_date = $day . "/" . $month . "/" . $year;
+        }
+
+        if ($format == 'd-M-Y') {
+            $format_date = date('d-M-Y', strtotime($day . "-" . $month . "-" . $year));
+        }
+
+        if ($format == 'd.m.Y') {
+            $format_date = $day . "." . $month . "." . $year;
+        }
+
+        if ($format == 'm-d-Y') {
+            $format_date = $month . "-" . $day . "-" . $year;
+        }
+
+        if ($format == 'm/d/Y') {
+            $format_date = $month . "/" . $day . "/" . $year;
+        }
+
+        if ($format == 'm.d.Y') {
+            $format_date = $month . "." . $day . "." . $year;
+        }
+
+        if ($format == 'Y/m/d') {
+            $format_date = $year . "/" . $month . "/" . $day;
+        }
+
+        return $format_date;
+    }
+
+    public function dateTimeformatTwentyfourhour($date, $twentyfour = false)
+    {
+        $format = $this->getSchoolDateFormat();
+        if ($twentyfour) {
+            $date_formated = date_parse_from_format($format . ' G:i:s', $date); // 18:00:00 or 24:00:00
+
+        } else {
+            $date_formated = date_parse_from_format($format . ' g:i a', $date); // 01:50 am or pm
+
+        }
+        $year   = $date_formated['year'];
+        $month  = $date_formated['month'];
+        $day    = $date_formated['day'];
+        $hour   = $date_formated['hour'];
+        $minute = $date_formated['minute'];
+        $second = $date_formated['second'];
+        $date   = $year . "-" . $month . "-" . $day . " " . $hour . ":" . $minute . ":" . $second;
+
+        return strtotime($date);
+    }
+
+    public function dateTimeformat($date)
+    {
+        $format        = $this->getSchoolDateFormat();
+        $date_formated = date_parse_from_format($format . ' H:i:s', $date);
+        $year          = $date_formated['year'];
+        $month         = $date_formated['month'];
+        $day           = $date_formated['day'];
+        $hour          = $date_formated['hour'];
+        $minute        = $date_formated['minute'];
+        $second        = $date_formated['second'];
+        $date          = $year . "-" . $month . "-" . $day . " " . $hour . ":" . $minute . ":" . $second;
+
+        return strtotime($date);
+    }
+
+    public function dateyyyymmddToDateTimeformat($date)
+    {
+        if ($date == "") {
+            return "";
+        }
+        $format        = $this->getSchoolDateFormat();
+        $date_formated = date_parse_from_format('Y-m-d H:i:s', $date);
+        $year          = $date_formated['year'];
+        $month         = str_pad($date_formated['month'], 2, "0", STR_PAD_LEFT);
+        $day           = str_pad($date_formated['day'], 2, "0", STR_PAD_LEFT);
+        $hour          = str_pad($date_formated['hour'], 2, "0", STR_PAD_LEFT);
+        $minute        = str_pad($date_formated['minute'], 2, "0", STR_PAD_LEFT);
+        $second        = str_pad($date_formated['second'], 2, "0", STR_PAD_LEFT);
+
+        $format_date = "";
+        if ($format == 'd-m-Y') {
+            $format_date = $day . "-" . $month . "-" . $year . " " . $hour . ":" . $minute . ":" . $second;
+        }
+
+        if ($format == 'd/m/Y') {
+            $format_date = $day . "/" . $month . "/" . $year . " " . $hour . ":" . $minute . ":" . $second;
+        }
+
+        if ($format == 'd-M-Y') {
+            $format_date = date('d-M-Y', strtotime($day . "-" . $month . "-" . $year)) . " " . $hour . ":" . $minute . ":" . $second;
+        }
+
+        if ($format == 'd.m.Y') {
+            $format_date = $day . "." . $month . "." . $year . " " . $hour . ":" . $minute . ":" . $second;
+        }
+
+        if ($format == 'm-d-Y') {
+            $format_date = $month . "-" . $day . "-" . $year . " " . $hour . ":" . $minute . ":" . $second;
+        }
+
+        if ($format == 'm/d/Y') {
+            $format_date = $month . "/" . $day . "/" . $year . " " . $hour . ":" . $minute . ":" . $second;
+        }
+
+        if ($format == 'm.d.Y') {
+            $format_date = $month . "." . $day . "." . $year . " " . $hour . ":" . $minute . ":" . $second;
+        }
+
+        if ($format == 'Y/m/d') {
+            $format_date = $year . "/" . $month . "/" . $day . " " . $hour . ":" . $minute . ":" . $second;
+        }
+
+        return $format_date;
     }
 
     public function timezone_list()
@@ -1019,14 +1063,14 @@ class Customlib
         if (!empty($notifications)) {
             foreach ($notifications as $note_key => $note_value) {
                 if ($note_value->type == $find) {
-    return array('mail' => $note_value->is_mail, 'sms' => $note_value->is_sms, 'notification' => $note_value->is_notification, 'template' => $note_value->template);
+                    return array('mail' => $note_value->is_mail, 'sms' => $note_value->is_sms, 'notification' => $note_value->is_notification, 'template' => $note_value->template);
                 }
             }
         }
         return false;
     }
 
-    public function setUserLog($username, $role)
+    public function setUserLog($username, $role, $class_section_id = null)
     {
         if ($this->CI->agent->is_browser()) {
             $agent = $this->CI->agent->browser() . ' ' . $this->CI->agent->version();
@@ -1039,11 +1083,14 @@ class Customlib
         }
 
         $data = array(
-            'user'       => $username,
-            'role'       => $role,
-            'ipaddress'  => $this->CI->input->ip_address(),
-            'user_agent' => $agent . ", " . $this->CI->agent->platform(),
+            'user'             => $username,
+            'role'             => $role,
+            'ipaddress'        => $this->CI->input->ip_address(),
+            'class_section_id' => $class_section_id,
+            'user_agent'       => $agent . ", " . $this->CI->agent->platform(),
+            'login_datetime'   => date('Y-m-d H:i:s'),
         );
+
         $this->CI->userlog_model->add($data);
     }
 
@@ -1241,8 +1288,12 @@ class Customlib
             $first_date  = '01-01-' . $search_year;
             $last_date   = '31-12-' . $search_year;
         } else if ($search_type == 'period') {
-            $first_date = date('Y-m-d', strtotime($_POST['date_from']));
-            $last_date  = date('Y-m-d', strtotime($_POST['date_to']));
+
+            $first_date = date('Y-m-d', $this->datetostrtotime($_POST['date_from']));
+            $last_date  = date('Y-m-d', $this->datetostrtotime($_POST['date_to']));
+
+            //$first_date=date('Y-m-d',$this->datetostrtotime($first_date1));
+            //$last_date=date('Y-m-d',$this->datetostrtotime($last_date1));
         }
 
         return $date = array('from_date' => $first_date, 'to_date' => $last_date);
@@ -1326,7 +1377,6 @@ class Customlib
 
     public function payment_mode()
     {
-
         $mode = array(
             'cash'   => $this->CI->lang->line('cash'),
             'cheque' => $this->CI->lang->line('cheque'),
@@ -1543,5 +1593,15 @@ class Customlib
             $string .= '...';
         }
         return $string;
+    }
+
+    public function get_rtl_languages($short_code)
+    {
+        $short_codes = array('ar', 'he', 'yi', 'fa', 'ur');
+        if (in_array($short_code, $short_codes)) {
+            return true;
+        } else {
+            return false;
+        }
     }
 }

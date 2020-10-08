@@ -1,4 +1,10 @@
 <?php
+if ($front_setting->whatsapp_url != "") {
+    ?>
+
+    <li><a href="<?php echo $front_setting->whatsapp_url; ?>" target="_blank"><i class="fa fa-whatsapp"></i></a></li>
+    <?php
+}
 if ($front_setting->fb_url != "") {
     ?>
 

@@ -51,15 +51,19 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
 
                                 <?php
                                 foreach ($stafflist as $skey => $svalue) {
-
+                                   
                                     if ($rolet_value['id'] == $svalue["role_id"]) {
 
                                         if (!empty($svalue["image"])) {
 
                                             $image = $svalue['image'];
                                         } else {
-
-                                            $image = "no_image.png";
+                                            if($svalue['gender']=='Male'){
+												$image="default_male.jpg";
+                                                }else{
+												$image="default_female.jpg";
+                                                }
+                                           
                                         }
                                         ?>
                                         <div class="studentname">
@@ -87,13 +91,19 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                 ?>>
                     <div class="box-body box-profile">
                         <?php
+						
                         $image = $staff['image'];
                         if (!empty($image)) {
 
                             $file = $staff['image'];
                         } else {
+							if($staff['gender']=='Male'){
+								$file = "default_male.jpg";
+							}else{
+								$file = "default_female.jpg";
+							}
 
-                            $file = "no_image.png";
+                            
                         }
                         ?>
                         <img class="profile-user-img img-responsive img-circle" src="<?php echo base_url() . "uploads/staff_images/" . $file ?>" alt="User profile picture">
@@ -166,13 +176,23 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                     if (!empty($staff["date_of_joining"]) && $staff["date_of_joining"]!='0000-00-00') {
                                         echo date($this->customlib->getSchoolDateFormat(), $this->customlib->dateyyyymmddTodateformat($staff['date_of_joining']));
                                     }
-                                    ?></a>
+                                    ?></a> 
                             </li>
                             <?php } if (($staff["is_active"] == 0)) { ?>
                                 <li class="list-group-item listnoback">
                                     <b><?php echo $this->lang->line('date_of_leaving'); ?></b> <a class="pull-right text-aqua"><?php
                                         if ($staff["date_of_leaving"] != '0000-00-00') {
                                             echo date($this->customlib->getSchoolDateFormat(), $this->customlib->dateyyyymmddTodateformat($staff['date_of_leaving']));
+                                        } else {
+                                            echo "";
+                                        }
+                                        ?></a>
+                                </li>
+                            <?php } if (($staff["is_active"] == 0)) { ?>
+                            <li class="list-group-item listnoback">
+                                    <b><?php echo $this->lang->line('disable')." ".$this->lang->line('date'); ?></b> <a class="pull-right text-aqua"><?php
+                                        if ($staff["disable_at"] != '0000-00-00') {
+                                            echo date($this->customlib->getSchoolDateFormat(), $this->customlib->dateyyyymmddTodateformat($staff['disable_at']));
                                         } else {
                                             echo "";
                                         }
@@ -232,7 +252,7 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                  if($logged_in_User_Role->id == 7){
                                 if ($a) {
                                     ?> 
-                                    <li class="pull-right"><a href="<?php echo base_url('admin/staff/disablestaff/' . $id); ?>" class="text-red" data-toggle="tooltip" data-placement="bottom"  title="<?php echo $this->lang->line('disable'); ?>" onclick="return confirm('<?php echo $this->lang->line('are_you_sure_disable_record');?>')"></i> <i class="fa fa-thumbs-o-down"></i></a></li>
+                                    <li class="pull-right"><a  class="text-red" data-toggle="tooltip" data-placement="bottom"  title="<?php echo $this->lang->line('disable'); ?>" onclick="disable_staff('<?php echo $id; ?>');"></i> <i class="fa fa-thumbs-o-down"></i></a></li>
 
 
 
@@ -272,7 +292,7 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                 <li class="pull-right"><a href="<?php echo base_url('admin/staff/enablestaff/' . $id); ?>" class="text-green" data-toggle="tooltip" data-placement="bottom" title="<?php echo $this->lang->line('enable'); ?>" onclick="return confirm('<?php echo $this->lang->line('are_you_sure').' '.$this->lang->line('you_want_to_enable_this_record'); ?>');"><i class="fa fa-thumbs-o-up"></i></a></li>  
 
 
-                                <?php  
+                                <?php   
                             }
                         }
                         }}
@@ -1254,7 +1274,45 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
         </div>
     </div>
 </div>
-<script type="text/javascript">
+<div id="disablemodal" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title"><?php echo $this->lang->line('disable')." ".$this->lang->line('staff'); ?></h4>
+            </div>
+            <form method="post" id="disablebtn" action="">
+
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="email"><?php echo $this->lang->line('date'); ?> </label>
+                        <input type="text" class="form-control date" value="<?php echo date($this->customlib->getSchoolDateFormat()); ?>" name="date">
+                    </div>
+                   
+
+
+                </div>
+                <div class="modal-footer">
+                    <button type="submit"  class="btn btn-primary"><?php echo $this->lang->line('save'); ?></button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+<script type="text/javascript"> 
+
+    function disable_staff(id){
+       $('#disablemodal').modal({
+            backdrop: 'static',
+            keyboard: false,
+            show: true
+
+        });
+
+    }
+
     $(".myTransportFeeBtn").click(function () {
         $("span[id$='_error']").html("");
         $('#transport_amount').val("");
@@ -1284,6 +1342,8 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
 
         });
     });
+
+
     $(document).ready(function (e) {
         $("#timelineform").on('submit', (function (e) {
             var staff_id = $("#staff_id").val();
@@ -1337,6 +1397,47 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
 
 
     $(document).ready(function (e) {
+        $("#disablebtn").on('submit', (function (e) {
+            var staff_id = $("#staff_id").val();
+
+            e.preventDefault();
+            $.ajax({ 
+                url: "<?php echo site_url('admin/staff/disablestaff/') ?>" + staff_id,
+                type: "POST",
+                data: new FormData(this),
+                dataType: 'json',
+                contentType: false,
+                cache: false,
+                processData: false,
+                success: function (data) {
+
+                    if (data.status == "fail") {
+
+                        var message = "";
+                        $.each(data.error, function (index, value) {
+
+                            message += value;
+                        });
+                        errorMsg(message);
+                    } else {
+
+                        successMsg(data.message);
+
+                        window.location.reload(true);
+                    }
+
+                },
+                error: function (e) {
+                    alert("Fail");
+                    console.log(e);
+                }
+            });
+
+
+        }));
+    });
+
+     $(document).ready(function (e) {
         $("#changepassbtn").on('submit', (function (e) {
             var staff_id = $("#staff_id").val();
 

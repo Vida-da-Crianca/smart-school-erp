@@ -28,7 +28,7 @@ class Notification_model extends MY_Model {
             $sql .= "where send_notification.id =" . $id;
         }
 
-         $query = $this->db->query($sql);
+        $query = $this->db->query($sql);
         if ($id != null) {
             return $query->row_array();
         } else {
@@ -51,7 +51,7 @@ class Notification_model extends MY_Model {
         $query = $this->db->query($sql);
         return $query->result();
     }
- 
+
     public function getUnreadStudentNotification() {
 
 
@@ -62,7 +62,7 @@ class Notification_model extends MY_Model {
         return $query->result();
     }
 
-    public function getUnreadParentNotification(){
+    public function getUnreadParentNotification() {
         $sql = "select send_notification.* from send_notification INNER JOIN notification_roles on notification_roles.send_notification_id = send_notification.id left JOIN read_notification on  read_notification.notification_id = send_notification.id WHERE  send_notification.visible_parent='yes' and read_notification.id IS NULL   order by send_notification.id desc";
 
 
@@ -92,13 +92,14 @@ LEFT JOIN read_notification ON send_notification.id = read_notification.notifica
 
     public function countUnreadNotificationStudent($studentid = null) {
         $date = date('Y-m-d');
-        $query = $this->db->query("select * from (SELECT  IF (read_notification.id IS NULL,'unread','read') as notification_id FROM send_notification LEFT JOIN read_notification ON send_notification.id = read_notification.notification_id and read_notification.student_id=" . $this->db->escape($studentid) . " where  send_notification.visible_student='Yes') final where notification_id ='unread'");
+        $query = $this->db->query("select * from (SELECT  IF (read_notification.id IS NULL,'unread','read') as notification_id FROM send_notification left JOIN read_notification ON send_notification.id = read_notification.notification_id and read_notification.student_id=" . $this->db->escape($studentid) . " where  send_notification.visible_student='Yes' and send_notification.publish_date <='" . $date . "') final where notification_id ='unread'");
+
         return $query->num_rows();
     }
 
     public function countUnreadNotificationParent($parentid = null) {
         $date = date('Y-m-d');
-        $query = $this->db->query("select * from (SELECT  IF (read_notification.id IS NULL,'unread','read') as notification_id FROM send_notification LEFT JOIN read_notification ON send_notification.id = read_notification.notification_id and read_notification.parent_id=" . $this->db->escape($parentid) . " where  send_notification.visible_parent='Yes') final where notification_id ='unread'");
+        $query = $this->db->query("select * from (SELECT  IF (read_notification.id IS NULL,'unread','read') as notification_id FROM send_notification LEFT JOIN read_notification ON send_notification.id = read_notification.notification_id and read_notification.parent_id=" . $this->db->escape($parentid) . " where  send_notification.visible_parent='Yes'  and send_notification.publish_date <='" . $date . "') final where notification_id ='unread'");
         return $query->num_rows();
     }
 
@@ -107,24 +108,24 @@ LEFT JOIN read_notification ON send_notification.id = read_notification.notifica
      * @param $id
      */
     public function remove($id) {
-		$this->db->trans_start(); # Starting Transaction
+        $this->db->trans_start(); # Starting Transaction
         $this->db->trans_strict(false); # See Note 01. If you wish can remove as well
         //=======================Code Start===========================
         $this->db->where('id', $id);
         $this->db->delete('send_notification');
-		$message      = DELETE_RECORD_CONSTANT." On send notification id ".$id;
-        $action       = "Delete";
-        $record_id    = $id;
+        $message = DELETE_RECORD_CONSTANT . " On send notification id " . $id;
+        $action = "Delete";
+        $record_id = $id;
         $this->log($message, $record_id, $action);
-		//======================Code End==============================
+        //======================Code End==============================
         $this->db->trans_complete(); # Completing transaction
-        /*Optional*/
+        /* Optional */
         if ($this->db->trans_status() === false) {
             # Something went wrong.
             $this->db->trans_rollback();
             return false;
         } else {
-        //return $return_value;
+            //return $return_value;
         }
     }
 
@@ -135,51 +136,49 @@ LEFT JOIN read_notification ON send_notification.id = read_notification.notifica
      * @param $data
      */
     public function add($data) {
-		$this->db->trans_start(); # Starting Transaction
+        $this->db->trans_start(); # Starting Transaction
         $this->db->trans_strict(false); # See Note 01. If you wish can remove as well
         //=======================Code Start===========================
         if (isset($data['id'])) {
             $this->db->where('id', $data['id']);
             $this->db->update('send_notification', $data);
-			$message      = UPDATE_RECORD_CONSTANT." On  send notification id ".$data['id'];
-			$action       = "Update";
-			$record_id    = $data['id'];
-			$this->log($message, $record_id, $action);
-			//======================Code End==============================
+            $message = UPDATE_RECORD_CONSTANT . " On  send notification id " . $data['id'];
+            $action = "Update";
+            $record_id = $data['id'];
+            $this->log($message, $record_id, $action);
+            //======================Code End==============================
 
-			$this->db->trans_complete(); # Completing transaction
-			/*Optional*/
+            $this->db->trans_complete(); # Completing transaction
+            /* Optional */
 
-			if ($this->db->trans_status() === false) {
-				# Something went wrong.
-				$this->db->trans_rollback();
-				return false;
-
-			} else {
-				//return $return_value;
-			}
+            if ($this->db->trans_status() === false) {
+                # Something went wrong.
+                $this->db->trans_rollback();
+                return false;
+            } else {
+                //return $return_value;
+            }
         } else {
             $this->db->insert('send_notification', $data);
-            $id=$this->db->insert_id();
-			$message      = INSERT_RECORD_CONSTANT." On  send notification id ".$id;
-			$action       = "Insert";
-			$record_id    = $id;
-			$this->log($message, $record_id, $action);
-			//echo $this->db->last_query();die;
-			//======================Code End==============================
+            $id = $this->db->insert_id();
+            $message = INSERT_RECORD_CONSTANT . " On  send notification id " . $id;
+            $action = "Insert";
+            $record_id = $id;
+            $this->log($message, $record_id, $action);
+            //echo $this->db->last_query();die;
+            //======================Code End==============================
 
-			$this->db->trans_complete(); # Completing transaction
-			/*Optional*/
+            $this->db->trans_complete(); # Completing transaction
+            /* Optional */
 
-			if ($this->db->trans_status() === false) {
-				# Something went wrong.
-				$this->db->trans_rollback();
-				return false;
-
-			} else {
-				//return $return_value;
-			}
-			return $id;
+            if ($this->db->trans_status() === false) {
+                # Something went wrong.
+                $this->db->trans_rollback();
+                return false;
+            } else {
+                //return $return_value;
+            }
+            return $id;
         }
     }
 
@@ -193,44 +192,42 @@ LEFT JOIN read_notification ON send_notification.id = read_notification.notifica
             $insert_id = $data['id'];
             $this->db->where('id', $data['id']);
             $this->db->update('send_notification', $data);
-			$message      = UPDATE_RECORD_CONSTANT." On  send notification id ".$data['id'];
-			$action       = "Update";
-			$record_id    = $data['id'];
-			$this->log($message, $record_id, $action);
-			//======================Code End==============================
+            $message = UPDATE_RECORD_CONSTANT . " On  send notification id " . $data['id'];
+            $action = "Update";
+            $record_id = $data['id'];
+            $this->log($message, $record_id, $action);
+            //======================Code End==============================
 
-			$this->db->trans_complete(); # Completing transaction
-			/*Optional*/
+            $this->db->trans_complete(); # Completing transaction
+            /* Optional */
 
-			if ($this->db->trans_status() === false) {
-				# Something went wrong.
-				$this->db->trans_rollback();
-				return false;
-
-			} else {
-				//return $return_value;
-			}
+            if ($this->db->trans_status() === false) {
+                # Something went wrong.
+                $this->db->trans_rollback();
+                return false;
+            } else {
+                //return $return_value;
+            }
         } else {
             $this->db->insert('send_notification', $data);
             $insert_id = $this->db->insert_id();
-			$message      = INSERT_RECORD_CONSTANT." On send notification id ".$insert_id;
-			$action       = "Insert";
-			$record_id    = $insert_id;
-			$this->log($message, $record_id, $action);
-			//echo $this->db->last_query();die;
-			//======================Code End==============================
+            $message = INSERT_RECORD_CONSTANT . " On send notification id " . $insert_id;
+            $action = "Insert";
+            $record_id = $insert_id;
+            $this->log($message, $record_id, $action);
+            //echo $this->db->last_query();die;
+            //======================Code End==============================
 
-			$this->db->trans_complete(); # Completing transaction
-			/*Optional*/
+            $this->db->trans_complete(); # Completing transaction
+            /* Optional */
 
-			if ($this->db->trans_status() === false) {
-				# Something went wrong.
-				$this->db->trans_rollback();
-				return false;
-
-			} else {
-				//return $return_value;
-			}
+            if ($this->db->trans_status() === false) {
+                # Something went wrong.
+                $this->db->trans_rollback();
+                return false;
+            } else {
+                //return $return_value;
+            }
         }
 
 
@@ -335,10 +332,9 @@ LEFT JOIN read_notification ON send_notification.id = read_notification.notifica
         }
     }
 
-    public function getcreatedByName($id)
-    {
-      $query = $this->db->select('staff.name,staff.surname')->where("id",$id)->get("staff");
-      return $query->row_array();
+    public function getcreatedByName($id) {
+        $query = $this->db->select('staff.name,staff.surname')->where("id", $id)->get("staff");
+        return $query->row_array();
     }
 
 }

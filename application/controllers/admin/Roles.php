@@ -39,12 +39,10 @@ class Roles extends Admin_Controller {
                 'name' => $this->input->post('name')
             );
             $this->role_model->add($data);
-            $this->session->set_flashdata('msg', '<div class="alert alert-success text-left">'.$this->lang->line('success_message').'</div>');
+            $this->session->set_flashdata('msg', '<div class="alert alert-success text-left">' . $this->lang->line('success_message') . '</div>');
             redirect('admin/roles');
         }
     }
-
-   
 
     function permission($id) {
         $data['title'] = 'Add Role';
@@ -92,7 +90,7 @@ class Roles extends Admin_Controller {
                     $to_be_insert[] = array_merge($ar, $insert_data);
                 }
             }
-            
+
             $this->role_model->getInsertBatch($role_id, $to_be_insert, $to_be_update, $to_be_delete);
             redirect('admin/roles/permission/' . $id);
         }
@@ -127,7 +125,7 @@ class Roles extends Admin_Controller {
                 'name' => $this->input->post('name')
             );
             $this->role_model->add($data);
-            $this->session->set_flashdata('msg', '<div class="alert alert-success text-left">'.$this->lang->line('success_message').'</div>');
+            $this->session->set_flashdata('msg', '<div class="alert alert-success text-left">' . $this->lang->line('success_message') . '</div>');
             redirect('admin/roles/index');
         }
     }

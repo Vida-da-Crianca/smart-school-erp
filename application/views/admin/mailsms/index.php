@@ -6,7 +6,7 @@
             display: none !important;
         }
     }
-</style>
+</style> 
 <?php
 $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
 ?>
@@ -22,7 +22,7 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                     <div class="box-header with-border">
                         <h3 class="box-title"> <?php echo $this->lang->line('email_/_sms_log'); ?></h3>
                         <div class="box-tools pull-right">
-                           
+
                         </div>
 
                     </div>
@@ -70,12 +70,7 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                                 </div>
                                             </td>
                                             <td class="mailbox-name">
-                                                <?php
-                                                $date_time = strtotime($message['created_at']);
-                                                $date = date('Y-m-d', $date_time);
-                                                $time = date('H:i:s', $date_time);
-                                                echo date($this->customlib->getSchoolDateFormat(), $this->customlib->dateyyyymmddTodateformat($date)) . " " . $time;
-                                                ?>
+                                                <?php echo $this->customlib->dateyyyymmddToDateTimeformat($message['created_at']); ?>
                                             </td>
                                             <td class="mailbox-name">
                                                 <?php
@@ -163,7 +158,7 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
         frame1.css({"position": "absolute", "top": "-1000000px"});
         $("body").append(frame1);
         var frameDoc = frame1[0].contentWindow ? frame1[0].contentWindow : frame1[0].contentDocument.document ? frame1[0].contentDocument.document : frame1[0].contentDocument;
-       // alert(frameDoc);
+        // alert(frameDoc);
         frameDoc.document.open();
         //Create a new HTML document.
         frameDoc.document.write('<html>');
