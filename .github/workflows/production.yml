@@ -17,11 +17,14 @@ on:
 env:
   # TODO: Change variable to your image's name.
   IMAGE_NAME: erpjb-school
+  STACK_NAME: ERP_APPLICATION
+  DOCKER_USER: ${{secrets.DOCKER_USER}}
+  DOCKER_PWD: ${{secrets.DOCKER_PASSWORD}}
 
 jobs:
   build:
     # Ensure test job passes before pushing image.
-    runs-on: docker-stack
+    runs-on: "docker-stack"
     if: github.event_name == 'push'
 
     steps:
@@ -31,10 +34,6 @@ jobs:
         run: docker build . --file docker/Dockerfile --tag $IMAGE_NAME
 
       - name: Auth in docker register
-        env:
-          DOCKER_USER: ${{secrets.DOCKER_USER}}
-          DOCKER_PWD: ${{secrets.DOCKER_PASSWORD}}
-
         run:  docker login -u $DOCKER_USER -p $DOCKER_PWD 
 
       - name: Push image to Docker Container Registry
@@ -52,3 +51,9 @@ jobs:
           echo VERSION=$VERSION
           docker tag $IMAGE_NAME $IMAGE_ID:$VERSION
           docker push $IMAGE_ID:$VERSION
+  deploy:
+     runs-on: "docker-stack"
+     steps:
+      - name: Deploy application
+        run: |
+         cat production-stack.yaml
