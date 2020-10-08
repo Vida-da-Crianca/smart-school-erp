@@ -1,0 +1,62 @@
+version: "3.7"
+services:
+  db:
+    image: mysql:latest
+    environment:
+      MYSQL_DATABASE: erp
+      MYSQL_PASSWORD: erp
+      MYSQL_ROOT_PASSWORD: erp
+      MYSQL_USER: erp
+    command: --default-authentication-plugin=mysql_native_password
+    volumes:
+      - ./data:/var/lib/mysql
+    networks:
+     - erp_net
+    ports:
+     - 3307:3306
+  erp:
+    image: webdevops/php-nginx:5.6
+    environment:
+      - VERSION_erp=1.0.2
+      - PHP_DATE_TIMEZONE=America/Sao_Paulo
+    volumes:
+     - ./:/app/
+    # configs:
+    #   - 
+    #     source: erp_conf
+    #     target: /opt/docker/etc/httpd/conf.d/erp.conf
+    #   -
+    #     source: php.ini
+    #     target: /opt/docker/etc/php/php.ini
+    #   -
+    #     source: periodico.conf
+    #     target: /opt/docker/etc/supervisor.d/erp.conf   
+
+    deploy:
+      labels:
+        traefik.http.services.erp.loadbalancer.server.port: "80"
+        traefik.http.routers.erp.rule: (Host(`erp.dev.in`) )
+        traefik.docker.network: proxy
+        traefik.enable: "true"
+        traefik.http.routers.erp.entrypoints: http
+        traefik.http.routers.erp-secure.entrypoints: https
+        traefik.http.routers.erp-secure.rule: (Host(`erp.dev.in`))
+        traefik.http.routers.erp-secure.tls: "true"
+        # traefik.http.routers.erp-secure.tls.certresolver: le
+        # traefik.http.middlewares.erp_redirect.redirectscheme.scheme: https
+        # traefik.http.routers.erp.middlewares: "erp_redirect"
+    tty: true
+    networks:
+      - proxy
+      - erp_net
+networks:
+  proxy:
+    external: true
+  erp_net:
+# configs:
+   
+#   php.ini:
+#     file: './docker/php.ini'
+#   periodico.conf:
+#     file: './docker/supervisor.conf'  
+
