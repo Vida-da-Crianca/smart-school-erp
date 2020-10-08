@@ -74,10 +74,10 @@ $query_builder = TRUE;
 
 $db['default'] = array(
 	'dsn'	=> '',
-	'hostname' => 'db',
-	'username' => 'root',
-	'password' => 'erp',
-	'database' => 'erp',
+	'hostname' => getenv('DB_HOST','db') ,
+	'username' => getenv('DB_USER','db'),
+	'password' => getenv('DB_PASSWORD','db'),
+	'database' => getenv('DB_NAME','db'),
 	'dbdriver' => 'mysqli',
 	'dbprefix' => '',
 	'pconnect' => FALSE,
