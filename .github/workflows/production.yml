@@ -55,5 +55,6 @@ jobs:
      runs-on: "docker-stack"
      steps:
       - name: Deploy application
+      - uses: actions/checkout@v2
         run: |
          cat production-stack.yaml
