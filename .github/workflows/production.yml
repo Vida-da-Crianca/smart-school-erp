@@ -58,4 +58,4 @@ jobs:
       
       - name: Deploy application
         run: |
-         cat production-stack.yaml
+         cat production-stack.yml
