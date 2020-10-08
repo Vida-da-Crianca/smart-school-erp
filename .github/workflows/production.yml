@@ -20,6 +20,7 @@ env:
   STACK_NAME: ERP_APPLICATION
   DOCKER_USER: ${{secrets.DOCKER_USER}}
   DOCKER_PWD: ${{secrets.DOCKER_PASSWORD}}
+  DIRECTORY_APPLICATION: /var/apps/erpjb/production/
 
 jobs:
   build:
@@ -56,6 +57,13 @@ jobs:
      steps:
       - uses: actions/checkout@v2
       
+      - name: Create Folder for Application 
+        run: |
+           mkdir -p $DIRECTORY_APPLICATION/app/uploads  && chmod 777 -R $DIRECTORY_APPLICATION/app/uploads &&
+           mkdir -p $DIRECTORY_APPLICATION/app/temp  && chmod 777 -R $DIRECTORY_APPLICATION/app/temp &&
+           mkdir -p $DIRECTORY_APPLICATION/app/logs  && chmod 777 -R $DIRECTORY_APPLICATION/app/logs &&
+           mkdir -p $DIRECTORY_APPLICATION/database/msyql  && chmod 777 -R $DIRECTORY_APPLICATION/database/msyql
+
       - name: Deploy application
         run: |
          cat production-stack.yml
