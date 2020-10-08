@@ -72,6 +72,7 @@ jobs:
       - name: Remove Stack  
         run: |
           docker stack rm $STACK_NAME
+          sleep 10
 
       - name: Create Stack
         run: |
