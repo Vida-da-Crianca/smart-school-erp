@@ -54,6 +54,7 @@ jobs:
           docker push $IMAGE_ID:$VERSION
   deploy:
      runs-on: "docker-stack"
+     needs: build
      steps:
       - uses: actions/checkout@v2
       
@@ -63,7 +64,11 @@ jobs:
            mkdir -p $DIRECTORY_APPLICATION/app/temp  && chmod 777 -R $DIRECTORY_APPLICATION/app/temp &&
            mkdir -p $DIRECTORY_APPLICATION/app/logs  && chmod 777 -R $DIRECTORY_APPLICATION/app/logs &&
            mkdir -p $DIRECTORY_APPLICATION/database/msyql  && chmod 777 -R $DIRECTORY_APPLICATION/database/msyql
-
-      - name: Deploy application
+      
+      - name: Remove Stack  
         run: |
-         cat production-stack.yml
+          docker stack rm $STACK_NAME
+
+      - name: Create Stack
+        run: |
+         docker stack deploy -c production-stack.yml $STACK_NAME
