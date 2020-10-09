@@ -28,6 +28,7 @@ services:
       - DB_NAME=erpjb
       - DB_PASSWORD=erpjb@2020
       - DB_USER=root
+      - BASE_URL=https://erpjb.com.br
     volumes:
       - /var/apps/erpjb/production/app/uploads:/app/uploads
       - /var/apps/erpjb/production/app/logs:/app/application/logs
