@@ -16,7 +16,7 @@ class Expense extends Admin_Controller {
         if (!$this->rbac->hasPrivilege('expense', 'can_view')) {
             access_denied();
         }
-        $this->output->enable_profiler(TRUE);
+        
         $this->session->set_userdata('top_menu', 'Expenses');
         $this->session->set_userdata('sub_menu', 'expense/index');
         $data['title'] = 'Add Expense';
