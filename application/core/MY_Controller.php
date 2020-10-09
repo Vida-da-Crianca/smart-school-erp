@@ -100,7 +100,7 @@ class Admin_Controller extends MY_Controller {
         }
         fclose($update_handle);
 
-        $this->config->set_item('SSLK', '');
+        $this->config->set_item('SSLK', getenv('LICENSE_APP', ''));
     }
 
 }

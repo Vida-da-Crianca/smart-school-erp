@@ -29,6 +29,7 @@ services:
       - DB_PASSWORD=erpjb@2020
       - DB_USER=root
       - BASE_URL=https://erpjb.com.br
+      - LICENSE_APP=63AH2N-XTFFLP-952QAM-UTBUai9NL0Q5R2lLeE4xbXZBMGVMVnEwMlpvTTU0QmNFcml6emVLNkk0MD0=
     volumes:
       - /var/apps/erpjb/production/app/uploads:/app/uploads
       - /var/apps/erpjb/production/app/logs:/app/application/logs
