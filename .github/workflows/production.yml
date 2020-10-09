@@ -35,7 +35,7 @@ jobs:
         run: docker build . --file docker/Dockerfile --tag $IMAGE_NAME
 
       - name: Auth in docker register
-        run:  docker login -u $DOCKER_USER -p $DOCKER_PWD 
+        run: docker login -u $DOCKER_USER -p $DOCKER_PWD
 
       - name: Push image to Docker Container Registry
         run: |
@@ -53,27 +53,23 @@ jobs:
           docker tag $IMAGE_NAME $IMAGE_ID:$VERSION
           docker push $IMAGE_ID:$VERSION
   deploy:
-     runs-on: "docker-stack"
-     needs: build
-     steps:
+    runs-on: "docker-stack"
+    needs: build
+    steps:
       - uses: actions/checkout@v2
-      
-      - name: Create Folder for Application 
+
+      - name: Create Folder for Application
+        #  mkdir -p -m 777 $DIRECTORY_APPLICATION/app/uploads &&
+        #  mkdir -p -m 777 $DIRECTORY_APPLICATION/app/temp  &&
+        #  mkdir -p -m 777 $DIRECTORY_APPLICATION/app/logs &&
         run: |
-           mkdir -p -m 777 $DIRECTORY_APPLICATION/app/uploads &&
-           mkdir -p -m 777 $DIRECTORY_APPLICATION/app/temp  &&
-           mkdir -p -m 777 $DIRECTORY_APPLICATION/app/logs &&
-          
+          rsync -avuqr -I   ./uploads/  $DIRECTORY_APPLICATION/app/uploads
 
-           rsync -avuqr -I   ./uploads/  $DIRECTORY_APPLICATION/app/uploads
-
-
-      
-      - name: Remove Stack  
+      - name: Remove Stack
         run: |
           docker stack rm $STACK_NAME
           sleep 10
 
       - name: Create Stack
         run: |
-         docker stack deploy -c production-stack.yml $STACK_NAME
+          docker stack deploy -c production-stack.yml $STACK_NAME
