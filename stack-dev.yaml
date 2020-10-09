@@ -1,5 +1,6 @@
 version: "3.7"
 services:
+  redis:
   db:
     image: mysql:latest
     environment:
@@ -28,6 +29,7 @@ services:
     environment:
       - VERSION_erp=1.0.2
       - PHP_DATE_TIMEZONE=America/Sao_Paulo
+      - LICENSE_APP=63AH2N-XTFFLP-952QAM-UTBUai9NL0Q5R2lLeE4xbXZBMGVMVnEwMlpvTTU0QmNFcml6emVLNkk0MD0=
     volumes:
      - ./:/app/
     # configs:
