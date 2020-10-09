@@ -1,6 +1,6 @@
 <?php
 
-$lang['absent'] = "Ausente";
+$lang['absent'] = "Ausentke";
 $lang['absent_student'] = "";
 $lang['academic_fees_detail'] = "Taxas Acadêmicas Detalhes";
 $lang['academics'] = "Acadêmicos";
