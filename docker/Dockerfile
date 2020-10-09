@@ -12,5 +12,6 @@ COPY  . /app/
 COPY docker/php.ini /opt/docker/etc/php/php.ini
 
 # COPY docker/supervisor.conf /opt/docker/etc/supervisor.d/app.conf
+RUN touch /app/.env
 
 RUN composer install
