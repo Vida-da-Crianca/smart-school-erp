@@ -333,9 +333,10 @@ class Admin extends Admin_Controller
         if ($getTotalStaff > 0) {$percentTotalStaff_data = ($Staffattendence * 100) / ($getTotalStaff);} else { $percentTotalStaff_data = '0';}
 
         $data['percentTotalStaff_data'] = $percentTotalStaff_data;
-        $this->load->view('layout/header', $data);
-        $this->load->view('admin/dashboard', $data);
-        $this->load->view('layout/footer', $data);
+        // $this->load->view('layout/header', $data);
+        // $this->load->view('admin/dashboard', $data);
+        // $this->load->view('layout/footer', $data);
+        $this->output->enable_profiler(TRUE);
     }
 
     public function getUserImage()

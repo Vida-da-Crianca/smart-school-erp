@@ -3,13 +3,16 @@
 if (!defined('BASEPATH'))
     exit('No direct script access allowed');
 
-class Aes {
+class Aes
+{
 
-    function __construct() {
-        $this->CI = & get_instance();
+    function __construct()
+    {
+        $this->CI = &get_instance();
     }
 
-    function encrypt($plainText, $key) {
+    function encrypt($plainText, $key)
+    {
         $secretKey = $this->hextobin(md5($key));
         $initVector = pack("C*", 0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f);
 
@@ -28,7 +31,8 @@ class Aes {
         return bin2hex($encryptedText);
     }
 
-    function decrypt($encryptedText, $key) {
+    function decrypt($encryptedText, $key)
+    {
         $secretKey = $this->hextobin(md5($key));
         $initVector = pack("C*", 0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f);
         $encryptedText = $this->hextobin($encryptedText);
@@ -52,14 +56,16 @@ class Aes {
 
     //*********** Padding Function *********************
 
-    function pkcs5_pad($plainText, $blockSize) {
+    function pkcs5_pad($plainText, $blockSize)
+    {
         $pad = $blockSize - (strlen($plainText) % $blockSize);
         return $plainText . str_repeat(chr($pad), $pad);
     }
 
     //********** Hexadecimal to Binary function for php 4.0 version ********
 
-    function hextobin($hexString) {
+    function hextobin($hexString)
+    {
         $length = strlen($hexString);
         $binString = "";
         $count = 0;
@@ -77,24 +83,23 @@ class Aes {
         return $binString;
     }
 
-        function validchk($action, $string) {
-    $output = false;
-    $encrypt_method = "AES-256-CBC";
-    $secret_key = '4D617279206861642061206C6974746C65206C616D';
-    $secret_iv = '4F505A5B5C5D5E5F60616A6B6C6D6E6F7A7D7';
-    // hash
-    $key = hash('sha256', $secret_key);
-    
-    // iv - encrypt method AES-256-CBC expects 16 bytes - else you will get a warning
-    $iv = substr(hash('sha256', $secret_iv), 0, 16);
-    if ( $action == 'encrypt' ) {
-        $output = openssl_encrypt($string, $encrypt_method, $key, 0, $iv);
-        $output = base64_encode($output);
-    } else if( $action == 'decrypt' ) {
-        $output = openssl_decrypt(base64_decode($string), $encrypt_method, $key, 0, $iv);
+    function validchk($action, $string)
+    {
+        $output = false;
+        $encrypt_method = "AES-256-CBC";
+        $secret_key = '4D617279206861642061206C6974746C65206C616D';
+        $secret_iv = '4F505A5B5C5D5E5F60616A6B6C6D6E6F7A7D7';
+        // hash
+        $key = hash('sha256', $secret_key);
+
+        // iv - encrypt method AES-256-CBC expects 16 bytes - else you will get a warning
+        $iv = substr(hash('sha256', $secret_iv), 0, 16);
+        if ($action == 'encrypt') {
+            $output = openssl_encrypt($string, $encrypt_method, $key, 0, $iv);
+            $output = base64_encode($output);
+        } else if ($action == 'decrypt') {
+            $output = openssl_decrypt(base64_decode($string), $encrypt_method, $key, 0, $iv);
+        }
+        return $output;
     }
-    return $output;
-
-}
-
 }

@@ -58,6 +58,7 @@ class Admin_Controller extends MY_Controller {
 
         $this->config->load('ci-blog');
         $this->config->load('custom_filed-config');
+       
     }
 
     public function check_license() {
@@ -85,13 +86,15 @@ class Admin_Controller extends MY_Controller {
     }
 
     public function update_ss_routine() {
-
+       
         $license = $this->config->item('SSLK');
         $fname = APPPATH . 'config/license.php';
         $update_handle = fopen($fname, "r");
         $content = fread($update_handle, filesize($fname));
         $file_contents = str_replace('$config[\'SSLK\'] = \'' . $license . '\'', '$config[\'SSLK\'] = \'\'', $content);
         $update_handle = fopen($fname, 'w') or die("can't open file");
+        
+
         if (fwrite($update_handle, $file_contents)) {
             
         }
