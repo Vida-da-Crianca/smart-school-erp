@@ -1,7 +1,5 @@
 version: "3.7"
 services:
-  
-
   db:
     image: mysql:latest
     environment:
@@ -20,6 +18,10 @@ services:
       - /var/apps/erpjb/production/database/msyql:/var/lib/mysql
     networks:
      - app_net
+    configs:
+      -
+        source: mysql.conf
+        target: /etc/mysql/conf.d/group.cnf 
     # ports:
     #  - 3306:3306 
   app:
@@ -54,7 +56,14 @@ services:
     networks:
       - proxy
       - app_net
+      - redis_net
 networks:
   proxy:
     external: true
+  redis_net:
+    external: true  
   app_net:
+
+configs:
+   mysql.conf:
+     file: './mysql.conf'  
