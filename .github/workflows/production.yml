@@ -65,7 +65,7 @@ jobs:
            mkdir -p -m 777 $DIRECTORY_APPLICATION/app/logs &&
           
 
-           cp -R ./uploads/  $DIRECTORY_APPLICATION/app/uploads
+           rsync -avuqr -I   ./uploads/  $DIRECTORY_APPLICATION/app/uploads
 
 
       
