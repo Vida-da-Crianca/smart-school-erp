@@ -2,7 +2,7 @@
 
 $lang['absent'] = "Ausente";
 $lang['absent_student'] = "";
-$lang['academic_fees_detail'] = "Taxas Acadêmicas Detalhesj";
+$lang['academic_fees_detail'] = "Valores Acadêmicos Detalhes";
 $lang['academics'] = "Acadêmicos";
 $lang['accountant'] = "";
 $lang['accountant_list'] = "Contabilista Lista";
@@ -23,9 +23,9 @@ $lang['add_expense_head'] = "Adicionar Tipos de Despesas";
 $lang['add_fee_category'] = "Adicionar Categoria De Inscrição";
 $lang['add_fees'] = "Adicionar Taxas De";
 $lang['add_fees_discount'] = "Tipos de desconto";
-$lang['add_fees_group'] = "Grupo de taxas";
-$lang['add_fees_master'] = "Adicionar Taxas De Mestre";
-$lang['add_fees_type'] = "Adicionar Taxas De Tipo";
+$lang['add_fees_group'] = "Valores de grupo";
+$lang['add_fees_master'] = "Adicionar valores De grupo";
+$lang['add_fees_type'] = "Adicionar Tipo valores";
 $lang['add_grade'] = "Adicionar Categoria";
 $lang['add_hostel'] = "Adicionar Hostel";
 $lang['add_hostel_room'] = "Adicionar Quarto De Hostel";
