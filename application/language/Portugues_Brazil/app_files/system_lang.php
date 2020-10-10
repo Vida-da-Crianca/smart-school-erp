@@ -1,6 +1,6 @@
 <?php
 
-$lang['absent'] = "Ausentke";
+$lang['absent'] = "Ausente";
 $lang['absent_student'] = "";
 $lang['academic_fees_detail'] = "Taxas Acadêmicas Detalhesj";
 $lang['academics'] = "Acadêmicos";
@@ -872,7 +872,7 @@ $lang['search_by_file_name'] = "Pesquisar Por Nome De Arquivo" ;
 $lang['search_by_file_type'] = 'Filtrar Por Tipo De Arquivo' ;
 $lang['search_by_staff'] = 'Procure Pelo Pessoal de ID, Nome, Função, etc...' ;
 $lang['seo_detail'] = 'SEO Detalhe' ;
-$lang['setup_front_office'] = 'Configuração De Site' ;
+$lang['setup_front_office'] = 'Configuração Do Site' ;
 $lang['sidebar'] = 'Sidebar' ;
 $lang['sidebar_option'] = 'Barra Lateral Opção' ;
 $lang['sidebar_setting'] = 'Barra Lateral Definição' ;
