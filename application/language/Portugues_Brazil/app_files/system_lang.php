@@ -628,7 +628,7 @@ $lang['upload_date'] = "Data De Upload";
 $lang['upload_documents'] = "O Upload De Documentos";
 $lang['upload_from_local_directory'] = "Upload Partir De Um Diretório Local";
 $lang['url'] = "Url";
-$lang['user_agent'] = "";
+$lang['user_agent'] = "Agente do usuário";
 $lang['user_log'] = "Registro de usuário";
 $lang['user_login'] = "Login Do Usuário";
 $lang['user_name'] = "Nome De Usuário";
@@ -648,7 +648,7 @@ $lang['view_schedule'] = "Ver Agenda";
 $lang['view_status'] = "Exibição De Status";
 $lang['visibility'] = "Visibilidade";
 $lang['visible_to_all'] = "Visível Para Todos";
-$lang['working_key'] = "";
+$lang['working_key'] = "CCAvenue Working Key";
 $lang['year_made'] = "Ano";
 $lang['yes'] = "Sim";
 $lang['you_can_edit_record'] = "Você Pode Editar O Registo";
@@ -1326,7 +1326,7 @@ $lang['recipient'] = "Destinatário" ;
 
 # version 6.0.0
  
-$lang['fees_payment_details'] = "Fees Payment Details";
+$lang['fees_payment_details'] = "Detalhes de pagamento de taxas";
 $lang['decription'] = "Descrição" ;
 $lang['pay_with_instamojo'] = "Pagar Com Instamojo" ;
 $lang['pay_with_paystack'] = "Pagar Com Paystack" ;
