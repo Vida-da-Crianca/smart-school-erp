@@ -1443,4 +1443,13 @@ $lang['setting'] = "Configuração" ;
 $lang['host'] = "Host" ;
 $lang['online_classes'] = "Aulas Ao Vivo" ;
 $lang['online_meeting'] = "Live Meetings" ;
-?>
+$lang['invoice_module'] = 'Notas Fiscais '; 
+$lang['invoice_collection'] = 'Lista Notas Fiscais' ;
+$lang['invoice_type_list'] = 'Lista Notas Fiscais' ;
+$lang['invoice_number'] = 'N˚ da Nota';
+$lang['invoice_guardian'] = 'Responsável';
+$lang['invoice_student'] = 'Estudante';
+$lang['invoice_email'] = 'Email';
+$lang['invoice_price'] = 'Valor';
+$lang['invoice_date'] = 'Gerada';
+

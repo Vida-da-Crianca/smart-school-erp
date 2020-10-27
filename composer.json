@@ -1,5 +1,10 @@
 {   "name": "erpjb/school",
     "require": {
-        "vlucas/phpdotenv": "^4.1"
+        "vlucas/phpdotenv": "^4.1",
+        "illuminate/database": "^5.8.36",
+        "ctodobom/api-inter":"dev-master"
+    },
+    "require-dev": {
+        "symfony/var-dumper": "^3.4"
     }
 }
