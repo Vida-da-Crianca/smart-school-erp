@@ -228,7 +228,7 @@ class Paymentsettings extends Admin_Controller {
         }
 
 
-public function paytm(){
+    public function paytm(){
     
              $this->form_validation->set_error_delimiters('', '');
 
@@ -263,13 +263,12 @@ public function paytm(){
                 );
                 echo json_encode(array('st' => 1, 'msg' => $data));
             }
-        }
+    }
 
 
-        public function midtrans(){
+    public function midtrans(){
     
              $this->form_validation->set_error_delimiters('', '');
-
             $this->form_validation->set_rules('midtrans_serverkey', $this->lang->line('key'), 'trim|required|xss_clean');
             
            
@@ -296,6 +295,46 @@ public function paytm(){
                 echo json_encode(array('st' => 1, 'msg' => $data));
             }
         }
+    public function banco_inter(){
+    
+            $this->form_validation->set_error_delimiters('', '');
+           $this->form_validation->set_rules('banco_inter_account_no', $this->lang->line('key'), 'numeric|trim|required|xss_clean');
+           $this->form_validation->set_rules('banco_inter_api_username', $this->lang->line('key'), 'numeric|trim|required|xss_clean');
+           $this->form_validation->set_rules('banco_inter_api_secret_key', $this->lang->line('key'), 'trim|required|xss_clean');
+           $this->form_validation->set_rules('banco_inter_api_publishable_key', $this->lang->line('key'), 'trim|required|xss_clean');
+           $this->form_validation->set_rules('banco_inter_api_password', $this->lang->line('key'), 'trim|xss_clean');
+           
+          
+           
+           if ($this->form_validation->run()) {
+
+               $data = array(
+                   'account_no' => $this->input->post('banco_inter_account_no'),
+                   'api_username' => $this->input->post('banco_inter_api_username'),
+                   'api_secret_key' => $this->input->post('banco_inter_api_secret_key'),
+                   'api_publishable_key' => $this->input->post('banco_inter_api_publishable_key'),
+                   'api_password' => $this->input->post('banco_inter_api_password'),
+                   'payment_type' => 'banco_inter',
+               );
+
+               $this->paymentsetting_model->add($data);
+               echo json_encode(array('st' => 0, 'msg' => $this->lang->line('update_message')));
+
+           } else {
+
+               $data = array(
+                   'banco_inter_account_no' => form_error('banco_inter_account_no'),
+                   'banco_inter_api_secret_key' => form_error('banco_inter_api_secret_key'),
+                   'banco_inter_api_publishable_key' => form_error('banco_inter_api_publishable_key'),
+                   'banco_inter_api_username' => form_error('banco_inter_api_username'),
+                   'banco_inter_api_password' => form_error('banco_inter_api_password'),
+                  
+                   
+                  
+               );
+               echo json_encode(array('st' => 1, 'msg' => $data));
+           }
+       }    
 
     public function setting() {
 
@@ -340,5 +379,3 @@ public function paytm(){
 
 
 }
-
-?>

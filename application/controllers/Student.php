@@ -278,6 +278,7 @@ class Student extends Admin_Controller
         // $this->form_validation->set_rules('rte', $this->lang->line('rtl'), 'trim|required|xss_clean');
         $this->form_validation->set_rules('guardian_name', $this->lang->line('guardian_name'), 'trim|required|xss_clean');
         $this->form_validation->set_rules('guardian_phone', $this->lang->line('guardian_phone'), 'trim|required|xss_clean');
+        $this->form_validation->set_rules('guardian_document', $this->lang->line('guardian_phone'), 'trim|numeric|xss_clean');
 
         if (!$this->sch_setting_detail->adm_auto_insert) {
 
@@ -347,6 +348,7 @@ class Student extends Admin_Controller
                 'ifsc_code'           => $this->input->post('ifsc_code'),
                 'guardian_occupation' => $this->input->post('guardian_occupation'),
                 'guardian_email'      => $this->input->post('guardian_email'),
+                'guardian_document'      => $this->input->post('guardian_document'),
                 'gender'              => $this->input->post('gender'),
                 'guardian_name'       => $this->input->post('guardian_name'),
                 'guardian_relation'   => $this->input->post('guardian_relation'),
@@ -1153,6 +1155,8 @@ class Student extends Admin_Controller
         $custom_fields              = $this->customfield_model->getByBelong('students');
         $data['sch_setting']        = $this->sch_setting_detail;
 
+        
+
         foreach ($custom_fields as $custom_fields_key => $custom_fields_value) {
             if ($custom_fields_value['validation']) {
                 $custom_fields_id   = $custom_fields_value['id'];
@@ -1170,6 +1174,7 @@ class Student extends Admin_Controller
 
         $this->form_validation->set_rules('gender', $this->lang->line('gender'), 'trim|required|xss_clean');
         $this->form_validation->set_rules('guardian_name', $this->lang->line('guardian_name'), 'trim|required|xss_clean');
+        $this->form_validation->set_rules('guardian_document', $this->lang->line('guardian_document'), 'trim|required|xss_clean');
         // $this->form_validation->set_rules('rte', $this->lang->line('rtl'), 'trim|required|xss_clean');
         $this->form_validation->set_rules('guardian_phone', $this->lang->line('guardian_phone'), 'trim|required|xss_clean');
         $this->form_validation->set_rules(
@@ -1246,6 +1251,7 @@ class Student extends Admin_Controller
                 'ifsc_code'           => $this->input->post('ifsc_code'),
                 'guardian_occupation' => $this->input->post('guardian_occupation'),
                 'guardian_email'      => $this->input->post('guardian_email'),
+                'guardian_document'      => $this->input->post('guardian_document'),
                 'gender'              => $this->input->post('gender'),
                 'guardian_name'       => $this->input->post('guardian_name'),
                 'guardian_relation'   => $this->input->post('guardian_relation'),

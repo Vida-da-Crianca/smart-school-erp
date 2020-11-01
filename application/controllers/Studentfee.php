@@ -1,12 +1,21 @@
 <?php
 
+use Application\Core\BankInterPayment;
+use Application\Core\JsonResponse;
+use Illuminate\Database\Capsule\Manager as DB;
+
+
 if (!defined('BASEPATH')) {
     exit('No direct script access allowed');
 }
 
-class Studentfee extends Admin_Controller {
 
-    public function __construct() {
+
+class Studentfee extends Admin_Controller
+{
+
+    public function __construct()
+    {
         parent::__construct();
         $this->load->library('smsgateway');
         $this->load->library('mailsmsconf');
@@ -14,7 +23,8 @@ class Studentfee extends Admin_Controller {
         $this->sch_setting_detail = $this->setting_model->getSetting();
     }
 
-    public function index() {
+    public function index()
+    {
         if (!$this->rbac->hasPrivilege('collect_fees', 'can_view')) {
             access_denied();
         }
@@ -29,7 +39,8 @@ class Studentfee extends Admin_Controller {
         $this->load->view('layout/footer', $data);
     }
 
-    public function collection_report() {
+    public function collection_report()
+    {
 
         if (!$this->rbac->hasPrivilege('collect_fees', 'can_view')) {
             access_denied();
@@ -122,11 +133,13 @@ class Studentfee extends Admin_Controller {
         $this->load->view('layout/footer', $data);
     }
 
-    public function pdf() {
+    public function pdf()
+    {
         $this->load->helper('pdf_helper');
     }
 
-    public function search() {
+    public function search()
+    {
         if (!$this->rbac->hasPrivilege('collect_fees', 'can_view')) {
             access_denied();
         }
@@ -149,7 +162,6 @@ class Studentfee extends Admin_Controller {
                 if ($search == 'search_filter') {
                     $this->form_validation->set_rules('class_id', $this->lang->line('class'), 'trim|required|xss_clean');
                     if ($this->form_validation->run() == false) {
-                        
                     } else {
                         $resultlist = $this->student_model->searchByClassSection($class, $section);
                         $data['resultlist'] = $resultlist;
@@ -165,7 +177,8 @@ class Studentfee extends Admin_Controller {
         }
     }
 
-    public function feesearch() {
+    public function feesearch()
+    {
         if (!$this->rbac->hasPrivilege('search_due_fees', 'can_view')) {
             access_denied();
         }
@@ -235,7 +248,8 @@ class Studentfee extends Admin_Controller {
         }
     }
 
-    public function reportbyname() {
+    public function reportbyname()
+    {
         if (!$this->rbac->hasPrivilege('fees_statement', 'can_view')) {
             access_denied();
         }
@@ -287,7 +301,8 @@ class Studentfee extends Admin_Controller {
         }
     }
 
-    public function reportbyclass() {
+    public function reportbyclass()
+    {
         $data['title'] = 'student fees';
         $data['title'] = 'student fees';
         $class = $this->class_model->get();
@@ -322,7 +337,8 @@ class Studentfee extends Admin_Controller {
         }
     }
 
-    public function view($id) {
+    public function view($id)
+    {
         if (!$this->rbac->hasPrivilege('collect_fees', 'can_view')) {
             access_denied();
         }
@@ -334,7 +350,8 @@ class Studentfee extends Admin_Controller {
         $this->load->view('layout/footer', $data);
     }
 
-    public function deleteFee() {
+    public function deleteFee()
+    {
 
         if (!$this->rbac->hasPrivilege('collect_fees', 'can_delete')) {
             access_denied();
@@ -348,7 +365,8 @@ class Studentfee extends Admin_Controller {
         echo json_encode($array);
     }
 
-    public function deleteStudentDiscount() {
+    public function deleteStudentDiscount()
+    {
 
         $discount_id = $this->input->post('discount_id');
         if (!empty($discount_id)) {
@@ -359,7 +377,11 @@ class Studentfee extends Admin_Controller {
         echo json_encode($array);
     }
 
-    public function getcollectfee() {
+
+
+
+    public function getcollectfee()
+    {
         $setting_result = $this->setting_model->get();
         $data['settinglist'] = $setting_result;
         $record = $this->input->post('data');
@@ -381,7 +403,8 @@ class Studentfee extends Admin_Controller {
         $this->output->set_output(json_encode($result));
     }
 
-    public function addfee($id) {
+    public function addfee($id)
+    {
         if (!$this->rbac->hasPrivilege('collect_fees', 'can_add')) {
             access_denied();
         }
@@ -393,6 +416,8 @@ class Studentfee extends Admin_Controller {
         $data['student'] = $student;
 
         $student_due_fee = $this->studentfeemaster_model->getStudentFees($id);
+
+
 
         $student_discount_fee = $this->feediscount_model->getStudentFeesDiscount($id);
 
@@ -406,25 +431,30 @@ class Studentfee extends Admin_Controller {
         $studentlistbysection = $this->student_model->getStudentClassSection($student["class_id"], $session);
         $data["studentlistbysection"] = $studentlistbysection;
 
+
+
         $this->load->view('layout/header', $data);
         $this->load->view('studentfee/studentAddfee', $data);
         $this->load->view('layout/footer', $data);
     }
 
-    public function deleteTransportFee() {
+    public function deleteTransportFee()
+    {
         $id = $this->input->post('feeid');
         $this->studenttransportfee_model->remove($id);
         $array = array('status' => 'success', 'result' => 'success');
         echo json_encode($array);
     }
 
-    public function delete($id) {
+    public function delete($id)
+    {
         $data['title'] = 'studentfee List';
         $this->studentfee_model->remove($id);
         redirect('studentfee/index');
     }
 
-    public function create() {
+    public function create()
+    {
         if (!$this->rbac->hasPrivilege('collect_fees', 'can_view')) {
             access_denied();
         }
@@ -444,7 +474,8 @@ class Studentfee extends Admin_Controller {
         }
     }
 
-    public function edit($id) {
+    public function edit($id)
+    {
         if (!$this->rbac->hasPrivilege('collect_fees', 'can_edit')) {
             access_denied();
         }
@@ -468,7 +499,8 @@ class Studentfee extends Admin_Controller {
         }
     }
 
-    public function addstudentfee() {
+    public function addstudentfee()
+    {
 
         $this->form_validation->set_rules('student_fees_master_id', $this->lang->line('fee_master'), 'required|trim|xss_clean');
         $this->form_validation->set_rules('fee_groups_feetype_id', $this->lang->line('student'), 'required|trim|xss_clean');
@@ -538,7 +570,8 @@ class Studentfee extends Admin_Controller {
         }
     }
 
-    public function printFeesByName() {
+    public function printFeesByName()
+    {
         $data = array('payment' => "0");
         $record = $this->input->post('data');
         $invoice_id = $this->input->post('main_invoice');
@@ -555,7 +588,8 @@ class Studentfee extends Admin_Controller {
         $this->load->view('print/printFeesByName', $data);
     }
 
-    public function printFeesByGroup() {
+    public function printFeesByGroup()
+    {
         $fee_groups_feetype_id = $this->input->post('fee_groups_feetype_id');
         $fee_master_id = $this->input->post('fee_master_id');
         $fee_session_group_id = $this->input->post('fee_session_group_id');
@@ -566,7 +600,8 @@ class Studentfee extends Admin_Controller {
         $this->load->view('print/printFeesByGroup', $data);
     }
 
-    public function printFeesByGroupArray() {
+    public function printFeesByGroupArray()
+    {
         $setting_result = $this->setting_model->get();
 
         $data['settinglist'] = $setting_result;
@@ -584,7 +619,8 @@ class Studentfee extends Admin_Controller {
         $this->load->view('print/printFeesByGroupArray', $data);
     }
 
-    public function searchpayment() {
+    public function searchpayment()
+    {
         if (!$this->rbac->hasPrivilege('search_fees_payment', 'can_view')) {
             access_denied();
         }
@@ -594,7 +630,6 @@ class Studentfee extends Admin_Controller {
 
         $this->form_validation->set_rules('paymentid', $this->lang->line('payment_id'), 'trim|required|xss_clean');
         if ($this->form_validation->run() == false) {
-            
         } else {
             $paymentid = $this->input->post('paymentid');
             $invoice = explode("/", $paymentid);
@@ -614,7 +649,8 @@ class Studentfee extends Admin_Controller {
         $this->load->view('layout/footer', $data);
     }
 
-    public function addfeegroup() {
+    public function addfeegroup()
+    {
         $this->form_validation->set_rules('fee_session_groups', $this->lang->line('fee_group'), 'required|trim|xss_clean');
 
         if ($this->form_validation->run() == false) {
@@ -651,7 +687,8 @@ class Studentfee extends Admin_Controller {
         }
     }
 
-    public function geBalanceFee() {
+    public function geBalanceFee()
+    {
         $this->form_validation->set_rules('fee_groups_feetype_id', $this->lang->line('fee_groups_feetype_id'), 'required|trim|xss_clean');
         $this->form_validation->set_rules('student_fees_master_id', 'student_fees_master_id', 'required|trim|xss_clean');
         $this->form_validation->set_rules('student_session_id', 'student_session_id', 'required|trim|xss_clean');
@@ -678,7 +715,8 @@ class Studentfee extends Admin_Controller {
         }
     }
 
-    public function getStuFeetypeBalance($fee_groups_feetype_id, $student_fees_master_id) {
+    public function getStuFeetypeBalance($fee_groups_feetype_id, $student_fees_master_id)
+    {
         $data = array();
         $data['fee_groups_feetype_id'] = $fee_groups_feetype_id;
         $data['student_fees_master_id'] = $student_fees_master_id;
@@ -714,7 +752,8 @@ class Studentfee extends Admin_Controller {
         return json_encode($array);
     }
 
-    public function check_deposit($amount) {
+    public function check_deposit($amount)
+    {
         if ($this->input->post('amount') != "" && $this->input->post('amount_discount') != "") {
             if ($this->input->post('amount') < 0) {
                 $this->form_validation->set_message('check_deposit', $this->lang->line('deposit_amount_can_not_be_less_than_zero'));
@@ -737,11 +776,132 @@ class Studentfee extends Admin_Controller {
         return true;
     }
 
-    public function getNotAppliedDiscount($student_session_id) {
+    public function getNotAppliedDiscount($student_session_id)
+    {
         return $this->feediscount_model->getDiscountNotApplied($student_session_id);
     }
+    
+    public function listBillet()
+    {
+        $this->load->library('bank_payment_inter');
+        $data = $this->bank_payment_inter->list();
 
-    public function addfeegrp() {
+        return new JsonResponse(compact('data'));
+    }
+    public function generateBillet()
+    {
+        $staff_record = $this->session->userdata('admin');
+
+        $this->form_validation->set_error_delimiters('', '');
+        $this->form_validation->set_rules('row_counter[]', 'Fees List', 'required|trim|xss_clean');
+        try {
+
+
+            DB::beginTransaction();
+            $data = json_decode($this->input->post('data'), true);
+
+            if ($this->form_validation->run()) {
+                $data = array(
+                    'row_counter' => form_error('row_counter'),
+                );
+                $array = array('status' => 0, 'error' => $data);
+                return new JsonResponse($array);
+            }
+
+            $this->load->model(['eloquent/Billet_eloquent', 'eloquent/Student_deposite_eloquent']);
+            $this->load->library('bank_payment_inter');
+            $listOfIds = [];
+            $student = (object) $this->student_model->getByStudentSession($data['0']['fee_master_id']);
+
+            
+            foreach ($data as $values) {
+                if (Student_deposite_eloquent::where('fee_groups_feetype_id', $values['fee_groups_feetype_id'])->where('student_fees_master_id', $values['fee_master_id'])->count() > 0) continue;
+                if (
+                    Billet_eloquent::where('fee_groups_feetype_id', $values['fee_groups_feetype_id'])
+                    ->where('fee_master_id', $values['fee_master_id'])
+                    ->where('fee_session_group_id', $values['fee_session_group_id'])
+                    ->count() > 0
+                ) continue;
+
+                $billet = new Billet_eloquent;
+                $values['body'] = json_encode($values);
+                $billet->price = ($values['fee_amount'] + $values['fee_fine']) - $values['fee_discount'];
+                $billet->fill($values);
+                //create billet
+                $billet->save();
+                $listOfIds[] = $billet->id;
+                $billet->received_at = date('Y-m-d H:i:s');
+
+                $payment = new BankInterPayment;
+                $payment->user =  $student->guardian_name;
+                $payment->user_document =  $student->guardian_document;
+                $payment->price = $billet->price;
+                $payment->address = $student->guardian_address;
+                $payment->address_state = 'SP';
+                $payment->address_district = 'Barretos';
+                $payment->address_city = 'Barretos';
+                $payment->address_number = '10';
+                $payment->address_postal_code = '08343000';
+                $payment->date_payment = date_add(new \DateTime(), new \DateInterval("P10D"))->format('Y-m-d');
+                $payment->your_number =  $billet->id;
+                $payment->description = implode(PHP_EOL, [$values['fee_line_1'], $values['fee_line_2']]);
+
+               
+                // DB::commit();
+                $this->bank_payment_inter->create($payment, function ($opt) use (&$billet) {
+                    if( !$opt->success) return false;
+                    $billet->bank_bullet_id = $opt->billet->number;
+                    $billet->save();
+                    DB::commit();
+                });
+            }
+
+
+
+
+
+
+            $response = [];
+            new JsonResponse(['message' => 'successful']);
+        } catch (Exception $e) {
+            return  new JsonResponse(['message' => $e->getMessage()], 400);
+        }
+        //    $this->bank_payment_inter->create($payment, function($o) use (& $response){
+        //             array_push($response, $o);
+        //    });
+
+
+    }
+
+    public function cancelBillet()
+    {
+        $staff_record = $this->session->userdata('admin');
+
+        $this->form_validation->set_error_delimiters('', '');
+        $this->form_validation->set_rules('row_counter[]', 'Fees List', 'required|trim|xss_clean');
+
+        $data = json_decode($this->input->post('data'), true);
+
+        if ($this->form_validation->run()) {
+            $data = array(
+                'row_counter' => form_error('row_counter'),
+            );
+            $array = array('status' => 0, 'error' => $data);
+            return new JsonResponse($array);
+        }
+
+        $this->load->model('eloquent/Billet_eloquent');
+        $insert = [];
+        foreach ($data as $values) {
+            $inset[] = Billet_eloquent::create(array_merge($values, ['price' => '100.00']));
+        }
+
+
+        return new JsonResponse(['inputs' => $insert]);
+    }
+
+    public function addfeegrp()
+    {
 
         $staff_record = $this->session->userdata('admin');
 
@@ -787,5 +947,4 @@ class Studentfee extends Admin_Controller {
             echo json_encode($array);
         }
     }
-
 }

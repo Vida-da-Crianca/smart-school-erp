@@ -2,9 +2,25 @@
     "require": {
         "vlucas/phpdotenv": "^4.1",
         "illuminate/database": "^5.8.36",
-        "ctodobom/api-inter":"dev-master"
+        "ctodobom/api-inter":"dev-master",
+        "symfony/console": "^5.1",
+        "symfony/filesystem": "^5.1",
+        "symfony/process": "^5.1",
+        "twig/twig": "^3.1",
+        "carlosocarvalho/sigis-php-sdk": "^2.0"
+        
     },
     "require-dev": {
-        "symfony/var-dumper": "^3.4"
+        "symfony/var-dumper": "^3.4",
+        "kenjis/codeigniter-cli": "^0.1.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Application\\Command\\":"./application/command/",
+            "Application\\Core\\":"./application/core/",
+            "Application\\":"./application/",
+            "Packages\\Commands\\":"packages/commands/"
+           
+        }
     }
 }

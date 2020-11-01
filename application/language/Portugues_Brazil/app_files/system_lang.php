@@ -1452,4 +1452,13 @@ $lang['invoice_student'] = 'Estudante';
 $lang['invoice_email'] = 'Email';
 $lang['invoice_price'] = 'Valor';
 $lang['invoice_date'] = 'Gerada';
+$lang['billet_new'] = 'Gerar Boleto';
+$lang['billet_preview'] ='Visualizar boleto';
+$lang['account_no'] = 'Número da conta';
+$lang['certificate_pem_path'] = 'Caminho da chave Pem';
+$lang['certificate_key_path'] = 'Caminho da chave key';
+$lang['account_no_document'] = 'Número do CPF/CNPJ';
+$lang['certificate_key_password'] = 'Senha do certificado';
+$lang['billet_generate'] = 'Gerar Boleto';
+$lang['guardian_document'] = 'Responsável CPF';
 

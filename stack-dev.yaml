@@ -1,11 +1,11 @@
 version: "3.7"
 services:
   redis:
-    image: redis:latest
+    image: redis:6.0.9
     networks:
       - erp_net  
   db:
-    image: mysql:latest
+    image: mysql:8
     environment:
       MYSQL_DATABASE: erp
       MYSQL_PASSWORD: erp
@@ -14,8 +14,8 @@ services:
     command: 
       [
         '--default_authentication_plugin=mysql_native_password',
-        '--character-set-server=utf8mb4',
-        '--collation-server=utf8mb4_unicode_ci'
+        # '--character-set-server=utf8mb4',
+        # '--collation-server=utf8mb4_unicode_ci'
         
       ]
     volumes:
@@ -30,6 +30,7 @@ services:
         target: /etc/mysql/conf.d/group.cnf
   app:
     image: webdevops/php-nginx:7.3
+    working_dir: /app/
     environment:
       - VERSION_erp=1.0.2
       - PHP_DATE_TIMEZONE=America/Sao_Paulo
