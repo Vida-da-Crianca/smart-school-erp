@@ -1460,5 +1460,11 @@ $lang['certificate_key_path'] = 'Caminho da chave key';
 $lang['account_no_document'] = 'Número do CPF/CNPJ';
 $lang['certificate_key_password'] = 'Senha do certificado';
 $lang['billet_generate'] = 'Gerar Boleto';
+$lang['billet_button_generate'] = 'Confirmar';
 $lang['guardian_document'] = 'Responsável CPF';
+$lang['guardian_postal_code'] = 'Responsável Cep';
+$lang['guardian_city'] = 'Responsável Cidade';
+$lang['guardian_district'] = 'Responsável Bairro';
+$lang['guardian_state'] = 'Responsável UF';
+$lang['billet_cancel'] ='Cancelar Boleto';
 

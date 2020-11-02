@@ -168,7 +168,7 @@ $language_name = $language["short_code"];
 
 
                                 <button type="button" class="btn btn-sm btn-secondary billetSelected" id="load_billet" data-loading-text="<i class='fa fa-spinner fa-spin '></i> Processando.."><i class="fa fa-barcode"></i> <?php echo $this->lang->line('billet_new') . " " . $this->lang->line('selected') ?></button>
-
+                                <button type="button" class="btn btn-sm btn-danger billetCancelSelected" id="load_billet_cancel" data-loading-text="<i class='fa fa-spinner fa-spin '></i> Processando.."><i class="fa fa-ban"></i> <?php echo $this->lang->line('billet_cancel') . " " . $this->lang->line('selected') ?></button>
                                 <span class="pull-right"><?php echo $this->lang->line('date'); ?>: <?php echo date($this->customlib->getSchoolDateFormat()); ?></span>
                             </div>
                         </div>
@@ -240,13 +240,7 @@ $language_name = $language["short_code"];
                                             }
                                                 ?>
                                                 <td>
-                                                    <input class="checkbox" type="checkbox" name="fee_checkbox" 
-                                                    data-fee_date_payment="<?php echo $fee_value->due_date; ?>"
-                                                    data-fee_fine="<?php echo $fee_fine; ?>"
-                                                    data-fee_amount="<?php echo $fee_value->amount; ?>" data-fee_discount="<?php echo  $fee_discount; ?>" data-fee_master_id="<?php echo $fee_value->id; ?>" data-fee_session_group_id="<?php echo $fee_value->fee_session_group_id; ?>" 
-                                                    data-fee_groups_feetype_id="<?php echo $fee_value->fee_groups_feetype_id; ?>" 
-                                                    data-fee_line_1="<?php echo $description; ?>" 
-                                                    data-fee_line_2="<?php echo $fee_value->code; ?>">
+                                                    <input class="checkbox" type="checkbox" name="fee_checkbox" data-fee_date_payment="<?php echo $fee_value->due_date; ?>" data-fee_fine="<?php echo $fee_fine; ?>" data-fee_is_pdf="<?php echo $fee_value->billet_id; ?>" data-fee_amount="<?php echo $fee_value->amount; ?>" data-fee_discount="<?php echo  $fee_discount; ?>" data-fee_master_id="<?php echo $fee_value->id; ?>" data-fee_session_group_id="<?php echo $fee_value->fee_session_group_id; ?>" data-fee_groups_feetype_id="<?php echo $fee_value->fee_groups_feetype_id; ?>" data-fee_line_1="<?php echo $description; ?>" data-fee_line_2="<?php echo $fee_value->code; ?>">
                                                 </td>
                                                 <td align="left"><?php
                                                                     echo $description;
@@ -765,7 +759,7 @@ $language_name = $language["short_code"];
 
 <div id="listBilletModal" class="modal fade">
     <div class="modal-dialog">
-        <form action="<?php echo site_url('studentfee/generateBillet'); ?>" method="POST" id="billet_fee_group">
+        <form method="POST" id="billet_fee_group">
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
@@ -775,7 +769,7 @@ $language_name = $language["short_code"];
 
                 </div>
                 <div class="modal-footer">
-                    <button type="submit" class="btn btn-primary payment_collect" data-loading-text="<i class='fa fa-spinner fa-spin '></i> Processing"><i class="fa fa-barcode"></i> <?php echo $this->lang->line('billet_generate'); ?></button>
+                    <button type="submit" class="btn btn-primary payment_collect" data-loading-text="<i class='fa fa-spinner fa-spin '></i> Processing"><i class="fa fa-barcode"></i> <?php echo $this->lang->line('billet_button_generate'); ?></button>
                 </div>
             </div>
         </form>
@@ -1265,6 +1259,9 @@ $language_name = $language["short_code"];
 
 <script type="text/javascript">
     $(document).ready(function() {
+
+
+
         $(document).on('click', '.printSelected', function() {
             var array_to_print = [];
             $.each($("input[name='fee_checkbox']:checked"), function() {
@@ -1372,32 +1369,32 @@ $language_name = $language["short_code"];
             });
 
             if (array_to_collect_fees.length == 0) return alert("Nenhum item foi selecionado");
-            // var html = `
-            //     <div class="row">
-            //     <div class="form-group">
-            //     </div>
-            //         <div class="form-group">
-            //             <div class="col-md-3 col-xs-4 control-label">
-            //                 <label class="control-label">Data Vencimento</label>
-            //             </div>
-            //             <div class="col-md-9 col-xs-8">    
-            //                 <input class="date form-control" />
-            //             <div>
-            //         </div>
-            //     </div>
-              
-            // `;
-            // $("#listBilletModal .modal-body").html(html);
-            // $(".date").datepicker({
-            //     format: date_format,
-            //     autoclose: true,
-            //     language: '<?php echo $language_name; ?>',
-            //     //endDate: '+0d',
-            //     todayHighlight: true
-            // });
-            // $("#listBilletModal").modal('show');
-            // $this.button('reset');
-            // return;
+            var html = `
+                <div class="row">
+                <div class="form-group">
+                </div>
+                    <div class="form-group">
+                        <div class="col-md-3 col-xs-4 control-label">
+                            <label class="control-label">Data Vencimento</label>
+                        </div>
+                        <div class="col-md-9 col-xs-8">    
+                            <input class="date form-control" />
+                        <div>
+                    </div>
+                </div>
+
+            `;
+            $("#listBilletModal .modal-body").html(html);
+            $(".date").datepicker({
+                format: date_format,
+                autoclose: true,
+                language: '<?php echo $language_name; ?>',
+                //endDate: '+0d',
+                todayHighlight: true
+            });
+            $("#listBilletModal").modal('show');
+            $this.button('reset');
+            return;
 
             $.ajax({
                 type: 'POST',
@@ -1413,7 +1410,7 @@ $language_name = $language["short_code"];
 
                     alert('Os boletos foram gerados com sucesso')
                     //window.location.reload();
-                    
+
                 },
                 error: function(xhr) { // if error occured
                     alert("Error occured.please try again");
@@ -1425,8 +1422,130 @@ $language_name = $language["short_code"];
             });
 
         });
+        ///cancel billet
+
+
+        $(document).on('click', '.billetCancelSelected', function() {
+            var $this = $(this);
+            var array_to_collect_fees = [];
+
+
+
+            $.each($("input[name='fee_checkbox']:checked"), function() {
+                var fee_session_group_id = $(this).data('fee_session_group_id');
+                var fee_master_id = $(this).data('fee_master_id');
+                var fee_groups_feetype_id = $(this).data('fee_groups_feetype_id');
+                item = {};
+                item["fee_session_group_id"] = fee_session_group_id;
+                item["fee_master_id"] = fee_master_id;
+                item["fee_groups_feetype_id"] = fee_groups_feetype_id;
+                item["fee_amount"] = $(this).data('fee_amount');
+                item["fee_discount"] = $(this).data('fee_discount');
+                item["fee_line_1"] = $(this).data('fee_line_1');
+                item["fee_line_2"] = $(this).data('fee_line_2');
+                item["fee_date_payment"] = $(this).data('fee_date_payment');
+                item["fee_fine"] = $(this).data('fee_fine');
+                item["bullet_id"] = $(this).data('fee_is_pdf');
+                if ($(this).data('fee_is_pdf') !== 0)
+                    array_to_collect_fees.push(item);
+            });
+
+            if (array_to_collect_fees.length == 0) return alert("Nenhum item válido foi selecionado");
+
+            var options = [
+                {
+                     value:  'ACERTOS',
+                     label:  'ACERTOS',
+                },
+                {
+                     value:  'DEVOLUCAO',
+                     label:  'DEVOLUÇÃO',
+                },
+                {
+                     value:  'SUBISTITUICAO',
+                     label:  'SUBISTITUIÇÃO',
+                },
+                {
+                     value:  'PROTESTOAPOSBAIXA',
+                     label:  'PROTESTO APÓS BAIXA',
+                },
+                {
+                     value:  'PAGODIRETOAOCLIENTE',
+                     label:  'PAGO DIRETO AO CLIENTE',
+                },
+                {
+                     value:  'FALTADESOLUCAO',
+                     label:  'FALTA DE SOLUÇÃO',
+                },
+
+                {
+                     value:  'APEDIDODOCLIENTE',
+                     label:  'APEDIDO DO CLIENTE',
+                }
+            ];
+            var html = `
+                <div class="row">
+                <div class="form-group">
+                </div>
+                    <div class="form-group">
+                        <div class="col-md-4 col-xs-4 control-label">
+                            <label class="control-label">Selecione o motivo</label>
+                        </div>
+                        <div class="col-md-8 col-xs-8">    
+                            <select name="billet_cancel_motvive" class="form-control">
+                                ${options.map(v => `<option value="${v.value}">${v.label}</option>`).join('')}
+                            </select>
+                        <div>
+                    </div>
+                </div>
+              
+            `;
+            var $modal = $("#listBilletModal .modal-footer");
+            $("#listBilletModal .modal-body").html(html);
+            $("#listBilletModal").modal('show');
+            $this.button('reset');
+            $('form#billet_fee_group').on('submit', function(e) {
+                e.preventDefault();
+
+                $.ajax({
+                    type: 'POST',
+                    url: base_url + "studentfee/cancelBillet",
+                    data: {
+                        'data': JSON.stringify(array_to_collect_fees),
+                        'motive': $('select[name="billet_cancel_motvive"]').val()
+                    },
+                    dataType: "JSON",
+                    beforeSend: function() {
+                        $modal.button('loading');
+                    },
+                    success: function(data) {
+
+                        alert('Os boletos foram cancelados com sucesso')
+                        //window.location.reload();
+
+                    },
+                    error: function(xhr) { // if error occured
+                        alert("Error occured.please try again");
+
+                    },
+                    complete: function() {
+                         $modal.button('reset');
+                    }
+                });
+            })
+
+
+
+
+
+
+        });
+
 
     });
+
+
+
 
 
     $(function() {

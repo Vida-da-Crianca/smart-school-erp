@@ -784,6 +784,7 @@ class Studentfee extends Admin_Controller
     public function listBillet()
     {
         $this->load->library('bank_payment_inter');
+         
         $data = $this->bank_payment_inter->list();
 
         return new JsonResponse(compact('data'));
@@ -879,6 +880,7 @@ class Studentfee extends Admin_Controller
 
         $this->form_validation->set_error_delimiters('', '');
         $this->form_validation->set_rules('row_counter[]', 'Fees List', 'required|trim|xss_clean');
+        $this->load->library('bank_payment_inter');
 
         $data = json_decode($this->input->post('data'), true);
 
@@ -893,7 +895,11 @@ class Studentfee extends Admin_Controller
         $this->load->model('eloquent/Billet_eloquent');
         $insert = [];
         foreach ($data as $values) {
-            $inset[] = Billet_eloquent::create(array_merge($values, ['price' => '100.00']));
+            $billet = Billet_eloquent::find($values['bullet_id']);
+            $billet->STATUS = $this->input->post('motive');
+            $billet->deleted_at = date('Y-m-d H:i:s');
+            $billet->save();
+           
         }
 
 

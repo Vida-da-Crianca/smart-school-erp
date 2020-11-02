@@ -239,6 +239,52 @@
                                             </div>																			
                                         </td>                                                
                                     </tr>
+
+                                    <tr>
+                                        <td><?php echo $this->lang->line('guardian_document'); ?></td>
+                                        <td>
+                                            <div class="material-switch pull-right">
+                                                <input id="guardian_document" name="guardian_document" type="checkbox" data-role="guardian_document" class="chk" data-rowid="1" value="checked" <?php if ($result->guardian_document == "1") echo "checked='checked'"; ?> />
+                                                <label for="guardian_document" class="label-success"></label>
+                                            </div>																			
+                                        </td>                                                
+                                    </tr>
+                                    <tr>
+                                        <td><?php echo $this->lang->line('guardian_postal_code'); ?></td>
+                                        <td>
+                                            <div class="material-switch pull-right">
+                                                <input id="guardian_postal_code" name="guardian_postal_code" type="checkbox" data-role="guardian_postal_code" class="chk" data-rowid="1" value="checked" <?php if ($result->guardian_postal_code == "1") echo "checked='checked'"; ?> />
+                                                <label for="guardian_postal_code" class="label-success"></label>
+                                            </div>																			
+                                        </td>                                                
+                                    </tr>
+                                    <tr>
+                                        <td><?php echo $this->lang->line('guardian_state'); ?></td>
+                                        <td>
+                                            <div class="material-switch pull-right">
+                                                <input id="guardian_state" name="guardian_state" type="checkbox" data-role="guardian_state" class="chk" data-rowid="1" value="checked" <?php if ($result->guardian_state == "1") echo "checked='checked'"; ?> />
+                                                <label for="guardian_state" class="label-success"></label>
+                                            </div>																			
+                                        </td>                                                
+                                    </tr>
+                                    <tr>
+                                        <td><?php echo $this->lang->line('guardian_city'); ?></td>
+                                        <td>
+                                            <div class="material-switch pull-right">
+                                                <input id="guardian_city" name="guardian_city" type="checkbox" data-role="guardian_city" class="chk" data-rowid="1" value="checked" <?php if ($result->guardian_city == "1") echo "checked='checked'"; ?> />
+                                                <label for="guardian_city" class="label-success"></label>
+                                            </div>																			
+                                        </td>                                                
+                                    </tr>
+                                    <tr>
+                                        <td><?php echo $this->lang->line('guardian_district'); ?></td>
+                                        <td>
+                                            <div class="material-switch pull-right">
+                                                <input id="guardian_district" name="guardian_district" type="checkbox" data-role="guardian_district" class="chk" data-rowid="1" value="checked" <?php if ($result->guardian_district == "1") echo "checked='checked'"; ?> />
+                                                <label for="guardian_district" class="label-success"></label>
+                                            </div>																			
+                                        </td>                                                
+                                    </tr>
                                     <tr>
                                         <td><?php echo $this->lang->line('guardian'); ?> <?php echo $this->lang->line('photo'); ?></td>
                                         <td>

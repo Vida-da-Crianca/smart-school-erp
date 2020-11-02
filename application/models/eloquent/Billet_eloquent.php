@@ -8,6 +8,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Billet_eloquent extends  Eloquent {
 
     use SoftDeletes;
+
+    const PAID_PENDING = 'AGUARDANDO PAGAMENTO';
       
     protected $table = 'billets';
 

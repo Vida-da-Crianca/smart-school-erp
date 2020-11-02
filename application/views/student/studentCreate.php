@@ -477,12 +477,48 @@
                                                     <span class="text-danger"><?php echo form_error('file'); ?></span>
                                                 </div>
                                             </div>
-                                        <?php }
+                                            <?php }
                                         if ($sch_setting->guardian_address) { ?>
-                                            <div class="col-md-6">
+                                            <div class="col-md-4">
                                                 <label for="exampleInputEmail1"><?php echo $this->lang->line('guardian_address'); ?></label>
-                                                <textarea id="guardian_address" name="guardian_address" placeholder="" class="form-control" rows="2"><?php echo set_value('guardian_address'); ?></textarea>
+                                                <input maxlength="30" id="guardian_address" name="guardian_address" placeholder="Rua exemplo, 23" class="form-control" value="<?php echo set_value('guardian_address'); ?>" />
                                                 <span class="text-danger"><?php echo form_error('guardian_address'); ?></span>
+                                            </div>
+                                        <?php } ?>
+
+                                        <?php 
+                                        if ($sch_setting->guardian_postal_code) { ?>
+                                            <div class="col-md-2">
+                                                <label for="exampleInputEmail1"><?php echo $this->lang->line('guardian_postal_code'); ?></label>
+                                                <input maxlength="20" id="guardian_postal_code" name="guardian_postal_code" placeholder="08342350" class="form-control" value="<?php echo set_value('guardian_postal_code'); ?>" />
+                                                <span class="text-danger"><?php echo form_error('guardian_postal_code'); ?></span>
+                                            </div>
+                                        <?php } ?>
+
+                                        <?php 
+                                        if ($sch_setting->guardian_district) { ?>
+                                            <div class="col-md-3">
+                                                <label for="exampleInputEmail1"><?php echo $this->lang->line('guardian_district'); ?></label>
+                                                <input maxlength="20" id="guardian_district" name="guardian_district" placeholder="" class="form-control" value="<?php echo set_value('guardian_district'); ?>" />
+                                                <span class="text-danger"><?php echo form_error('guardian_district'); ?></span>
+                                            </div>
+                                        <?php } ?>
+
+                                        <?php 
+                                        if ($sch_setting->guardian_city) { ?>
+                                            <div class="col-md-2">
+                                                <label for="exampleInputEmail1"><?php echo $this->lang->line('guardian_city'); ?></label>
+                                                <input maxlength="20" id="guardian_city" name="guardian_city" placeholder="Barretos" class="form-control" value="<?php echo set_value('guardian_city'); ?>" />
+                                                <span class="text-danger"><?php echo form_error('guardian_city'); ?></span>
+                                            </div>
+                                        <?php } ?>
+
+                                        <?php 
+                                        if ($sch_setting->guardian_state) { ?>
+                                            <div class="col-md-1">
+                                                <label for="exampleInputEmail1"><?php echo explode(' ',$this->lang->line('guardian_state'))[1]; ?></label>
+                                                <input maxlength="2" id="guardian_state" name="guardian_state" placeholder="SP" class="form-control" value="<?php echo set_value('guardian_state'); ?>" />
+                                                <span class="text-danger"><?php echo form_error('guardian_state'); ?></span>
                                             </div>
                                         <?php } ?>
                                     </div>

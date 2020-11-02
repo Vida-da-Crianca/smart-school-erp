@@ -37,6 +37,10 @@ class Migration_Add_guardian_student extends CI_Migration
 
     public function down()
     {
-        $this->dbforge->drop_column('students', 'father_document' , 'mother_document', 'guardian_document');
+        $columns = ['father_document' , 'mother_document', 'guardian_document'];
+        foreach($columns as $v){
+            $this->dbforge->drop_column('students', $v );
+        }
+        
     }
 }

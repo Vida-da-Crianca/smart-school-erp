@@ -90,18 +90,30 @@ class Bank_payment_inter
             $onCallback((object)['success' => false,  'status' => $e->getMessage(), 'body' => $e->reply->body]);
         }
     }
-
+   
+    public function find($id)
+    {
+        try {
+            return $this->bank->getBoleto($id);
+        } catch (BancoInterException $e) {
+              return;
+        }
+    }
 
     public function list()
     {
 
-        return $this->bank->listaBoletos(date('Y-m-d'), date_add(new \DateTime() , new \DateInterval("P20D"))->format('Y-m-d'));
+        return $this->bank->listaBoletos(date('Y-m-d'), date_add(new \DateTime(), new \DateInterval("P20D"))->format('Y-m-d'));
     }
 
     //00617177078
-    public function down($number, $motive = 'ACERTOS')
+    public function cancel($data, $onCallback)
     {
-
-        return true;
+        try {
+            $this->bank->baixaBoleto($data['number'], $data['motive']);
+            return $onCallback((object)['success' => true]);
+        } catch (BancoInterException $e) {
+            $onCallback((object)['success' => false,  'status' => $e->getMessage(), 'body' => $e->reply->body]);
+        }
     }
 }

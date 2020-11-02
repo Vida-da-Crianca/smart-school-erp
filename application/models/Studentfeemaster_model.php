@@ -244,7 +244,7 @@ class Studentfeemaster_model extends MY_Model {
         INNER JOIN fee_groups_feetype on  fee_groups_feetype.fee_session_group_id = fee_session_groups.id  
         INNER JOIN fee_groups on fee_groups.id=fee_groups_feetype.fee_groups_id 
         INNER JOIN feetype on feetype.id=fee_groups_feetype.feetype_id
-        LEFT JOIN billets on billets.fee_groups_feetype_id=fee_groups_feetype.id AND billets.deleted_at IS NULL
+        LEFT JOIN billets on billets.fee_groups_feetype_id=fee_groups_feetype.id AND billets.fee_master_id=student_fees_master.student_session_id AND billets.deleted_at IS NULL
         LEFT JOIN student_fees_deposite on (student_fees_deposite.student_fees_master_id=student_fees_master.id)
        
         AND student_fees_deposite.fee_groups_feetype_id=fee_groups_feetype.id WHERE student_fees_master.fee_session_group_id =" . $fee_session_groups_id . " and student_fees_master.id=" . $student_fees_master_id . " order by fee_groups_feetype.due_date ASC";
