@@ -38,6 +38,7 @@ class CancelBillet extends BaseCommand{
               $this->CI->bank_payment_inter->cancel(['number' => $row->bank_bullet_id, 'motive' => $row->status], 
               function($status) use(&$row){
                    if($status->success ) {
+                       dump('Deleted '.  $row->id);
                           $row->is_active = 0;
                           $row->save();
                    }

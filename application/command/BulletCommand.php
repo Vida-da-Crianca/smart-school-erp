@@ -44,7 +44,7 @@ class BulletCommand extends BaseCommand{
         $doc->setTipoPessoa(Pagador::PESSOA_FISICA);
         $doc->setNome("Carlos Carvalho");
         $doc->setEndereco("Travessa Salve a mocidade");
-        $doc->setNumero(33);
+        $doc->setNumero('33');
         $doc->setBairro("Jardim Conquista");
         $doc->setCidade("São Paulo");
         $doc->setCep("08343320");

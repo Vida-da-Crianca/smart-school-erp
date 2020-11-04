@@ -187,7 +187,7 @@
                             <i class="fa fa-money ftlayer"></i> <span> <?php echo $this->lang->line('fees_collection'); ?></span> <i class="fa fa-angle-left pull-right"></i>
                         </a>
                         <ul class="treeview-menu">
-                            <?php if($this->rbac->hasPrivilege('invoice_module', 'can_view')): ?>
+                            <?php if ($this->rbac->hasPrivilege('invoice_module', 'can_view')) : ?>
                                 <li class="<?php echo set_Submenu('admin/invoice'); ?>"><a href="<?php echo base_url(); ?>admin/invoice"><i class="fa fa-angle-double-right"></i> <?php echo $this->lang->line('invoice_module'); ?></a></li>
                             <?php endif; ?>
                             <?php if ($this->rbac->hasPrivilege('collect_fees', 'can_view')) { ?>
@@ -1228,6 +1228,7 @@
                     $this->rbac->hasPrivilege('payment_methods', 'can_edit') ||
                     $this->rbac->hasPrivilege('languages', 'can_view') ||
                     $this->rbac->hasPrivilege('languages', 'can_add') ||
+                    $this->rbac->hasPrivilege('invoice_setting', 'can_edit') ||
                     $this->rbac->hasPrivilege('backup_restore', 'can_view') ||
                     $this->rbac->hasPrivilege('front_cms_setting', 'can_edit'))) {
                 ?>
@@ -1239,8 +1240,13 @@
                         <ul class="treeview-menu">
                             <?php
                             if ($this->rbac->hasPrivilege('general_setting', 'can_view')) {
-                            ?>
+                                ?>
                                 <li class="<?php echo set_Submenu('schsettings/index'); ?>"><a href="<?php echo base_url(); ?>schsettings"><i class="fa fa-angle-double-right"></i> <?php echo $this->lang->line('general_settings'); ?></a></li>
+                            <?php
+                            }
+                            if ($this->rbac->hasPrivilege('invoice_setting', 'can_view')) {
+                                ?>
+                                <li class="<?php echo set_Submenu('invoices'); ?>"><a href="<?php echo base_url(); ?>invoices"><i class="fa fa-angle-double-right"></i> <?php echo $this->lang->line('invoice_settings'); ?></a></li>
                             <?php
                             }
                             if ($this->rbac->hasPrivilege('session_setting', 'can_view')) {

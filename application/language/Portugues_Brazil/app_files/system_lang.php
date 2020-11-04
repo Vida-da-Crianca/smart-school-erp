@@ -1467,4 +1467,5 @@ $lang['guardian_city'] = 'Responsável Cidade';
 $lang['guardian_district'] = 'Responsável Bairro';
 $lang['guardian_state'] = 'Responsável UF';
 $lang['billet_cancel'] ='Cancelar Boleto';
-
+$lang['invoice_settings'] = 'Notas fiscais';
+$lang['invoice_general_settings'] = 'Notas fiscais definições';

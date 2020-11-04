@@ -22,7 +22,8 @@ class Billet_eloquent extends  Eloquent {
         'invoice_id',
         'received_at',
         'fee_session_group_id',
-        'fee_master_id'
+        'fee_master_id',
+        'user_id'
     ];
 
 

@@ -3,6 +3,7 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
 $language = $this->customlib->getLanguage();
 $language_name = $language["short_code"];
 ?>
+<input type="hiden" value="<?php echo $student['id']; ?>" name="student_user_id" />
 <div class="content-wrapper">
     <div class="row">
         <div class="col-md-12">
@@ -1344,12 +1345,21 @@ $language_name = $language["short_code"];
 
         // add generate bolete 
 
+        var loading = false;
+
+         function isNotDayUtil(){
+           return getDaysExceptions().indexOf(moment().format('YYYY-MM-DD')) >= 0  || [6,7].indexOf(Number(moment().format('E'))) >= 0
+         }
 
         $(document).on('click', '.billetSelected', function() {
             var $this = $(this);
             var array_to_collect_fees = [];
 
 
+            var hasPaymentOld = [];
+            if( isNotDayUtil() ) {
+                return alert('Essa operação só pode ser realizada em dias úteis.');
+            }
 
             $.each($("input[name='fee_checkbox']:checked"), function() {
                 var fee_session_group_id = $(this).data('fee_session_group_id');
@@ -1364,7 +1374,12 @@ $language_name = $language["short_code"];
                 item["fee_line_1"] = $(this).data('fee_line_1');
                 item["fee_line_2"] = $(this).data('fee_line_2');
                 item["fee_date_payment"] = $(this).data('fee_date_payment');
+                item["fee_date_payment_old"] = $(this).data('fee_date_payment');
                 item["fee_fine"] = $(this).data('fee_fine');
+                var date = moment(item["fee_date_payment"]);
+                var hasDateOld = moment().day(1).isBefore(date.format('YYYY-MM-DD'));
+
+                if (!hasDateOld) hasPaymentOld.push(fee_groups_feetype_id)
                 array_to_collect_fees.push(item);
             });
 
@@ -1373,34 +1388,79 @@ $language_name = $language["short_code"];
                 <div class="row">
                 <div class="form-group">
                 </div>
+                    <div class="col-xs-12 form-group">
+                       <strong>Alguns itens selecionados, estão com a data vencimento para gerar boleto inválidas. <br/> Será necessário adicionar uma nova data para gerar o boleto</strong>
+                    </div>
                     <div class="form-group">
-                        <div class="col-md-3 col-xs-4 control-label">
-                            <label class="control-label">Data Vencimento</label>
+                        <div class="col-md-2 col-xs-4 control-label">
+                            <label class="control-label">Data</label>
                         </div>
-                        <div class="col-md-9 col-xs-8">    
-                            <input class="date form-control" />
-                        <div>
+                   
+                        <div class="col-md-3 col-xs-6 input-group date">
+                            <input type="text" name="fee_date_payment_new" class="form-control">
+                            <div class="input-group-addon">
+                                <span class="glyphicon glyphicon-th"></span>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
             `;
-            $("#listBilletModal .modal-body").html(html);
-            $(".date").datepicker({
-                format: date_format,
-                autoclose: true,
-                language: '<?php echo $language_name; ?>',
-                //endDate: '+0d',
-                todayHighlight: true
-            });
-            $("#listBilletModal").modal('show');
-            $this.button('reset');
-            return;
 
+
+            if (hasPaymentOld.length > 0) {
+                $("#listBilletModal .modal-body").html(html);
+                $(".date").datepicker({
+                    format: date_format,
+                    autoclose: true,
+                    language: '<?php echo $language_name; ?>',
+                    // startDate: '+1d',
+
+                    todayHighlight: true
+                });
+                var $modal = $("#listBilletModal .modal-footer");
+                $("#listBilletModal .modal-body").html(html);
+                $("#listBilletModal").modal('show');
+                $this.button('reset');
+                var fvalidator = $('form#billet_fee_group');
+                fvalidator.validate({
+                    rules: {
+                        fee_date_payment_new: {
+                            required: true
+                        }
+                    }
+                });
+
+                $('form#billet_fee_group').on('submit', function(e) {
+                    e.preventDefault();
+                    if (!fvalidator.valid() || loading) return;
+                    loading = true;
+                    array_to_collect_fees.map(row => {
+
+                        if (hasPaymentOld.indexOf(row.fee_groups_feetype_id) >= 0) {
+                            let datePay = ($('input[name="fee_date_payment_new"]').val().split(/\-|\//gi).reverse().join('-'));
+                            row.fee_date_payment = datePay
+                        }
+                        return row;
+                    })
+                    createAllBillets(array_to_collect_fees, $modal);
+
+                });
+                return;
+            }
+            createAllBillets(array_to_collect_fees, $this);
+
+        });
+
+        // console.log(getDaysExceptions());
+
+        function createAllBillets(array_to_collect_fees, $this) {
             $.ajax({
                 type: 'POST',
                 url: base_url + "studentfee/generateBillet",
                 data: {
-                    'data': JSON.stringify(array_to_collect_fees)
+                    'data': JSON.stringify(array_to_collect_fees),
+                    'user_id': $('input[name="student_user_id"]').val()
                 },
                 dataType: "JSON",
                 beforeSend: function() {
@@ -1409,7 +1469,7 @@ $language_name = $language["short_code"];
                 success: function(data) {
 
                     alert('Os boletos foram gerados com sucesso')
-                    //window.location.reload();
+                    // window.location.reload();
 
                 },
                 error: function(xhr) { // if error occured
@@ -1418,10 +1478,10 @@ $language_name = $language["short_code"];
                 },
                 complete: function() {
                     $this.button('reset');
+                    loading = false;
                 }
             });
-
-        });
+        }
         ///cancel billet
 
 
@@ -1452,35 +1512,34 @@ $language_name = $language["short_code"];
 
             if (array_to_collect_fees.length == 0) return alert("Nenhum item válido foi selecionado");
 
-            var options = [
-                {
-                     value:  'ACERTOS',
-                     label:  'ACERTOS',
+            var options = [{
+                    value: 'ACERTOS',
+                    label: 'ACERTOS',
                 },
                 {
-                     value:  'DEVOLUCAO',
-                     label:  'DEVOLUÇÃO',
+                    value: 'DEVOLUCAO',
+                    label: 'DEVOLUÇÃO',
                 },
                 {
-                     value:  'SUBISTITUICAO',
-                     label:  'SUBISTITUIÇÃO',
+                    value: 'SUBISTITUICAO',
+                    label: 'SUBISTITUIÇÃO',
                 },
                 {
-                     value:  'PROTESTOAPOSBAIXA',
-                     label:  'PROTESTO APÓS BAIXA',
+                    value: 'PROTESTOAPOSBAIXA',
+                    label: 'PROTESTO APÓS BAIXA',
                 },
                 {
-                     value:  'PAGODIRETOAOCLIENTE',
-                     label:  'PAGO DIRETO AO CLIENTE',
+                    value: 'PAGODIRETOAOCLIENTE',
+                    label: 'PAGO DIRETO AO CLIENTE',
                 },
                 {
-                     value:  'FALTADESOLUCAO',
-                     label:  'FALTA DE SOLUÇÃO',
+                    value: 'FALTADESOLUCAO',
+                    label: 'FALTA DE SOLUÇÃO',
                 },
 
                 {
-                     value:  'APEDIDODOCLIENTE',
-                     label:  'APEDIDO DO CLIENTE',
+                    value: 'APEDIDODOCLIENTE',
+                    label: 'APEDIDO DO CLIENTE',
                 }
             ];
             var html = `
@@ -1512,7 +1571,8 @@ $language_name = $language["short_code"];
                     url: base_url + "studentfee/cancelBillet",
                     data: {
                         'data': JSON.stringify(array_to_collect_fees),
-                        'motive': $('select[name="billet_cancel_motvive"]').val()
+                        'motive': $('select[name="billet_cancel_motvive"]').val(),
+
                     },
                     dataType: "JSON",
                     beforeSend: function() {
@@ -1529,7 +1589,7 @@ $language_name = $language["short_code"];
 
                     },
                     complete: function() {
-                         $modal.button('reset');
+                        $modal.button('reset');
                     }
                 });
             })
@@ -1606,4 +1666,54 @@ $language_name = $language["short_code"];
         $('input:checkbox').not(this).prop('checked', this.checked);
         // $(".checkbox").prop('checked', $(this).prop("checked")); //change all ".checkbox" checked status
     });
+
+
+
+    function getDaysExceptions() {
+
+       return [
+            moment().month(1).date(1).format('YYYY-MM-DD'), // Confraternização Universal - Lei nº 662, de 06/04/49
+            moment().month(4).date(21).format('YYYY-MM-DD'),
+            moment().month(5).date(1).format('YYYY-MM-DD'), // Tiradentes - Lei nº 662, de 06/04/49
+            moment().month(9).date(7).format('YYYY-MM-DD'), // Dia da Independência - Lei nº 662, de 06/04/49
+            moment().month(10).date(12).format('YYYY-MM-DD'), // N. S. Aparecida - Lei nº 6802, de 30/06/80
+            moment().month(11).date(2).format('YYYY-MM-DD'), // Todos os santos - Lei nº 662, de 06/04/49
+            moment().month(11).date(15).format('YYYY-MM-DD'), // Proclamação da republica - Lei nº 662, de 06/04/49
+            moment().month(12).date(25).format('YYYY-MM-DD'), // Natal - Lei nº 662, de 06/04/49
+           
+           ...getSpecialDay()
+        ]
+    }
+
+    function subtrairDias(data, dias) {
+        return new Date(data.getTime() - (dias * 24 * 60 * 60 * 1000));
+    }
+
+
+    function getSpecialDay() {
+        var ano = moment().format('YYYY');
+        var X = 24;
+        var Y = 5;
+        var a = ano % 19;
+        var b = ano % 4;
+        var c = ano % 7;
+        var d = (19 * a + X) % 30
+        var e = (2 * b + 4 * c + 6 * d + Y) % 7
+        var soma = d + e
+
+        if (soma > 9) {
+            dia = (d + e - 9);
+            mes = 03;
+        } else {
+            dia = (d + e + 22);
+            mes = 02;
+        }
+
+        return [
+            moment(new Date(ano,mes,dia).toDateString()).format('YYYY-MM-DD'),
+            moment(subtrairDias(new Date(ano,mes,dia), 47)).format('YYYY-MM-DD'),
+            // moment(subtrairDias(new Date(ano,mes,dia), 48)).format('YYYY-MM-DD'),
+            moment(subtrairDias(new Date(ano,mes,dia), 46)).format('YYYY-MM-DD'),
+        ]
+    }
 </script>

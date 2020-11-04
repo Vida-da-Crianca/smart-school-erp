@@ -55,8 +55,8 @@ class Bank_payment_inter
             $doc = new Pagador();
             $doc->setTipoPessoa(Pagador::PESSOA_FISICA);
             $doc->setNome($data->getUser());
-            $doc->setEndereco($data->getAddress());
-            $doc->setNumero($data->getAddressNumber());
+            $doc->setEndereco( substr($data->getAddress(),0,90 ));
+            $doc->setNumero( substr($data->getAddressNumber(), 0,10) );
             $doc->setBairro($data->getAddressDistrict());
             $doc->setCidade($data->getAddressCity());
             $doc->setCep($data->getAddressPostalCode());
@@ -65,7 +65,7 @@ class Bank_payment_inter
             $boleto = new Boleto();
             $boleto->setCnpjCPFBeneficiario($this->settings->api_username);
             $boleto->setPagador($doc);
-            $boleto->setSeuNumero($data->getYourNumber());
+            $boleto->setSeuNumero( $data->getYourNumber());
             $boleto->setDataEmissao(date('Y-m-d'));
             $boleto->setValorNominal($data->getPrice());
             $boleto->setDataVencimento($data->getDatePayment()   /*date_add(new \DateTime() , new \DateInterval("P10D"))->format('Y-m-d')*/);
@@ -74,7 +74,7 @@ class Bank_payment_inter
             foreach ($description as $k => $v) {
                 if ($k <= 4) {
                     $call = sprintf('setLinha%s', $k + 1);
-                    $message->$call(trim($v));
+                    $message->$call(substr(trim($v),0, 78));
                 }
             }
             $boleto->setMensagem($message);
