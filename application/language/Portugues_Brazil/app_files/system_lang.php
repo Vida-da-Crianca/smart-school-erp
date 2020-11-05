@@ -1469,3 +1469,19 @@ $lang['guardian_state'] = 'Responsável UF';
 $lang['billet_cancel'] ='Cancelar Boleto';
 $lang['invoice_settings'] = 'Notas fiscais';
 $lang['invoice_general_settings'] = 'Notas fiscais definições';
+$lang['invoice_school_name'] = 'Razão Social';
+$lang['invoice_document'] = 'CNPJ';
+$lang['invoice_ccm'] = 'CCM';
+$lang['invoice_password'] = 'Senha';   
+$lang['invoice_crc'] = 'CRC Contador';
+$lang['invoice_crc_state'] = 'UF CRC';
+$lang['invoice_simple_rate'] = 'Aliquota';
+$lang['invoice_code_service'] = 'Código do Serviço';
+$lang['invoice_condition'] = 'Situação';
+$lang['invoice_phone'] = 'Telefone';
+$lang['invoice_serie'] = 'Série';
+
+
+
+
+
