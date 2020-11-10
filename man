@@ -9,7 +9,6 @@
  * @link       https://github.com/kenjis/codeigniter-cli
  */
 
-use Application\Command\BulletCommand;
 use Symfony\Component\Console\Application;
 
 
@@ -35,9 +34,7 @@ $ci->load->add_package_path(__DIR__.'/packages/Extends');
 $fileListCommand = sprintf('%sapplication/config/command.php', ROOTPATH); 
 $listCommands =  file_exists($fileListCommand) ? require_once($fileListCommand) : [] ;
 
-$commands = array_merge($listCommands,[
-    BulletCommand::class,
-]);
+$commands = array_merge($listCommands,[]);
 
 $application  = new Application('Man Command Line', '1.0.0');
 

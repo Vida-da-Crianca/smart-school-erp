@@ -145,8 +145,8 @@
                                         <div class="form-group row">
                                             <label class="col-sm-4"><?php echo $this->lang->line('invoice_simple_rate'); ?><small class="req"> *</small></label>
                                             <div class="col-sm-8">
-                                                <input type="text" class="form-control" id="rate" name="rate" value="<?php echo search_key_in($result, 'rate'); ?>">
-                                                <span class="text-danger"><?php echo form_error('rate'); ?></span>
+                                                <input type="text" class="form-control" id="rate" name="simple_rate" value="<?php echo search_key_in($result, 'simple_rate'); ?>">
+                                                <span class="text-danger"><?php echo form_error('simple_rate'); ?></span>
                                             </div>
                                         </div>
                                     </div>

@@ -950,7 +950,7 @@ class Studentfee extends Admin_Controller
                     'amount_detail' => $json_array,
                 );
             }
-
+             
             $inserted_id = $this->studentfeemaster_model->fee_deposit_collections($collected_array);
             $array = array('status' => 1, 'error' => '');
             echo json_encode($array);

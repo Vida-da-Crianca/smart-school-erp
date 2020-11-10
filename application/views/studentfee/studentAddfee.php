@@ -739,6 +739,7 @@ $language_name = $language["short_code"];
 <div id="listCollectionModal" class="modal fade">
     <div class="modal-dialog">
         <form action="<?php echo site_url('studentfee/addfeegrp'); ?>" method="POST" id="collect_fee_group">
+        <input type="hiden" value="<?php echo $student['id']; ?>" name="user_id" />
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
@@ -852,6 +853,7 @@ $language_name = $language["short_code"];
             url: '<?php echo site_url("studentfee/addstudentfee") ?>',
             type: 'post',
             data: {
+                'user_id': $('input[name="student_user_id"]').val(),
                 action: action,
                 student_session_id: student_session_id,
                 date: date,

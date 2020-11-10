@@ -36,7 +36,10 @@ class PaidBillet extends BaseCommand{
 
         foreach($billets as $row){
              $b = $this->CI->bank_payment_inter->find($row->bank_bullet_id);
-             dump($b->situacao);
+             if($b->situacao == 'PAGO'){
+                   $row->update(['status' => \Billet_eloquent::PAID]);
+                   
+             }
         }
        
         // try {

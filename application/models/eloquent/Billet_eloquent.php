@@ -10,6 +10,8 @@ class Billet_eloquent extends  Eloquent {
     use SoftDeletes;
 
     const PAID_PENDING = 'AGUARDANDO PAGAMENTO';
+    
+    const PAID = 'PAGO';
       
     protected $table = 'billets';
 

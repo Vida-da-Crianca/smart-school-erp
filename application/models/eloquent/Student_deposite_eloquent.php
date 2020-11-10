@@ -23,4 +23,10 @@ class Student_deposite_eloquent extends  Eloquent {
         return $this->hasOne('Student_orm', 'parent_id', 'id');
     }
 
+
+    public function feeGroupType(){
+        get_instance()->load->model('eloquent/Fee_group_type_eloquent');
+        return $this->belongsTo('Fee_group_type_eloquent', 'fee_groups_feetype_id', 'id');
+    }
+
 }

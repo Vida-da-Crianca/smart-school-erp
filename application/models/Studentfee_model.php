@@ -76,6 +76,8 @@ class Studentfee_model extends CI_Model {
 
 
     public function remove($id, $sub_invoice) {
+
+        get_instance()->load->model('eloquent/Invoice_eloquent');
         $this->db->where('id', $id);
         $q = $this->db->get('student_fees_deposite');
         if ($q->num_rows() > 0) {
@@ -89,6 +91,9 @@ class Studentfee_model extends CI_Model {
             } else {
                 $this->db->where('id', $id);
                 $this->db->delete('student_fees_deposite');
+                Invoice_eloquent::where('student_fees_deposite_id', $id)->update([
+                    'status' => Invoice_eloquent::PENDING_DELETE
+                ]);
             }
         }
     }

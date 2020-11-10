@@ -29,7 +29,7 @@ services:
         source: mysql.conf
         target: /etc/mysql/conf.d/group.cnf
   app:
-    image: webdevops/php-nginx:7.3
+    image: webdevops/php-nginx:7.4
     working_dir: /app/
     environment:
       - VERSION_erp=1.0.2
@@ -37,10 +37,10 @@ services:
       - LICENSE_APP=63AH2N-XTFFLP-952QAM-UTBUai9NL0Q5R2lLeE4xbXZBMGVMVnEwMlpvTTU0QmNFcml6emVLNkk0MD0=
     volumes:
      - ./:/app/
-    # configs:
-    #   - 
-    #     source: erp_conf
-    #     target: /opt/docker/etc/httpd/conf.d/erp.conf
+    configs:
+      - 
+        source: openssl.cnf
+        target: /etc/ssl/openssl.cnf
     #   -
     #     source: php.ini
     #     target: /opt/docker/etc/php/php.ini
@@ -72,7 +72,8 @@ networks:
 configs:
    mysql.conf:
      file: './mysql.conf'
-   
+   openssl.cnf:
+     file: ./openssl.cnf
 #   php.ini:
 #     file: './docker/php.ini'
 #   periodico.conf:

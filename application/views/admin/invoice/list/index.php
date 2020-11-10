@@ -41,24 +41,33 @@
                                     ?>
                                         <tr>
                                             <td class="mailbox-name">
-                                                <a href="#" data-toggle="popover" class="detail_popover"><?php echo $item->nota_id ?></a>
+                                                <a href="#" data-toggle="popover" class="detail_popover"><?php echo $item->invoice_number; ?></a>
                                                 
                                             </td>
                                             <td class="mailbox-name">
-                                              <?php echo $item->owner->student->full_name; ?> 
+                                              <?php echo $item->student->full_name; ?> 
                                             </td>
                                             <td class="mailbox-name">
-                                              <?php echo $item->owner->student->guardian_name; ?> 
+                                              <?php echo $item->student->guardian_name; ?> 
                                             </td>
                                             <td class="mailbox-name">
-                                              <?php echo $item->owner->student->guardian_email; ?> 
+                                              <?php echo $item->student->guardian_email; ?> 
                                             </td>
                                             <td class="mailbox-name">
                                               <?php echo (new \DateTime($item->created_at))->format('d/m/Y'); ?> 
                                             </td>
+                                            <td class="mailbox-name">
+                                             <a 
+                                             target="_blank"
+                                             href="<?php
+                                                 $bodyJson = json_decode($item->body);
+                                                 echo $bodyJson->LinkImpressao;
+                                             ?>"> Ver Nota</a>  
+                                        
+                                            </td>
                                             
                                             <td class="mailbox-name">
-                                              <?php echo $item->price; ?> 
+                                              <?php echo number_format($item->price,2,',','.'); ?> 
                                             </td>
                                             
 

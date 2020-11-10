@@ -3,7 +3,7 @@
 
 use \Illuminate\Database\Eloquent\Model as Eloquent;
 
-class Student_orm extends  Eloquent
+class Student_eloquent extends  Eloquent
 {
 
     protected $table = 'students';

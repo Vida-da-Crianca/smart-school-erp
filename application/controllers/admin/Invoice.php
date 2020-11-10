@@ -28,7 +28,7 @@ class Invoice extends Admin_Controller {
         // if ($this->form_validation->run() == FALSE) { 
              
         
-            $this->load->model('Invoice_model');
+            $this->load->model('eloquent/Invoice_eloquent');
         // }
             // $data = array(
             //     'type' => $this->input->post('name'),
@@ -41,7 +41,7 @@ class Invoice extends Admin_Controller {
        
         
 
-        $data['list'] = Invoice_model::with(['owner.student'])->get();
+        $data['list'] = \Invoice_eloquent::with(['student'])->valid()->get();
 
         
 

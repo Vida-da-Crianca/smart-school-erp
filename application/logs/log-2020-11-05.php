@@ -46,3 +46,21 @@ ERROR - 2020-11-05 17:40:36 --> Session: Error while trying to obtain lock for c
 ERROR - 2020-11-05 17:40:37 --> Severity: Warning --> ini_set(): A session is active. You cannot change the session module's ini settings at this time /app/system/libraries/Session/Session_driver.php 188
 ERROR - 2020-11-05 17:40:37 --> Severity: Warning --> session_start(): Failed to read session data: user (path: ) /app/system/libraries/Session/Session.php 143
 ERROR - 2020-11-05 17:50:39 --> Could not find the language line "invoice_rate"
+ERROR - 2020-11-05 22:02:18 --> Session: Error while trying to obtain lock for ci_session:b99f81f308e935547a0343828711a07dfa71cdcc
+ERROR - 2020-11-05 22:02:18 --> Severity: Warning --> ini_set(): A session is active. You cannot change the session module's ini settings at this time /app/system/libraries/Session/Session_driver.php 188
+ERROR - 2020-11-05 22:02:18 --> Severity: Warning --> session_start(): Failed to read session data: user (path: ) /app/system/libraries/Session/Session.php 143
+ERROR - 2020-11-05 22:02:42 --> Could not find the language line "academic"
+ERROR - 2020-11-05 22:02:42 --> Could not find the language line "auto"
+ERROR - 2020-11-05 22:02:42 --> Could not find the language line "drag"
+ERROR - 2020-11-05 22:02:42 --> Could not find the language line "drag"
+ERROR - 2020-11-05 22:02:42 --> Could not find the language line "drag"
+ERROR - 2020-11-05 22:02:42 --> Could not find the language line "drag"
+ERROR - 2020-11-05 22:03:36 --> Could not find the language line "student_fee"
+ERROR - 2020-11-05 22:03:37 --> Session: Error while trying to obtain lock for ci_session:b99f81f308e935547a0343828711a07dfa71cdcc
+ERROR - 2020-11-05 22:03:37 --> Severity: Warning --> ini_set(): A session is active. You cannot change the session module's ini settings at this time /app/system/libraries/Session/Session_driver.php 188
+ERROR - 2020-11-05 22:03:37 --> Severity: Warning --> session_start(): Failed to read session data: user (path: ) /app/system/libraries/Session/Session.php 143
+ERROR - 2020-11-05 22:04:23 --> Could not find the language line "student_fee"
+ERROR - 2020-11-05 23:56:49 --> Could not find the language line "student_fee"
+ERROR - 2020-11-05 23:57:44 --> Could not find the language line "student_fee"
+ERROR - 2020-11-05 23:57:46 --> Could not find the language line "student_fee"
+ERROR - 2020-11-05 23:58:07 --> Could not find the language line "student_fee"
