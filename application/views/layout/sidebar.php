@@ -180,6 +180,7 @@
                     $this->rbac->hasPrivilege('fees_type', 'can_view') ||
                     $this->rbac->hasPrivilege('fees_discount', 'can_view') ||
                     $this->rbac->hasPrivilege('invoice_module', 'can_view') ||
+                    $this->rbac->hasPrivilege('billet_module', 'can_view') ||
                     $this->rbac->hasPrivilege('accountants', 'can_view'))) {
                 ?>
                     <li class="treeview <?php echo set_Topmenu('Fees Collection'); ?>">
@@ -189,6 +190,10 @@
                         <ul class="treeview-menu">
                             <?php if ($this->rbac->hasPrivilege('invoice_module', 'can_view')) : ?>
                                 <li class="<?php echo set_Submenu('admin/invoice'); ?>"><a href="<?php echo base_url(); ?>admin/invoice"><i class="fa fa-angle-double-right"></i> <?php echo $this->lang->line('invoice_module'); ?></a></li>
+                            <?php endif; ?>
+
+                            <?php if ($this->rbac->hasPrivilege('billet_module', 'can_view')) : ?>
+                                <li class="<?php echo set_Submenu('admin/billet'); ?>"><a href="<?php echo base_url(); ?>admin/billet"><i class="fa fa-angle-double-right"></i> <?php echo $this->lang->line('billet_module'); ?></a></li>
                             <?php endif; ?>
                             <?php if ($this->rbac->hasPrivilege('collect_fees', 'can_view')) { ?>
                                 <li class="<?php echo set_Submenu('studentfee/index'); ?>"><a href="<?php echo base_url(); ?>studentfee"><i class="fa fa-angle-double-right"></i> <?php echo $this->lang->line('collect_fees'); ?></a></li>
@@ -1249,6 +1254,8 @@
                                 <li class="<?php echo set_Submenu('invoices'); ?>"><a href="<?php echo base_url(); ?>invoices"><i class="fa fa-angle-double-right"></i> <?php echo $this->lang->line('invoice_settings'); ?></a></li>
                             <?php
                             }
+
+                            
                             if ($this->rbac->hasPrivilege('session_setting', 'can_view')) {
                             ?>
                                 <li class="<?php echo set_Submenu('sessions/index'); ?>"><a href="<?php echo base_url(); ?>sessions"><i class="fa fa-angle-double-right"></i> <?php echo $this->lang->line('session_setting'); ?></a></li>

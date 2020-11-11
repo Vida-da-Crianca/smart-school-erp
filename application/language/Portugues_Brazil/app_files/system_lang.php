@@ -1480,7 +1480,10 @@ $lang['invoice_code_service'] = 'Código do Serviço';
 $lang['invoice_condition'] = 'Situação';
 $lang['invoice_phone'] = 'Telefone';
 $lang['invoice_serie'] = 'Série';
-
+$lang['billet_module'] = 'Boleto em lote';
+$lang['billet_date_start'] = 'Inicio';
+$lang['billet_date_end'] = 'Fim';
+$lang['billet_title'] = 'Boleto em lote';
 
 
 

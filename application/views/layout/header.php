@@ -50,6 +50,7 @@
     <script src="<?php echo base_url(); ?>backend/custom/jquery.min.js"></script>
     <script src="<?php echo base_url(); ?>backend/dist/js/moment.min.js"></script>
     <script src="<?php echo base_url(); ?>backend/dist/js/jquery.validate.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/additional-methods.min.js"></script>
     <script src="<?php echo base_url(); ?>backend/datepicker/js/bootstrap-datetimepicker.js"></script>
     <script src="<?php echo base_url(); ?>backend/plugins/colorpicker/bootstrap-colorpicker.js"></script>
     <script src="<?php echo base_url(); ?>backend/datepicker/date.js"></script>

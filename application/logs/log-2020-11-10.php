@@ -100,3 +100,106 @@ ERROR - 2020-11-10 23:08:35 --> Could not find the language line "payment_mode"
 ERROR - 2020-11-10 23:08:41 --> Could not find the language line "student_fee"
 ERROR - 2020-11-10 23:09:54 --> Could not find the language line "student_fee"
 ERROR - 2020-11-10 23:09:56 --> Could not find the language line "student_fee"
+ERROR - 2020-11-10 23:12:42 --> Session: Error while trying to obtain lock for ci_session:3973be903d2ab982524d4063c0a6c12d64f17ded
+ERROR - 2020-11-10 23:12:42 --> Severity: Warning --> ini_set(): A session is active. You cannot change the session module's ini settings at this time /app/system/libraries/Session/Session_driver.php 188
+ERROR - 2020-11-10 23:12:42 --> Severity: Warning --> session_start(): Failed to read session data: user (path: ) /app/system/libraries/Session/Session.php 143
+ERROR - 2020-11-10 23:19:26 --> Session: Error while trying to obtain lock for ci_session:d1d21c793ce37d545f16694acf5639d7e481d70b
+ERROR - 2020-11-10 23:19:26 --> Severity: Warning --> ini_set(): A session is active. You cannot change the session module's ini settings at this time /app/system/libraries/Session/Session_driver.php 188
+ERROR - 2020-11-10 23:19:26 --> Severity: Warning --> session_start(): Failed to read session data: user (path: ) /app/system/libraries/Session/Session.php 143
+ERROR - 2020-11-10 23:20:42 --> Severity: Notice --> Undefined variable: result /app/application/views/admin/billet/index.php 39
+ERROR - 2020-11-10 23:20:42 --> Severity: Warning --> Invalid argument supplied for foreach() /app/application/helpers/application_helper.php 10
+ERROR - 2020-11-10 23:20:42 --> Severity: Notice --> Undefined variable: result /app/application/views/admin/billet/index.php 48
+ERROR - 2020-11-10 23:20:42 --> Severity: Warning --> Invalid argument supplied for foreach() /app/application/helpers/application_helper.php 10
+ERROR - 2020-11-10 23:20:42 --> Severity: Notice --> Undefined variable: result /app/application/views/admin/billet/index.php 63
+ERROR - 2020-11-10 23:20:42 --> Severity: Warning --> Invalid argument supplied for foreach() /app/application/helpers/application_helper.php 10
+ERROR - 2020-11-10 23:20:42 --> Severity: Notice --> Undefined variable: result /app/application/views/admin/billet/index.php 76
+ERROR - 2020-11-10 23:20:42 --> Severity: Warning --> Invalid argument supplied for foreach() /app/application/helpers/application_helper.php 10
+ERROR - 2020-11-10 23:20:42 --> Severity: Notice --> Undefined variable: result /app/application/views/admin/billet/index.php 87
+ERROR - 2020-11-10 23:20:42 --> Severity: Warning --> Invalid argument supplied for foreach() /app/application/helpers/application_helper.php 10
+ERROR - 2020-11-10 23:20:42 --> Severity: Notice --> Undefined variable: result /app/application/views/admin/billet/index.php 95
+ERROR - 2020-11-10 23:20:42 --> Severity: Warning --> Invalid argument supplied for foreach() /app/application/helpers/application_helper.php 10
+ERROR - 2020-11-10 23:20:42 --> Severity: Notice --> Undefined variable: result /app/application/views/admin/billet/index.php 112
+ERROR - 2020-11-10 23:20:42 --> Severity: Warning --> Invalid argument supplied for foreach() /app/application/helpers/application_helper.php 10
+ERROR - 2020-11-10 23:20:42 --> Severity: Notice --> Undefined variable: result /app/application/views/admin/billet/index.php 121
+ERROR - 2020-11-10 23:20:42 --> Severity: Warning --> Invalid argument supplied for foreach() /app/application/helpers/application_helper.php 10
+ERROR - 2020-11-10 23:20:42 --> Severity: Notice --> Undefined variable: result /app/application/views/admin/billet/index.php 139
+ERROR - 2020-11-10 23:20:42 --> Severity: Warning --> Invalid argument supplied for foreach() /app/application/helpers/application_helper.php 10
+ERROR - 2020-11-10 23:20:42 --> Severity: Notice --> Undefined variable: result /app/application/views/admin/billet/index.php 148
+ERROR - 2020-11-10 23:20:42 --> Severity: Warning --> Invalid argument supplied for foreach() /app/application/helpers/application_helper.php 10
+ERROR - 2020-11-10 23:20:42 --> Severity: Notice --> Undefined variable: result /app/application/views/admin/billet/index.php 158
+ERROR - 2020-11-10 23:20:42 --> Severity: Warning --> Invalid argument supplied for foreach() /app/application/helpers/application_helper.php 10
+ERROR - 2020-11-10 23:22:57 --> Could not find the language line "billet_settings"
+ERROR - 2020-11-10 23:22:57 --> Could not find the language line "billet_general_settings"
+ERROR - 2020-11-10 23:22:57 --> Could not find the language line "billet_school_name"
+ERROR - 2020-11-10 23:22:57 --> Could not find the language line "billet_document"
+ERROR - 2020-11-10 23:28:26 --> Could not find the language line "billet_settings"
+ERROR - 2020-11-10 23:28:26 --> Could not find the language line "billet_general_settings"
+ERROR - 2020-11-10 23:28:26 --> Could not find the language line "billet_document"
+ERROR - 2020-11-10 23:31:33 --> Could not find the language line "billet_settings"
+ERROR - 2020-11-10 23:31:33 --> Could not find the language line "billet_general_settings"
+ERROR - 2020-11-10 23:31:33 --> Could not find the language line "billet_document"
+ERROR - 2020-11-10 23:31:33 --> Severity: Notice --> Undefined variable: language_name /app/application/views/admin/billet/index.php 95
+ERROR - 2020-11-10 23:31:34 --> Session: Error while trying to obtain lock for ci_session:532ec7e487af639978ad03cacd3a51edac9d043a
+ERROR - 2020-11-10 23:31:34 --> Severity: Warning --> ini_set(): A session is active. You cannot change the session module's ini settings at this time /app/system/libraries/Session/Session_driver.php 188
+ERROR - 2020-11-10 23:31:34 --> Severity: Warning --> session_start(): Failed to read session data: user (path: ) /app/system/libraries/Session/Session.php 143
+ERROR - 2020-11-10 23:31:44 --> Could not find the language line "billet_settings"
+ERROR - 2020-11-10 23:31:44 --> Could not find the language line "billet_general_settings"
+ERROR - 2020-11-10 23:31:44 --> Could not find the language line "billet_document"
+ERROR - 2020-11-10 23:31:44 --> Severity: Notice --> Undefined variable: language_name /app/application/views/admin/billet/index.php 95
+ERROR - 2020-11-10 23:31:45 --> Session: Error while trying to obtain lock for ci_session:532ec7e487af639978ad03cacd3a51edac9d043a
+ERROR - 2020-11-10 23:31:45 --> Severity: Warning --> ini_set(): A session is active. You cannot change the session module's ini settings at this time /app/system/libraries/Session/Session_driver.php 188
+ERROR - 2020-11-10 23:31:45 --> Severity: Warning --> session_start(): Failed to read session data: user (path: ) /app/system/libraries/Session/Session.php 143
+ERROR - 2020-11-10 23:32:07 --> Could not find the language line "billet_settings"
+ERROR - 2020-11-10 23:32:07 --> Could not find the language line "billet_general_settings"
+ERROR - 2020-11-10 23:32:07 --> Could not find the language line "billet_document"
+ERROR - 2020-11-10 23:32:07 --> Severity: Notice --> Undefined variable: language_name /app/application/views/admin/billet/index.php 95
+ERROR - 2020-11-10 23:32:25 --> Could not find the language line "billet_settings"
+ERROR - 2020-11-10 23:32:25 --> Could not find the language line "billet_general_settings"
+ERROR - 2020-11-10 23:32:25 --> Could not find the language line "billet_document"
+ERROR - 2020-11-10 23:32:25 --> Severity: Notice --> Undefined variable: language_name /app/application/views/admin/billet/index.php 95
+ERROR - 2020-11-10 23:32:26 --> Session: Error while trying to obtain lock for ci_session:532ec7e487af639978ad03cacd3a51edac9d043a
+ERROR - 2020-11-10 23:32:26 --> Severity: Warning --> ini_set(): A session is active. You cannot change the session module's ini settings at this time /app/system/libraries/Session/Session_driver.php 188
+ERROR - 2020-11-10 23:32:26 --> Severity: Warning --> session_start(): Failed to read session data: user (path: ) /app/system/libraries/Session/Session.php 143
+ERROR - 2020-11-10 23:33:09 --> Could not find the language line "billet_settings"
+ERROR - 2020-11-10 23:33:09 --> Could not find the language line "billet_general_settings"
+ERROR - 2020-11-10 23:33:09 --> Could not find the language line "billet_document"
+ERROR - 2020-11-10 23:33:09 --> Severity: Notice --> Undefined variable: language_name /app/application/views/admin/billet/index.php 95
+ERROR - 2020-11-10 23:33:10 --> Session: Error while trying to obtain lock for ci_session:532ec7e487af639978ad03cacd3a51edac9d043a
+ERROR - 2020-11-10 23:33:10 --> Severity: Warning --> ini_set(): A session is active. You cannot change the session module's ini settings at this time /app/system/libraries/Session/Session_driver.php 188
+ERROR - 2020-11-10 23:33:10 --> Severity: Warning --> session_start(): Failed to read session data: user (path: ) /app/system/libraries/Session/Session.php 143
+ERROR - 2020-11-10 23:35:09 --> Could not find the language line "billet_settings"
+ERROR - 2020-11-10 23:35:09 --> Could not find the language line "billet_general_settings"
+ERROR - 2020-11-10 23:35:09 --> Severity: Notice --> Undefined variable: language_name /app/application/views/admin/billet/index.php 95
+ERROR - 2020-11-10 23:35:41 --> Could not find the language line "billet_settings"
+ERROR - 2020-11-10 23:35:41 --> Could not find the language line "billet_general_settings"
+ERROR - 2020-11-10 23:35:41 --> Severity: Notice --> Undefined variable: language_name /app/application/views/admin/billet/index.php 95
+ERROR - 2020-11-10 23:35:55 --> Could not find the language line "billet_settings"
+ERROR - 2020-11-10 23:35:55 --> Could not find the language line "billet_general_settings"
+ERROR - 2020-11-10 23:35:55 --> Severity: Notice --> Undefined variable: language_name /app/application/views/admin/billet/index.php 95
+ERROR - 2020-11-10 23:36:36 --> Could not find the language line "billet_settings"
+ERROR - 2020-11-10 23:36:36 --> Could not find the language line "billet_general_settings"
+ERROR - 2020-11-10 23:36:36 --> Severity: Notice --> Undefined variable: language_name /app/application/views/admin/billet/index.php 95
+ERROR - 2020-11-10 23:36:59 --> Could not find the language line "billet_settings"
+ERROR - 2020-11-10 23:36:59 --> Could not find the language line "billet_general_settings"
+ERROR - 2020-11-10 23:36:59 --> Severity: Notice --> Undefined variable: language_name /app/application/views/admin/billet/index.php 95
+ERROR - 2020-11-10 23:37:35 --> Could not find the language line "billet_settings"
+ERROR - 2020-11-10 23:37:35 --> Could not find the language line "billet_general_settings"
+ERROR - 2020-11-10 23:37:35 --> Severity: Notice --> Undefined variable: language_name /app/application/views/admin/billet/index.php 95
+ERROR - 2020-11-10 23:37:53 --> Could not find the language line "billet_settings"
+ERROR - 2020-11-10 23:37:53 --> Could not find the language line "billet_general_settings"
+ERROR - 2020-11-10 23:37:53 --> Severity: Notice --> Undefined variable: language_name /app/application/views/admin/billet/index.php 95
+ERROR - 2020-11-10 23:38:18 --> Could not find the language line "billet_settings"
+ERROR - 2020-11-10 23:38:18 --> Could not find the language line "billet_general_settings"
+ERROR - 2020-11-10 23:38:18 --> Severity: Notice --> Undefined variable: language_name /app/application/views/admin/billet/index.php 95
+ERROR - 2020-11-10 23:38:43 --> Could not find the language line "billet_settings"
+ERROR - 2020-11-10 23:38:43 --> Could not find the language line "billet_general_settings"
+ERROR - 2020-11-10 23:38:43 --> Severity: Notice --> Undefined variable: language_name /app/application/views/admin/billet/index.php 95
+ERROR - 2020-11-10 23:39:00 --> Could not find the language line "billet_settings"
+ERROR - 2020-11-10 23:39:00 --> Could not find the language line "billet_general_settings"
+ERROR - 2020-11-10 23:39:00 --> Severity: Notice --> Undefined variable: language_name /app/application/views/admin/billet/index.php 95
+ERROR - 2020-11-10 23:39:02 --> Session: Error while trying to obtain lock for ci_session:78caaed9657fa1431c10135ac8ba177b9d0d592a
+ERROR - 2020-11-10 23:39:02 --> Severity: Warning --> ini_set(): A session is active. You cannot change the session module's ini settings at this time /app/system/libraries/Session/Session_driver.php 188
+ERROR - 2020-11-10 23:39:02 --> Severity: Warning --> session_start(): Failed to read session data: user (path: ) /app/system/libraries/Session/Session.php 143
+ERROR - 2020-11-10 23:42:20 --> Could not find the language line "billet_settings"
+ERROR - 2020-11-10 23:42:20 --> Could not find the language line "billet_general_settings"
+ERROR - 2020-11-10 23:42:20 --> Severity: Notice --> Undefined variable: language_name /app/application/views/admin/billet/index.php 95
