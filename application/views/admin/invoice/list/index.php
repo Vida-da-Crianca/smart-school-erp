@@ -82,9 +82,9 @@
                                                 <?php
                                                 if ($this->rbac->hasPrivilege('invoice_type', 'can_delete')) {
                                                 ?>
-                                                    <a data-placement="left" href="<?php echo base_url(); ?>admin/feetype/delete/<?php echo $item['id'] ?>" class="btn btn-default btn-xs" data-toggle="tooltip" title="<?php echo $this->lang->line('delete'); ?>" onclick="return confirm('<?php echo $this->lang->line('delete_confirm') ?>');">
+                                                    <!-- <a data-placement="left" href="<?php echo base_url(); ?>admin/feetype/delete/<?php echo $item['id'] ?>" class="btn btn-default btn-xs" data-toggle="tooltip" title="<?php echo $this->lang->line('delete'); ?>" onclick="return confirm('<?php echo $this->lang->line('delete_confirm') ?>');">
                                                         <i class="fa fa-remove"></i>
-                                                    </a>
+                                                    </a> -->
                                                 <?php } ?>
                                             </td>
                                         </tr>

@@ -9,6 +9,7 @@ use CarlosOCarvalho\Sigiss\Provider;
 use CarlosOCarvalho\Sigiss\SigissService;
 use Packages\Commands\BaseCommand;
 use Symfony\Component\Console\Input\ArrayInput;
+use Symfony\Component\Process\Process;
 
 class ScheduleCommand extends BaseCommand
 {
@@ -36,16 +37,28 @@ class ScheduleCommand extends BaseCommand
     {
         $this->title('Schedule running');
 
-        $comandList = [
-            'invoice:cancel',
-            'invoice:create',
-            'billet:paid'
-        ];
+        $process = new Process(['ls', '-lsa']);
+        $process->setTimeout(3600);
+        $process->start();
 
-        foreach ($comandList as $c) {
-            $command = $this->getApplication()->find($c);
-            $this->call($command);
+        while (true) {
+            // ...
+            $comandList = [
+                'invoice:cancel',
+                'invoice:create',
+                'billet:paid'
+            ];
+
+            foreach ($comandList as $c) {
+                $command = $this->getApplication()->find($c);
+                $this->call($command);
+            }
+            // check if the timeout is reached
+            $process->checkTimeout();
+
+            sleep(30);
         }
+
         return 0;
     }
 

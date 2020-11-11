@@ -41,12 +41,9 @@ services:
       - 
         source: openssl.cnf
         target: /etc/ssl/openssl.cnf
-    #   -
-    #     source: php.ini
-    #     target: /opt/docker/etc/php/php.ini
-    #   -
-    #     source: periodico.conf
-    #     target: /opt/docker/etc/supervisor.d/erp.conf   
+      - 
+        source: schedule.conf
+        target: /opt/docker/etc/supervisor.d/erp.conf
 
     deploy:
       labels:
@@ -74,8 +71,6 @@ configs:
      file: './mysql.conf'
    openssl.cnf:
      file: ./openssl.cnf
-#   php.ini:
-#     file: './docker/php.ini'
-#   periodico.conf:
-#     file: './docker/supervisor.conf'  
+   schedule.conf:
+     file: ./docker/supervisor.conf
 

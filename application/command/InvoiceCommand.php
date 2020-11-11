@@ -45,7 +45,7 @@ class InvoiceCommand extends BaseCommand
     protected function start()
     {
 
-
+        log_message('debug', "Invoice generate started");
         $this->CI->load->model(['eloquent/Invoice_eloquent', 'eloquent/Invoice_setting_eloquent']);
 
         $settings = \Invoice_setting_eloquent::get()->pluck('value', 'key');
@@ -81,10 +81,10 @@ class InvoiceCommand extends BaseCommand
                 'rps_serie' => $settings->toArray()['serie'],
                 'serie' =>  $settings->toArray()['serie']
             ];
-
+            $service  =  new SigissService($provider);
             try {
 
-                $service  =  new SigissService($provider);
+               
                 $service->params($data)->create();
 
                 $response = $service->fire();

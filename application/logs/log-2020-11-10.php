@@ -70,3 +70,33 @@ ERROR - 2020-11-10 18:41:41 --> Could not find the language line "student_fee"
 ERROR - 2020-11-10 18:43:56 --> Could not find the language line "student_fee"
 ERROR - 2020-11-10 18:44:20 --> Could not find the language line "payment_mode"
 ERROR - 2020-11-10 18:45:11 --> Could not find the language line "payment_mode"
+ERROR - 2020-11-10 19:20:17 --> Could not find the language line "student_fee"
+ERROR - 2020-11-10 19:20:45 --> Could not find the language line "student_fee"
+ERROR - 2020-11-10 19:34:40 --> Could not find the language line "student_fee"
+ERROR - 2020-11-10 19:34:58 --> Could not find the language line "student_fee"
+ERROR - 2020-11-10 19:35:43 --> Could not find the language line "student_fee"
+ERROR - 2020-11-10 19:40:52 --> Session: Error while trying to obtain lock for ci_session:ff2d34f185424c286f313825fb51c74d1bee8f58
+ERROR - 2020-11-10 19:40:52 --> Severity: Warning --> ini_set(): A session is active. You cannot change the session module's ini settings at this time /app/system/libraries/Session/Session_driver.php 188
+ERROR - 2020-11-10 19:40:52 --> Severity: Warning --> session_start(): Failed to read session data: user (path: ) /app/system/libraries/Session/Session.php 143
+ERROR - 2020-11-10 19:41:09 --> Session: Error while trying to obtain lock for ci_session:ff2d34f185424c286f313825fb51c74d1bee8f58
+ERROR - 2020-11-10 19:41:09 --> Severity: Warning --> ini_set(): A session is active. You cannot change the session module's ini settings at this time /app/system/libraries/Session/Session_driver.php 188
+ERROR - 2020-11-10 19:41:09 --> Severity: Warning --> session_start(): Failed to read session data: user (path: ) /app/system/libraries/Session/Session.php 143
+ERROR - 2020-11-10 19:41:10 --> Severity: Warning --> Cannot modify header information - headers already sent by (output started at /app/system/core/Exceptions.php:271) /app/system/helpers/url_helper.php 564
+ERROR - 2020-11-10 19:41:13 --> Could not find the language line "student_fee"
+ERROR - 2020-11-10 19:56:31 --> Session: Error while trying to obtain lock for ci_session:3b99384bb283da7a75ca4f023fdae3d341b63a89
+ERROR - 2020-11-10 19:56:31 --> Severity: Warning --> ini_set(): A session is active. You cannot change the session module's ini settings at this time /app/system/libraries/Session/Session_driver.php 188
+ERROR - 2020-11-10 19:56:31 --> Severity: Warning --> session_start(): Failed to read session data: user (path: ) /app/system/libraries/Session/Session.php 143
+ERROR - 2020-11-10 19:56:51 --> Could not find the language line "student_fee"
+ERROR - 2020-11-10 20:06:10 --> Session: Error while trying to obtain lock for ci_session:d8b02deb2b931a5720b033ae9e39e12d9f20d514
+ERROR - 2020-11-10 20:06:10 --> Severity: Warning --> ini_set(): A session is active. You cannot change the session module's ini settings at this time /app/system/libraries/Session/Session_driver.php 188
+ERROR - 2020-11-10 20:06:10 --> Severity: Warning --> session_start(): Failed to read session data: user (path: ) /app/system/libraries/Session/Session.php 143
+ERROR - 2020-11-10 22:42:14 --> Session: Error while trying to obtain lock for ci_session:f021ca5bf6c0c6b0b2b6e10e3c3579ab63cf3040
+ERROR - 2020-11-10 22:42:14 --> Severity: Warning --> ini_set(): A session is active. You cannot change the session module's ini settings at this time /app/system/libraries/Session/Session_driver.php 188
+ERROR - 2020-11-10 22:42:14 --> Severity: Warning --> session_start(): Failed to read session data: user (path: ) /app/system/libraries/Session/Session.php 143
+ERROR - 2020-11-10 23:07:06 --> Could not find the language line "student_fee"
+ERROR - 2020-11-10 23:07:54 --> Could not find the language line "student_fee"
+ERROR - 2020-11-10 23:07:57 --> Could not find the language line "student_fee"
+ERROR - 2020-11-10 23:08:35 --> Could not find the language line "payment_mode"
+ERROR - 2020-11-10 23:08:41 --> Could not find the language line "student_fee"
+ERROR - 2020-11-10 23:09:54 --> Could not find the language line "student_fee"
+ERROR - 2020-11-10 23:09:56 --> Could not find the language line "student_fee"
