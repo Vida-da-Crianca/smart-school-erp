@@ -76,6 +76,14 @@
 <div class="col-lg-12">
     <div class="form-horizontal">
         <div class="form-group">
+
+            <div class="col-sm-9 col-sm-offset-3 checkbox">
+                <label>
+                    <input name="generate_invoice"  value="1" type="checkbox"> <?php echo $this->lang->line('generate_invoice'); ?>
+                </label>
+            </div>
+        </div>
+        <div class="form-group">
             <label for="inputEmail3" class="col-sm-3 control-label"><?php echo $this->lang->line('date'); ?></label>
             <div class="col-sm-9">
                 <input id="date" name="collected_date" placeholder="" type="text" class="form-control date" value="" readonly="readonly" autocomplete="off">
@@ -121,7 +129,7 @@
     <?php
     $row_counter  = 1;
     $total_amount = 0;
-    foreach ($feearray as $fee_key => $fee_value) {
+    foreach ($listOfFees as $fee_key => $fee_value) {
         $amount_prev_paid = 0;
         $amount_to_be_pay = $fee_value->amount;
 
@@ -152,15 +160,12 @@
                 <input name="row_counter[]" type="hidden" value="<?php echo $row_counter; ?>">
                 <input name="student_fees_master_id_<?php echo $row_counter; ?>" type="hidden" value="<?php echo $fee_value->id; ?>">
                 <input name="fee_groups_feetype_id_<?php echo $row_counter; ?>" type="hidden" value="<?php echo $fee_value->fee_groups_feetype_id; ?>">
-                <input name="fee_amount_<?php echo $row_counter; ?>" type="hidden" value="<?php echo $amount_to_be_pay; ?>">
+                <input name="fee_amount_<?php echo $row_counter; ?>" type="hidden" value="<?php echo ($amount_to_be_pay); ?>">
                 <div class="product-info">
-                    <a href="#" class="product-title"><?php echo $fee_value->name; ?>
-                        <span class="pull-right"><?php echo $amount_to_be_pay; ?></span></a>
-                    <span class="product-description">
+                    <a href="javascript:void(0)" class="product-title">
+                        <?php echo $fee_value->title; ?>
+                        <span class="pull-right"><?php echo number_format($amount_to_be_pay, 2, ',', '.');  ?></span></a>
 
-                        <?php echo $fee_value->code; ?>
-
-                    </span>
                 </div>
             </li>
 
@@ -180,7 +185,7 @@
     </div>
     <div class="col-md-4">
         <span class="pull-right">
-            <?php echo number_format((float) $total_amount, 2, '.', ''); ?>
+            <?php echo number_format((float) $total_amount, 2, ',', '.'); ?>
         </span>
 
     </div>

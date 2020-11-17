@@ -38,7 +38,7 @@ class ScheduleCommand extends BaseCommand
         $this->title('Schedule running');
 
         $process = new Process(['ls', '-lsa']);
-        $process->setTimeout(3600);
+        // $process->setTimeout(3600);
         $process->start();
 
         while (true) {

@@ -3,7 +3,7 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
 $language = $this->customlib->getLanguage();
 $language_name = $language["short_code"];
 ?>
-<input type="hiden" value="<?php echo $student['id']; ?>" name="student_user_id" />
+<input type="hidden" value="<?php echo $student['id']; ?>" name="student_user_id" />
 <div class="content-wrapper">
     <div class="row">
         <div class="col-md-12">
@@ -148,6 +148,17 @@ $language_name = $language["short_code"];
                                                             </td>
                                                         <?php } ?>
                                                     </tr>
+                                                    <tr>
+                                                      <th>
+                                                       Ano
+                                                      </th>
+                                                      <td>
+                                                      <?php
+                                                      
+                                                        echo form_dropdown('year_fees', $optionsYear, [$current_year], 'class="form-control"');
+                                                      ?>
+                                                      </td>
+                                                    </tr>
 
                                                 </tbody>
                                             </table>
@@ -180,7 +191,7 @@ $language_name = $language["short_code"];
                                     <tr>
                                         <th style="width: 10px"><input type="checkbox" id="select_all" /></th>
                                         <th align="left"><?php echo $this->lang->line('fees_group'); ?></th>
-                                        <th align="left"><?php echo $this->lang->line('fees_code'); ?></th>
+                                        <!-- <th align="left"><?php echo $this->lang->line('fees_code'); ?></th> -->
                                         <th align="left" class="text text-left"><?php echo $this->lang->line('due_date'); ?></th>
                                         <th align="left" class="text text-left"><?php echo $this->lang->line('status'); ?></th>
                                         <th class="text text-right"><?php echo $this->lang->line('amount') ?> <span><?php echo "(" . $currency_symbol . ")"; ?></span></th>
@@ -212,9 +223,9 @@ $language_name = $language["short_code"];
                                             $fee_fine = 0;
 
 
-                                            if (!empty($fee_value->amount_detail)) {
-                                                $fee_deposits = json_decode(($fee_value->amount_detail));
-
+                                            if ($fee_value->deposite) {
+                                                $fee_deposits = json_decode(($fee_value->deposite->amount_detail));
+                                                 
                                                 foreach ($fee_deposits as $fee_deposits_key => $fee_deposits_value) {
                                                     $fee_paid = $fee_paid + $fee_deposits_value->amount;
                                                     $fee_discount = $fee_discount + $fee_deposits_value->amount_discount;
@@ -241,12 +252,14 @@ $language_name = $language["short_code"];
                                             }
                                                 ?>
                                                 <td>
-                                                    <input class="checkbox" type="checkbox" name="fee_checkbox" data-fee_date_payment="<?php echo $fee_value->due_date; ?>" data-fee_fine="<?php echo $fee_fine; ?>" data-fee_is_pdf="<?php echo $fee_value->billet_id; ?>" data-fee_amount="<?php echo $fee_value->amount; ?>" data-fee_discount="<?php echo  $fee_discount; ?>" data-fee_master_id="<?php echo $fee_value->id; ?>" data-fee_session_group_id="<?php echo $fee_value->fee_session_group_id; ?>" data-fee_groups_feetype_id="<?php echo $fee_value->fee_groups_feetype_id; ?>" data-fee_line_1="<?php echo $description; ?>" data-fee_line_2="<?php echo $fee_value->code; ?>">
+                                                    <input <?php echo  $fee_value->deposite ? 'disabled' : '' ?> class="checkbox" type="checkbox" name="fee_checkbox" 
+                                                    data-fee_date_payment="<?php echo $fee_value->due_date; ?>"
+                                                     data-fee_fine="<?php echo $fee_fine; ?>" data-fee_is_pdf="<?php echo $fee_value->billet_id; ?>" data-fee_amount="<?php echo $fee_value->amount; ?>" data-fee_discount="<?php echo  $fee_discount; ?>" data-fee_master_id="<?php echo $fee_value->id; ?>" data-fee_session_group_id="<?php echo $fee_value->fee_session_group_id; ?>" data-fee_groups_feetype_id="<?php echo $fee_value->fee_groups_feetype_id; ?>" data-fee_line_1="<?php echo $description; ?>" data-fee_line_2="<?php echo $fee_value->code; ?>">
                                                 </td>
                                                 <td align="left"><?php
-                                                                    echo $description;
+                                                                    echo $fee_value->title;
                                                                     ?></td>
-                                                <td align="left"><?php echo $fee_value->code; ?></td>
+                                                <!-- <td align="left"><?php echo $fee_value->code; ?></td> -->
                                                 <td align="left" class="text text-left">
 
                                                     <?php
@@ -269,7 +282,7 @@ $language_name = $language["short_code"];
                                                                                                                                                                                                                                                                                                                     ?>
 
                                                 </td>
-                                                <td class="text text-right"><?php echo $fee_value->amount; ?></td>
+                                                <td class="text text-right"><?php echo $fee_value->amountReal; ?></td>
 
                                                 <td class="text text-left"></td>
                                                 <td class="text text-left"></td>
@@ -310,15 +323,15 @@ $language_name = $language["short_code"];
 
 
                                                 <?php
-                                                if (!empty($fee_value->amount_detail)) {
+                                                if (($fee_value->deposite)) {
 
-                                                    $fee_deposits = json_decode(($fee_value->amount_detail));
+                                                    $fee_deposits = json_decode(($fee_value->deposite->amount_detail));
 
 
                                                     foreach ($fee_deposits as $fee_deposits_key => $fee_deposits_value) {
                                                 ?>
                                                         <tr class="white-td">
-                                                            <td align="left"></td>
+                                                           
                                                             <td align="left"></td>
                                                             <td align="left"></td>
                                                             <td align="left"></td>
@@ -357,7 +370,7 @@ $language_name = $language["short_code"];
                                                                 <div class="btn-group pull-right">
 
                                                                     <?php if ($this->rbac->hasPrivilege('collect_fees', 'can_delete')) { ?>
-                                                                        <button class="btn btn-default btn-xs" data-invoiceno="<?php echo $fee_value->student_fees_deposite_id . "/" . $fee_deposits_value->inv_no; ?>" data-main_invoice="<?php echo $fee_value->student_fees_deposite_id ?>" data-sub_invoice="<?php echo $fee_deposits_value->inv_no ?>" data-toggle="modal" data-target="#confirm-delete" title="<?php echo $this->lang->line('revert'); ?>">
+                                                                        <button class="btn btn-default btn-xs" data-invoiceno="<?php echo $fee_value->id; ?>" data-main_invoice="<?php echo $fee_value->deposite->id ?>"  data-toggle="modal" data-target="#confirm-delete" title="<?php echo $this->lang->line('revert'); ?>">
                                                                             <i class="fa fa-undo"> </i>
                                                                         </button>
                                                                     <?php } ?>
@@ -461,23 +474,23 @@ $language_name = $language["short_code"];
                                             <td align="left"></td>
                                             <td align="left" class="text text-left"><?php echo $this->lang->line('grand_total'); ?></td>
                                             <td class="text text-right"><?php
-                                                                        echo ($currency_symbol . number_format($total_amount, 2, '.', ''));
+                                                                        echo ($currency_symbol . number_format($total_amount, 2, ',', '.'));
                                                                         ?></td>
                                             <td class="text text-left"></td>
                                             <td class="text text-left"></td>
                                             <td class="text text-left"></td>
 
                                             <td class="text text-right"><?php
-                                                                        echo ($currency_symbol . number_format($total_discount_amount + $alot_fee_discount, 2, '.', ''));
+                                                                        echo sprintf('%s %s', $currency_symbol, number_format($total_discount_amount + $alot_fee_discount, 2, ',', '.'));
                                                                         ?></td>
                                             <td class="text text-right"><?php
-                                                                        echo ($currency_symbol . number_format($total_fine_amount, 2, '.', ''));
+                                                                        echo sprintf('%s %s', $currency_symbol , number_format($total_fine_amount, 2, ',', '.'));
                                                                         ?></td>
                                             <td class="text text-right"><?php
-                                                                        echo ($currency_symbol . number_format($total_deposite_amount, 2, '.', ''));
+                                                                        echo sprintf('%s %s', $currency_symbol , number_format($total_deposite_amount, 2, ',', '.'));
                                                                         ?></td>
                                             <td class="text text-right"><?php
-                                                                        echo ($currency_symbol . number_format($total_balance_amount - $alot_fee_discount, 2, '.', ''));
+                                                                        echo sprintf('%s %s', $currency_symbol , number_format($total_balance_amount - $alot_fee_discount, 2, ',', '.'));
                                                                         ?></td>
                                             <td class="text text-right"></td>
                                         </tr>
@@ -739,7 +752,7 @@ $language_name = $language["short_code"];
 <div id="listCollectionModal" class="modal fade">
     <div class="modal-dialog">
         <form action="<?php echo site_url('studentfee/addfeegrp'); ?>" method="POST" id="collect_fee_group">
-        <input type="hiden" value="<?php echo $student['id']; ?>" name="user_id" />
+        <input type="hidden" value="<?php echo $student['id']; ?>" name="user_id" />
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
@@ -966,13 +979,15 @@ $language_name = $language["short_code"];
             $('.discount_title', this).text($(e.relatedTarget).data('discounttitle'));
             $('#discount_id', this).val($(e.relatedTarget).data('discountid'));
         });
-
-        $('#confirm-delete').on('click', '.btn-ok', function(e) {
+         var isDeleting = false;
+        $('#confirm-delete').off('click', '.btn-ok').on('click', '.btn-ok', function(e) {
+            if(isDeleting ) return;
             var $modalDiv = $(e.delegateTarget);
             var main_invoice = $('#main_invoice').val();
             var sub_invoice = $('#sub_invoice').val();
 
             $modalDiv.addClass('modalloading');
+            isDeleting  =  true
             $.ajax({
                 type: "post",
                 url: '<?php echo site_url("studentfee/deleteFee") ?>',
@@ -984,6 +999,9 @@ $language_name = $language["short_code"];
                 success: function(data) {
                     $modalDiv.modal('hide').removeClass('modalloading');
                     location.reload(true);
+                },
+                complete: function(){
+                    isDeleting = false;
                 }
             });
 
@@ -1050,6 +1068,13 @@ $language_name = $language["short_code"];
     var date_format = '<?php echo $result = strtr($this->customlib->getSchoolDateFormat(), ['d' => 'dd', 'm' => 'mm', 'Y' => 'yyyy']) ?>';
 </script>
 <script type="text/javascript">
+     var ibase_url = "<?php echo trim(site_url(),'/'); ?>";
+    $(document).ready(function(){
+        $('select[name="year_fees"]').change( function(){
+            var path = window.location.pathname;
+            window.location.href = `${ibase_url}/${path.replace(/^\/+/gi,'')}?due_date=${this.value}`
+        });
+    })
     $("#myFeesModal").on('shown.bs.modal', function(e) {
         e.stopPropagation();
         var discount_group_dropdown = '<option value=""><?php echo $this->lang->line('select'); ?></option>';

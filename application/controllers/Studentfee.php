@@ -384,18 +384,22 @@ class Studentfee extends Admin_Controller
     {
         $setting_result = $this->setting_model->get();
         $data['settinglist'] = $setting_result;
-        $record = $this->input->post('data');
+        $record =   $this->input->post('data');
+        // '[{"fee_session_group_id":2,"fee_master_id":4,"fee_groups_feetype_id":""}]';
         $record_array = json_decode($record);
 
         $fees_array = array();
+        $this->load->model(['eloquent/Student_eloquent', 'eloquent/Student_fee_item_eloquent']);
+
         foreach ($record_array as $key => $value) {
-            $fee_groups_feetype_id = $value->fee_groups_feetype_id;
+            // $fee_groups_feetype_id = $value->fee_groups_feetype_id;
             $fee_master_id = $value->fee_master_id;
-            $fee_session_group_id = $value->fee_session_group_id;
-            $feeList = $this->studentfeemaster_model->getDueFeeByFeeSessionGroupFeetype($fee_session_group_id, $fee_master_id, $fee_groups_feetype_id);
-            $fees_array[] = $feeList;
+            // $fee_session_group_id = $value->fee_session_group_id;
+            // $feeList = $this->studentfeemaster_model->getDueFeeByFeeSessionGroupFeetype($fee_session_group_id, $fee_master_id, $fee_groups_feetype_id);
+            $fees_array[] = $value->fee_master_id;
         }
-        $data['feearray'] = $fees_array;
+        $data['listOfFees'] = Student_fee_item_eloquent::whereIn('id', $fees_array)->get();
+
         $result = array(
             'view' => $this->load->view('studentfee/getcollectfee', $data, true),
         );
@@ -414,10 +418,33 @@ class Studentfee extends Admin_Controller
 
         $student = $this->student_model->getByStudentSession($id);
         $data['student'] = $student;
+        $this->load->model(['eloquent/Student_eloquent', 'eloquent/Student_fee_item_eloquent']);
+        $student_due_fee = $this->studentfeemaster_model->getStudentFees2($id);
 
-        $student_due_fee = $this->studentfeemaster_model->getStudentFees($id);
+        // $dsd = Student_eloquent::where('id', $id)->with('fees')->get('id');
+        $due_date = $this->input->get('due_date') ? $this->input->get('due_date') :  date('Y');
+
+        $options = Student_fee_item_eloquent::select(
+            DB::raw('DISTINCT(YEAR(`due_date`)) AS year')
+        )->get()->pluck('year');
+        $years = [];
+        foreach ($options->toArray() as $v) {
+            $years[$v] = $v;
+        }
+        $data['optionsYear'] = $years;
+        $data['current_year'] = $due_date;
+
+        foreach ($student_due_fee as $row) {
+            $row->fees = Student_fee_item_eloquent::where('student_session_id', $row->student_session_id)
+                ->whereYear('due_date', $due_date)
+                ->with(['deposite'])
+                ->get();
+        }
+        //  dump($student_due_fee);
+        // dump($dsd->toArray() );
 
 
+        // exit();
 
         $student_discount_fee = $this->feediscount_model->getStudentFeesDiscount($id);
 
@@ -687,6 +714,91 @@ class Studentfee extends Admin_Controller
         }
     }
 
+    /**
+     * array:8 [
+  "fee_session_groups" => "2"
+  "feetype" => array:2 [
+    0 => "4"
+    1 => "15"
+  ]
+  "price" => array:2 [
+    0 => "550.00"
+    1 => "250.55"
+  ]
+  "date_payment" => array:2 [
+    0 => "11/05/2020"
+    1 => "11/16/2020"
+  ]
+  "number_multiply_payment" => array:2 [
+    0 => "12"
+    1 => "1"
+  ]
+  "student_session_id" => array:1 [
+    0 => "1"
+  ]
+  "student_fees_master_id_1" => "1"
+  "student_ids" => array:1 [
+    0 => "1"
+  ]
+]
+     */
+    public function assign()
+    {
+
+        $data = [];
+        $listOfDatePayment = $this->input->post('date_payment');
+        $listOfType = $this->input->post('feetype');
+        foreach ($this->input->post('number_multiply_payment') as $key => $v) {
+            $datePaymentDefault = (implode('-', array_reverse(explode('/', $listOfDatePayment[$key]))));
+            $type_id = $listOfType[$key];
+            $price  = $this->input->post('price')[$key];
+            $title =  $this->input->post('title')[$key];
+
+            for ($i = 0; $i < $v; $i += 1) {
+                $datePayment = new DateTime($datePaymentDefault);
+                $datePayment->modify("+ {$i}month");
+                $data[] = [
+                    'title' => sprintf('%s %s/%s', $title, $i + 1, $v),
+                    'feetype_id' => $type_id,
+                    'amount' => $price,
+
+                    'due_date' => $datePayment->format('Y-m-d'),
+                    'fee_session_group_id' => $this->input->post('fee_session_groups')
+                ];
+            }
+        }
+        $this->load->model(['eloquent/Student_fee_item_eloquent', 'eloquent/Student_fee_master_eloquent']);
+        foreach ($this->input->post('student_session_id') as $k => $v) {
+            $class_id = $this->input->post('class_id')[$k];
+            foreach ($data as $row) {
+
+                $register = array_merge($row, ['user_id' => $v, 'student_session_id' => $v, 'class_id' => $class_id]);
+
+                // dump($register);
+                Student_fee_item_eloquent::updateOrCreate(
+                    [
+                        'user_id' => $v,
+                        'due_date' => $row['due_date'],
+                        'feetype_id' => $row['feetype_id'],
+                        'student_session_id' => $v,
+                    ],
+                    $register
+                );
+                $sessionMaster = [
+                    'student_session_id' => $v,
+                    'fee_session_group_id' => $this->input->post('fee_session_groups'),
+
+
+                ];
+                // dump($register);
+                Student_fee_master_eloquent::updateOrCreate(
+                    $sessionMaster,
+                    $sessionMaster
+                );
+            }
+        }
+    }
+
     public function geBalanceFee()
     {
         $this->form_validation->set_rules('fee_groups_feetype_id', $this->lang->line('fee_groups_feetype_id'), 'required|trim|xss_clean');
@@ -780,11 +892,11 @@ class Studentfee extends Admin_Controller
     {
         return $this->feediscount_model->getDiscountNotApplied($student_session_id);
     }
-    
+
     public function listBillet()
     {
         $this->load->library('bank_payment_inter');
-         
+
         $data = $this->bank_payment_inter->list();
 
         return new JsonResponse(compact('data'));
@@ -833,7 +945,7 @@ class Studentfee extends Admin_Controller
                 $billet->save();
                 $listOfIds[] = $billet->id;
                 // $billet->received_at = date('Y-m-d H:i:s');
-                $address = preg_split('#,#',$student->guardian_address);
+                $address = preg_split('#,#', $student->guardian_address);
                 $payment = new BankInterPayment;
                 $payment->user =  $student->guardian_name;
                 $payment->user_document =  $student->guardian_document;
@@ -845,28 +957,25 @@ class Studentfee extends Admin_Controller
                 $payment->address_number = isset($address[1]) ? $address[1] : 1;
                 $payment->address_postal_code = $student->guardian_postal_code;
                 $payment->date_payment = $values['fee_date_payment'];
-                $payment->your_number =  str_pad($billet->id, 10, "0", STR_PAD_LEFT) ;
+                $payment->your_number =  str_pad($billet->id, 10, "0", STR_PAD_LEFT);
                 $payment->description = implode(PHP_EOL, [$values['fee_line_1'], $values['fee_line_2']]);
                 //  $errors[] = $payment;
                 $this->bank_payment_inter->create($payment, function ($opt) use (&$billet, &$errors) {
                     if (!$opt->success) {
-                        $errors[] = sprintf('%s - %s',$opt->status, (string) $opt->body);
+                        $errors[] = sprintf('%s - %s', $opt->status, (string) $opt->body);
                         return false;
                     }
                     $billet->bank_bullet_id = $opt->billet->number;
                     $billet->save();
                     DB::commit();
-                   
                 });
-
-                
             }
- 
 
-        //    return new JsonResponse(['message' => $errors]);
-            if( count($errors) > 0)
+
+            //    return new JsonResponse(['message' => $errors]);
+            if (count($errors) > 0)
                 throw new Exception(implode('<br/>', $errors));
-              new JsonResponse(['message' =>  'successful' ]);
+            new JsonResponse(['message' =>  'successful']);
         } catch (Exception $e) {
             return  new JsonResponse(['message' => $e->getMessage()], 400);
         }
@@ -902,7 +1011,6 @@ class Studentfee extends Admin_Controller
             $billet->STATUS = $this->input->post('motive');
             $billet->deleted_at = date('Y-m-d H:i:s');
             $billet->save();
-           
         }
 
 
@@ -947,11 +1055,12 @@ class Studentfee extends Admin_Controller
                 $collected_array[] = array(
                     'student_fees_master_id' => $this->input->post('student_fees_master_id_' . $total_row_value),
                     'fee_groups_feetype_id' => $this->input->post('fee_groups_feetype_id_' . $total_row_value),
+                    'student_fees_id' => $this->input->post('student_fees_master_id_' . $total_row_value),
                     'amount_detail' => $json_array,
                 );
             }
-             
-            $inserted_id = $this->studentfeemaster_model->fee_deposit_collections($collected_array);
+
+            $inserted_id = $this->studentfeemaster_model->fee_deposit_collections($collected_array, $this->input->post('generate_invoice') == 1);
             $array = array('status' => 1, 'error' => '');
             echo json_encode($array);
         }

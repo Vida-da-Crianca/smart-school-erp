@@ -239,6 +239,32 @@ class Studentfeemaster_model extends MY_Model
         return $result;
     }
 
+    public function getStudentFees2($student_session_id)
+    {
+        $sql = "SELECT `student_fees_master`.*,fee_groups.name FROM `student_fees_master` 
+        INNER JOIN fee_session_groups on student_fees_master.fee_session_group_id=fee_session_groups.id 
+        INNER JOIN fee_groups on fee_groups.id=fee_session_groups.fee_groups_id 
+        
+        WHERE `student_session_id` = " . $student_session_id . " ORDER BY `student_fees_master`.`id`";
+        $query = $this->db->query($sql);
+        $result = $query->result();
+        // if (!empty($result)) {
+        //     foreach ($result as $result_key => $result_value) {
+
+        //         $fee_session_group_id = $result_value->fee_session_group_id;
+        //         $student_fees_master_id = $result_value->id;
+        //         $result_value->fees = $this->getDueFeeByFeeSessionGroup($fee_session_group_id, $student_fees_master_id);
+
+        //         if ($result_value->is_system != 0) {
+        //             $result_value->fees[0]->amount = $result_value->amount;
+        //         }
+        //     }
+        // }
+
+
+        return $result;
+    }
+
     public function getDueFeeByFeeSessionGroup($fee_session_groups_id, $student_fees_master_id)
     {
         $sql = "SELECT student_fees_master.*,fee_groups_feetype.id as `fee_groups_feetype_id`,
@@ -326,7 +352,7 @@ class Studentfeemaster_model extends MY_Model
             } else {
                 $this->db->trans_commit();
                 $inv = json_decode($data['amount_detail'], true)[1];
-                $this->invoiceForCreate($inserted_id, ($inv['amount'] + $inv['amount_fine']) - $inv['amount_discount'] );
+                $this->invoiceForCreate($inserted_id, ($inv['amount'] + $inv['amount_fine']) - $inv['amount_discount']);
                 return json_encode(array('invoice_id' => $inserted_id, 'sub_invoice_id' => 1));
             }
         }
@@ -633,7 +659,7 @@ class Studentfeemaster_model extends MY_Model
         return $result;
     }
 
-    public function fee_deposit_collections($data)
+    public function fee_deposit_collections($data, $generate = false)
     {
         $this->db->trans_begin();
         try {
@@ -657,7 +683,8 @@ class Studentfeemaster_model extends MY_Model
                         $data[$d_key]['amount_detail'] = json_encode($a);
 
                         $this->db->update('student_fees_deposite', $data[$d_key]);
-                        $this->invoiceForCreate($q->row()->id, ($a[$inv_no]['amount'] + $a[$inv_no]['amount_fine']) - $a[$inv_no]['amount_discount']);
+                        if ($generate)
+                            $this->invoiceForCreate($q->row()->id, ($a[$inv_no]['amount'] + $a[$inv_no]['amount_fine']) - $a[$inv_no]['amount_discount']);
                     } else {
 
                         $data[$d_key]['amount_detail']['inv_no'] = 1;
@@ -666,8 +693,8 @@ class Studentfeemaster_model extends MY_Model
                         $a = json_decode($data[$d_key]['amount_detail'], true)[1];
                         $this->db->insert('student_fees_deposite', $data[$d_key]);
                         $inserted_id = $this->db->insert_id();
-                      
-                        $this->invoiceForCreate($inserted_id, ($a['amount'] + $a['amount_fine']) - $a['amount_discount']);
+                        if ($generate)
+                            $this->invoiceForCreate($inserted_id, ($a['amount'] + $a['amount_fine']) - $a['amount_discount']);
 
                         // return json_encode(array('invoice_id' => $inserted_id, 'sub_invoice_id' => 1));
                     }
@@ -675,14 +702,10 @@ class Studentfeemaster_model extends MY_Model
             }
 
             $this->db->trans_commit();
-
         } catch (\Exception $e) {
-          
+
             $this->db->trans_rollback();
         }
-
-        
-       
     }
 
     private function invoiceForCreate($student_fees_deposite_id, $price)

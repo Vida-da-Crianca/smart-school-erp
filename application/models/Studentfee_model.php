@@ -82,19 +82,19 @@ class Studentfee_model extends CI_Model {
         $q = $this->db->get('student_fees_deposite');
         if ($q->num_rows() > 0) {
             $result = $q->row();
-            $a = json_decode($result->amount_detail, true);
-            unset($a[$sub_invoice]);
-            if (!empty($a)) {
-                $data['amount_detail'] = json_encode($a);
-                $this->db->where('id', $id);
-                $this->db->update('student_fees_deposite', $data);
-            } else {
+            // $a = json_decode($result->amount_detail, true);
+            // unset($a[$sub_invoice]);
+            // if (!empty($a)) {
+            //     $data['amount_detail'] = json_encode($a);
+            //     $this->db->where('id', $id);
+            //     $this->db->update('student_fees_deposite', $data);
+            // } else {
                 $this->db->where('id', $id);
                 $this->db->delete('student_fees_deposite');
                 Invoice_eloquent::where('student_fees_deposite_id', $id)->update([
                     'status' => Invoice_eloquent::PENDING_DELETE
                 ]);
-            }
+            // }
         }
     }
 

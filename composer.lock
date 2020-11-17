@@ -8,16 +8,16 @@
     "packages": [
         {
             "name": "carlosocarvalho/sigis-php-sdk",
-            "version": "v2.0.2",
+            "version": "v2.0.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Vida-da-Crianca/sigiss-php-sdk.git",
-                "reference": "73deedfe32f0526edd26057655e5fdbe4e8f52e0"
+                "reference": "e695ff6ddf20ef187c96dd4619268a535da0cffe"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Vida-da-Crianca/sigiss-php-sdk/zipball/73deedfe32f0526edd26057655e5fdbe4e8f52e0",
-                "reference": "73deedfe32f0526edd26057655e5fdbe4e8f52e0",
+                "url": "https://api.github.com/repos/Vida-da-Crianca/sigiss-php-sdk/zipball/e695ff6ddf20ef187c96dd4619268a535da0cffe",
+                "reference": "e695ff6ddf20ef187c96dd4619268a535da0cffe",
                 "shasum": ""
             },
             "require": {
@@ -48,9 +48,9 @@
             ],
             "support": {
                 "issues": "https://github.com/Vida-da-Crianca/sigiss-php-sdk/issues",
-                "source": "https://github.com/Vida-da-Crianca/sigiss-php-sdk/tree/v2.0.2"
+                "source": "https://github.com/Vida-da-Crianca/sigiss-php-sdk/tree/v2.0.3"
             },
-            "time": "2020-11-06T05:09:52+00:00"
+            "time": "2020-11-12T01:43:43+00:00"
         },
         {
             "name": "ctodobom/api-inter",

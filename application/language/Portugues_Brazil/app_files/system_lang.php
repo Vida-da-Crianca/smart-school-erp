@@ -1481,9 +1481,10 @@ $lang['invoice_condition'] = 'Situação';
 $lang['invoice_phone'] = 'Telefone';
 $lang['invoice_serie'] = 'Série';
 $lang['billet_module'] = 'Boleto em lote';
-$lang['billet_date_start'] = 'Inicio';
-$lang['billet_date_end'] = 'Fim';
+$lang['billet_date_start'] = 'Data do vencimento(Inicial)';
+$lang['billet_date_end'] = 'Data do vencimento(Final)';
 $lang['billet_title'] = 'Boleto em lote';
+$lang['generate_invoice'] = 'Gerar nota fiscal';
 
 
 
