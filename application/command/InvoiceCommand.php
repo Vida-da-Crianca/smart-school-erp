@@ -57,16 +57,17 @@ class InvoiceCommand extends BaseCommand
 
         $provider = new Provider(new Barretos($options));
 
-        $invoices = \Invoice_eloquent::with(['student', 'feeStudentDeposite.feeGroupType.feeGroup'])->forGenerate()->get();
+        $invoices = \Invoice_eloquent::with(['student', 'feeStudentDeposite.feeGroupType.feeGroup', 'feeStudentDeposite.feeItem'])->forGenerate()->get();
 
        if( $invoices->count() == 0) return $this->success('Not exists invoices for create');
 
         foreach ($invoices as $item) {
             $address = explode(',', $item->student->guardian_address);
+          
             $data  = [
                 'valor' => $item->price,
                 'base'  => $item->price,
-                'descricaoNF' => $item->feeStudentDeposite->feeGroupType->feeGroup->description,
+                'descricaoNF' => $item->feeStudentDeposite->feeItem->title,
                 'tomador_tipo' => 2,
                 'tomador_cnpj' => $item->student->guardian_document, //cnoj da empresa
                 'tomador_email' => $item->student->guardian_email,
@@ -81,6 +82,8 @@ class InvoiceCommand extends BaseCommand
                 'rps_serie' => $settings->toArray()['serie'],
                 'serie' =>  $settings->toArray()['serie']
             ];
+
+            // dump($data);
             $service  =  new SigissService($provider);
             try {
 
@@ -99,7 +102,7 @@ class InvoiceCommand extends BaseCommand
 
             } catch (\Exception $e) {
                 $response = $service->getClientSoap()->__getLastResponse();
-                dump($response);
+                //dump($response);
                dump($e->getMessage());
             }
         }

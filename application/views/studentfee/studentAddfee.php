@@ -239,6 +239,7 @@ $language_name = $language["short_code"];
                                             $feetype_balance = $fee_value->amount - ($fee_paid + $fee_discount);
                                             $total_balance_amount = $total_balance_amount + $feetype_balance;
                                             $description = $fee_value->name . " (" . $fee_value->type . ")";
+                                            
                                     ?>
                                             <?php
                                             if ($feetype_balance > 0 && strtotime($fee_value->due_date) < strtotime(date('Y-m-d'))) {
@@ -254,7 +255,7 @@ $language_name = $language["short_code"];
                                                 <td>
                                                     <input <?php echo  $fee_value->deposite ? 'disabled' : '' ?> class="checkbox" type="checkbox" name="fee_checkbox" 
                                                     data-fee_date_payment="<?php echo $fee_value->due_date; ?>"
-                                                     data-fee_fine="<?php echo $fee_fine; ?>" data-fee_is_pdf="<?php echo $fee_value->billet_id; ?>" data-fee_amount="<?php echo $fee_value->amount; ?>" data-fee_discount="<?php echo  $fee_discount; ?>" data-fee_master_id="<?php echo $fee_value->id; ?>" data-fee_session_group_id="<?php echo $fee_value->fee_session_group_id; ?>" data-fee_groups_feetype_id="<?php echo $fee_value->fee_groups_feetype_id; ?>" data-fee_line_1="<?php echo $description; ?>" data-fee_line_2="<?php echo $fee_value->code; ?>">
+                                                     data-fee_fine="<?php echo $fee_fine; ?>" data-fee_is_pdf="<?php echo $fee_value->billet_id; ?>" data-fee_amount="<?php echo $fee_value->amount; ?>" data-fee_discount="<?php echo  $fee_discount; ?>" data-fee_master_id="<?php echo $fee_value->id; ?>" data-fee_session_group_id="<?php echo $fee_value->fee_session_group_id; ?>" data-fee_groups_feetype_id="<?php echo $fee_value->feetype_id; ?>" data-fee_line_1="<?php echo $description; ?>" data-fee_line_2="<?php echo $fee_value->code; ?>">
                                                 </td>
                                                 <td align="left"><?php
                                                                     echo $fee_value->title;
@@ -309,12 +310,12 @@ $language_name = $language["short_code"];
                                                 <td style="width: 100px;">
                                                     <div class="btn-group pull-right">
                                                         <?php if ($fee_value->billet_id != 0) : ?>
-                                                            <button class="btn btn-xs btn-default " data-fee_billet_id="<?php echo $fee_value->id ?>" data-fee_session_group_id="<?php echo $fee_value->fee_session_group_id ?>" data-fee_groups_feetype_id="<?php echo $fee_value->fee_groups_feetype_id ?>" title="<?php echo $this->lang->line('billet_preview'); ?>"><i class="fa  fa-file-pdf-o text-danger"></i> </button>
+                                                            <button class="btn btn-xs btn-default " data-fee_billet_id="<?php echo $fee_value->id ?>" data-fee_session_group_id="<?php echo $fee_value->fee_session_group_id ?>" data-fee_groups_feetype_id="<?php echo $fee_value->feetype_id ?>" title="<?php echo $this->lang->line('billet_preview'); ?>"><i class="fa  fa-file-pdf-o text-danger"></i> </button>
                                                         <?php endif; ?>
-                                                        <button type="button" data-student_session_id="<?php echo $fee->student_session_id; ?>" data-student_fees_master_id="<?php echo $fee->id; ?>" data-fee_groups_feetype_id="<?php echo $fee_value->fee_groups_feetype_id; ?>" data-group="<?php echo $fee_value->name; ?>" data-type="<?php echo $fee_value->code; ?>" class="btn btn-xs btn-default myCollectFeeBtn <?php echo $display_none; ?>" title="<?php echo $this->lang->line('add_fees'); ?>" data-toggle="modal" data-target="#myFeesModal"><i class="fa fa-plus"></i></button>
+                                                        <button type="button" data-student_session_id="<?php echo $fee->student_session_id; ?>" data-student_fees_master_id="<?php echo $fee->id; ?>" data-fee_groups_feetype_id="<?php echo $fee_value->feetype_id; ?>" data-group="<?php echo $fee_value->name; ?>" data-type="<?php echo $fee_value->code; ?>" class="btn btn-xs btn-default myCollectFeeBtn <?php echo $display_none; ?>" title="<?php echo $this->lang->line('add_fees'); ?>" data-toggle="modal" data-target="#myFeesModal"><i class="fa fa-plus"></i></button>
 
 
-                                                        <button class="btn btn-xs btn-default printInv" data-fee_master_id="<?php echo $fee_value->id ?>" data-fee_session_group_id="<?php echo $fee_value->fee_session_group_id ?>" data-fee_groups_feetype_id="<?php echo $fee_value->fee_groups_feetype_id ?>" title="<?php echo $this->lang->line('print'); ?>"><i class="fa fa-print"></i> </button>
+                                                        <button class="btn btn-xs btn-default printInv" data-fee_master_id="<?php echo $fee_value->id ?>" data-fee_session_group_id="<?php echo $fee_value->fee_session_group_id ?>" data-fee_groups_feetype_id="<?php echo $fee_value->feetype_id ?>" title="<?php echo $this->lang->line('print'); ?>"><i class="fa fa-print"></i> </button>
                                                     </div>
                                                 </td>
 

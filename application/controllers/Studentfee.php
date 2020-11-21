@@ -440,7 +440,8 @@ class Studentfee extends Admin_Controller
                 ->with(['deposite'])
                 ->get();
         }
-        //  dump($student_due_fee);
+        // dump($student_due_fee);
+        // die();
         // dump($dsd->toArray() );
 
 
@@ -463,6 +464,7 @@ class Studentfee extends Admin_Controller
         $this->load->view('layout/header', $data);
         $this->load->view('studentfee/studentAddfee', $data);
         $this->load->view('layout/footer', $data);
+        // /studentAddfee
     }
 
     public function deleteTransportFee()

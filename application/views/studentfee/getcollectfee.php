@@ -159,7 +159,7 @@
             <li class="item">
                 <input name="row_counter[]" type="hidden" value="<?php echo $row_counter; ?>">
                 <input name="student_fees_master_id_<?php echo $row_counter; ?>" type="hidden" value="<?php echo $fee_value->id; ?>">
-                <input name="fee_groups_feetype_id_<?php echo $row_counter; ?>" type="hidden" value="<?php echo $fee_value->fee_groups_feetype_id; ?>">
+                <input name="fee_groups_feetype_id_<?php echo $row_counter; ?>" type="hidden" value="<?php echo $fee_value->feetype_id; ?>">
                 <input name="fee_amount_<?php echo $row_counter; ?>" type="hidden" value="<?php echo ($amount_to_be_pay); ?>">
                 <div class="product-info">
                     <a href="javascript:void(0)" class="product-title">
