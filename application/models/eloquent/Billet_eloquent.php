@@ -10,6 +10,7 @@ class Billet_eloquent extends  Eloquent {
     use SoftDeletes;
 
     const PAID_PENDING = 'AGUARDANDO PAGAMENTO';
+    const FOR_CREATE = 'NAO_GERADO';
     
     const PAID = 'PAGO';
       
@@ -25,7 +26,8 @@ class Billet_eloquent extends  Eloquent {
         'received_at',
         'fee_session_group_id',
         'fee_master_id',
-        'user_id'
+        'user_id',
+        
     ];
 
 
@@ -33,6 +35,18 @@ class Billet_eloquent extends  Eloquent {
 
         get_instance()->load->model('Student_orm');
         return $this->hasOne('Student_orm', 'parent_id', 'id');
+    }
+
+    public function feeItems(){
+        get_instance()->load->model('eloquent/Student_fee_item_eloquent');
+        return $this->belongsToMany(
+            'Student_fee_item_eloquent',
+            'billet_student_fee_item',
+            'billet_id',
+            'fee_item_id',
+           
+           
+        );
     }
 
 }

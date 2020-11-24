@@ -47,4 +47,16 @@ class Student_fee_item_eloquent extends  Eloquent
         get_instance()->load->model('eloquent/Student_deposite_eloquent');
         return $this->hasOne('Student_deposite_eloquent', 'student_fees_id',  'id');
     }
+
+
+    public function billet(){
+        get_instance()->load->model('eloquent/Billet_eloquent');
+        return $this->belongsToMany(
+            'Billet_eloquent',
+            'billet_student_fee_item',
+            'fee_item_id',
+            'billet_id'
+           
+        );
+    }
 }

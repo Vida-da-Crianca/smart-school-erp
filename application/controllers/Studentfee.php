@@ -747,6 +747,8 @@ class Studentfee extends Admin_Controller
     public function assign()
     {
 
+        
+        
         $data = [];
         $listOfDatePayment = $this->input->post('date_payment');
         $listOfType = $this->input->post('feetype');
@@ -925,24 +927,25 @@ class Studentfee extends Admin_Controller
 
             $this->load->model(['eloquent/Billet_eloquent', 'eloquent/Student_deposite_eloquent']);
             $this->load->library('bank_payment_inter');
-            $listOfIds = [];
+            $listOfIds = [];    
             $student = (object) $this->student_model->getByStudentSession($this->input->post('user_id'));
             $errors = [];
             //   return new JsonResponse((array) $student);
             foreach ($data as $values) {
-                if (Student_deposite_eloquent::where('fee_groups_feetype_id', $values['fee_groups_feetype_id'])->where('student_fees_master_id', $values['fee_master_id'])->count() > 0) continue;
+                // if (Student_deposite_eloquent::where('fee_groups_feetype_id', $values['fee_groups_feetype_id'])->where('student_fees_master_id', $values['fee_master_id'])->count() > 0) continue;
                 if (
-                    Billet_eloquent::where('fee_groups_feetype_id', $values['fee_groups_feetype_id'])
-                    ->where('fee_master_id',  $values['fee_master_id'])
-                    ->where('fee_session_group_id', $values['fee_session_group_id'])
+                    Billet_eloquent::where('fee_item_id',  $values['fee_master_id'])
+                   
                     ->count() > 0
                 ) continue;
 
                 $billet = new Billet_eloquent;
-                $values['body'] = json_encode($values);
+                $billet->body = json_encode($values);
                 $billet->price = ($values['fee_amount'] + $values['fee_fine']) - $values['fee_discount'];
-                $values['user_id'] = $student->id;
-                $billet->fill($values);
+                $billet->fee_item_id = $values['fee_master_id'];
+                $billet->user_id = $student->id;
+
+                //$billet->fill($values);
                 //create billet
                 $billet->save();
                 $listOfIds[] = $billet->id;
@@ -952,11 +955,11 @@ class Studentfee extends Admin_Controller
                 $payment->user =  $student->guardian_name;
                 $payment->user_document =  $student->guardian_document;
                 $payment->price = $billet->price;
-                $payment->address = $address[0];
+                $payment->address = $student->guardian_address;
                 $payment->address_state = $student->guardian_state;
                 $payment->address_district = $student->guardian_district;
                 $payment->address_city = $student->guardian_city;
-                $payment->address_number = isset($address[1]) ? $address[1] : 1;
+                $payment->address_number = $student->guardian_address_number;
                 $payment->address_postal_code = $student->guardian_postal_code;
                 $payment->date_payment = $values['fee_date_payment'];
                 $payment->your_number =  str_pad($billet->id, 10, "0", STR_PAD_LEFT);

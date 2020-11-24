@@ -62,8 +62,6 @@ class InvoiceCommand extends BaseCommand
        if( $invoices->count() == 0) return $this->success('Not exists invoices for create');
 
         foreach ($invoices as $item) {
-            $address = explode(',', $item->student->guardian_address);
-          
             $data  = [
                 'valor' => $item->price,
                 'base'  => $item->price,
@@ -72,8 +70,8 @@ class InvoiceCommand extends BaseCommand
                 'tomador_cnpj' => $item->student->guardian_document, //cnoj da empresa
                 'tomador_email' => $item->student->guardian_email,
                 'tomador_razao' => $item->student->guardian_name,
-                'tomador_endereco' => $address[0],
-                'tomador_numero' => $address[1],
+                'tomador_endereco' => $item->student->guardian_address,
+                'tomador_numero' => $item->student->guardian_address_number,
                 'tomador_bairro' => $item->student->guardian_district,
                 'tomador_CEP' => $item->student->guardian_postal_code,
                 'tomador_cod_cidade' => getCodeCity($item->student->guardian_city),
@@ -102,7 +100,7 @@ class InvoiceCommand extends BaseCommand
 
             } catch (\Exception $e) {
                 $response = $service->getClientSoap()->__getLastResponse();
-                //dump($response);
+            
                dump($e->getMessage());
             }
         }

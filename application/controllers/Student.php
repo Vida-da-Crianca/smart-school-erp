@@ -362,6 +362,7 @@ class Student extends Admin_Controller
                 'guardian_relation'   => $this->input->post('guardian_relation'),
                 'guardian_phone'      => $this->input->post('guardian_phone'),
                 'guardian_address'    => $this->input->post('guardian_address'),
+                'guardian_address_number'    => $this->input->post('guardian_address_number'),
                 'vehroute_id'         => $vehroute_id,
                 'hostel_room_id'      => $hostel_room_id,
                 'note'                => $this->input->post('note'),
@@ -937,7 +938,7 @@ class Student extends Admin_Controller
 
         $category = $this->category_model->get();
 
-        $fields = array('admission_no', 'roll_no', 'firstname', 'lastname', 'gender', 'dob', 'category_id', 'religion', 'cast', 'mobileno', 'email', 'admission_date', 'blood_group', 'school_house_id', 'height', 'weight', 'measurement_date', 'father_name', 'father_phone', 'father_occupation', 'mother_name', 'mother_phone', 'mother_occupation', 'guardian_is', 'guardian_name', 'guardian_relation', 'guardian_email', 'guardian_phone', 'guardian_occupation', 'guardian_address', 'current_address', 'permanent_address', 'bank_account_no', 'bank_name', 'ifsc_code', 'adhar_no', 'samagra_id', 'rte', 'previous_school', 'note');
+        $fields = array('admission_no', 'roll_no', 'firstname', 'lastname', 'gender', 'dob', 'category_id', 'religion', 'cast', 'mobileno', 'email', 'admission_date', 'blood_group', 'school_house_id', 'height', 'weight', 'measurement_date', 'father_name', 'father_phone', 'father_occupation', 'mother_name', 'mother_phone', 'mother_occupation', 'guardian_is', 'guardian_name', 'guardian_relation', 'guardian_email', 'guardian_phone', 'guardian_occupation', 'guardian_address' ,'guardian_address_number', 'current_address', 'permanent_address', 'bank_account_no', 'bank_name', 'ifsc_code', 'adhar_no', 'samagra_id', 'rte', 'previous_school', 'note');
 
         $data["fields"]       = $fields;
         $data['categorylist'] = $category;
@@ -1273,6 +1274,7 @@ class Student extends Admin_Controller
                 'guardian_relation'   => $this->input->post('guardian_relation'),
                 'guardian_phone'      => $this->input->post('guardian_phone'),
                 'guardian_address'    => $this->input->post('guardian_address'),
+                'guardian_address_number'    => $this->input->post('guardian_address_number'),
                 'vehroute_id'         => $vehroute_id,
                 'hostel_room_id'      => $hostel_room_id,
                 'note'                => $this->input->post('note'),

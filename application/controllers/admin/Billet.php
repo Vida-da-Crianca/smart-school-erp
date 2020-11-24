@@ -2,6 +2,7 @@
 
 use Application\Core\JsonResponse;
 use Application\Core\Billet as B;
+use Application\Core\Billet as CoreBillet;
 
 if (!defined('BASEPATH'))
     exit('No direct script access allowed');
@@ -27,7 +28,6 @@ class Billet extends Admin_Controller
         $data['title_list'] = 'Boleto em lotes';
 
         $data['listOfSeries'] = $this->class_model->get();
-
         $data['listOfMotive'] = Fee_type_eloquent::get()->pluck('type', 'id')->toArray();
 
 
@@ -48,41 +48,61 @@ class Billet extends Admin_Controller
         $fee_item = new Student_fee_item_eloquent;
         $data  =   $fee_item->whereBetween('due_date', [$dateStart, $dateEnd])
             ->where(function ($q) {
-                if (strtolower($this->input->post('motive_id')) != 'todos')
-                    return $q->where('feetype_id', $this->input->post('motive_id'));
-                
-                if ( strtolower($this->input->post('classe_id')) != 'todos')
-                    return $q->where('class_id', $this->input->post('classe_id'));
+               
+                if (strtolower($this->input->post('classe_id')) != 'todos')
+                   return $q->where('class_id', $this->input->post('classe_id'));
             })
-            ->with(['deposite', 'student'])
+            ->where(function ($q) {
+                if (strtolower($this->input->post('motive_id')) != 'todos')
+                   return $q->where('feetype_id', $this->input->post('motive_id'));
+
+              
+            })
+            ->with(['deposite', 'student','billet'])
             ->get()
+            ->map(function($row){
+                $row->amount = number_format($row->amount,2,',', '.');
+                $due_date = (new DateTime($row->due_date));
+                $row->is_valid = $due_date > (new DateTime()) ;
+                $row->due_date =  $due_date->format('d/m/Y');
+                return $row;
+            })
             ->filter(function ($row) {
-                return !$row->deposite;
+                return !$row->deposite  && $row->billet->count() == 0;
             })->all();
 
         return new JsonResponse(compact('data'));
     }
 
-    function generate(){
+    function generate()
+    {
         $this->load->model(['eloquent/Student_fee_item_eloquent', 'eloquent/Billet_eloquent']);
 
         $data = Student_fee_item_eloquent::whereIn('id', $this->input->post('student_fee_item_id'))->get();
         $items = [];
-        foreach($data as $item)
-        {
-           $items[] = [
-               'fee_item_id' => $item->id,
-               
-               'user_id' => $item->user_id,
-               'body' => json_encode([
+        foreach ($data as $item) {
+            if (!isset($items[$item->user_id])) $items[$item->user_id] = [];
+
+            $items[$item->user_id][] = [
+                'fee_item_id' => $item->id,
+                'user_id' => $item->user_id,
+                'price' => $item->amount,
                 'fee_fine' => 0,
                 'fee_discount' => 0,
                 'fee_amount' =>  $item->amount,
-               ])
-               
-               
-           ];
+                'fee_date_payment' => $item->date_due,
+                'fee_line_1' => $item->title,
+                'fee_line_2' => ''
+
+            ];
         }
-     dump($items);
+        foreach ($items as $id => $dataItems) {
+            //    dump($dataItems);
+            $createForBackend =  (new CoreBillet)->create($dataItems, $id, Billet_eloquent::FOR_CREATE);
+        }
+
+        return new JsonResponse(['data' => $createForBackend ]);
+
+        //  dump($items);
     }
 }

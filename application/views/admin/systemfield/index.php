@@ -304,6 +304,15 @@
                                         </td>                                                
                                     </tr>
                                     <tr>
+                                        <td><?php echo $this->lang->line('guardian_address_number'); ?></td>
+                                        <td>
+                                            <div class="material-switch pull-right">
+                                                <input id="guardian_address_number" name="guardian_address_number" type="checkbox" data-role="guardian_address_number" class="chk" data-rowid="1" value="checked" <?php if (isset($result->guardian_address_number) && $result->guardian_address_number == "1") echo "checked='checked'"; ?> />
+                                                <label for="guardian_address_number" class="label-success"></label>
+                                            </div>																			
+                                        </td>                                                
+                                    </tr>
+                                    <tr>
                                         <td><?php echo $this->lang->line('if_guardian_address_is_current_address'); ?></td>
                                         <td>
                                             <div class="material-switch pull-right">

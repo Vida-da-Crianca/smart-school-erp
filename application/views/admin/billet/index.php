@@ -127,7 +127,7 @@
     $(document).ready(function() {
         var site_url = "<?php echo site_url('admin'); ?>";
 
-
+       
         var $form = $("#schsetting_form");
         $.datepicker.regional['pt-BR'] = {
             closeText: 'Fechar',
@@ -201,11 +201,12 @@
             for (var i in data) {
                 var row = data[i]
                 table.push(`
-                   <tr>
-                    <td>
+                   <tr class="${!row.is_valid ? 'text-danger': ''}">
+                    <td >
                     
                         <label>
-                        <input name="student_fee_item_id[]" value="${row.id}" type="checkbox">
+                        <input name="student_fee_item_id[]" value="${row.id}" ${!row.is_valid ? 'disabled': ''} type="checkbox">
+                        <small class="text-danger">${!row.is_valid ? 'Vencido': ''}</small>
                         </label>
                    
                     </td>
@@ -268,27 +269,29 @@
                 }
             })
             var loadBillet = false
+
             $formBillet.submit(function(e) {
                 e.preventDefault();
-                if(! $formBillet.valid() || loadBillet) return;
+                
+                if (!$formBillet.valid() || loadBillet || $formBillet.find('input[name="student_fee_item_id[]"]:checked').size() == 0) return;
+               
                 loadBillet = true;
                 var $button = $modalFooter.find('button')
                 $button.button('loading')
                 $.ajax({
-                url: `${site_url}/billet/generate`,
-                type: 'POST',
-                data: $formBillet.serialize(),
-                dataType: 'json',
-                success: function({
-                    data
-                }) {
-                    
-                },
-                complete: function() {
-                    loadBillet = false;
-                    $button.button('reset');
-                }
-            });
+                    url: `${site_url}/billet/generate`,
+                    type: 'POST',
+                    data: $formBillet.serialize(),
+                    dataType: 'json',
+                    success: function() {
+                      
+                        $("#listBilletModal").modal('hide');
+                        $("#listBilletModal .modal-body").html('');
+                    },
+                    complete: function() {
+                        $button.button('reset')
+                    }
+                });
 
 
             })
@@ -297,7 +300,7 @@
         }
 
 
-        $form.on('submit', function(e) {
+        $form.submit(function(e) {
             var $this = $(this);
             e.preventDefault();
             if (!$form.valid()) return;

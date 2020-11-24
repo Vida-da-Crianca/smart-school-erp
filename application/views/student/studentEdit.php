@@ -644,6 +644,25 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                                     <span class="text-danger"><?php echo form_error('guardian_pic'); ?></span>
                                                 </div>
                                             </div>
+
+                                        <?php }
+
+                                        if ($sch_setting->guardian_postal_code) { ?>
+                                            <div class="row col-md-12">
+                                                <div class="col-md-2 form-group">
+                                                    <label for="exampleInputEmail1"><?php echo $this->lang->line('guardian_postal_code'); ?></label>
+                                                    <input maxlength="20" id="guardian_postal_code" name="guardian_postal_code" placeholder="08342350" class="form-control" value="<?php echo set_value('guardian_postal_code', $student['guardian_postal_code']); ?>" />
+                                                    <span class="text-danger"><?php echo form_error('guardian_postal_code'); ?></span>
+                                                </div>
+                                                <div class="col-md-4 form-group" style="
+                                                  margin-top:22.8px;
+                                                ">
+                                                <label for="exampleInputEmail1">&nbsp;</label>
+                                                    <button 
+                                                    data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> Processing"
+                                                    id="trigger-cep" data-target="guardian_postal_code"  style="padding: 3.8px 15px;" type="button" class="btn btn-primary">Pesquisar endereco</button>
+                                                </div>
+                                            </div>
                                         <?php }
                                         if ($sch_setting->guardian_address) { ?>
                                             <div class="col-md-4">
@@ -651,18 +670,19 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                                 <input maxlength="30" id="guardian_address" name="guardian_address" placeholder="Rua exemplo, 23" class="form-control" value="<?php echo set_value('guardian_address', $student['guardian_address']); ?>" />
                                                 <span class="text-danger"><?php echo form_error('guardian_address'); ?></span>
                                             </div>
-                                        <?php } ?>
+                                        <?php }
 
-                                        <?php 
-                                        if ($sch_setting->guardian_postal_code) { ?>
+                                        if ($sch_setting->guardian_address_number) { ?>
                                             <div class="col-md-2">
-                                                <label for="exampleInputEmail1"><?php echo $this->lang->line('guardian_postal_code'); ?></label>
-                                                <input maxlength="20" id="guardian_postal_code" name="guardian_postal_code" placeholder="08342350" class="form-control" value="<?php echo set_value('guardian_postal_code', $student['guardian_postal_code']); ?>" />
-                                                <span class="text-danger"><?php echo form_error('guardian_postal_code'); ?></span>
+                                                <label><?php echo $this->lang->line('guardian_address_number_f'); ?></label>
+                                                <input maxlength="30" id="guardian_address_number" name="guardian_address_number" placeholder="23" class="form-control" value="<?php echo set_value('guardian_address_number', $student['guardian_address_number']); ?>" />
+                                                <span class="text-danger"><?php echo form_error('guardian_address_number'); ?></span>
                                             </div>
                                         <?php } ?>
 
-                                        <?php 
+                                       
+                                       
+                                        <?php
                                         if ($sch_setting->guardian_district) { ?>
                                             <div class="col-md-3">
                                                 <label for="exampleInputEmail1"><?php echo $this->lang->line('guardian_district'); ?></label>
@@ -671,7 +691,7 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                             </div>
                                         <?php } ?>
 
-                                        <?php 
+                                        <?php
                                         if ($sch_setting->guardian_city) { ?>
                                             <div class="col-md-2">
                                                 <label for="exampleInputEmail1"><?php echo $this->lang->line('guardian_city'); ?></label>
@@ -680,10 +700,10 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                             </div>
                                         <?php } ?>
 
-                                        <?php 
+                                        <?php
                                         if ($sch_setting->guardian_state) { ?>
                                             <div class="col-md-1">
-                                                <label for="exampleInputEmail1"><?php echo explode(' ',$this->lang->line('guardian_state'))[1]; ?></label>
+                                                <label for="exampleInputEmail1"><?php echo explode(' ', $this->lang->line('guardian_state'))[1]; ?></label>
                                                 <input maxlength="2" id="guardian_state" name="guardian_state" placeholder="SP" class="form-control" value="<?php echo set_value('guardian_state', $student['guardian_state']); ?>" />
                                                 <span class="text-danger"><?php echo form_error('guardian_state'); ?></span>
                                             </div>
@@ -1230,8 +1250,13 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
 
 
     });
+
+
+
+
+    
 </script>
 
 
-
+<script type="text/javascript" src="<?php echo base_url(); ?>backend/js/postalCodeAutoComplete.js"></script>
 <script type="text/javascript" src="<?php echo base_url(); ?>backend/dist/js/savemode.js"></script>

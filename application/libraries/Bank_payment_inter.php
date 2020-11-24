@@ -103,7 +103,7 @@ class Bank_payment_inter
     public function list()
     {
 
-        return $this->bank->listaBoletos(date('Y-m-d'), date_add(new \DateTime(), new \DateInterval("P20D"))->format('Y-m-d'));
+        return $this->bank->listaBoletos(date('Y-m-d'), date_add(new \DateTime(), new \DateInterval("P50D"))->format('Y-m-d'));
     }
 
     //00617177078

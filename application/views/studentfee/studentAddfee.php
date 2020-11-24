@@ -1385,9 +1385,9 @@ $language_name = $language["short_code"];
 
 
             var hasPaymentOld = [];
-            if( isNotDayUtil() ) {
-                return alert('Essa operação só pode ser realizada em dias úteis.');
-            }
+            // if( isNotDayUtil() ) {
+            //     return alert('Essa operação só pode ser realizada em dias úteis.');
+            // }
 
             $.each($("input[name='fee_checkbox']:checked"), function() {
                 var fee_session_group_id = $(this).data('fee_session_group_id');
