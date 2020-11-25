@@ -46,7 +46,9 @@ class ScheduleCommand extends BaseCommand
             $comandList = [
                 'invoice:cancel',
                 'invoice:create',
-                'billet:paid'
+                'billet:paid',
+                'billet:cancel',
+                'billet:generate'
             ];
 
             foreach ($comandList as $c) {

@@ -23,6 +23,8 @@ class Bank_payment_inter
      */
     private $settings;
 
+    private $CI;
+
     public function __construct($options = [])
     {
 
@@ -35,6 +37,7 @@ class Bank_payment_inter
         $this->bank = new BancoInter($settings->account_no, $settings->api_secret_key, $settings->api_publishable_key);
         $this->bank->setKeyPassword($settings->api_password);
         $this->settings = $settings;
+        $this->CI = $CI;
     }
 
     private function configure($options = [])
@@ -98,6 +101,48 @@ class Bank_payment_inter
         } catch (BancoInterException $e) {
               return;
         }
+    }
+
+
+    public function download($id){
+      
+        try {
+            
+            $pdf = $this->bank->getPdfBoleto($id, getenv('BANK_INTER_PDF_FILES'));
+            $filename  = sprintf('%s%s.pdf', getenv('BANK_INTER_PDF_FILES'), $id);
+            rename($pdf, $filename);
+            echo "\n\nSalvo PDF em ".$pdf."\n";
+        } catch ( BancoInterException $e ) {
+            echo "\n\n".$e->getMessage();
+            echo "\n\nCabeçalhos: \n";
+            echo $e->reply->header;
+            echo "\n\nConteúdo: \n";
+            echo $e->reply->body;
+        }
+
+    }
+
+    public function show($id){
+
+        $filename  = sprintf('%s%s.pdf', getenv('BANK_INTER_PDF_FILES'), $id);
+        if( !file_exists($filename)) $this->download($id);
+        $this->CI->load->helper('file');
+        
+        $contents = read_file($filename);
+        // Header content type 
+        $this->CI->output
+        ->set_header('Content-type: application/pdf')
+        ->set_status_header(200)
+        ->set_content_type(get_mime_by_extension($filename))
+        ->set_output($contents); 
+        
+        // $this->CI->output->set_header('Content-Transfer-Encoding: binary'); 
+        
+        // $this->CI->output->set_header('Accept-Ranges: bytes');
+      
+        //@readfile($filename); 
+        // exit();
+
     }
 
     public function list()

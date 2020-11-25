@@ -149,15 +149,15 @@ $language_name = $language["short_code"];
                                                         <?php } ?>
                                                     </tr>
                                                     <tr>
-                                                      <th>
-                                                       Ano
-                                                      </th>
-                                                      <td>
-                                                      <?php
-                                                      
-                                                        echo form_dropdown('year_fees', $optionsYear, [$current_year], 'class="form-control"');
-                                                      ?>
-                                                      </td>
+                                                        <th>
+                                                            Ano
+                                                        </th>
+                                                        <td>
+                                                            <?php
+
+                                                            echo form_dropdown('year_fees', $optionsYear, [$current_year], 'class="form-control"');
+                                                            ?>
+                                                        </td>
                                                     </tr>
 
                                                 </tbody>
@@ -222,16 +222,19 @@ $language_name = $language["short_code"];
                                             $fee_discount = 0;
                                             $fee_fine = 0;
 
-
+                                             if($fee_value->billet->count() > 0){
+                                                 $fee_discount = $fee_value->billet->first()->body_json->fee_discount;
+                                             }
                                             if ($fee_value->deposite) {
                                                 $fee_deposits = json_decode(($fee_value->deposite->amount_detail));
-                                                 
+
                                                 foreach ($fee_deposits as $fee_deposits_key => $fee_deposits_value) {
                                                     $fee_paid = $fee_paid + $fee_deposits_value->amount;
                                                     $fee_discount = $fee_discount + $fee_deposits_value->amount_discount;
                                                     $fee_fine = $fee_fine + $fee_deposits_value->amount_fine;
                                                 }
                                             }
+
                                             $total_amount = $total_amount + $fee_value->amount;
                                             $total_discount_amount = $total_discount_amount + $fee_discount;
                                             $total_deposite_amount = $total_deposite_amount + $fee_paid;
@@ -239,7 +242,7 @@ $language_name = $language["short_code"];
                                             $feetype_balance = $fee_value->amount - ($fee_paid + $fee_discount);
                                             $total_balance_amount = $total_balance_amount + $feetype_balance;
                                             $description = $fee_value->name . " (" . $fee_value->type . ")";
-                                            
+
                                     ?>
                                             <?php
                                             if ($feetype_balance > 0 && strtotime($fee_value->due_date) < strtotime(date('Y-m-d'))) {
@@ -253,9 +256,9 @@ $language_name = $language["short_code"];
                                             }
                                                 ?>
                                                 <td>
-                                                    <input <?php echo  $fee_value->deposite ? 'disabled' : '' ?> class="checkbox" type="checkbox" name="fee_checkbox" 
-                                                    data-fee_date_payment="<?php echo $fee_value->due_date; ?>"
-                                                     data-fee_fine="<?php echo $fee_fine; ?>" data-fee_is_pdf="<?php echo $fee_value->billet_id; ?>" data-fee_amount="<?php echo $fee_value->amount; ?>" data-fee_discount="<?php echo  $fee_discount; ?>" data-fee_master_id="<?php echo $fee_value->id; ?>" data-fee_session_group_id="<?php echo $fee_value->fee_session_group_id; ?>" data-fee_groups_feetype_id="<?php echo $fee_value->feetype_id; ?>" data-fee_line_1="<?php echo $description; ?>" data-fee_line_2="<?php echo $fee_value->code; ?>">
+                                                    <input <?php echo  $fee_value->deposite ? 'disabled' : '' ?> class="checkbox" type="checkbox" name="fee_checkbox" data-fee_date_payment="<?php echo $fee_value->due_date; ?>" data-fee_fine="<?php echo $fee_fine; ?>" data-fee_is_pdf="<?php echo $fee_value->billet->count() > 0 ? $fee_value->billet->first()->id : 0; ?>" 
+                                                    data-fee_title="<?php echo $fee_value->title; ?>" 
+                                                    data-fee_amount="<?php echo $fee_value->amount; ?>" data-fee_discount="<?php echo  $fee_discount; ?>" data-fee_master_id="<?php echo $fee_value->id; ?>" data-fee_session_group_id="<?php echo $fee_value->fee_session_group_id; ?>" data-fee_groups_feetype_id="<?php echo $fee_value->feetype_id; ?>" data-fee_line_1="<?php echo $description; ?>" data-fee_line_2="<?php echo $fee_value->code; ?>">
                                                 </td>
                                                 <td align="left"><?php
                                                                     echo $fee_value->title;
@@ -307,16 +310,36 @@ $language_name = $language["short_code"];
                                                                             ?>
 
                                                 </td>
-                                                <td style="width: 100px;">
+                                                <td style="width: 40px;">
                                                     <div class="btn-group pull-right">
-                                                        <?php if ($fee_value->billet_id != 0) : ?>
-                                                            <button class="btn btn-xs btn-default " data-fee_billet_id="<?php echo $fee_value->id ?>" data-fee_session_group_id="<?php echo $fee_value->fee_session_group_id ?>" data-fee_groups_feetype_id="<?php echo $fee_value->feetype_id ?>" title="<?php echo $this->lang->line('billet_preview'); ?>"><i class="fa  fa-file-pdf-o text-danger"></i> </button>
+                                                        <?php if ($fee_value->billet->count() > 0) :
+                                                            $hasBillet = $fee_value->billet->first();
+                                                            if ($hasBillet->bank_bullet_id == null) : ?>
+                                                                <button class="btn btn-xs btn-default" title="<?php echo $this->lang->line('billet_preview_waiting'); ?>"><i class="fa  fa-file-pdf-o text-default"></i> </button>
+                                                            <?php
+                                                            endif;
+
+                                                            if ($hasBillet->bank_bullet_id != null) : ?>
+                                                                <button class="btn btn-xs btn-default preview_billet" data-title="<?php echo $fee_value->title; ?>" data-billet_id="<?php echo $hasBillet->bank_bullet_id;  ?>" data-fee_billet_id="<?php echo $fee_value->id ?>" data-fee_session_group_id="<?php echo $fee_value->fee_session_group_id ?>" data-fee_groups_feetype_id="<?php echo $fee_value->feetype_id ?>" title="<?php echo $this->lang->line('billet_preview'); ?>"><i class="fa  fa-file-pdf-o text-danger"></i> </button>
+                                                            <?php
+
+                                                            endif;
+                                                            ?>
+
+
                                                         <?php endif; ?>
-                                                        <button type="button" data-student_session_id="<?php echo $fee->student_session_id; ?>" data-student_fees_master_id="<?php echo $fee->id; ?>" data-fee_groups_feetype_id="<?php echo $fee_value->feetype_id; ?>" data-group="<?php echo $fee_value->name; ?>" data-type="<?php echo $fee_value->code; ?>" class="btn btn-xs btn-default myCollectFeeBtn <?php echo $display_none; ?>" title="<?php echo $this->lang->line('add_fees'); ?>" data-toggle="modal" data-target="#myFeesModal"><i class="fa fa-plus"></i></button>
+                                                        <?php if ($fee_value->billet->count() == 0) : ?>
+                                                            <button type="button" data-student_session_id="<?php echo $fee->student_session_id; ?>" data-student_fees_master_id="<?php echo $fee->id; ?>" data-fee_groups_feetype_id="<?php echo $fee_value->feetype_id; ?>" data-group="<?php echo $fee_value->name; ?>" data-type="<?php echo $fee_value->code; ?>" class="btn btn-xs btn-default myCollectFeeBtn <?php echo $display_none; ?>" title="<?php echo $this->lang->line('add_fees'); ?>" data-toggle="modal" data-target="#myFeesModal"><i class="fa fa-plus"></i></button>
 
 
-                                                        <button class="btn btn-xs btn-default printInv" data-fee_master_id="<?php echo $fee_value->id ?>" data-fee_session_group_id="<?php echo $fee_value->fee_session_group_id ?>" data-fee_groups_feetype_id="<?php echo $fee_value->feetype_id ?>" title="<?php echo $this->lang->line('print'); ?>"><i class="fa fa-print"></i> </button>
+                                                            <button class="btn btn-xs btn-default printInv" data-fee_master_id="<?php echo $fee_value->id ?>" data-fee_session_group_id="<?php echo $fee_value->fee_session_group_id ?>" data-fee_groups_feetype_id="<?php echo $fee_value->feetype_id ?>" title="<?php echo $this->lang->line('print'); ?>"><i class="fa fa-print"></i> </button>
+                                                        <?php endif; ?>
                                                     </div>
+                                                </td>
+                                                <td style="width:20px;">
+                                                    <?php if ($fee_value->billet->count() == 0  && !$fee_value->deposite) : ?>
+                                                        <button class="btn btn-xs btn-default delete-item" data-fee_item_id="<?php echo $fee_value->id ?>" title="<?php echo $this->lang->line('fee_item_delete'); ?>"><i class="fa fa-trash"></i> </button>
+                                                    <?php endif; ?>
                                                 </td>
 
 
@@ -332,7 +355,7 @@ $language_name = $language["short_code"];
                                                     foreach ($fee_deposits as $fee_deposits_key => $fee_deposits_value) {
                                                 ?>
                                                         <tr class="white-td">
-                                                           
+
                                                             <td align="left"></td>
                                                             <td align="left"></td>
                                                             <td align="left"></td>
@@ -371,7 +394,7 @@ $language_name = $language["short_code"];
                                                                 <div class="btn-group pull-right">
 
                                                                     <?php if ($this->rbac->hasPrivilege('collect_fees', 'can_delete')) { ?>
-                                                                        <button class="btn btn-default btn-xs" data-invoiceno="<?php echo $fee_value->id; ?>" data-main_invoice="<?php echo $fee_value->deposite->id ?>"  data-toggle="modal" data-target="#confirm-delete" title="<?php echo $this->lang->line('revert'); ?>">
+                                                                        <button class="btn btn-default btn-xs" data-invoiceno="<?php echo $fee_value->id; ?>" data-main_invoice="<?php echo $fee_value->deposite->id ?>" data-toggle="modal" data-target="#confirm-delete" title="<?php echo $this->lang->line('revert'); ?>">
                                                                             <i class="fa fa-undo"> </i>
                                                                         </button>
                                                                     <?php } ?>
@@ -485,13 +508,13 @@ $language_name = $language["short_code"];
                                                                         echo sprintf('%s %s', $currency_symbol, number_format($total_discount_amount + $alot_fee_discount, 2, ',', '.'));
                                                                         ?></td>
                                             <td class="text text-right"><?php
-                                                                        echo sprintf('%s %s', $currency_symbol , number_format($total_fine_amount, 2, ',', '.'));
+                                                                        echo sprintf('%s %s', $currency_symbol, number_format($total_fine_amount, 2, ',', '.'));
                                                                         ?></td>
                                             <td class="text text-right"><?php
-                                                                        echo sprintf('%s %s', $currency_symbol , number_format($total_deposite_amount, 2, ',', '.'));
+                                                                        echo sprintf('%s %s', $currency_symbol, number_format($total_deposite_amount, 2, ',', '.'));
                                                                         ?></td>
                                             <td class="text text-right"><?php
-                                                                        echo sprintf('%s %s', $currency_symbol , number_format($total_balance_amount - $alot_fee_discount, 2, ',', '.'));
+                                                                        echo sprintf('%s %s', $currency_symbol, number_format($total_balance_amount - $alot_fee_discount, 2, ',', '.'));
                                                                         ?></td>
                                             <td class="text text-right"></td>
                                         </tr>
@@ -753,7 +776,7 @@ $language_name = $language["short_code"];
 <div id="listCollectionModal" class="modal fade">
     <div class="modal-dialog">
         <form action="<?php echo site_url('studentfee/addfeegrp'); ?>" method="POST" id="collect_fee_group">
-        <input type="hidden" value="<?php echo $student['id']; ?>" name="user_id" />
+            <input type="hidden" value="<?php echo $student['id']; ?>" name="user_id" />
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
@@ -785,7 +808,7 @@ $language_name = $language["short_code"];
 
                 </div>
                 <div class="modal-footer">
-                    <button type="submit" class="btn btn-primary payment_collect" data-loading-text="<i class='fa fa-spinner fa-spin '></i> Processing"><i class="fa fa-barcode"></i> <?php echo $this->lang->line('billet_button_generate'); ?></button>
+                    <button type="submit" class="btn btn-primary payment_collect_confirm" data-loading-text="<i class='fa fa-spinner fa-spin '></i> Processing"><i class="fa fa-barcode"></i> <?php echo $this->lang->line('billet_button_generate'); ?></button>
                 </div>
             </div>
         </form>
@@ -794,8 +817,29 @@ $language_name = $language["short_code"];
 
 
 
+<!-- begin: show Billet PDF-->
+<div id="showPrinterPDF" class="modal fade">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">
+                    <span class="modal-inner-title"></span>
+                    <span class="modal-inner-loader pull-right" style="float: right; display: inline-block; padding:5px 15px;" data-loading-text="<i class='fa fa-spinner fa-spin '></i> Processing"></span>
+                </h4>
+            </div>
+            <div class="modal-body">
+
+            </div>
+        </div>
+    </div>
+</div>
+<!-- end: show Billet PDF-->
+
+
 
 <script type="text/javascript">
+    var base_url = '<?php echo base_url() ?>';
     $(document).ready(function() {
         $(".date_fee").datepicker({
             format: date_format,
@@ -804,6 +848,62 @@ $language_name = $language["short_code"];
             endDate: '+0d',
             todayHighlight: true
         });
+
+        $('.delete-item').on('click.DeleteFeeItem', function(e) {
+
+            if (!confirm('Deseja realizar essa operacao ? ')) return;
+            var fee_item_id = $(this).data('fee_item_id')
+            $.ajax({
+                url: `${base_url}studentfee/destroyItem/${fee_item_id}`,
+                dataType: 'json',
+                method: 'post',
+                success: function() {
+                    window.location.reload();
+                }
+            })
+        })
+
+
+        $('.preview_billet').on('click.showPDF', function(e) {
+            e.preventDefault();
+            var $this = $(this)
+            var billet_id = $this.data('billet_id')
+
+            var $el = $('#showPrinterPDF').modal({
+                backdrop: 'static',
+                keyboard: false,
+                show: false
+            });
+
+            $el.find('.modal-inner-title').html($this.data('title'))
+            var $loader = $el.find('.modal-inner-loader');
+            //var textLoaderReset = $loader.html()
+
+            $loader.html($loader.data('loading-text'))
+            $el.modal('show');
+            var $pdf = $('<iframe frameborder="0" width="100%" height="400px">') // create an iframe
+            // add the source
+
+            $el.find('.modal-body').html($pdf);
+
+            $.ajax({
+                url: `${base_url}studentfee/getBillet/${billet_id}`,
+                processData: false,
+                success: function(data) {
+                    // var myResponse = eval(data);
+                    $pdf.attr('src', `${base_url}studentfee/getBillet/${billet_id}`)
+                    setTimeout(() => {
+                        $loader.html('')
+                    }, 2000)
+
+
+
+                }
+            })
+
+
+
+        })
 
         $(document).on('click', '.printDoc', function() {
             var main_invoice = $(this).data('main_invoice');
@@ -906,8 +1006,6 @@ $language_name = $language["short_code"];
 
 
 <script>
-    var base_url = '<?php echo base_url() ?>';
-
     function Popup(data, winload = false) {
         var frame1 = $('<iframe />');
         frame1[0].name = "frame1";
@@ -980,15 +1078,15 @@ $language_name = $language["short_code"];
             $('.discount_title', this).text($(e.relatedTarget).data('discounttitle'));
             $('#discount_id', this).val($(e.relatedTarget).data('discountid'));
         });
-         var isDeleting = false;
+        var isDeleting = false;
         $('#confirm-delete').off('click', '.btn-ok').on('click', '.btn-ok', function(e) {
-            if(isDeleting ) return;
+            if (isDeleting) return;
             var $modalDiv = $(e.delegateTarget);
             var main_invoice = $('#main_invoice').val();
             var sub_invoice = $('#sub_invoice').val();
 
             $modalDiv.addClass('modalloading');
-            isDeleting  =  true
+            isDeleting = true
             $.ajax({
                 type: "post",
                 url: '<?php echo site_url("studentfee/deleteFee") ?>',
@@ -1001,7 +1099,7 @@ $language_name = $language["short_code"];
                     $modalDiv.modal('hide').removeClass('modalloading');
                     location.reload(true);
                 },
-                complete: function(){
+                complete: function() {
                     isDeleting = false;
                 }
             });
@@ -1069,9 +1167,9 @@ $language_name = $language["short_code"];
     var date_format = '<?php echo $result = strtr($this->customlib->getSchoolDateFormat(), ['d' => 'dd', 'm' => 'mm', 'Y' => 'yyyy']) ?>';
 </script>
 <script type="text/javascript">
-     var ibase_url = "<?php echo trim(site_url(),'/'); ?>";
-    $(document).ready(function(){
-        $('select[name="year_fees"]').change( function(){
+    var ibase_url = "<?php echo trim(site_url(), '/'); ?>";
+    $(document).ready(function() {
+        $('select[name="year_fees"]').change(function() {
             var path = window.location.pathname;
             window.location.href = `${ibase_url}/${path.replace(/^\/+/gi,'')}?due_date=${this.value}`
         });
@@ -1291,286 +1389,386 @@ $language_name = $language["short_code"];
 
 
 
-        $(document).on('click', '.printSelected', function() {
-            var array_to_print = [];
-            $.each($("input[name='fee_checkbox']:checked"), function() {
-                var fee_session_group_id = $(this).data('fee_session_group_id');
-                var fee_master_id = $(this).data('fee_master_id');
-                var fee_groups_feetype_id = $(this).data('fee_groups_feetype_id');
-                item = {};
-                item["fee_session_group_id"] = fee_session_group_id;
-                item["fee_master_id"] = fee_master_id;
-                item["fee_groups_feetype_id"] = fee_groups_feetype_id;
+                $(document).on('click', '.printSelected', function() {
+                    var array_to_print = [];
+                    $.each($("input[name='fee_checkbox']:checked"), function() {
+                        var fee_session_group_id = $(this).data('fee_session_group_id');
+                        var fee_master_id = $(this).data('fee_master_id');
+                        var fee_groups_feetype_id = $(this).data('fee_groups_feetype_id');
+                        item = {};
+                        item["fee_session_group_id"] = fee_session_group_id;
+                        item["fee_master_id"] = fee_master_id;
+                        item["fee_groups_feetype_id"] = fee_groups_feetype_id;
 
-                array_to_print.push(item);
-            });
-            if (array_to_print.length === 0) {
-                alert("<?php echo $this->lang->line('no_record_selected'); ?>");
-            } else {
-                $.ajax({
-                    url: '<?php echo site_url("studentfee/printFeesByGroupArray") ?>',
-                    type: 'post',
-                    data: {
-                        'data': JSON.stringify(array_to_print)
-                    },
-                    success: function(response) {
-                        Popup(response);
-                    }
-                });
-            }
-        });
-
-
-        $(document).on('click', '.collectSelected', function() {
-            var $this = $(this);
-            var array_to_collect_fees = [];
-            $.each($("input[name='fee_checkbox']:checked"), function() {
-                var fee_session_group_id = $(this).data('fee_session_group_id');
-                var fee_master_id = $(this).data('fee_master_id');
-                var fee_groups_feetype_id = $(this).data('fee_groups_feetype_id');
-                item = {};
-                item["fee_session_group_id"] = fee_session_group_id;
-                item["fee_master_id"] = fee_master_id;
-                item["fee_groups_feetype_id"] = fee_groups_feetype_id;
-
-                array_to_collect_fees.push(item);
-            });
-
-            $.ajax({
-                type: 'POST',
-                url: base_url + "studentfee/getcollectfee",
-                data: {
-                    'data': JSON.stringify(array_to_collect_fees)
-                },
-                dataType: "JSON",
-                beforeSend: function() {
-                    $this.button('loading');
-                },
-                success: function(data) {
-
-                    $("#listCollectionModal .modal-body").html(data.view);
-                    $(".date").datepicker({
-                        format: date_format,
-                        autoclose: true,
-                        language: '<?php echo $language_name; ?>',
-                        endDate: '+0d',
-                        todayHighlight: true
+                        array_to_print.push(item);
                     });
-                    $("#listCollectionModal").modal('show');
-                    $this.button('reset');
-                },
-                error: function(xhr) { // if error occured
-                    alert("Error occured.please try again");
-
-                },
-                complete: function() {
-                    $this.button('reset');
-                }
-            });
-
-        });
-
-
-        // add generate bolete 
-
-        var loading = false;
-
-         function isNotDayUtil(){
-           return getDaysExceptions().indexOf(moment().format('YYYY-MM-DD')) >= 0  || [6,7].indexOf(Number(moment().format('E'))) >= 0
-         }
-
-        $(document).on('click', '.billetSelected', function() {
-            var $this = $(this);
-            var array_to_collect_fees = [];
-
-
-            var hasPaymentOld = [];
-            // if( isNotDayUtil() ) {
-            //     return alert('Essa operação só pode ser realizada em dias úteis.');
-            // }
-
-            $.each($("input[name='fee_checkbox']:checked"), function() {
-                var fee_session_group_id = $(this).data('fee_session_group_id');
-                var fee_master_id = $(this).data('fee_master_id');
-                var fee_groups_feetype_id = $(this).data('fee_groups_feetype_id');
-                item = {};
-                item["fee_session_group_id"] = fee_session_group_id;
-                item["fee_master_id"] = fee_master_id;
-                item["fee_groups_feetype_id"] = fee_groups_feetype_id;
-                item["fee_amount"] = $(this).data('fee_amount');
-                item["fee_discount"] = $(this).data('fee_discount');
-                item["fee_line_1"] = $(this).data('fee_line_1');
-                item["fee_line_2"] = $(this).data('fee_line_2');
-                item["fee_date_payment"] = $(this).data('fee_date_payment');
-                item["fee_date_payment_old"] = $(this).data('fee_date_payment');
-                item["fee_fine"] = $(this).data('fee_fine');
-                var date = moment(item["fee_date_payment"]);
-                var hasDateOld = moment().day(1).isBefore(date.format('YYYY-MM-DD'));
-
-                if (!hasDateOld) hasPaymentOld.push(fee_groups_feetype_id)
-                array_to_collect_fees.push(item);
-            });
-
-            if (array_to_collect_fees.length == 0) return alert("Nenhum item foi selecionado");
-            var html = `
-                <div class="row">
-                <div class="form-group">
-                </div>
-                    <div class="col-xs-12 form-group">
-                       <strong>Alguns itens selecionados, estão com a data vencimento para gerar boleto inválidas. <br/> Será necessário adicionar uma nova data para gerar o boleto</strong>
-                    </div>
-                    <div class="form-group">
-                        <div class="col-md-2 col-xs-4 control-label">
-                            <label class="control-label">Data</label>
-                        </div>
-                   
-                        <div class="col-md-3 col-xs-6 input-group date">
-                            <input type="text" name="fee_date_payment_new" class="form-control">
-                            <div class="input-group-addon">
-                                <span class="glyphicon glyphicon-th"></span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-            `;
-
-
-            if (hasPaymentOld.length > 0) {
-                $("#listBilletModal .modal-body").html(html);
-                $(".date").datepicker({
-                    format: date_format,
-                    autoclose: true,
-                    language: '<?php echo $language_name; ?>',
-                    // startDate: '+1d',
-
-                    todayHighlight: true
-                });
-                var $modal = $("#listBilletModal .modal-footer");
-                $("#listBilletModal .modal-body").html(html);
-                $("#listBilletModal").modal('show');
-                $this.button('reset');
-                var fvalidator = $('form#billet_fee_group');
-                fvalidator.validate({
-                    rules: {
-                        fee_date_payment_new: {
-                            required: true
-                        }
+                    if (array_to_print.length === 0) {
+                        alert("<?php echo $this->lang->line('no_record_selected'); ?>");
+                    } else {
+                        $.ajax({
+                            url: '<?php echo site_url("studentfee/printFeesByGroupArray") ?>',
+                            type: 'post',
+                            data: {
+                                'data': JSON.stringify(array_to_print)
+                            },
+                            success: function(response) {
+                                Popup(response);
+                            }
+                        });
                     }
                 });
 
-                $('form#billet_fee_group').on('submit', function(e) {
-                    e.preventDefault();
-                    if (!fvalidator.valid() || loading) return;
-                    loading = true;
-                    array_to_collect_fees.map(row => {
 
-                        if (hasPaymentOld.indexOf(row.fee_groups_feetype_id) >= 0) {
-                            let datePay = ($('input[name="fee_date_payment_new"]').val().split(/\-|\//gi).reverse().join('-'));
-                            row.fee_date_payment = datePay
+                $(document).on('click', '.collectSelected', function() {
+                    var $this = $(this);
+                    var array_to_collect_fees = [];
+                    $.each($("input[name='fee_checkbox']:checked"), function() {
+                        var fee_session_group_id = $(this).data('fee_session_group_id');
+                        var fee_master_id = $(this).data('fee_master_id');
+                        var fee_groups_feetype_id = $(this).data('fee_groups_feetype_id');
+                        item = {};
+                        item["fee_session_group_id"] = fee_session_group_id;
+                        item["fee_master_id"] = fee_master_id;
+                        item["fee_groups_feetype_id"] = fee_groups_feetype_id;
+
+                        array_to_collect_fees.push(item);
+                    });
+
+                    $.ajax({
+                        type: 'POST',
+                        url: base_url + "studentfee/getcollectfee",
+                        data: {
+                            'data': JSON.stringify(array_to_collect_fees)
+                        },
+                        dataType: "JSON",
+                        beforeSend: function() {
+                            $this.button('loading');
+                        },
+                        success: function(data) {
+
+                            $("#listCollectionModal .modal-body").html(data.view);
+                            $(".date").datepicker({
+                                format: date_format,
+                                autoclose: true,
+                                language: '<?php echo $language_name; ?>',
+                                endDate: '+0d',
+                                todayHighlight: true
+                            });
+                            $("#listCollectionModal").modal('show');
+                            $this.button('reset');
+                        },
+                        error: function(xhr) { // if error occured
+                            alert("Error occured.please try again");
+
+                        },
+                        complete: function() {
+                            $this.button('reset');
                         }
-                        return row;
-                    })
-                    createAllBillets(array_to_collect_fees, $modal);
+                    });
 
                 });
-                return;
-            }
-            createAllBillets(array_to_collect_fees, $this);
 
-        });
 
-        // console.log(getDaysExceptions());
+                // add generate bolete 
 
-        function createAllBillets(array_to_collect_fees, $this) {
-            $.ajax({
-                type: 'POST',
-                url: base_url + "studentfee/generateBillet",
-                data: {
-                    'data': JSON.stringify(array_to_collect_fees),
-                    'user_id': $('input[name="student_user_id"]').val()
-                },
-                dataType: "JSON",
-                beforeSend: function() {
-                    $this.button('loading');
-                },
-                success: function(data) {
+                var loading = false;
 
-                    alert('Os boletos foram gerados com sucesso')
-                    // window.location.reload();
-
-                },
-                error: function(xhr) { // if error occured
-                    alert("Error occured.please try again");
-
-                },
-                complete: function() {
-                    $this.button('reset');
-                    loading = false;
+                function isNotDayUtil() {
+                    return getDaysExceptions().indexOf(moment().format('YYYY-MM-DD')) >= 0 || [6, 7].indexOf(Number(moment().format('E'))) >= 0
                 }
-            });
-        }
-        ///cancel billet
+
+                $(document).on('click', '.billetSelected', function() {
+                        var $this = $(this);
+                        var array_to_collect_fees = [],
+                            listOfItemSelected = [];
 
 
-        $(document).on('click', '.billetCancelSelected', function() {
-            var $this = $(this);
-            var array_to_collect_fees = [];
+                        var hasPaymentOld = [];
+                        // if( isNotDayUtil() ) {
+                        //     return alert('Essa operação só pode ser realizada em dias úteis.');
+                        // }
+                        var feeGroupsFeetypeId,
+                            feeSessionGroupId, 
+                            feeMasterId;
+
+                        
+                        $.each($("input[name='fee_checkbox']:checked"), function() {
+                            var fee_session_group_id = $(this).data('fee_session_group_id');
+                            var fee_master_id = $(this).data('fee_master_id');
+                            var fee_groups_feetype_id = $(this).data('fee_groups_feetype_id');
+
+                            if( !feeGroupsFeetypeId)
+                            feeGroupsFeetypeId = fee_groups_feetype_id
+
+                            if(!feeSessionGroupId)
+                            feeSessionGroupId =fee_session_group_id
+
+                            if(!feeMasterId)
+                            feeMasterId = fee_master_id
+
+                            item = {};
+                            item["fee_session_group_id"] = fee_session_group_id;
+                            item["fee_master_id"] = fee_master_id;
+                            item["fee_groups_feetype_id"] = fee_groups_feetype_id;
+                            item["fee_amount"] = $(this).data('fee_amount');
+                            item["fee_title"] = $(this).data('fee_title');
+                            item["fee_discount"] = $(this).data('fee_discount');
+                            item["fee_line_1"] = $(this).data('fee_line_1');
+                            item["fee_line_2"] = $(this).data('fee_line_2');
+                            item["fee_date_payment"] = $(this).data('fee_date_payment');
+                            item["fee_date_payment_old"] = $(this).data('fee_date_payment');
+                            item["fee_fine"] = $(this).data('fee_fine');
+
+                            
+                            var date = moment(item["fee_date_payment"]);
+                            var hasDateOld = moment().day(1).isBefore(date.format('YYYY-MM-DD'));
+
+                            if (!hasDateOld) hasPaymentOld.push(fee_groups_feetype_id)
+                            array_to_collect_fees.push(item);
+                            
+                        });
+
+                        if (array_to_collect_fees.length == 0) return alert("Nenhum item foi selecionado");
+                        var html = `
+                            <div class="row">
+                            <div class="form-group">
+                            </div>
+                                <div class="col-xs-12 form-group">
+                                <strong>Alguns itens selecionados, estão com a data vencimento para gerar boleto inválidas. <br/> Será necessário adicionar uma nova data para gerar o boleto</strong>
+                                </div>
+                                
+                                <div class="form-group col-xs-12">
+                                        <label for="inputPassword3" class="col-sm-3 control-label"> <?php echo $this->lang->line('billet_due_date'); ?></label>
+                                        <div class="col-sm-9">
+                                            <div class="col-md-5 col-xs-6 input-group date">
+                                                <input type="text" name="fee_date_payment_new" class="form-control">
+                                                <div class="input-group-addon">
+                                                    <span class="glyphicon glyphicon-th"></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                </div>
+                                <div class="form-group col-xs-12">
+                                        <label for="inputPassword3" class="col-sm-3 control-label"> <?php echo $this->lang->line('discount'); ?> <?php echo $this->lang->line('group'); ?></label>
+                                        <div class="col-sm-9">
+                                            <select disabled class="form-control modal_discount_group" id="billet_discount_group">
+                                                <option value=""><?php echo $this->lang->line('select'); ?></option>
+                                            </select>
+
+                                            <span class="text-danger" id="amount_error"></span>
+                                        </div>
+                                </div>
+                                <div class="form-group col-xs-12 ">
+                                     <table class="table table-bordered">
+                                       <thead>
+                                          <tr> 
+                                            <th>Descricao</th>
+                                            <th>Valor</th>
+                                            <th>Desconto</th>
+                                            <th>Total</th>
+                                          </tr>
+                                       </thead>
+                                       <tbody id="billet_for_generate"></tbody>
+                                     </table>
+                                </div>
+                            </div>
+
+                        `;
+
+
+                        if (hasPaymentOld.length > 0) {
+                            $("#listBilletModal .modal-body").html(html);
+                            setTimeout(function(){  
+                                
+                               
+                                array_to_collect_fees = buildListItemsWithDiscount(array_to_collect_fees, 0);
+                            }, 200)
+                           
+
+                            $.ajax({
+                                    type: "post",
+                                    url: '<?php echo site_url("studentfee/geBalanceFee") ?>',
+                                    dataType: 'JSON',
+                                    data: {
+                                        'fee_groups_feetype_id': feeGroupsFeetypeId,
+                                        'student_fees_master_id': $('[data-student_fees_master_id]').data('student_fees_master_id'),
+                                        'student_session_id': <?php echo $student['student_session_id'] ?>
+                                    },
+                                  
+                                    success: function(data) {
+
+                                        if (data.status === "success") {
+                                            fee_amount = data.balance;
+
+                                            $('#amount').val(data.balance);
+                                            $('#amount_fine').val(data.remain_amount_fine);
+
+                                               var discount_group_dropdown;
+                                            $.each(data.discount_not_applied, function(i, obj) {
+                                                discount_group_dropdown += "<option value=" + obj.student_fees_discount_id + " data-disamount=" + obj.amount + ">" + obj.code + "</option>";
+                                            });
+                                            $('#billet_discount_group').prop('disabled', false).append(discount_group_dropdown);
+
+                                            $('#billet_discount_group').change(function(){
+                                               var discount = $(this).find('option:selected').data('disamount')
+                                               
+                                               array_to_collect_fees = buildListItemsWithDiscount(array_to_collect_fees, discount);
+                                            })
+
+
+                                        }
+                                    }
+                                })
+
+
+                                var $modal = $("#listBilletModal .modal-footer"); $("#listBilletModal .modal-body").html(html); $(".date").datepicker({
+                                    format: date_format,
+                                    autoclose: true,
+                                    language: '<?php echo $language_name; ?>',
+                                    startDate: '+0d',
+                                    todayHighlight: true
+                                }); $("#listBilletModal").modal('show'); $this.button('reset');
+                                var fvalidator = $('form#billet_fee_group'); fvalidator.validate({
+                                    rules: {
+                                        fee_date_payment_new: {
+                                            required: true
+                                        }
+                                    }
+                                });
+
+                                $('form#billet_fee_group').on('submit', function(e) {
+                                    e.preventDefault();
+                                    if (!fvalidator.valid() || loading) return;
+                                    loading = true;
+                                    array_to_collect_fees.map(row => {
+
+                                        if (hasPaymentOld.indexOf(row.fee_groups_feetype_id) >= 0) {
+                                            let datePay = ($('input[name="fee_date_payment_new"]').val().split(/\-|\//gi).reverse().join('-'));
+                                            row.fee_date_payment = datePay
+                                        }
+                                        return row;
+                                    })
+                                    createAllBillets(array_to_collect_fees, $modal);
+
+                                });
+                                return;
+                            }
+                            createAllBillets(array_to_collect_fees, $this);
+
+                        });
+
+                    // console.log(getDaysExceptions());
+
+                    function buildListItemsWithDiscount(items, discount){
+                        var collect_fees = [], listOfItemSelected =[];
+                        items.forEach(function(item){
+                            item["fee_discount"] = discount;
+                            collect_fees.push(item)
+                            listOfItemSelected.push(`
+                               <tr>
+                                  <td>${item["fee_title"]}</td>
+                                  <td  data-value="${item["fee_amount"]}" >${item["fee_amount"]}</td>
+                                  <td data-value="${item["fee_discount"]}">${item["fee_discount"]}</td>
+                                  <td >${item["fee_amount"] - item["fee_discount"]}</td>
+                               </tr>
+                            `)
+
+                        })
+                        $('#listBilletModal .modal-body #billet_for_generate').html(listOfItemSelected.join(''))
+                        return collect_fees;
+
+                           
+                    }
+
+                    function createAllBillets(array_to_collect_fees, $this) {
+                        $.ajax({
+                            type: 'POST',
+                            url: base_url + "studentfee/generateBillet",
+                            data: {
+                                'data': JSON.stringify(array_to_collect_fees),
+                                'user_id': $('input[name="student_user_id"]').val()
+                            },
+                            dataType: "JSON",
+                            beforeSend: function() {
+                                $this.button('loading');
+                            },
+                            success: function(data) {
+
+                                alert('Os boletos foram enviados para serem gerados com sucesso ')
+                                window.location.reload();
+
+                            },
+                            error: function(xhr) { // if error occured
+                                alert("Error occured.please try again");
+
+                            },
+                            complete: function() {
+                                $this.button('reset');
+                                loading = false;
+                            }
+                        });
+                    }
+                    ///cancel billet
+
+
+                    $(document).on('click', '.billetCancelSelected', function() {
+                        var $this = $(this);
+                        var array_to_collect_fees = [];
 
 
 
-            $.each($("input[name='fee_checkbox']:checked"), function() {
-                var fee_session_group_id = $(this).data('fee_session_group_id');
-                var fee_master_id = $(this).data('fee_master_id');
-                var fee_groups_feetype_id = $(this).data('fee_groups_feetype_id');
-                item = {};
-                item["fee_session_group_id"] = fee_session_group_id;
-                item["fee_master_id"] = fee_master_id;
-                item["fee_groups_feetype_id"] = fee_groups_feetype_id;
-                item["fee_amount"] = $(this).data('fee_amount');
-                item["fee_discount"] = $(this).data('fee_discount');
-                item["fee_line_1"] = $(this).data('fee_line_1');
-                item["fee_line_2"] = $(this).data('fee_line_2');
-                item["fee_date_payment"] = $(this).data('fee_date_payment');
-                item["fee_fine"] = $(this).data('fee_fine');
-                item["bullet_id"] = $(this).data('fee_is_pdf');
-                if ($(this).data('fee_is_pdf') !== 0)
-                    array_to_collect_fees.push(item);
-            });
+                        $.each($("input[name='fee_checkbox']:checked"), function() {
+                            var fee_session_group_id = $(this).data('fee_session_group_id');
+                            var fee_master_id = $(this).data('fee_master_id');
+                            var fee_groups_feetype_id = $(this).data('fee_groups_feetype_id');
+                            item = {};
+                            item["fee_session_group_id"] = fee_session_group_id;
+                            item["fee_master_id"] = fee_master_id;
+                            item["fee_groups_feetype_id"] = fee_groups_feetype_id;
+                            item["fee_amount"] = $(this).data('fee_amount');
+                            item["fee_discount"] = $(this).data('fee_discount');
+                            item["fee_line_1"] = $(this).data('fee_line_1');
+                            item["fee_line_2"] = $(this).data('fee_line_2');
+                            item["fee_date_payment"] = $(this).data('fee_date_payment');
+                            item["fee_fine"] = $(this).data('fee_fine');
+                            item["billet_id"] = $(this).data('fee_is_pdf');
+                            if ($(this).data('fee_is_pdf') !== 0)
+                                array_to_collect_fees.push(item);
+                        });
 
-            if (array_to_collect_fees.length == 0) return alert("Nenhum item válido foi selecionado");
+                        if (array_to_collect_fees.length == 0) return alert("Nenhum item válido foi selecionado");
 
-            var options = [{
-                    value: 'ACERTOS',
-                    label: 'ACERTOS',
-                },
-                {
-                    value: 'DEVOLUCAO',
-                    label: 'DEVOLUÇÃO',
-                },
-                {
-                    value: 'SUBISTITUICAO',
-                    label: 'SUBISTITUIÇÃO',
-                },
-                {
-                    value: 'PROTESTOAPOSBAIXA',
-                    label: 'PROTESTO APÓS BAIXA',
-                },
-                {
-                    value: 'PAGODIRETOAOCLIENTE',
-                    label: 'PAGO DIRETO AO CLIENTE',
-                },
-                {
-                    value: 'FALTADESOLUCAO',
-                    label: 'FALTA DE SOLUÇÃO',
-                },
+                        var options = [{
+                                value: 'ACERTOS',
+                                label: 'ACERTOS',
+                            },
+                            {
+                                value: 'DEVOLUCAO',
+                                label: 'DEVOLUÇÃO',
+                            },
+                            {
+                                value: 'SUBISTITUICAO',
+                                label: 'SUBISTITUIÇÃO',
+                            },
+                            {
+                                value: 'PROTESTOAPOSBAIXA',
+                                label: 'PROTESTO APÓS BAIXA',
+                            },
+                            {
+                                value: 'PAGODIRETOAOCLIENTE',
+                                label: 'PAGO DIRETO AO CLIENTE',
+                            },
+                            {
+                                value: 'FALTADESOLUCAO',
+                                label: 'FALTA DE SOLUÇÃO',
+                            },
 
-                {
-                    value: 'APEDIDODOCLIENTE',
-                    label: 'APEDIDO DO CLIENTE',
-                }
-            ];
-            var html = `
+                            {
+                                value: 'APEDIDODOCLIENTE',
+                                label: 'APEDIDO DO CLIENTE',
+                            }
+                        ];
+                        var html = `
                 <div class="row">
                 <div class="form-group">
                 </div>
@@ -1587,161 +1785,161 @@ $language_name = $language["short_code"];
                 </div>
               
             `;
-            var $modal = $("#listBilletModal .modal-footer");
-            $("#listBilletModal .modal-body").html(html);
-            $("#listBilletModal").modal('show');
-            $this.button('reset');
-            $('form#billet_fee_group').on('submit', function(e) {
-                e.preventDefault();
+                        var $modal = $("#listBilletModal .modal-footer");
+                        $("#listBilletModal .modal-body").html(html);
+                        $("#listBilletModal").modal('show');
+                        $this.button('reset');
+                        $('form#billet_fee_group').off('submit').on('submit', function(e) {
+                            e.preventDefault();
 
+                            $.ajax({
+                                type: 'POST',
+                                url: base_url + "studentfee/cancelBillet",
+                                data: {
+                                    'data': JSON.stringify(array_to_collect_fees),
+                                    'motive': $('select[name="billet_cancel_motvive"]').val(),
+
+                                },
+                                dataType: "JSON",
+                                beforeSend: function() {
+                                    $modal.button('loading');
+                                },
+                                success: function(data) {
+
+                                    alert('Os boletos foram cancelados com sucesso')
+                                    //window.location.reload();
+
+                                },
+                                error: function(xhr) { // if error occured
+                                    alert("Error occured.please try again");
+
+                                },
+                                complete: function() {
+                                    $modal.button('reset');
+                                }
+                            });
+                        })
+
+
+
+
+
+
+                    });
+
+
+                });
+
+
+
+
+
+            $(function() {
+                $(document).on('change', "#discount_group", function() {
+                    var amount = $('option:selected', this).data('disamount');
+
+                    var balance_amount = (parseFloat(fee_amount) - parseFloat(amount)).toFixed(2);
+                    if (typeof amount !== typeof undefined && amount !== false) {
+                        $('div#myFeesModal').find('input#amount_discount').prop('readonly', true).val(amount);
+                        $('div#myFeesModal').find('input#amount').val(balance_amount);
+
+                    } else {
+                        $('div#myFeesModal').find('input#amount').val(fee_amount);
+                        $('div#myFeesModal').find('input#amount_discount').prop('readonly', false).val(0);
+                    }
+
+                });
+            });
+
+            $("#collect_fee_group").submit(function(e) {
+                var form = $(this);
+                var url = form.attr('action');
+                var smt_btn = $(this).find("button[type=submit]");
                 $.ajax({
-                    type: 'POST',
-                    url: base_url + "studentfee/cancelBillet",
-                    data: {
-                        'data': JSON.stringify(array_to_collect_fees),
-                        'motive': $('select[name="billet_cancel_motvive"]').val(),
-
-                    },
-                    dataType: "JSON",
+                    type: "POST",
+                    url: url,
+                    dataType: 'JSON',
+                    data: form.serialize(), // serializes the form's elements.
                     beforeSend: function() {
-                        $modal.button('loading');
+                        smt_btn.button('loading');
                     },
-                    success: function(data) {
+                    success: function(response) {
 
-                        alert('Os boletos foram cancelados com sucesso')
-                        //window.location.reload();
+                        if (response.status === 1) {
 
+                            location.reload(true);
+                        } else if (response.status === 0) {
+                            $.each(response.error, function(index, value) {
+                                var errorDiv = '#form_collection_' + index + '_error';
+                                $(errorDiv).empty().append(value);
+                            });
+                        }
                     },
                     error: function(xhr) { // if error occured
+
                         alert("Error occured.please try again");
 
                     },
                     complete: function() {
-                        $modal.button('reset');
+                        smt_btn.button('reset');
                     }
                 });
-            })
+
+                e.preventDefault(); // avoid to execute the actual submit of the form.
+            });
+
+            $("#select_all").change(function() { //"select all" change 
+                $('input:checkbox').not(this).prop('checked', this.checked);
+                // $(".checkbox").prop('checked', $(this).prop("checked")); //change all ".checkbox" checked status
+            });
 
 
 
+            function getDaysExceptions() {
 
+                return [
+                    moment().month(1).date(1).format('YYYY-MM-DD'), // Confraternização Universal - Lei nº 662, de 06/04/49
+                    moment().month(4).date(21).format('YYYY-MM-DD'),
+                    moment().month(5).date(1).format('YYYY-MM-DD'), // Tiradentes - Lei nº 662, de 06/04/49
+                    moment().month(9).date(7).format('YYYY-MM-DD'), // Dia da Independência - Lei nº 662, de 06/04/49
+                    moment().month(10).date(12).format('YYYY-MM-DD'), // N. S. Aparecida - Lei nº 6802, de 30/06/80
+                    moment().month(11).date(2).format('YYYY-MM-DD'), // Todos os santos - Lei nº 662, de 06/04/49
+                    moment().month(11).date(15).format('YYYY-MM-DD'), // Proclamação da republica - Lei nº 662, de 06/04/49
+                    moment().month(12).date(25).format('YYYY-MM-DD'), // Natal - Lei nº 662, de 06/04/49
 
-
-        });
-
-
-    });
-
-
-
-
-
-    $(function() {
-        $(document).on('change', "#discount_group", function() {
-            var amount = $('option:selected', this).data('disamount');
-
-            var balance_amount = (parseFloat(fee_amount) - parseFloat(amount)).toFixed(2);
-            if (typeof amount !== typeof undefined && amount !== false) {
-                $('div#myFeesModal').find('input#amount_discount').prop('readonly', true).val(amount);
-                $('div#myFeesModal').find('input#amount').val(balance_amount);
-
-            } else {
-                $('div#myFeesModal').find('input#amount').val(fee_amount);
-                $('div#myFeesModal').find('input#amount_discount').prop('readonly', false).val(0);
+                    ...getSpecialDay()
+                ]
             }
 
-        });
-    });
+            function subtrairDias(data, dias) {
+                return new Date(data.getTime() - (dias * 24 * 60 * 60 * 1000));
+            }
 
-    $("#collect_fee_group").submit(function(e) {
-        var form = $(this);
-        var url = form.attr('action');
-        var smt_btn = $(this).find("button[type=submit]");
-        $.ajax({
-            type: "POST",
-            url: url,
-            dataType: 'JSON',
-            data: form.serialize(), // serializes the form's elements.
-            beforeSend: function() {
-                smt_btn.button('loading');
-            },
-            success: function(response) {
 
-                if (response.status === 1) {
+            function getSpecialDay() {
+                var ano = moment().format('YYYY');
+                var X = 24;
+                var Y = 5;
+                var a = ano % 19;
+                var b = ano % 4;
+                var c = ano % 7;
+                var d = (19 * a + X) % 30
+                var e = (2 * b + 4 * c + 6 * d + Y) % 7
+                var soma = d + e
 
-                    location.reload(true);
-                } else if (response.status === 0) {
-                    $.each(response.error, function(index, value) {
-                        var errorDiv = '#form_collection_' + index + '_error';
-                        $(errorDiv).empty().append(value);
-                    });
+                if (soma > 9) {
+                    dia = (d + e - 9);
+                    mes = 03;
+                } else {
+                    dia = (d + e + 22);
+                    mes = 02;
                 }
-            },
-            error: function(xhr) { // if error occured
 
-                alert("Error occured.please try again");
-
-            },
-            complete: function() {
-                smt_btn.button('reset');
+                return [
+                    moment(new Date(ano, mes, dia).toDateString()).format('YYYY-MM-DD'),
+                    moment(subtrairDias(new Date(ano, mes, dia), 47)).format('YYYY-MM-DD'),
+                    // moment(subtrairDias(new Date(ano,mes,dia), 48)).format('YYYY-MM-DD'),
+                    moment(subtrairDias(new Date(ano, mes, dia), 46)).format('YYYY-MM-DD'),
+                ]
             }
-        });
-
-        e.preventDefault(); // avoid to execute the actual submit of the form.
-    });
-
-    $("#select_all").change(function() { //"select all" change 
-        $('input:checkbox').not(this).prop('checked', this.checked);
-        // $(".checkbox").prop('checked', $(this).prop("checked")); //change all ".checkbox" checked status
-    });
-
-
-
-    function getDaysExceptions() {
-
-       return [
-            moment().month(1).date(1).format('YYYY-MM-DD'), // Confraternização Universal - Lei nº 662, de 06/04/49
-            moment().month(4).date(21).format('YYYY-MM-DD'),
-            moment().month(5).date(1).format('YYYY-MM-DD'), // Tiradentes - Lei nº 662, de 06/04/49
-            moment().month(9).date(7).format('YYYY-MM-DD'), // Dia da Independência - Lei nº 662, de 06/04/49
-            moment().month(10).date(12).format('YYYY-MM-DD'), // N. S. Aparecida - Lei nº 6802, de 30/06/80
-            moment().month(11).date(2).format('YYYY-MM-DD'), // Todos os santos - Lei nº 662, de 06/04/49
-            moment().month(11).date(15).format('YYYY-MM-DD'), // Proclamação da republica - Lei nº 662, de 06/04/49
-            moment().month(12).date(25).format('YYYY-MM-DD'), // Natal - Lei nº 662, de 06/04/49
-           
-           ...getSpecialDay()
-        ]
-    }
-
-    function subtrairDias(data, dias) {
-        return new Date(data.getTime() - (dias * 24 * 60 * 60 * 1000));
-    }
-
-
-    function getSpecialDay() {
-        var ano = moment().format('YYYY');
-        var X = 24;
-        var Y = 5;
-        var a = ano % 19;
-        var b = ano % 4;
-        var c = ano % 7;
-        var d = (19 * a + X) % 30
-        var e = (2 * b + 4 * c + 6 * d + Y) % 7
-        var soma = d + e
-
-        if (soma > 9) {
-            dia = (d + e - 9);
-            mes = 03;
-        } else {
-            dia = (d + e + 22);
-            mes = 02;
-        }
-
-        return [
-            moment(new Date(ano,mes,dia).toDateString()).format('YYYY-MM-DD'),
-            moment(subtrairDias(new Date(ano,mes,dia), 47)).format('YYYY-MM-DD'),
-            // moment(subtrairDias(new Date(ano,mes,dia), 48)).format('YYYY-MM-DD'),
-            moment(subtrairDias(new Date(ano,mes,dia), 46)).format('YYYY-MM-DD'),
-        ]
-    }
 </script>

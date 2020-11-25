@@ -1487,6 +1487,9 @@ $lang['billet_date_start'] = 'Data do vencimento(Inicial)';
 $lang['billet_date_end'] = 'Data do vencimento(Final)';
 $lang['billet_title'] = 'Boleto em lote';
 $lang['generate_invoice'] = 'Gerar nota fiscal';
+$lang['bulk_billet_success_generate'] = 'Os itens selecionados foram enviados para serem gerados boletos. ';
+$lang['billet_preview_waiting'] = 'Aguarde estamos gerando o boleto';
+$lang['billet_due_date'] = 'Data de Vencimento';
 
 
 

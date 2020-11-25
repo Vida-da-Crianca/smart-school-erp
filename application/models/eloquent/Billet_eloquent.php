@@ -27,14 +27,17 @@ class Billet_eloquent extends  Eloquent {
         'fee_session_group_id',
         'fee_master_id',
         'user_id',
+        'due_date',
+        'custom_number'
         
     ];
 
 
-    public function student(){
+    public function student()
+    {
 
-        get_instance()->load->model('Student_orm');
-        return $this->hasOne('Student_orm', 'parent_id', 'id');
+        get_instance()->load->model('eloquent/Student_eloquent');
+        return $this->belongsTo('Student_eloquent', 'user_id', 'id');
     }
 
     public function feeItems(){
@@ -48,5 +51,9 @@ class Billet_eloquent extends  Eloquent {
            
         );
     }
+    
 
+    public function getBodyJsonAttribute(){
+        return json_decode($this->body);
+    }
 }

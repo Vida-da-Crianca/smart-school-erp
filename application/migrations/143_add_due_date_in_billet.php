@@ -3,23 +3,15 @@
 
 defined('BASEPATH') or exit('No direct script access allowed');
 
-class Migration_drop_fee_item_id_billet extends CI_Migration
+class Migration_Add_due_date_in_billet extends CI_Migration
 {
 
     public function up()
     {
-        
-        $this->dbforge->drop_column('billets', 'fee_item_id' );
-       
-    }
-
-    public function down()
-    {  
         $columns = array(
             
-            'fee_item_id' => [
-                'type' => 'int',
-                'constraint' => 15,
+            'due_date' => [
+                'type' => 'date',
                 'null' => true,
                 'after' => 'is_active',
             ],
@@ -27,6 +19,13 @@ class Migration_drop_fee_item_id_billet extends CI_Migration
         );
         
         $this->dbforge->add_column('billets', $columns );
+       
+       
+    }
+
+    public function down()
+    {    
         
+        $this->dbforge->drop_column('billets', 'due_date');
     }
 }

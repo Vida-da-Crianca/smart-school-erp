@@ -1,6 +1,7 @@
 <?php
 
 use Application\Core\BankInterPayment;
+use Application\Core\Billet;
 use Application\Core\JsonResponse;
 use Illuminate\Database\Capsule\Manager as DB;
 
@@ -437,7 +438,7 @@ class Studentfee extends Admin_Controller
         foreach ($student_due_fee as $row) {
             $row->fees = Student_fee_item_eloquent::where('student_session_id', $row->student_session_id)
                 ->whereYear('due_date', $due_date)
-                ->with(['deposite'])
+                ->with(['deposite', 'billet'])
                 ->get();
         }
         // dump($student_due_fee);
@@ -599,6 +600,8 @@ class Studentfee extends Admin_Controller
         }
     }
 
+
+
     public function printFeesByName()
     {
         $data = array('payment' => "0");
@@ -747,8 +750,8 @@ class Studentfee extends Admin_Controller
     public function assign()
     {
 
-        
-        
+
+
         $data = [];
         $listOfDatePayment = $this->input->post('date_payment');
         $listOfType = $this->input->post('feetype');
@@ -905,6 +908,12 @@ class Studentfee extends Admin_Controller
 
         return new JsonResponse(compact('data'));
     }
+    public function getBillet($id)
+    {
+        $this->load->library('bank_payment_inter');
+
+        $this->bank_payment_inter->show($id);
+    }
     public function generateBillet()
     {
         $staff_record = $this->session->userdata('admin');
@@ -927,56 +936,62 @@ class Studentfee extends Admin_Controller
 
             $this->load->model(['eloquent/Billet_eloquent', 'eloquent/Student_deposite_eloquent']);
             $this->load->library('bank_payment_inter');
-            $listOfIds = [];    
+            $listOfIds = [];
             $student = (object) $this->student_model->getByStudentSession($this->input->post('user_id'));
             $errors = [];
             //   return new JsonResponse((array) $student);
-            foreach ($data as $values) {
+            $ids  = [];
+            foreach ($data as $k => $values) {
+
                 // if (Student_deposite_eloquent::where('fee_groups_feetype_id', $values['fee_groups_feetype_id'])->where('student_fees_master_id', $values['fee_master_id'])->count() > 0) continue;
-                if (
-                    Billet_eloquent::where('fee_item_id',  $values['fee_master_id'])
-                   
-                    ->count() > 0
-                ) continue;
+                // if (
+                //     Billet_eloquent::where('fee_item_id',  $values['fee_master_id'])
 
-                $billet = new Billet_eloquent;
-                $billet->body = json_encode($values);
-                $billet->price = ($values['fee_amount'] + $values['fee_fine']) - $values['fee_discount'];
-                $billet->fee_item_id = $values['fee_master_id'];
-                $billet->user_id = $student->id;
+                //     ->count() > 0
+                // ) continue;
+                $data[$k]['fee_item_id'] =  $values['fee_master_id'];
+                $data[$k]['due_date'] = $values['fee_date_payment'];
+                
 
-                //$billet->fill($values);
-                //create billet
-                $billet->save();
-                $listOfIds[] = $billet->id;
-                // $billet->received_at = date('Y-m-d H:i:s');
-                $address = preg_split('#,#', $student->guardian_address);
-                $payment = new BankInterPayment;
-                $payment->user =  $student->guardian_name;
-                $payment->user_document =  $student->guardian_document;
-                $payment->price = $billet->price;
-                $payment->address = $student->guardian_address;
-                $payment->address_state = $student->guardian_state;
-                $payment->address_district = $student->guardian_district;
-                $payment->address_city = $student->guardian_city;
-                $payment->address_number = $student->guardian_address_number;
-                $payment->address_postal_code = $student->guardian_postal_code;
-                $payment->date_payment = $values['fee_date_payment'];
-                $payment->your_number =  str_pad($billet->id, 10, "0", STR_PAD_LEFT);
-                $payment->description = implode(PHP_EOL, [$values['fee_line_1'], $values['fee_line_2']]);
-                //  $errors[] = $payment;
-                $this->bank_payment_inter->create($payment, function ($opt) use (&$billet, &$errors) {
-                    if (!$opt->success) {
-                        $errors[] = sprintf('%s - %s', $opt->status, (string) $opt->body);
-                        return false;
-                    }
-                    $billet->bank_bullet_id = $opt->billet->number;
-                    $billet->save();
-                    DB::commit();
-                });
+                // $billet = new Billet_eloquent;
+                // $billet->body = json_encode($values);
+                // $billet->price = ($values['fee_amount'] + $values['fee_fine']) - $values['fee_discount'];
+                // $billet->fee_item_id = $values['fee_master_id'];
+                // $billet->user_id = $student->id;
+
+                // //$billet->fill($values);
+                // //create billet
+                // $billet->save();
+                // $listOfIds[] = $billet->id;
+                // // $billet->received_at = date('Y-m-d H:i:s');
+                // $address = preg_split('#,#', $student->guardian_address);
+                // $payment = new BankInterPayment;
+                // $payment->user =  $student->guardian_name;
+                // $payment->user_document =  $student->guardian_document;
+                // $payment->price = $billet->price;
+                // $payment->address = $student->guardian_address;
+                // $payment->address_state = $student->guardian_state;
+                // $payment->address_district = $student->guardian_district;
+                // $payment->address_city = $student->guardian_city;
+                // $payment->address_number = $student->guardian_address_number;
+                // $payment->address_postal_code = $student->guardian_postal_code;
+                // $payment->date_payment = $values['fee_date_payment'];
+                // $payment->your_number =  str_pad($billet->id, 10, "0", STR_PAD_LEFT);
+                // $payment->description = implode(PHP_EOL, [$values['fee_line_1'], $values['fee_line_2']]);
+                // //  $errors[] = $payment;
+                // $this->bank_payment_inter->create($payment, function ($opt) use (&$billet, &$errors) {
+                //     if (!$opt->success) {
+                //         $errors[] = sprintf('%s - %s', $opt->status, (string) $opt->body);
+                //         return false;
+                //     }
+                //     $billet->bank_bullet_id = $opt->billet->number;
+                //     $billet->save();
+                //     DB::commit();
+                // });
             }
-
-
+         
+            $ids =  array_merge($ids, (new Billet)->create($data, $this->input->post('user_id')));
+            DB::commit();
             //    return new JsonResponse(['message' => $errors]);
             if (count($errors) > 0)
                 throw new Exception(implode('<br/>', $errors));
@@ -1010,16 +1025,33 @@ class Studentfee extends Admin_Controller
         }
 
         $this->load->model('eloquent/Billet_eloquent');
-        $insert = [];
+        $saved = [];
         foreach ($data as $values) {
-            $billet = Billet_eloquent::find($values['bullet_id']);
-            $billet->STATUS = $this->input->post('motive');
+            $billet = Billet_eloquent::find($values['billet_id']);
+            $billet->status = $this->input->post('motive');
             $billet->deleted_at = date('Y-m-d H:i:s');
             $billet->save();
         }
 
 
-        return new JsonResponse(['inputs' => $insert]);
+        return new JsonResponse(['inputs' => $saved]);
+    }
+
+    public function destroyItem($id)
+    {
+        $staff_record = $this->session->userdata('admin');
+        $this->load->model('eloquent/Student_fee_item_eloquent');
+
+        try {
+
+            Student_fee_item_eloquent::where('id', $id)->delete();
+        } catch (Exception $e) {
+            return new JsonResponse(['message' => 'failure'], 400);
+        }
+
+
+
+        return new JsonResponse(['message' => 'successful']);
     }
 
     public function addfeegrp()

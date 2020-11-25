@@ -90,19 +90,19 @@ class Billet extends Admin_Controller
                 'fee_fine' => 0,
                 'fee_discount' => 0,
                 'fee_amount' =>  $item->amount,
-                'fee_date_payment' => $item->date_due,
+                'due_date' => $item->due_date,
                 'fee_line_1' => $item->title,
                 'fee_line_2' => ''
 
             ];
         }
+        $ids = [];
         foreach ($items as $id => $dataItems) {
-            //    dump($dataItems);
-            $createForBackend =  (new CoreBillet)->create($dataItems, $id, Billet_eloquent::FOR_CREATE);
+            $ids =  array_merge($ids, (new CoreBillet)->create($dataItems, $id));
         }
 
-        return new JsonResponse(['data' => $createForBackend ]);
+        return new JsonResponse(['data' => $ids , 'message' => $this->lang->line('bulk_billet_success_generate')]);
 
-        //  dump($items);
+        
     }
 }

@@ -127,7 +127,7 @@
     $(document).ready(function() {
         var site_url = "<?php echo site_url('admin'); ?>";
 
-       
+
         var $form = $("#schsetting_form");
         $.datepicker.regional['pt-BR'] = {
             closeText: 'Fechar',
@@ -247,7 +247,8 @@
                 var checked = $(this).is(':checked')
 
                 $('input[name="student_fee_item_id[]"]').each(function() {
-                    $(this).prop('checked', checked)
+                    if (!$(this).prop('disabled'))
+                        $(this).prop('checked', checked)
 
 
                 })
@@ -270,11 +271,11 @@
             })
             var loadBillet = false
 
-            $formBillet.submit(function(e) {
+            $formBillet.off('submit').on('submit', function(e) {
                 e.preventDefault();
-                
+
                 if (!$formBillet.valid() || loadBillet || $formBillet.find('input[name="student_fee_item_id[]"]:checked').size() == 0) return;
-               
+
                 loadBillet = true;
                 var $button = $modalFooter.find('button')
                 $button.button('loading')
@@ -284,9 +285,12 @@
                     data: $formBillet.serialize(),
                     dataType: 'json',
                     success: function() {
-                      
+
                         $("#listBilletModal").modal('hide');
+                        $button.button('reset')
+                        $formBillet.trigger('reset')
                         $("#listBilletModal .modal-body").html('');
+
                     },
                     complete: function() {
                         $button.button('reset')

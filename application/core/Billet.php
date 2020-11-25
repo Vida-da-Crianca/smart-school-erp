@@ -25,31 +25,32 @@ class Billet {
             // ) continue;
 
             $billet = new \Billet_eloquent;
-            $values['body'] = json_encode($values);
+            $billet->body = json_encode($values);
             $billet->price = ($values['fee_amount'] + $values['fee_fine']) - $values['fee_discount'];
-            $values['user_id'] = $student->id;
-            $billet->fill($values);
+            $billet->user_id = $student->id;
+            // $billet->fill($values);
+            $billet->due_date = $values['due_date'];
             $billet->status = $defaultStatus;
             //create billet
             $billet->save();
-            $billet->feeItems()->detach($values['fee_item_id']);
+            $billet->feeItems()->detach();
             $billet->feeItems()->attach($values['fee_item_id']);
             $listOfIds[] = $billet->id;
             // $billet->received_at = date('Y-m-d H:i:s');
             
-            $payment = new BankInterPayment;
-            $payment->user =  $student->guardian_name;
-            $payment->user_document =  $student->guardian_document;
-            $payment->price = $billet->price;
-            $payment->address = $student->guardian_address;
-            $payment->address_state = $student->guardian_state;
-            $payment->address_district = $student->guardian_district;
-            $payment->address_city = $student->guardian_city;
-            $payment->address_number = $student->guardian_address_number;
-            $payment->address_postal_code = $student->guardian_postal_code;
-            $payment->date_payment = $values['fee_date_payment'];
-            $payment->your_number =  str_pad($billet->id, 10, "0", STR_PAD_LEFT);
-            $payment->description = implode(PHP_EOL, [$values['fee_line_1'], $values['fee_line_2']]);
+            // $payment = new BankInterPayment;
+            // $payment->user =  $student->guardian_name;
+            // $payment->user_document =  $student->guardian_document;
+            // $payment->price = $billet->price;
+            // $payment->address = $student->guardian_address;
+            // $payment->address_state = $student->guardian_state;
+            // $payment->address_district = $student->guardian_district;
+            // $payment->address_city = $student->guardian_city;
+            // $payment->address_number = $student->guardian_address_number;
+            // $payment->address_postal_code = $student->guardian_postal_code;
+            // $payment->date_payment = $values['fee_date_payment'];
+            // $payment->your_number =  str_pad($billet->id, 10, "0", STR_PAD_LEFT);
+            // $payment->description = implode(PHP_EOL, [$values['fee_line_1'], $values['fee_line_2']]);
             //  $errors[] = $payment;
             // $this->bank_payment_inter->create($payment, function ($opt) use (&$billet, &$errors) {
             //     if (!$opt->success) {
