@@ -32,16 +32,20 @@ class CancelBillet extends BaseCommand{
         $this->CI->load->library('bank_payment_inter');
         $this->CI->load->model('eloquent/Billet_eloquent');
         
-        $billets = \Billet_eloquent::onlyTrashed()->where('is_active',1)->get();
+        $billets = \Billet_eloquent::onlyTrashed()->where('is_active',1)->get()->groupBy('bank_bullet_id');
         
-
-        foreach($billets as $row){
+        
+        foreach($billets as $item){
+            //   dump($row->status);
+              $row = $item->first();
               $this->CI->bank_payment_inter->cancel(['number' => $row->bank_bullet_id, 'motive' => $row->status], 
-              function($status) use(&$row){
+              function($status) use($row){
                    if($status->success ) {
-                       dump('Deleted '.  $row->id);
-                          $row->is_active = 0;
-                          $row->save();
+                      \Billet_eloquent::onlyTrashed()
+                       ->where('bank_bullet_id', $row->bank_bullet_id)
+                       ->update([
+                           'is_active' => 0,
+                       ]);
                    }
 
                    dump($status);

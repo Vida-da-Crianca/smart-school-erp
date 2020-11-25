@@ -38,9 +38,12 @@ class BilletGenerateCommand extends BaseCommand
     protected function start()
     {
 
-        $this->CI->load->library('bank_payment_inter');
-        $this->CI->load->model('eloquent/Billet_eloquent');
+        $this->CI->load->library(['bank_payment_inter', 'mailer']);
+        $this->CI->load->model(['eloquent/Billet_eloquent', 'eloquent/Email_setting_eloquent']);
+
+
         DB::beginTransaction();
+        
 
         $billets = \Billet_eloquent::whereNull('bank_bullet_id')
             ->with(['feeItems', 'student'])
@@ -57,6 +60,15 @@ class BilletGenerateCommand extends BaseCommand
         foreach ($data as $row) {
             $callback($row);
         }
+    }
+
+
+    protected function sendMail($name, $email, $id, $code)
+    {
+        $content = $this->CI->load->view('mailer/billet.tpl.php', ['name' => $name, 
+        'code' => $code,
+        'link' => sprintf('%sstudentfee/getBillet/%s', getenv('SITE_URL'), $id)],  TRUE);
+        $this->CI->mailer->send_mail($email, 'Boleto ' . $id, $content /**/);
     }
 
 
@@ -77,10 +89,11 @@ class BilletGenerateCommand extends BaseCommand
 
                 $billet->id[] = $item->id;
                 $first = $item->feeItems()->first();
-                $billet->price +=  $first->amount;
+                $body =  $item->body_json;
+                $billet->price +=  $item->price;
                 $billet->due_date = $item->due_date;
                 $student = $item->student;
-                $descriptions[] =  sprintf('%s - %s - R$ %s', $student->full_name, $first->title, number_format($first->amount, 2, ',', '.'));
+                $descriptions[] =  sprintf('%s - %s - R$ %s - Desc. R$ %s', $student->full_name, $first->title, number_format($first->amount, 2, ',', '.'), number_format($body->fee_discount, 2, ',', '.'));
             });
 
             if ($billet->id == 0) continue;
@@ -89,16 +102,17 @@ class BilletGenerateCommand extends BaseCommand
             $billet->description = implode(PHP_EOL, $descriptions);
             $this->buildOptionsBilletPayment($payment, $billet);
 
-            $this->push($payment, function ($options) use ($billet) {
+            $this->push($payment, function ($options) use ($billet, $student) {
                 //  if($id == null) return;
-                $this->onPush($options, $billet);
+                $this->onPush($options, $billet, $student);
             });
         }
     }
 
 
-    public function onPush($options, $billet)
-    {   if(!$options->success) return;
+    public function onPush($options, $billet, $student)
+    {
+        if (!$options->success) return;
         \Billet_eloquent::whereIn('id', $billet->id)
             ->update([
                 'custom_number' => $billet->custom_number,
@@ -106,6 +120,7 @@ class BilletGenerateCommand extends BaseCommand
             ]);
 
         DB::commit();
+        $this->sendMail($student->guardian_name, $student->guardian_email, $options->billet->number, $options->billet->barcode);
     }
 
     public function buildOptionsStudentPayment($student)

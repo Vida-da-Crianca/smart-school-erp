@@ -111,13 +111,13 @@ class Bank_payment_inter
             $pdf = $this->bank->getPdfBoleto($id, getenv('BANK_INTER_PDF_FILES'));
             $filename  = sprintf('%s%s.pdf', getenv('BANK_INTER_PDF_FILES'), $id);
             rename($pdf, $filename);
-            echo "\n\nSalvo PDF em ".$pdf."\n";
+            // echo "\n\nSalvo PDF em ".$pdf."\n";
         } catch ( BancoInterException $e ) {
-            echo "\n\n".$e->getMessage();
-            echo "\n\nCabeçalhos: \n";
-            echo $e->reply->header;
-            echo "\n\nConteúdo: \n";
-            echo $e->reply->body;
+            // echo "\n\n".$e->getMessage();
+            // echo "\n\nCabeçalhos: \n";
+            // echo $e->reply->header;
+            // echo "\n\nConteúdo: \n";
+              throw new Exception($e->reply->body);
         }
 
     }

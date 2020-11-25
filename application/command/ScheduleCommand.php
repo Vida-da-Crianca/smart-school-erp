@@ -48,7 +48,7 @@ class ScheduleCommand extends BaseCommand
                 'invoice:create',
                 'billet:paid',
                 'billet:cancel',
-                'billet:generate'
+                'billet:generate',
             ];
 
             foreach ($comandList as $c) {
@@ -56,7 +56,7 @@ class ScheduleCommand extends BaseCommand
                 $this->call($command);
             }
             // check if the timeout is reached
-            $process->checkTimeout();
+            // $process->checkTimeout();
 
             sleep(30);
         }

@@ -82,10 +82,13 @@ class Emailconfig extends Admin_Controller {
         }
         echo json_encode($array);
     }
+  
 
+    function preview(){
+
+        $this->load->view('mailer/billet.tpl.php');
+    }
      
 
 
 }
-
-?>

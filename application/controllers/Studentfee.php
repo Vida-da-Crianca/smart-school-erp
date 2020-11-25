@@ -909,10 +909,16 @@ class Studentfee extends Admin_Controller
         return new JsonResponse(compact('data'));
     }
     public function getBillet($id)
-    {
-        $this->load->library('bank_payment_inter');
-
-        $this->bank_payment_inter->show($id);
+    {   
+        try{
+            
+            $this->load->library('bank_payment_inter');
+            $this->bank_payment_inter->show($id);
+           
+        }catch(Exception $e){
+            return new JsonResponse(json_decode($e->getMessage(), true), 404);
+        }
+       
     }
     public function generateBillet()
     {
@@ -1026,11 +1032,14 @@ class Studentfee extends Admin_Controller
 
         $this->load->model('eloquent/Billet_eloquent');
         $saved = [];
+
         foreach ($data as $values) {
             $billet = Billet_eloquent::find($values['billet_id']);
-            $billet->status = $this->input->post('motive');
-            $billet->deleted_at = date('Y-m-d H:i:s');
-            $billet->save();
+            \Billet_eloquent::where('bank_bullet_id', $billet->bank_bullet_id)
+                       ->update([
+                           'status' => $this->input->post('motive'),
+                           'deleted_at' => date('Y-m-d H:i:s'),
+                       ]);
         }
 
 

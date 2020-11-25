@@ -1738,7 +1738,8 @@ $language_name = $language["short_code"];
 
                         if (array_to_collect_fees.length == 0) return alert("Nenhum item válido foi selecionado");
 
-                        var options = [{
+                        var options = [
+                            {
                                 value: 'ACERTOS',
                                 label: 'ACERTOS',
                             },
@@ -1750,10 +1751,10 @@ $language_name = $language["short_code"];
                                 value: 'SUBISTITUICAO',
                                 label: 'SUBISTITUIÇÃO',
                             },
-                            // {
-                            //     value: 'PROTESTOAPOSBAIXA',
-                            //     label: 'PROTESTO APÓS BAIXA',
-                            // },
+                            {
+                                value: 'PROTESTOAPOSBAIXA',
+                                label: 'PROTESTO APÓS BAIXA',
+                            },
                             {
                                 value: 'PAGODIRETOAOCLIENTE',
                                 label: 'PAGO DIRETO AO CLIENTE',
@@ -1807,7 +1808,7 @@ $language_name = $language["short_code"];
                                 success: function(data) {
 
                                     alert('Os boletos foram cancelados com sucesso')
-                                    //window.location.reload();
+                                    window.location.reload();
 
                                 },
                                 error: function(xhr) { // if error occured
