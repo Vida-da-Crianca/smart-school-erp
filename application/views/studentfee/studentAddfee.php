@@ -1750,10 +1750,10 @@ $language_name = $language["short_code"];
                                 value: 'SUBISTITUICAO',
                                 label: 'SUBISTITUIÇÃO',
                             },
-                            {
-                                value: 'PROTESTOAPOSBAIXA',
-                                label: 'PROTESTO APÓS BAIXA',
-                            },
+                            // {
+                            //     value: 'PROTESTOAPOSBAIXA',
+                            //     label: 'PROTESTO APÓS BAIXA',
+                            // },
                             {
                                 value: 'PAGODIRETOAOCLIENTE',
                                 label: 'PAGO DIRETO AO CLIENTE',
