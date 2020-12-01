@@ -49,9 +49,9 @@ class PaidBillet extends BaseCommand
             if ($b->situacao == 'PAGO') {
 
 
-                // $row->update(['status' => \Billet_eloquent::PAID,
-                // 'received_at'=> $dateStatus->format('Y-m-d H:i:s'),
-                // ]);
+                $row->update(['status' => \Billet_eloquent::PAID,
+                'received_at'=> $dateStatus->format('Y-m-d H:i:s'),
+                ]);
                 $body = $row->body_json;
                 $deposite = new \Student_deposite_eloquent;
                 $deposite->fill([
