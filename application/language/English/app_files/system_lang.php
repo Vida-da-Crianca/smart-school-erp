@@ -1478,4 +1478,6 @@ $lang['editable'] = "Editable";
 $lang['form'] = "Form";
 $lang['allowed_edit_form_fields_on_student_profile'] = "Allowed edit form fields on student profile";
 $lang['whatsapp_url'] = "WhatsApp URL";
+
+$lang['invoice_module'] = 'Invoices '; 
 ?>

@@ -278,6 +278,11 @@ class Student extends Admin_Controller
         // $this->form_validation->set_rules('rte', $this->lang->line('rtl'), 'trim|required|xss_clean');
         $this->form_validation->set_rules('guardian_name', $this->lang->line('guardian_name'), 'trim|required|xss_clean');
         $this->form_validation->set_rules('guardian_phone', $this->lang->line('guardian_phone'), 'trim|required|xss_clean');
+        $this->form_validation->set_rules('guardian_document', $this->lang->line('guardian_phone'), 'trim|numeric|xss_clean');
+        $this->form_validation->set_rules('guardian_postal_code', $this->lang->line('guardian_postal_code'), 'trim|numeric|required|xss_clean');
+        $this->form_validation->set_rules('guardian_district', $this->lang->line('guardian_district'), 'trim|required|xss_clean');
+        $this->form_validation->set_rules('guardian_city', $this->lang->line('guardian_city'), 'trim|required|xss_clean');
+        $this->form_validation->set_rules('guardian_state', $this->lang->line('guardian_state'), 'trim|required|xss_clean');
 
         if (!$this->sch_setting_detail->adm_auto_insert) {
 
@@ -347,11 +352,17 @@ class Student extends Admin_Controller
                 'ifsc_code'           => $this->input->post('ifsc_code'),
                 'guardian_occupation' => $this->input->post('guardian_occupation'),
                 'guardian_email'      => $this->input->post('guardian_email'),
+                'guardian_document'      => $this->input->post('guardian_document'),
+                'guardian_postal_code'      => $this->input->post('guardian_postal_code'),
+                'guardian_district'      => $this->input->post('guardian_district'),
+                'guardian_state'      => $this->input->post('guardian_state'),
+                'guardian_city'      => $this->input->post('guardian_city'),
                 'gender'              => $this->input->post('gender'),
                 'guardian_name'       => $this->input->post('guardian_name'),
                 'guardian_relation'   => $this->input->post('guardian_relation'),
                 'guardian_phone'      => $this->input->post('guardian_phone'),
                 'guardian_address'    => $this->input->post('guardian_address'),
+                'guardian_address_number'    => $this->input->post('guardian_address_number'),
                 'vehroute_id'         => $vehroute_id,
                 'hostel_room_id'      => $hostel_room_id,
                 'note'                => $this->input->post('note'),
@@ -927,7 +938,7 @@ class Student extends Admin_Controller
 
         $category = $this->category_model->get();
 
-        $fields = array('admission_no', 'roll_no', 'firstname', 'lastname', 'gender', 'dob', 'category_id', 'religion', 'cast', 'mobileno', 'email', 'admission_date', 'blood_group', 'school_house_id', 'height', 'weight', 'measurement_date', 'father_name', 'father_phone', 'father_occupation', 'mother_name', 'mother_phone', 'mother_occupation', 'guardian_is', 'guardian_name', 'guardian_relation', 'guardian_email', 'guardian_phone', 'guardian_occupation', 'guardian_address', 'current_address', 'permanent_address', 'bank_account_no', 'bank_name', 'ifsc_code', 'adhar_no', 'samagra_id', 'rte', 'previous_school', 'note');
+        $fields = array('admission_no', 'roll_no', 'firstname', 'lastname', 'gender', 'dob', 'category_id', 'religion', 'cast', 'mobileno', 'email', 'admission_date', 'blood_group', 'school_house_id', 'height', 'weight', 'measurement_date', 'father_name', 'father_phone', 'father_occupation', 'mother_name', 'mother_phone', 'mother_occupation', 'guardian_is', 'guardian_name', 'guardian_relation', 'guardian_email', 'guardian_phone', 'guardian_occupation', 'guardian_address' ,'guardian_address_number', 'current_address', 'permanent_address', 'bank_account_no', 'bank_name', 'ifsc_code', 'adhar_no', 'samagra_id', 'rte', 'previous_school', 'note');
 
         $data["fields"]       = $fields;
         $data['categorylist'] = $category;
@@ -1153,6 +1164,8 @@ class Student extends Admin_Controller
         $custom_fields              = $this->customfield_model->getByBelong('students');
         $data['sch_setting']        = $this->sch_setting_detail;
 
+        
+
         foreach ($custom_fields as $custom_fields_key => $custom_fields_value) {
             if ($custom_fields_value['validation']) {
                 $custom_fields_id   = $custom_fields_value['id'];
@@ -1170,6 +1183,11 @@ class Student extends Admin_Controller
 
         $this->form_validation->set_rules('gender', $this->lang->line('gender'), 'trim|required|xss_clean');
         $this->form_validation->set_rules('guardian_name', $this->lang->line('guardian_name'), 'trim|required|xss_clean');
+        $this->form_validation->set_rules('guardian_document', $this->lang->line('guardian_document'), 'trim|required|xss_clean');
+        $this->form_validation->set_rules('guardian_postal_code', $this->lang->line('guardian_postal_code'), 'trim|numeric|required|xss_clean');
+        $this->form_validation->set_rules('guardian_district', $this->lang->line('guardian_district'), 'trim|required|xss_clean');
+        $this->form_validation->set_rules('guardian_city', $this->lang->line('guardian_city'), 'trim|required|xss_clean');
+        $this->form_validation->set_rules('guardian_state', $this->lang->line('guardian_state'), 'trim|required|xss_clean');
         // $this->form_validation->set_rules('rte', $this->lang->line('rtl'), 'trim|required|xss_clean');
         $this->form_validation->set_rules('guardian_phone', $this->lang->line('guardian_phone'), 'trim|required|xss_clean');
         $this->form_validation->set_rules(
@@ -1246,11 +1264,17 @@ class Student extends Admin_Controller
                 'ifsc_code'           => $this->input->post('ifsc_code'),
                 'guardian_occupation' => $this->input->post('guardian_occupation'),
                 'guardian_email'      => $this->input->post('guardian_email'),
+                'guardian_document'      => $this->input->post('guardian_document'),
+                'guardian_postal_code'      => $this->input->post('guardian_postal_code'),
+                'guardian_district'      => $this->input->post('guardian_district'),
+                'guardian_state'      => $this->input->post('guardian_state'),
+                'guardian_city'      => $this->input->post('guardian_city'),
                 'gender'              => $this->input->post('gender'),
                 'guardian_name'       => $this->input->post('guardian_name'),
                 'guardian_relation'   => $this->input->post('guardian_relation'),
                 'guardian_phone'      => $this->input->post('guardian_phone'),
                 'guardian_address'    => $this->input->post('guardian_address'),
+                'guardian_address_number'    => $this->input->post('guardian_address_number'),
                 'vehroute_id'         => $vehroute_id,
                 'hostel_room_id'      => $hostel_room_id,
                 'note'                => $this->input->post('note'),

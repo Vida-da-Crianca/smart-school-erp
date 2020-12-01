@@ -37,6 +37,8 @@
  */
 defined('BASEPATH') OR exit('No direct script access allowed');
 
+
+define('PHPREDIS_VERSION', phpversion('redis'));
 /**
  * CodeIgniter Session Redis Driver
  *
@@ -215,7 +217,8 @@ class CI_Session_redis_driver extends CI_Session_driver implements SessionHandle
 			$this->_session_id = $session_id;
 		}
 
-		$this->_redis->setTimeout($this->_lock_key, 300);
+		// $this->_redis->setTimeout($this->_lock_key, 300);
+		$this->_expire_key($this->_lock_key, 300);
 		if ($this->_fingerprint !== ($fingerprint = md5($session_data)) OR $this->_key_exists === FALSE)
 		{
 			if ($this->_redis->set($this->_key_prefix.$session_id, $session_data, $this->_config['expiration']))
@@ -228,7 +231,7 @@ class CI_Session_redis_driver extends CI_Session_driver implements SessionHandle
 			return $this->_fail();
 		}
 
-		return ($this->_redis->setTimeout($this->_key_prefix.$session_id, $this->_config['expiration']))
+		return ($this->_expire_key($this->_key_prefix.$session_id, $this->_config['expiration']))
 			? $this->_success
 			: $this->_fail();
 	}
@@ -247,7 +250,8 @@ class CI_Session_redis_driver extends CI_Session_driver implements SessionHandle
 		if (isset($this->_redis))
 		{
 			try {
-				if ($this->_redis->ping() === '+PONG')
+				$ping = $this->_redis->ping();
+				if ($ping === '+PONG' OR $ping === TRUE)
 				{
 					$this->_release_lock();
 					if ($this->_redis->close() === FALSE)
@@ -282,9 +286,9 @@ class CI_Session_redis_driver extends CI_Session_driver implements SessionHandle
 	{
 		if (isset($this->_redis, $this->_lock_key))
 		{
-			if (($result = $this->_redis->delete($this->_key_prefix.$session_id)) !== 1)
+			if (($result = $this->_delete_key($this->_key_prefix.$session_id)) !== 1)
 			{
-				log_message('debug', 'Session: Redis::delete() expected to return 1, got '.var_export($result, TRUE).' instead.');
+				log_message('debug', 'Session: Redis::del() expected to return 1, got '.var_export($result, TRUE).' instead.');
 			}
 
 			$this->_cookie_destroy();
@@ -327,7 +331,7 @@ class CI_Session_redis_driver extends CI_Session_driver implements SessionHandle
 		// correct session ID.
 		if ($this->_lock_key === $this->_key_prefix.$session_id.':lock')
 		{
-			return $this->_redis->setTimeout($this->_lock_key, 300);
+			return $this->_expire_key($this->_lock_key, 300);
 		}
 
 		// 30 attempts to obtain a lock, in case another request already has it
@@ -382,8 +386,9 @@ class CI_Session_redis_driver extends CI_Session_driver implements SessionHandle
 	protected function _release_lock()
 	{
 		if (isset($this->_redis, $this->_lock_key) && $this->_lock)
-		{
-			if ( ! $this->_redis->delete($this->_lock_key))
+		{    
+			$redisCallback =  version_compare(PHPREDIS_VERSION, '5', '>=') ? 'del' : 'delete';
+			if ( ! $this->_redis->$redisCallback($this->_lock_key))
 			{
 				log_message('error', 'Session: Error while trying to free lock for '.$this->_lock_key);
 				return FALSE;
@@ -394,6 +399,34 @@ class CI_Session_redis_driver extends CI_Session_driver implements SessionHandle
 		}
 
 		return TRUE;
+	}
+
+	/**
+	 * Expire key
+	 *
+	 * Sets expiration for a key
+	 *
+	 * @param	string	$key	Redis key
+	 * @param	int	$ttl	The key's remaining Time To Live, in seconds.
+	 * @return	bool
+	 */
+	protected function _expire_key($key, $ttl) {
+
+		if (version_compare(PHPREDIS_VERSION, '5', '>=')){
+			return $this->_redis->expire($key, $ttl);
+		}
+		return $this->_redis->setTimeout($key, $ttl);
+	}
+
+	protected function _delete_key($key){
+		
+			if (version_compare(PHPREDIS_VERSION, '5', '>=')){
+				return $this->_redis->del($key);
+			}
+				
+			return $this->_redis->delete($key);
+		
+	
 	}
 
 }
