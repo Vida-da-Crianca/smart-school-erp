@@ -1,4 +1,4 @@
-FROM webdevops/php-nginx:5.6
+FROM webdevops/php-nginx:7.4
 
 LABEL name="erpjp-school" author="carlosocarvalho" email="contato@carlosocarvalho.com.br"
 
