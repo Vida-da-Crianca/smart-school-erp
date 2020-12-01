@@ -7,7 +7,10 @@
         "symfony/filesystem": "^5.1",
         "symfony/process": "^5.1",
         "twig/twig": "^3.1",
-        "carlosocarvalho/sigis-php-sdk": "^2.0"
+        "carlosocarvalho/sigis-php-sdk": "^2.0",
+        "maknz/slack": "^1.7",
+        "agorlov/discordmsg": "^1.0",
+        "nesbot/carbon": "^2.42"
         
     },
     "require-dev": {

@@ -52,6 +52,7 @@ class BilletGenerateCommand extends BaseCommand
             $group = $row->groupBy('due_date');
             $this->buildByOnDueDate($group);
         }
+        return 0;
     }
 
 

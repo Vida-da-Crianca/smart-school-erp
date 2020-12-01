@@ -722,7 +722,8 @@ class Studentfeemaster_model extends MY_Model
         ], [
             'price' => $price,
             'status' => Invoice_eloquent::PENDING_CREATE,
-            'student_fees_deposite_id' => $student_fees_deposite_id
+            'student_fees_deposite_id' => $student_fees_deposite_id,
+            'due_date' => date('Y-m-d')
         ]);
     }
 

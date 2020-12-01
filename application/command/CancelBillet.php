@@ -48,7 +48,8 @@ class CancelBillet extends BaseCommand{
                        ]);
                    }
 
-                   dump($status);
+                //    dump($status);
+                   file_put_contents(getenv('BASE_DIR') . 'schedule.log', sprintf( '%s -  %s',date('Y-m-d H:i:s'), json_encode($status) , PHP_EOL), FILE_APPEND);
               });
         }
        

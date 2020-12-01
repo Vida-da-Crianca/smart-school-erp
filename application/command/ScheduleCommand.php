@@ -36,16 +36,18 @@ class ScheduleCommand extends BaseCommand
     protected function start()
     {
         $this->title('Schedule running');
+        file_put_contents( getenv('BASE_DIR'). 'schedule.log', date('Y-m-d H:i:s').PHP_EOL, FILE_APPEND);
 
-        $process = new Process(['ls', '-lsa']);
+        // $process = new Process(['ls', '-lsa']);
         // $process->setTimeout(3600);
-        $process->start();
+        // $process->start();
 
-        while (true) {
+        // while (true) {
             // ...
             $comandList = [
                 'invoice:cancel',
                 'invoice:create',
+                'invoice:tribute',
                 'billet:paid',
                 'billet:cancel',
                 'billet:generate',
@@ -58,8 +60,8 @@ class ScheduleCommand extends BaseCommand
             // check if the timeout is reached
             // $process->checkTimeout();
 
-            sleep(30);
-        }
+            // sleep(30);
+        // }
 
         return 0;
     }

@@ -9,11 +9,16 @@ class Student_deposite_eloquent extends  Eloquent {
 
     
     protected $table = 'student_fees_deposite';
+
+    public $timestamps = false;
+
     protected $fillable = [
         'fee_groups_feetype_id',
         'student_fees_master_id',
         'is_active',
-        'amount_detail'
+        'amount_detail',
+        'student_fees_id',
+        'created_at'
     ];
 
 

@@ -31,7 +31,8 @@ class Invoice_eloquent extends  Eloquent
         'invoice_number',
         'autenticidade',
         'user_id',
-        'bullet_id'
+        'bullet_id',
+        'due_date'
     ];
 
 
@@ -46,6 +47,10 @@ class Invoice_eloquent extends  Eloquent
     {
         get_instance()->load->model('eloquent/Student_deposite_eloquent');
         return $this->belongsTo('Student_deposite_eloquent', 'student_fees_deposite_id', 'id');
+    }
+    public function billet(){
+        get_instance()->load->model('eloquent/Billet_eloquent');
+        return $this->belongsTo('Billet_eloquent', 'bullet_id', 'id');
     }
 
    

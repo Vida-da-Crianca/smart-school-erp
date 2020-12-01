@@ -45,8 +45,8 @@ services:
         source: openssl.cnf
         target: /etc/ssl/openssl.cnf
       - 
-        source: schedule.conf
-        target: /opt/docker/etc/supervisor.d/erp.conf
+        source: supervisor.conf
+        target: /opt/docker/etc/supervisor.d/schedule.conf
 
     deploy:
       labels:
@@ -74,6 +74,8 @@ configs:
      file: './mysql.conf'
    openssl.cnf:
      file: ./openssl.cnf
-   schedule.conf:
-     file: ./docker/supervisor.conf
+   cron:
+     file: ./docker/cron.sh
+   supervisor.conf:
+     file: ./docker/supervisor.conf 
 
