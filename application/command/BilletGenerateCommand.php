@@ -43,15 +43,27 @@ class BilletGenerateCommand extends BaseCommand
 
 
         DB::beginTransaction();
-        
 
-        $billets = \Billet_eloquent::whereNull('bank_bullet_id')
-            ->with(['feeItems', 'student'])
-            ->get()->groupBy('user_id');
-        foreach ($billets as $row) {
-            $group = $row->groupBy('due_date');
-            $this->buildByOnDueDate($group);
+        try {
+
+
+            $billets = \Billet_eloquent::whereNull('bank_bullet_id')
+                ->with(['feeItems', 'student'])
+                ->get()->groupBy('user_id');
+               
+            foreach ($billets as $row) {
+                $group = $row->groupBy('due_date');
+
+                dump($group);
+                $this->buildByOnDueDate($group);
+            }
+        } catch (\Exception $e) {
+            discord_exception(
+                sprintf('%s----%s', PHP_EOL, $e->getMessage())
+            );
         }
+
+
         return 0;
     }
 
@@ -66,9 +78,11 @@ class BilletGenerateCommand extends BaseCommand
 
     protected function sendMail($name, $email, $id, $code)
     {
-        $content = $this->CI->load->view('mailer/billet.tpl.php', ['name' => $name, 
-        'code' => $code,
-        'link' => sprintf('%sstudentfee/getBillet/%s', getenv('SITE_URL'), $id)],  TRUE);
+        $content = $this->CI->load->view('mailer/billet.tpl.php', [
+            'name' => $name,
+            'code' => $code,
+            'link' => sprintf('%sstudentfee/getBillet/%s', getenv('SITE_URL'), $id)
+        ],  TRUE);
         $this->CI->mailer->send_mail($email, 'Boleto ' . $id, $content /**/);
     }
 
@@ -121,6 +135,7 @@ class BilletGenerateCommand extends BaseCommand
             ]);
 
         DB::commit();
+        discord_log(sprintf('%s', json_encode($options, JSON_PRETTY_PRINT)), 'Nova Boleto');
         $this->sendMail($student->guardian_name, $student->guardian_email, $options->billet->number, $options->billet->barcode);
     }
 
