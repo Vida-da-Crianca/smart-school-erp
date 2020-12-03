@@ -54,7 +54,7 @@ class BilletGenerateCommand extends BaseCommand
             foreach ($billets as $row) {
                 $group = $row->groupBy('due_date');
 
-                dump($group);
+                dump($group->toArray());
                 $this->buildByOnDueDate($group);
             }
         } catch (\Exception $e) {
@@ -127,7 +127,10 @@ class BilletGenerateCommand extends BaseCommand
 
     public function onPush($options, $billet, $student)
     {
-        if (!$options->success) return;
+        if (!$options->success) {
+            discord_log(sprintf('%s', json_encode($options, JSON_PRETTY_PRINT)), 'Falha ao gerar boleto');
+            return;
+        };
         \Billet_eloquent::whereIn('id', $billet->id)
             ->update([
                 'custom_number' => $billet->custom_number,
