@@ -38,18 +38,25 @@ class CancelBillet extends BaseCommand{
         foreach($billets as $item){
             //   dump($row->status);
               $row = $item->first();
+              if( $row->bank_bullet_id == null) {
+                  $row->is_active= 0;
+                  $row->save();
+                  continue;
+              }
               $this->CI->bank_payment_inter->cancel(['number' => $row->bank_bullet_id, 'motive' => $row->status], 
               function($status) use($row){
-                   if($status->success ) {
+               
+                //    dump($row->bank_bullet_id);
+                   //if($status->success ) {
                       \Billet_eloquent::onlyTrashed()
                        ->where('bank_bullet_id', $row->bank_bullet_id)
                        ->update([
                            'is_active' => 0,
                        ]);
-                   }
 
-                //    dump($status);
-                   file_put_contents(getenv('BASE_DIR') . 'schedule.log', sprintf( '%s -  %s',date('Y-m-d H:i:s'), json_encode($status) , PHP_EOL), FILE_APPEND);
+                   //}
+                   discord_log(sprintf('%s', json_encode($status, JSON_PRETTY_PRINT)), 'Cancelamento de Boleto');
+                  
               });
         }
        

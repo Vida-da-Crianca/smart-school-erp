@@ -63,8 +63,13 @@ class InvoiceCommand extends BaseCommand
         if ($invoices->count() == 0) return $this->success('Not exists invoices for create');
           
         $options = $settings->toArray();
+        $aliquota = str_replace([',','%'], ['.',''],$options['simple_rate']);
         foreach ($invoices as $item) {
             $this->buildInvoiceDescription($item);
+            $calc = ($aliquota / 100) * $item->price;
+            $al = number_format($calc,2,',', '.');
+
+            dump($al);
             $data  = [
                 'valor' => $item->price,
                 'base'  => $item->price,
@@ -80,7 +85,9 @@ class InvoiceCommand extends BaseCommand
                 'tomador_cod_cidade' => getCodeCity($item->student->guardian_city),
                 'rps_num' => '',
                 'id_sis_legado' => '',
-                'aliquota_atividade'=> $options['aliquota_atividade'],
+                'iss' => $options['iss'],
+                'aliquota_simples' => $al,
+                // 'aliquota_atividade'=> $options['aliquota_atividade'],
                 // 'retencao_iss' => '2.80%',
                 'rps_serie' => $options['serie'],
                 'serie' =>  $options['serie']
@@ -94,14 +101,18 @@ class InvoiceCommand extends BaseCommand
                 $service->params($data)->create();
                 $response = $service->fire();
 
-                if ($response->RetornoNota->Resultado > 0) {
-                    unset($item->_description);
-                    $item->update(['invoice_number' => $response->RetornoNota->Nota, 
-                    'status' => Invoice_eloquent::VALID,
-                    'body' => json_encode($response->RetornoNota)]);
-                    discord_log(sprintf('%s', json_encode($response->RetornoNota, JSON_PRETTY_PRINT)) , 'Nova Nota Fiscal');
+                // dump($service->getBody());
 
-                }
+                // if ($response->RetornoNota->Resultado > 0) {
+                //     unset($item->_description);
+                //     $item->update(['invoice_number' => $response->RetornoNota->Nota, 
+                //     'status' => Invoice_eloquent::VALID,
+                //     'body' => json_encode($response->RetornoNota)]);
+                //     discord_log(sprintf('%s', json_encode($response->RetornoNota, JSON_PRETTY_PRINT)) , 'Nova Nota Fiscal');
+
+                // }
+
+                dump($response);
 
            
             } catch (\Exception $e) {

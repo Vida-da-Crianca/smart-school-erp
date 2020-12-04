@@ -74,18 +74,29 @@ class TributeCommand extends BaseCommand
         \Invoice_setting_eloquent::updateOrCreate([
             'key' => 'simple_rate',
         ], [
-            'value' => str_replace('.', ',', number_format($calcB, 2)) . "%",
+            'value' => str_replace('.', ',', number_format($calcA, 2)) . "%",
             'key' => 'simple_rate',
 
         ]);
 
         \Invoice_setting_eloquent::updateOrCreate([
-            'key' => 'aliquota_atividade',
+            'key' => 'iss',
         ], [
-            'value' => str_replace('.', ',', number_format($calcA, 2)) . "%",
-            'key' => 'aliquota_atividade',
+            'value' => str_replace('.', ',', number_format($calcB, 2)) . "%",
+            'key' => 'iss',
 
         ]);
+
+        discord_log(
+            
+            json_encode(
+                [   'total' => $total,
+                    'aliquota' =>
+                str_replace('.', ',', number_format($calcA, 2)) . "%", 'iss' => str_replace('.', ',', number_format($calcB, 2)) . "%",
+                'meses' => \Invoice_resume_eloquent::whereBetween('due_date', [$dateTime->format('Y-m-01'), $now])->get()
+    
+    
+    ], JSON_PRETTY_PRINT), 'Calculo do Tributo');
     }
 
 

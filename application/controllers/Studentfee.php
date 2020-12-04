@@ -418,6 +418,7 @@ class Studentfee extends Admin_Controller
         $data['title'] = 'Student Detail';
 
         $student = $this->student_model->getByStudentSession($id);
+        
         $data['student'] = $student;
         $this->load->model(['eloquent/Student_eloquent', 'eloquent/Student_fee_item_eloquent']);
         $student_due_fee = $this->studentfeemaster_model->getStudentFees2($id);
@@ -904,7 +905,7 @@ class Studentfee extends Admin_Controller
     {
         $this->load->library('bank_payment_inter');
 
-        $data = $this->bank_payment_inter->find('00625281102');
+        $data = $this->bank_payment_inter->find('00628830707');
 
         return new JsonResponse(compact('data'));
     }
@@ -996,7 +997,7 @@ class Studentfee extends Admin_Controller
                 // });
             }
          
-            $ids =  array_merge($ids, (new Billet)->create($data, $this->input->post('user_id')));
+            $ids =  array_merge($ids, (new Billet)->create($data, $this->input->post('user_id'), true));
             DB::commit();
             //    return new JsonResponse(['message' => $errors]);
             if (count($errors) > 0)

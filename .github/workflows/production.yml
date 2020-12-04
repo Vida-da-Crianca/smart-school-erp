@@ -74,3 +74,4 @@ jobs:
       - name: Create Stack
         run: |
           docker stack deploy -c production-stack.yml $STACK_NAME
+          docker system prune --force

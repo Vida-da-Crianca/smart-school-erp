@@ -138,7 +138,7 @@ class BilletGenerateCommand extends BaseCommand
             ]);
 
         DB::commit();
-        discord_log(sprintf('%s', json_encode($options, JSON_PRETTY_PRINT)), 'Nova Boleto');
+        discord_log(sprintf('%s', json_encode($options, JSON_PRETTY_PRINT)), 'Novo Boleto');
         $this->sendMail($student->guardian_name, $student->guardian_email, $options->billet->number, $options->billet->barcode);
     }
 

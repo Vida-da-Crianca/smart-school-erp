@@ -8,8 +8,8 @@ use Illuminate\Database\Capsule\Manager as DB;
 class Billet {
     
 
-    public function create( $data, $user_id, $status = null){
-        $defaultStatus = $status ==  null ? \Billet_eloquent::PAID_PENDING : $status;
+    public function create( $data, $user_id, $forceId = false){
+        $defaultStatus = \Billet_eloquent::PAID_PENDING ;
         $CI = get_instance();
         $CI->load->model(['eloquent/Billet_eloquent', 'eloquent/Student_deposite_eloquent']);
         $CI->load->library('bank_payment_inter');
@@ -27,7 +27,7 @@ class Billet {
             $billet = new \Billet_eloquent;
             $billet->body = json_encode($values);
             $billet->price = ($values['fee_amount'] + $values['fee_fine']) - $values['fee_discount'];
-            $billet->user_id = $student->id;
+            $billet->user_id = $forceId  ? $user_id : $student->id;
             // $billet->fill($values);
             $billet->due_date = $values['due_date'];
             $billet->status = $defaultStatus;

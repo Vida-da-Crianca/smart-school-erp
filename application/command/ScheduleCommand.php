@@ -36,33 +36,22 @@ class ScheduleCommand extends BaseCommand
     protected function start()
     {
         $this->title('Schedule running');
-        file_put_contents( getenv('BASE_DIR'). 'schedule.log', date('Y-m-d H:i:s').PHP_EOL, FILE_APPEND);
-
-        // $process = new Process(['ls', '-lsa']);
-        // $process->setTimeout(3600);
-        // $process->start();
-
-        // while (true) {
-            // ...
-            $comandList = [
-                'invoice:cancel',
-                'invoice:create',
-                'invoice:tribute',
-                'billet:paid',
-                'billet:cancel',
-                'billet:generate',
-            ];
-
-            foreach ($comandList as $c) {
-                $command = $this->getApplication()->find($c);
-                $this->call($command);
+      
+        $comandList = [
+            'invoice:cancel',
+            'invoice:create',
+            'invoice:tribute',
+            'billet:generate',
+            'billet:paid',
+            'billet:cancel',
+            'clean:directory',
+        ];
+        while (true) {
+            foreach ($comandList as $command) {
+                shell_exec(sprintf('/usr/local/bin/php /app/man %s >/dev/null 2>&1', $command));
             }
-            // check if the timeout is reached
-            // $process->checkTimeout();
-
-            // sleep(30);
-        // }
-
+            sleep(30);
+        }
         return 0;
     }
 
