@@ -155,6 +155,7 @@ class Bank_payment_inter
     public function cancel($data, $onCallback)
     {
         try {
+           
             $this->bank->baixaBoleto($data['number'], $data['motive']);
             return $onCallback((object)['success' => true]);
         } catch (BancoInterException $e) {

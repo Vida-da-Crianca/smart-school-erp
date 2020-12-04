@@ -6,7 +6,19 @@
  */
 
 
-while( true) {
-      shell_exec('/usr/local/bin/php /app/man schedule:run >/dev/null 2>&1');      
+$comandList = [
+      // 'invoice:cancel',
+      // 'invoice:create',
+      // 'invoice:tribute',
+      'billet:generate',
+      // 'billet:paid',
+      'billet:cancel',
+
+];
+
+while (true) {
+      foreach ($comandList as $command) {
+            shell_exec(sprintf('/usr/local/bin/php /app/man %s >/dev/null 2>&1', $command));
+      }
       sleep(30);
 }

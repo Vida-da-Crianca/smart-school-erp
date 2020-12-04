@@ -1,0 +1,41 @@
+#!/usr/bin/env php
+<?php
+/**
+ *  CRON TAB application
+ */
+
+use Carbon\Carbon;
+
+require_once './vendor/autoload.php';
+
+$inProcess =  false;
+
+while (true) {
+    if ($inProcess) continue;
+
+    clearTMPDir();
+    sleep(30);
+}
+
+
+
+function clearTMPDir()
+{
+    global $inProcess;
+    $inProcess = true;
+    $dateTime = new \DateTime();
+    $second = Carbon::create($dateTime->format('Y'), $dateTime->format('m'), $dateTime->format('d'), 0, 0);
+    $first = Carbon::create($dateTime->format('Y'), $dateTime->format('m'), $dateTime->format('d'), 0, 40);
+
+    $isValid = Carbon::create(
+        $dateTime->format('Y'),
+        $dateTime->format('m'),
+        $dateTime->format('d'),
+        $dateTime->format('H'),
+        $dateTime->format('i')
+    )->betweenIncluded($first, $second);
+    if ($isValid)
+        shell_exec('rm -rf /app/temp/*');
+
+    $inProcess = false;
+}
