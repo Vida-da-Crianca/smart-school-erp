@@ -14,7 +14,7 @@ COPY docker/php.ini /opt/docker/etc/php/php.ini
 COPY docker/supervisor.conf /opt/docker/etc/supervisor.d/schedule.conf
 RUN touch /app/.env && \
    chmod 777 /app/application/config/license.php && \
-   chmod 777 -R /app/temp
+   mkdir -p -m 777 /app/temp
 
 
 RUN composer install
