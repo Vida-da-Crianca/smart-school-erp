@@ -16,5 +16,7 @@ RUN touch /app/.env && \
    chmod 777 /app/application/config/license.php && \
    mkdir -p -m 777 /app/temp
 
+RUN chmod +x /app/schedule-run.sh   
+
 
 RUN composer install

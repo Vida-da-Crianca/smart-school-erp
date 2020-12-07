@@ -63,7 +63,7 @@ class InvoiceCancelCommand extends BaseCommand
         $service  =  new SigissService($provider);
         $invoices = \Invoice_eloquent::with(['student'])->forDelete()->get();
 
-        if ($invoices->count() == 0) return $this->success('Not exists invoices for delete');
+        if ($invoices->count() == 0) return; //$this->success('Not exists invoices for delete');
         $this->text('start cancel invoices');
         foreach ($invoices as $item) {
             

@@ -29,6 +29,15 @@ class BankInterPayment implements BankInterContract
     {
         return isset($this->payment->description) ? $this->payment->description : '' ;
     }
+
+    public function getDiscount(){
+        isset($this->payment->discount) ? $this->payment->discount : '' ;
+    }
+    
+    public function getFine(){
+        isset($this->payment->fine) ? $this->payment->fine : '' ;
+    
+    } 
     public function getYourNumber()
     {
         return $this->payment->your_number;

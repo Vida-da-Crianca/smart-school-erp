@@ -24,6 +24,39 @@ services:
         target: /etc/mysql/conf.d/group.cnf 
     # ports:
     #  - 3306:3306 
+  jobs:
+    image: carlosocarvalho/erpjb-school:main
+    working_dir: /app/
+    volumes:
+      - /var/apps/erpjb/production/app/uploads:/app/uploads
+      - /var/apps/erpjb/production/app/logs:/app/application/logs
+      - /var/apps/erpjb/production/app/temp:/app/temp
+    depends_on:
+      - db
+      - redis
+      - app
+    environment:
+      - ENVIRONMENT=production
+      - DB_HOST=db
+      - DB_NAME=erpjb
+      - DB_PASSWORD=erpjb@2020
+      - DB_USER=root
+      - BANK_INTER_PDF_FILES=temp/
+      - DISCORD_EXCEPTIONS=https://discord.com/api/webhooks/783155960201347072/TN1yr1WndAI9Ug9vuDxb_qUQOnERJ8qs_XmzUOwYLUM35pRDdE5CJl3qfxxSjezIEZQh
+      - DISCORD_HOOK=https://discord.com/api/webhooks/783101033672605698/d61CeThzLZcUHI_N7NBcIM1qTEF6HLgNw7gO8CAqhKVmuy_6BEHAMUW1nbEYOgev6Nyu
+      - BASE_URL=https://erpjb.com.br
+      - LICENSE_APP=63AH2N-XTFFLP-952QAM-UTBUai9NL0Q5R2lLeE4xbXZBMGVMVnEwMlpvTTU0QmNFcml6emVLNkk0MD0=
+    tty: true
+    networks:
+      - proxy
+      - erp_net 
+    command: [
+      "/app/schedule-run.sh"
+    ] 
+    configs:
+      - 
+        source: openssl.cnf
+        target: /etc/ssl/openssl.cnf  
   app:
     image: carlosocarvalho/erpjb-school:main
     environment:

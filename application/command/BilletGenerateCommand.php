@@ -40,8 +40,7 @@ class BilletGenerateCommand extends BaseCommand
 
         $this->CI->load->library(['bank_payment_inter', 'mailer']);
         $this->CI->load->model(['eloquent/Billet_eloquent', 'eloquent/Email_setting_eloquent']);
-
-
+        
         DB::beginTransaction();
 
         try {

@@ -22,5 +22,7 @@ interface BankInterContract {
     public function getAddressNumber();
     public function getAddressState();
     public function getAddressDistrict();
+    public function getDiscount();
+    public function getFine();
 
 }

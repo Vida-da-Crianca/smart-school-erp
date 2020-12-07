@@ -269,7 +269,7 @@ class CI_Loader {
 			return $this;
 		}
 
-		$CI =& get_instance();
+		$CI = get_instance();
 		if (isset($CI->$name))
 		{
 			throw new RuntimeException('The model name you are loading is the name of a resource that is already being used: '.$name);
