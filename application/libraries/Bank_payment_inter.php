@@ -87,7 +87,7 @@ class Bank_payment_inter
 
             return $onCallback((object)['success' => true, 'billet' => (object) [
                 'number' => $boleto->getNossoNumero(),
-                'barcode' => $boleto->getCodigoBarras()
+                'barcode' => $boleto->getLinhaDigitavel()
             ]]);
         } catch (BancoInterException $e) {
             $onCallback((object)['success' => false,  'status' => $e->getMessage(), 'body' => $e->reply->body]);
