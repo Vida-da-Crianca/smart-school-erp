@@ -66,10 +66,10 @@ jobs:
           mkdir -p -m 777 $DIRECTORY_APPLICATION/app/temp
           rsync -qr -I   ./uploads/  $DIRECTORY_APPLICATION/app/uploads
 
-      - name: Remove Stack
-        run: |
-          docker stack rm $STACK_NAME
-          sleep 10
+      # - name: Remove Stack
+      #   run: |
+      #     docker stack rm $STACK_NAME
+      #     sleep 20
 
       - name: Create Stack
         run: |
