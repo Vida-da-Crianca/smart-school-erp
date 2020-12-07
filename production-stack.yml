@@ -22,8 +22,6 @@ services:
       -
         source: mysql.conf
         target: /etc/mysql/conf.d/group.cnf 
-    # ports:
-    #  - 3306:3306 
   jobs:
     image: carlosocarvalho/erpjb-school:main
     working_dir: /app/
