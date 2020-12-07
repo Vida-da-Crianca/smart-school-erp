@@ -48,8 +48,8 @@ services:
       - LICENSE_APP=63AH2N-XTFFLP-952QAM-UTBUai9NL0Q5R2lLeE4xbXZBMGVMVnEwMlpvTTU0QmNFcml6emVLNkk0MD0=
     tty: true
     networks:
-      - proxy
-      - erp_net 
+      - app_net
+      - redis_net
     command: [
       "/app/schedule-run.sh"
     ] 
