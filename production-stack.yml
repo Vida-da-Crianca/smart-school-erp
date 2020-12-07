@@ -53,10 +53,6 @@ services:
     command: [
       "/app/schedule-run.sh"
     ] 
-    configs:
-      - 
-        source: openssl.cnf
-        target: /etc/ssl/openssl.cnf  
   app:
     image: carlosocarvalho/erpjb-school:main
     environment:
