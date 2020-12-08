@@ -278,8 +278,8 @@ class Student extends Admin_Controller
         // $this->form_validation->set_rules('rte', $this->lang->line('rtl'), 'trim|required|xss_clean');
         $this->form_validation->set_rules('guardian_name', $this->lang->line('guardian_name'), 'trim|required|xss_clean');
         $this->form_validation->set_rules('guardian_phone', $this->lang->line('guardian_phone'), 'trim|required|xss_clean');
-        $this->form_validation->set_rules('guardian_document', $this->lang->line('guardian_phone'), 'trim|numeric|xss_clean');
-        $this->form_validation->set_rules('guardian_postal_code', $this->lang->line('guardian_postal_code'), 'trim|numeric|required|xss_clean');
+        $this->form_validation->set_rules('guardian_document', $this->lang->line('guardian_phone'), 'required|only_numeric|trim|numeric|exact_length[11]|xss_clean');
+        $this->form_validation->set_rules('guardian_postal_code', $this->lang->line('guardian_postal_code'), 'required|only_numeric|trim|numeric|exact_length[11]|xss_clean');
         $this->form_validation->set_rules('guardian_district', $this->lang->line('guardian_district'), 'trim|required|xss_clean');
         $this->form_validation->set_rules('guardian_city', $this->lang->line('guardian_city'), 'trim|required|xss_clean');
         $this->form_validation->set_rules('guardian_state', $this->lang->line('guardian_state'), 'trim|required|xss_clean');
@@ -352,8 +352,8 @@ class Student extends Admin_Controller
                 'ifsc_code'           => $this->input->post('ifsc_code'),
                 'guardian_occupation' => $this->input->post('guardian_occupation'),
                 'guardian_email'      => $this->input->post('guardian_email'),
-                'guardian_document'      => $this->input->post('guardian_document'),
-                'guardian_postal_code'      => $this->input->post('guardian_postal_code'),
+                'guardian_document'      => only_numeric($this->input->post('guardian_document')),
+                'guardian_postal_code'      => only_numeric($this->input->post('guardian_postal_code')),
                 'guardian_district'      => $this->input->post('guardian_district'),
                 'guardian_state'      => $this->input->post('guardian_state'),
                 'guardian_city'      => $this->input->post('guardian_city'),
@@ -1183,8 +1183,8 @@ class Student extends Admin_Controller
 
         $this->form_validation->set_rules('gender', $this->lang->line('gender'), 'trim|required|xss_clean');
         $this->form_validation->set_rules('guardian_name', $this->lang->line('guardian_name'), 'trim|required|xss_clean');
-        $this->form_validation->set_rules('guardian_document', $this->lang->line('guardian_document'), 'trim|required|xss_clean');
-        $this->form_validation->set_rules('guardian_postal_code', $this->lang->line('guardian_postal_code'), 'trim|numeric|required|xss_clean');
+        $this->form_validation->set_rules('guardian_document', $this->lang->line('guardian_document'), 'only_numeric|trim|required|numeric|exact_length[11]|xss_clean');
+        $this->form_validation->set_rules('guardian_postal_code', $this->lang->line('guardian_postal_code'), 'only_numeric|trim|required|numeric|exact_length[8]|xss_clean');
         $this->form_validation->set_rules('guardian_district', $this->lang->line('guardian_district'), 'trim|required|xss_clean');
         $this->form_validation->set_rules('guardian_city', $this->lang->line('guardian_city'), 'trim|required|xss_clean');
         $this->form_validation->set_rules('guardian_state', $this->lang->line('guardian_state'), 'trim|required|xss_clean');
@@ -1264,8 +1264,8 @@ class Student extends Admin_Controller
                 'ifsc_code'           => $this->input->post('ifsc_code'),
                 'guardian_occupation' => $this->input->post('guardian_occupation'),
                 'guardian_email'      => $this->input->post('guardian_email'),
-                'guardian_document'      => $this->input->post('guardian_document'),
-                'guardian_postal_code'      => $this->input->post('guardian_postal_code'),
+                'guardian_document'      => only_numeric($this->input->post('guardian_document')),
+                'guardian_postal_code'      => only_numeric($this->input->post('guardian_postal_code')),
                 'guardian_district'      => $this->input->post('guardian_district'),
                 'guardian_state'      => $this->input->post('guardian_state'),
                 'guardian_city'      => $this->input->post('guardian_city'),

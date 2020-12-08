@@ -45,3 +45,12 @@ if(! function_exists('discord_exception')) {
   }
   
 }
+
+
+if( !function_exists('only_numeric')) {
+
+  function only_numeric($str){
+
+    return preg_replace('#\D#','', $str);
+  }
+}
