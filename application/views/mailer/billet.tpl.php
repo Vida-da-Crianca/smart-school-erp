@@ -419,7 +419,7 @@
 
 												<tr>
 													<td>
-													Link para visualizar o boleto <a href="<?php echo $link; ?>">(aqui)  </a>	
+													<a href="<?php echo $link; ?>"> Link para visualizar o boleto aqui </a>	
 													</td>
 													
 												</tr>

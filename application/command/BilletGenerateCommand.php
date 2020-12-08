@@ -78,7 +78,7 @@ class BilletGenerateCommand extends BaseCommand
     protected function sendMail($options)
     {
         $content = $this->CI->load->view('mailer/billet.tpl.php', $options ,  TRUE);
-        $this->CI->mailer->send_mail($options->email, 'Boleto ' .$options->id, $content /**/);
+        $this->CI->mailer->send_mail($options->email, 'Envio de boletos', $content /**/);
     }
 
 
