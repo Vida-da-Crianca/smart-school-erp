@@ -53,7 +53,7 @@ class BilletGenerateCommand extends BaseCommand
             foreach ($billets as $row) {
                 $group = $row->groupBy('due_date');
 
-                dump($group->toArray());
+                //dump($group->toArray());
                 $this->buildByOnDueDate($group);
             }
         } catch (\Exception $e) {
@@ -75,20 +75,17 @@ class BilletGenerateCommand extends BaseCommand
     }
 
 
-    protected function sendMail($name, $email, $id, $code)
+    protected function sendMail($options)
     {
-        $content = $this->CI->load->view('mailer/billet.tpl.php', [
-            'name' => $name,
-            'code' => $code,
-            'link' => sprintf('%sstudentfee/getBillet/%s', getenv('SITE_URL'), $id)
-        ],  TRUE);
-        $this->CI->mailer->send_mail($email, 'Boleto ' . $id, $content /**/);
+        $content = $this->CI->load->view('mailer/billet.tpl.php', $options ,  TRUE);
+        $this->CI->mailer->send_mail($options->email, 'Boleto ' .$options->id, $content /**/);
     }
 
 
     public function buildByOnDueDate($data)
     {
-
+        
+        
         foreach ($data as $row) {
 
             $student = null;
@@ -98,8 +95,10 @@ class BilletGenerateCommand extends BaseCommand
             $billet->due_date = null;
             $billet->description = null;
             $billet->id = [];
+            $billet->mail_items= [];
             $billet->custom_number = substr(md5(rand(10, 1000) . date('YmdHis')), 0, 10);
-            $this->callGrouped($row, function ($item) use (&$billet, &$student, &$descriptions) {
+           
+            $this->callGrouped($row, function ($item) use (&$billet, &$student, &$descriptions, &$items) {
 
                 $billet->id[] = $item->id;
                 $first = $item->feeItems()->first();
@@ -107,13 +106,22 @@ class BilletGenerateCommand extends BaseCommand
                 $billet->price +=  $item->price;
                 $billet->due_date = $item->due_date;
                 $student = $item->student;
+                
+                $billet->mail_items[] = (object)[ 
+                    'name' => $student->full_name,
+                    'due_date' => new \DateTime($first->due_date),
+                    'description' => $first->title,
+                    'price' => sprintf('%s', number_format($first->amount - $body->fee_discount, 2, ',', '.'))
+                ];
+                
                 $descriptions[] =  sprintf('%s - %s - R$ %s - Desc. R$ %s', $student->full_name, $first->title, number_format($first->amount, 2, ',', '.'), number_format($body->fee_discount, 2, ',', '.'));
             });
 
-            if ($billet->id == 0) continue;
+            if (count($billet->id) == 0) continue;
 
             $payment = $this->buildOptionsStudentPayment($student);
             $billet->description = implode(PHP_EOL, $descriptions);
+            
             $this->buildOptionsBilletPayment($payment, $billet);
 
             $this->push($payment, function ($options) use ($billet, $student) {
@@ -125,7 +133,8 @@ class BilletGenerateCommand extends BaseCommand
 
 
     public function onPush($options, $billet, $student)
-    {
+    {   
+       
         if (!$options->success) {
             discord_log(sprintf('%s', json_encode($options, JSON_PRETTY_PRINT)), 'Falha ao gerar boleto');
             return;
@@ -138,7 +147,24 @@ class BilletGenerateCommand extends BaseCommand
 
         DB::commit();
         discord_log(sprintf('%s', json_encode($options, JSON_PRETTY_PRINT)), 'Novo Boleto');
-        $this->sendMail($student->guardian_name, $student->guardian_email, $options->billet->number, $options->billet->barcode);
+        $items = [];
+        foreach($billet->mail_items as $row){
+            $row->billet = $options->billet->number; 
+
+            $items[]= $row;
+        }
+        $data = (object) [
+            'name' => $student->guardian_name,
+            'email' =>$student->guardian_email,
+            'id' => $options->billet->number,
+            'link' => site_url('billet/live/'.$options->billet->number),
+            'code' => $options->billet->barcode,
+            'file' => '',
+            'due_date' =>  new \DateTime($billet->due_date),
+            'items' => $items
+        ];
+       
+        $this->sendMail($data);
     }
 
     public function buildOptionsStudentPayment($student)
@@ -168,6 +194,7 @@ class BilletGenerateCommand extends BaseCommand
 
     public function push($payment, \Closure $callback)
     {
+       
         $this->CI->bank_payment_inter->create($payment, $callback);
     }
 }
