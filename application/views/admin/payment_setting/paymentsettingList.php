@@ -441,10 +441,9 @@
                                                 <?php
                                                 $banco_inter_result = check_in_array('banco_inter', $paymentlist);
 
-
                                                 ?>
 
-<div class="form-group">
+                                                <div class="form-group">
                                                     <label class="control-label col-md-5 col-sm-12 col-xs-12" for="exampleInputEmail1">
                                                         <?php echo $this->lang->line('account_no_document'); ?>
                                                         <small class="req"> *</small></label>
@@ -470,30 +469,27 @@
                                                         <?php echo $this->lang->line('certificate_pem_path'); ?>
                                                         <small class="req"> *</small></label>
                                                     <div class="col-md-7 col-sm-7 col-xs-12">
-                                                        <input name="banco_inter_api_secret_key" placeholder="" type="text" class="form-control col-md-7 col-xs-12"
-                                                         value="<?php echo isset($banco_inter_result->api_secret_key) ? $banco_inter_result->api_secret_key : ""; ?>" />
+                                                        <input name="banco_inter_api_secret_key" placeholder="" type="text" class="form-control col-md-7 col-xs-12" value="<?php echo isset($banco_inter_result->api_secret_key) ? $banco_inter_result->api_secret_key : ""; ?>" />
                                                         <span class=" text text-danger banco_inter_api_secret_key_error"></span>
                                                     </div>
                                                 </div>
 
                                                 <div class="form-group">
-                                                    <label class="control-label col-md-5 col-sm-12 col-xs-12" >
+                                                    <label class="control-label col-md-5 col-sm-12 col-xs-12">
                                                         <?php echo $this->lang->line('certificate_key_path'); ?>
                                                         <small class="req"> *</small></label>
                                                     <div class="col-md-7 col-sm-7 col-xs-12">
-                                                        <input name="banco_inter_api_publishable_key" placeholder="" type="text" 
-                                                        class="form-control col-md-7 col-xs-12" value="<?php echo isset($banco_inter_result->api_publishable_key) ? $banco_inter_result->api_publishable_key : ""; ?>" />
+                                                        <input name="banco_inter_api_publishable_key" placeholder="" type="text" class="form-control col-md-7 col-xs-12" value="<?php echo isset($banco_inter_result->api_publishable_key) ? $banco_inter_result->api_publishable_key : ""; ?>" />
                                                         <span class=" text text-danger banco_inter_api_publishable_key_error"></span>
                                                     </div>
                                                 </div>
 
                                                 <div class="form-group">
-                                                    <label class="control-label col-md-5 col-sm-12 col-xs-12" >
+                                                    <label class="control-label col-md-5 col-sm-12 col-xs-12">
                                                         <?php echo $this->lang->line('certificate_key_password'); ?>
-                                                        </label>
+                                                    </label>
                                                     <div class="col-md-7 col-sm-7 col-xs-12">
-                                                        <input name="banco_inter_api_password" placeholder="" type="text" 
-                                                        class="form-control col-md-7 col-xs-12" value="<?php echo isset($banco_inter_result->api_password) ? $banco_inter_result->api_password : ""; ?>" />
+                                                        <input name="banco_inter_api_password" placeholder="" type="text" class="form-control col-md-7 col-xs-12" value="<?php echo isset($banco_inter_result->api_password) ? $banco_inter_result->api_password : ""; ?>" />
                                                         <span class=" text text-danger banco_inter_api_password_error"></span>
                                                     </div>
                                                 </div>
@@ -618,10 +614,10 @@
                                 <div class="radio">
                                     <label>
                                         <input type="radio" name="payment_setting" value="banco_inter" <?php
-                                                                                                    if ($radio_check == 'banco_inter') {
-                                                                                                        echo "checked";
-                                                                                                    }
-                                                                                                    ?>>
+                                                                                                        if ($radio_check == 'banco_inter') {
+                                                                                                            echo "checked";
+                                                                                                        }
+                                                                                                        ?>>
                                         Banco inter
                                     </label>
                                 </div>
