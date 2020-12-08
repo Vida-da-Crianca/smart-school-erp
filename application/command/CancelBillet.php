@@ -47,30 +47,18 @@ class CancelBillet extends BaseCommand{
               function($status) use($row){
                
                 //    dump($row->bank_bullet_id);
-                   //if($status->success ) {
+                   if($status->success ) {
                       \Billet_eloquent::onlyTrashed()
                        ->where('bank_bullet_id', $row->bank_bullet_id)
                        ->update([
                            'is_active' => 0,
                        ]);
 
-                   //}
+                   }
                    discord_log(sprintf('%s', json_encode($status, JSON_PRETTY_PRINT)), 'Cancelamento de Boleto');
                   
               });
         }
-       
-        // try {
-        //     echo "\nBaixando boleto\n";
-        //     $bank->baixaBoleto('00616514891', INTER_BAIXA_DEVOLUCAO);
-        //     echo "Boleto Baixado";
-        // } catch ( BancoInterException $e ) {
-        //     echo "\n\n".$e->getMessage();
-        //     echo "\n\nCabeçalhos: \n";
-        //     echo $e->reply->header;
-        //     echo "\n\nConteúdo: \n";
-        //     echo $e->reply->body;
-        // }
         return 0;
     }
     
