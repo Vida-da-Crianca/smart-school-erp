@@ -193,7 +193,7 @@ $language_name = $language["short_code"];
                                         <th align="left"><?php echo $this->lang->line('fees_item_code'); ?></th>
                                         <th align="left"><?php echo $this->lang->line('fees_group'); ?></th>
                                         <!-- <th align="left"><?php echo $this->lang->line('fees_code'); ?></th> -->
-                                        <th align="left" class="text text-left"><?php echo $this->lang->line('due_date'); ?></th>
+                                        <th align="left" class="text text-left"><?php $this->lang->line('due_date'); ?></th>
                                         <th align="left" class="text text-left"><?php echo $this->lang->line('status'); ?></th>
                                         <th class="text text-right"><?php echo $this->lang->line('amount') ?> <span><?php echo "(" . $currency_symbol . ")"; ?></span></th>
                                         <th class="text text-left"><?php echo $this->lang->line('payment_id'); ?></th>
