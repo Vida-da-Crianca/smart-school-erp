@@ -178,6 +178,7 @@ class BilletGenerateCommand extends BaseCommand
         $payment->address_city = $student->guardian_city;
         $payment->address_number = $student->guardian_address_number;
         $payment->address_postal_code = $student->guardian_postal_code;
+        
 
         return $payment;
     }

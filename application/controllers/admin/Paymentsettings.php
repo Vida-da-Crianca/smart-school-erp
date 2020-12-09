@@ -303,6 +303,8 @@ class Paymentsettings extends Admin_Controller {
            $this->form_validation->set_rules('banco_inter_api_secret_key', $this->lang->line('key'), 'trim|required|xss_clean');
            $this->form_validation->set_rules('banco_inter_api_publishable_key', $this->lang->line('key'), 'trim|required|xss_clean');
            $this->form_validation->set_rules('banco_inter_api_password', $this->lang->line('key'), 'trim|xss_clean');
+           $this->form_validation->set_rules('banco_inter_pay_fine', $this->lang->line('key'), 'trim|xss_clean');
+           $this->form_validation->set_rules('banco_inter_pay_moura', $this->lang->line('key'), 'trim|xss_clean');
            
           
            
@@ -314,6 +316,8 @@ class Paymentsettings extends Admin_Controller {
                    'api_secret_key' => $this->input->post('banco_inter_api_secret_key'),
                    'api_publishable_key' => $this->input->post('banco_inter_api_publishable_key'),
                    'api_password' => $this->input->post('banco_inter_api_password'),
+                   'pay_moura' => $this->input->post('banco_inter_pay_moura'),
+                   'pay_fine' => $this->input->post('banco_inter_pay_fine'),
                    'payment_type' => 'banco_inter',
                );
 
