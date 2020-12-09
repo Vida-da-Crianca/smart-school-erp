@@ -498,7 +498,7 @@
                                                         <?php echo $this->lang->line('inter_juros'); ?>
                                                     </label>
                                                     <div class="col-md-7 col-sm-7 col-xs-12">
-                                                        <input name="banco_inter_pay_fine" placeholder="" data-mask-reverse="true" data-mask="#c      0.00%" type="text" class="form-control col-md-7 col-xs-12" value="<?php echo isset($banco_inter_result->pay_fine) ? $banco_inter_result->pay_fine : ""; ?>" />
+                                                        <input name="banco_inter_pay_fine" placeholder="" data-mask-reverse="true" data-mask="#0.00%" type="text" class="form-control col-md-7 col-xs-12" value="<?php echo isset($banco_inter_result->pay_fine) ? $banco_inter_result->pay_fine : ""; ?>" />
                                                         <span class=" text text-danger banco_inter_pay_fee_error"></span>
                                                     </div>
                                                 </div>
