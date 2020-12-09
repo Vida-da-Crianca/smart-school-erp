@@ -1492,5 +1492,5 @@ $lang['billet_preview_waiting'] = 'Aguarde estamos gerando o boleto';
 $lang['billet_due_date'] = 'Data de Vencimento';
 $lang['fees_item_code'] = 'Código';
 $lang['inter_moura'] = 'Mora %';
-$lang['inter_juros'] = 'Juros %';
+$lang['inter_juros'] = 'Multa %';
 
