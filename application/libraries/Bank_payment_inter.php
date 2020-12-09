@@ -5,6 +5,8 @@ use ctodobom\APInterPHP\BancoInter;
 use ctodobom\APInterPHP\BancoInterException;
 use ctodobom\APInterPHP\Cobranca\Boleto;
 use ctodobom\APInterPHP\Cobranca\Mensagem;
+use ctodobom\APInterPHP\Cobranca\Mora;
+use ctodobom\APInterPHP\Cobranca\Multa;
 use ctodobom\APInterPHP\Cobranca\Pagador;
 
 
@@ -51,7 +53,7 @@ class Bank_payment_inter
         return $this;
     }
 
-    public function create(BankinterContract $data, \Closure $onCallback)
+    public function create(BankInterContract $data, \Closure $onCallback)
     {
         try {
 
@@ -72,6 +74,8 @@ class Bank_payment_inter
             $boleto->setDataEmissao(date('Y-m-d'));
             $boleto->setValorNominal($data->getPrice());
             $boleto->setDataVencimento($data->getDatePayment()   /*date_add(new \DateTime() , new \DateInterval("P10D"))->format('Y-m-d')*/);
+            $this->applyFine($boleto, $data);
+            $this->applyMora($boleto, $data);
             $message =  new Mensagem();
             $description = explode(PHP_EOL, $data->getDescription());
             foreach ($description as $k => $v) {
@@ -101,6 +105,31 @@ class Bank_payment_inter
         } catch (BancoInterException $e) {
               return;
         }
+    }
+     
+    public function applyFine(& $boleto, $data)
+    {   
+        if(!isset($this->settings->pay_fine) || !$this->settings->pay_fine) return; 
+        $multa =  new Multa();
+        $multa->setCodigoMulta(Multa::PERCENTUAL);
+        $multa->setValor(0);
+        $multa->setTaxa(str_replace('%','',$this->settings->pay_fine));
+        $multa->setData((new DateTime($data->getDatePayment()))->modify('+1 day')->format('Y-m-d') );
+        $boleto->setMulta($multa);
+
+    }
+
+    public function applyMora(& $boleto,BankInterContract $data)
+    {   
+        if(!isset($this->settings->pay_moura) || !$this->settings->pay_moura) return;
+        $mora =  new Mora;
+        $percent = str_replace('%','', str_replace('%','',$this->settings->pay_moura));
+        $mora->setCodigoMora(Mora::VALOR_POR_DIA);
+        $mora->setValor( number_format(($data->getPrice() * ($percent / 100 )),2 ));
+        
+        $mora->setData((new DateTime($data->getDatePayment()))->modify('+1 day')->format('Y-m-d') );
+        $boleto->setMora($mora);
+
     }
 
 

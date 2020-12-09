@@ -49,6 +49,7 @@ services:
       - app_net
       - redis_net
     command: [
+      "/usr/local/bin/php /app/man migrate -n",
       "/app/schedule-run.sh"
     ] 
   app:

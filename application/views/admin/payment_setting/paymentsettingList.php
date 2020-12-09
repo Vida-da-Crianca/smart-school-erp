@@ -493,6 +493,24 @@
                                                         <span class=" text text-danger banco_inter_api_password_error"></span>
                                                     </div>
                                                 </div>
+                                                <div class="form-group">
+                                                    <label class="control-label col-md-5 col-sm-12 col-xs-12">
+                                                        <?php echo $this->lang->line('inter_juros'); ?>
+                                                    </label>
+                                                    <div class="col-md-7 col-sm-7 col-xs-12">
+                                                        <input name="banco_inter_pay_fine" placeholder="" data-mask-reverse="true" data-mask="#c      0.00%" type="text" class="form-control col-md-7 col-xs-12" value="<?php echo isset($banco_inter_result->pay_fine) ? $banco_inter_result->pay_fine : ""; ?>" />
+                                                        <span class=" text text-danger banco_inter_pay_fee_error"></span>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label class="control-label col-md-5 col-sm-12 col-xs-12">
+                                                        <?php echo $this->lang->line('inter_moura'); ?>
+                                                    </label>
+                                                    <div class="col-md-7 col-sm-7 col-xs-12">
+                                                        <input name="banco_inter_pay_moura" data-mask="#0.00%" data-mask-reverse="true" placeholder="" type="text" class="form-control col-md-7 col-xs-12" value="<?php echo isset($banco_inter_result->pay_moura) ? $banco_inter_result->pay_moura : ""; ?>" />
+                                                        <span class=" text text-danger banco_inter_pay_moura_error"></span>
+                                                    </div>
+                                                </div>
 
                                             </div>
                                             <div class="col-md-5 text text-center disblock">
