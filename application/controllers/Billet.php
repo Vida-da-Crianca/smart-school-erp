@@ -43,4 +43,11 @@ class Billet  extends CI_Controller
             return new JsonResponse(json_decode($e->getMessage(), true), 404);
         }
     }
+
+
+    public function aluno(){
+        $this->load->model('eloquent/migrate/Aluno_eloquent');
+        // dump(Aluno_eloquent::all());
+        return new JsonResponse(Aluno_eloquent::limit(1)->with(['guardian'])->get()->toArray());
+    }
 }
