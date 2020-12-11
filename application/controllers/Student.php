@@ -50,7 +50,6 @@ class Student extends Admin_Controller
         $this->form_validation->set_rules('class_id', $this->lang->line('class'), 'trim|required|xss_clean');
 
         if ($this->form_validation->run() == false) {
-
         } else {
             $class                   = $this->class_model->get();
             $data['classlist']       = $class;
@@ -279,7 +278,7 @@ class Student extends Admin_Controller
         $this->form_validation->set_rules('guardian_name', $this->lang->line('guardian_name'), 'trim|required|xss_clean');
         $this->form_validation->set_rules('guardian_phone', $this->lang->line('guardian_phone'), 'trim|required|xss_clean');
         $this->form_validation->set_rules('guardian_document', $this->lang->line('guardian_phone'), 'required|only_numeric|trim|numeric|exact_length[11]|xss_clean');
-        $this->form_validation->set_rules('guardian_postal_code', $this->lang->line('guardian_postal_code'), 'required|only_numeric|trim|numeric|exact_length[11]|xss_clean');
+        $this->form_validation->set_rules('guardian_postal_code', $this->lang->line('guardian_postal_code'), 'required|only_numeric|trim|numeric|exact_length[8]|xss_clean');
         $this->form_validation->set_rules('guardian_district', $this->lang->line('guardian_district'), 'trim|required|xss_clean');
         $this->form_validation->set_rules('guardian_city', $this->lang->line('guardian_city'), 'trim|required|xss_clean');
         $this->form_validation->set_rules('guardian_state', $this->lang->line('guardian_state'), 'trim|required|xss_clean');
@@ -290,7 +289,10 @@ class Student extends Admin_Controller
         }
         $this->form_validation->set_rules('file', $this->lang->line('image'), 'callback_handle_upload');
         $this->form_validation->set_rules(
-            'roll_no', $this->lang->line('roll_no'), array('trim',
+            'roll_no',
+            $this->lang->line('roll_no'),
+            array(
+                'trim',
                 array('check_exists', array($this->student_model, 'valid_student_roll')),
             )
         );
@@ -488,6 +490,9 @@ class Student extends Admin_Controller
             $data_setting['adm_update_status'] = $this->sch_setting_detail->adm_update_status;
             $admission_no                      = 0;
 
+
+            // dump($this->input->post());
+            // exit();
             if ($this->sch_setting_detail->adm_auto_insert) {
                 if ($this->sch_setting_detail->adm_update_status) {
 
@@ -660,7 +665,6 @@ class Student extends Admin_Controller
                 $this->mailsmsconf->mailsms('login_credential', $student_login_detail);
 
                 if ($sibling_id > 0) {
-
                 } else {
                     $parent_login_detail = array('id' => $insert_id, 'credential_for' => 'parent', 'username' => $this->parent_login_prefix . $insert_id, 'password' => $parent_password, 'contact_no' => $this->input->post('guardian_phone'), 'email' => $this->input->post('guardian_email'));
                     $this->mailsmsconf->mailsms('login_credential', $parent_login_detail);
@@ -707,15 +711,12 @@ class Student extends Admin_Controller
                 move_uploaded_file($_FILES["first_doc"]["tmp_name"], $img_name);
                 $data_img = array('student_id' => $student_id, 'title' => $first_title, 'doc' => $imp);
                 $this->student_model->adddoc($data_img);
-
             }
 
             $msg   = $this->lang->line('success_message');
             $array = array('status' => 'success', 'error' => '', 'message' => $msg);
-
         }
         echo json_encode($array);
-
     }
 
     public function handle_uploadcreate_doc()
@@ -938,7 +939,7 @@ class Student extends Admin_Controller
 
         $category = $this->category_model->get();
 
-        $fields = array('admission_no', 'roll_no', 'firstname', 'lastname', 'gender', 'dob', 'category_id', 'religion', 'cast', 'mobileno', 'email', 'admission_date', 'blood_group', 'school_house_id', 'height', 'weight', 'measurement_date', 'father_name', 'father_phone', 'father_occupation', 'mother_name', 'mother_phone', 'mother_occupation', 'guardian_is', 'guardian_name', 'guardian_relation', 'guardian_email', 'guardian_phone', 'guardian_occupation', 'guardian_address' ,'guardian_address_number', 'current_address', 'permanent_address', 'bank_account_no', 'bank_name', 'ifsc_code', 'adhar_no', 'samagra_id', 'rte', 'previous_school', 'note');
+        $fields = array('admission_no', 'roll_no', 'firstname', 'lastname', 'gender', 'dob', 'category_id', 'religion', 'cast', 'mobileno', 'email', 'admission_date', 'blood_group', 'school_house_id', 'height', 'weight', 'measurement_date', 'father_name', 'father_phone', 'father_occupation', 'mother_name', 'mother_phone', 'mother_occupation', 'guardian_is', 'guardian_name', 'guardian_relation', 'guardian_email', 'guardian_phone', 'guardian_occupation', 'guardian_address', 'guardian_address_number', 'current_address', 'permanent_address', 'bank_account_no', 'bank_name', 'ifsc_code', 'adhar_no', 'samagra_id', 'rte', 'previous_school', 'note');
 
         $data["fields"]       = $fields;
         $data['categorylist'] = $category;
@@ -1006,13 +1007,11 @@ class Student extends Admin_Controller
                                     } else {
 
                                         $insert_id = $this->student_model->add($student_data[$i], $data_setting);
-
                                     }
                                 } else {
 
                                     $insert_id = $this->student_model->add($student_data[$i], $data_setting);
                                 }
-
                             } else {
 
                                 $insert_id = "";
@@ -1071,7 +1070,6 @@ class Student extends Admin_Controller
 
                                 $rowcount++;
                                 $this->session->set_flashdata('msg', '<div class="alert alert-success text-center">Total ' . count($result) . " records found in CSV file. Total " . $rowcount . ' records imported successfully.</div>');
-
                             } else {
 
                                 $this->session->set_flashdata('msg', '<div class="alert alert-danger text-center">' . $this->lang->line('record_already_exists') . '</div>');
@@ -1096,7 +1094,8 @@ class Student extends Admin_Controller
         $error = "";
         if (isset($_FILES["file"]) && !empty($_FILES['file']['name'])) {
             $allowedExts = array('csv');
-            $mimes       = array('text/csv',
+            $mimes       = array(
+                'text/csv',
                 'text/plain',
                 'application/csv',
                 'text/comma-separated-values',
@@ -1105,7 +1104,8 @@ class Student extends Admin_Controller
                 'application/vnd.msexcel',
                 'text/anytext',
                 'application/octet-stream',
-                'application/txt');
+                'application/txt'
+            );
             $temp      = explode(".", $_FILES["file"]["name"]);
             $extension = end($temp);
             if ($_FILES["file"]["error"] > 0) {
@@ -1164,7 +1164,7 @@ class Student extends Admin_Controller
         $custom_fields              = $this->customfield_model->getByBelong('students');
         $data['sch_setting']        = $this->sch_setting_detail;
 
-        
+
 
         foreach ($custom_fields as $custom_fields_key => $custom_fields_value) {
             if ($custom_fields_value['validation']) {
@@ -1191,7 +1191,10 @@ class Student extends Admin_Controller
         // $this->form_validation->set_rules('rte', $this->lang->line('rtl'), 'trim|required|xss_clean');
         $this->form_validation->set_rules('guardian_phone', $this->lang->line('guardian_phone'), 'trim|required|xss_clean');
         $this->form_validation->set_rules(
-            'roll_no', $this->lang->line('roll_no'), array('trim',
+            'roll_no',
+            $this->lang->line('roll_no'),
+            array(
+                'trim',
                 array('check_exists', array($this->student_model, 'valid_student_roll')),
             )
         );
@@ -1468,7 +1471,6 @@ class Student extends Admin_Controller
                 );
                 $student_sibling = $this->student_model->add($update_student);
             } else {
-
             }
 
             $this->session->set_flashdata('msg', '<div student="alert alert-success text-left">' . $this->lang->line('update_message') . '</div>');
@@ -1510,6 +1512,14 @@ class Student extends Admin_Controller
         if (!$this->rbac->hasPrivilege('student', 'can_view')) {
             access_denied();
         }
+        $sections = [
+            // 'config'  => TRUE,
+            'queries' => TRUE,
+            'query_toggle_count' => TRUE
+        ];
+
+        // $this->output->set_profiler_sections($sections);
+        // $this->output->enable_profiler(TRUE);
 
         $this->session->set_userdata('top_menu', 'Student Information');
         $this->session->set_userdata('sub_menu', 'student/search');
@@ -1540,11 +1550,12 @@ class Student extends Admin_Controller
             $section     = $this->input->post('section_id');
             $search      = $this->input->post('search');
             $search_text = $this->input->post('search_text');
+
+
             if (isset($search)) {
                 if ($search == 'search_filter') {
                     $this->form_validation->set_rules('class_id', $this->lang->line('class'), 'trim|required|xss_clean');
                     if ($this->form_validation->run() == false) {
-
                     } else {
                         $data['searchby']    = "filter";
                         $data['class_id']    = $this->input->post('class_id');
@@ -1717,7 +1728,6 @@ class Student extends Admin_Controller
 
         $button = $this->input->post('search');
         if ($this->input->server('REQUEST_METHOD') == "GET") {
-
         } else {
             $class       = $this->input->post('class_id');
             $section     = $this->input->post('section_id');
@@ -1727,7 +1737,6 @@ class Student extends Admin_Controller
                 if ($search == 'search_filter') {
                     $this->form_validation->set_rules('class_id', $this->lang->line('class'), 'trim|required|xss_clean');
                     if ($this->form_validation->run() == false) {
-
                     } else {
                         $data['searchby']   = "filter";
                         $data['class_id']   = $this->input->post('class_id');
@@ -1914,7 +1923,6 @@ class Student extends Admin_Controller
             $students = $this->input->post('student');
 
             foreach ($students as $student_key => $student_value) {
-
             }
 
             $this->student_model->bulkdelete($students);
@@ -1966,7 +1974,6 @@ class Student extends Admin_Controller
             );
 
             $array = array('status' => '0', 'error' => $msg, 'msg' => $this->lang->line('something_went_wrong'));
-
         } else {
             $insert = array(
                 'name'   => $this->input->post('name'),
@@ -1978,5 +1985,4 @@ class Student extends Admin_Controller
 
         echo json_encode($array);
     }
-
 }

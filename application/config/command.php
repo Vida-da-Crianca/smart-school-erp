@@ -2,6 +2,7 @@
 
 //Register your commands
 
+use Application\Command\AppImport;
 use Application\Command\CleanDirectoryTemp;
 
 return [
@@ -16,4 +17,5 @@ return [
     'rollback' => \Packages\Commands\Migrations\Rollback::class,
     'schedule_run' => Application\Command\ScheduleCommand::class,
     'clean_directory' => CleanDirectoryTemp::class,
+    'app_import' => AppImport::class,
 ];

@@ -532,7 +532,7 @@ class Student_model extends MY_Model {
         $this->db->or_like('students.roll_no', $searchterm);
         $this->db->or_like('students.admission_no', $searchterm);
         $this->db->group_end();
-        $this->db->order_by('students.id');
+        $this->db->order_by('students.firstname');
         $query = $this->db->get();
         // echo $this->db->last_query();die;
         return $query->result_array();

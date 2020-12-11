@@ -46,8 +46,12 @@ class Billet  extends CI_Controller
 
 
     public function aluno(){
-        $this->load->model('eloquent/migrate/Aluno_eloquent');
+        $this->load->model(['eloquent/migrate/Aluno_eloquent', 'eloquent/migrate/Turma_eloquent']);
         // dump(Aluno_eloquent::all());
-        return new JsonResponse(Aluno_eloquent::limit(1)->with(['guardian'])->get()->toArray());
+        return new JsonResponse(Turma_eloquent::whereIn('ano',['2020'])->orderBy('ano','desc')->with(
+            ['matriculas.aluno.guardian','matriculas.serie','matriculas.lancamentos'])
+        // ->select('codturma', 'descricao','ano')
+        ->get()
+        ->toArray());
     }
 }

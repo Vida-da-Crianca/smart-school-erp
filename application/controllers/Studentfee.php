@@ -906,7 +906,7 @@ class Studentfee extends Admin_Controller
     {
         $this->load->library('bank_payment_inter');
 
-        $data = $this->bank_payment_inter->find('00628830707');
+        $data = $this->bank_payment_inter->find('00630521724');
 
         return new JsonResponse(compact('data'));
     }
