@@ -5,13 +5,13 @@
 use \Illuminate\Database\Eloquent\Model as Eloquent;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Guardian_eloquent extends  Eloquent {
+class Serie_eloquent extends  Eloquent {
 
    
       
-    protected $table = 'tbresp';
+    protected $table = 'tbserie';
 
-    protected $primaryKey = 'codresp';
+    protected $primaryKey = 'codserie';
 
     protected $connection = 'mysql_2';
     protected $fillable = [
