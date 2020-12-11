@@ -17,7 +17,7 @@ env:
   STACK_NAME: ERP_PROD
   DOCKER_USER: ${{secrets.DOCKER_USER}}
   DOCKER_PWD: ${{secrets.DOCKER_PASSWORD}}
-  DIRECTORY_APPLICATION: /var/apps/production/app
+  DIRECTORY_APPLICATION: /var/apps/production/erp/app
   IMAGE_ID: ''
 
 jobs:
