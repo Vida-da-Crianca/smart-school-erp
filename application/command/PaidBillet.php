@@ -65,9 +65,9 @@ class PaidBillet extends BaseCommand
                         'date' => date('Y-m-d'),
                         'description' => 'Collected By: Sistema automatico',
                         'amount_discount' => $body->fee_discount,
-                        'amount_fine' => 0,
+                        'amount_fine' => $row->price - $b->valorNominal,
                         'payment_mode' => 'Billet',
-                        'received_by' => '1',
+                        'received_by' => 'Banco Inter',
                         'inv_no' => 1,
                     ]])
                 ]);
