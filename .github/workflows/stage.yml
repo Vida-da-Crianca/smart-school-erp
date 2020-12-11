@@ -1,24 +1,23 @@
-name: Production
+name: Stage
+
 on:
   push:
     # Publish `master` as Docker `latest` image.
+    branches:
+      - main
     paths-ignore:
       - README.md
     # Publish `v1.2.3` tags as releases.
-    tags:
-      - v*
-
   # Run tests for any PRs.
   pull_request:
 
 env:
   # TODO: Change variable to your image's name.
   IMAGE_NAME: erpjb-school
-  STACK_NAME: ERP_PROD
+  STACK_NAME: ERP_APPLICATION
   DOCKER_USER: ${{secrets.DOCKER_USER}}
   DOCKER_PWD: ${{secrets.DOCKER_PASSWORD}}
-  DIRECTORY_APPLICATION: /var/apps/production/app
-  IMAGE_ID: ''
+  DIRECTORY_APPLICATION: /var/apps/erpjb/production
 
 jobs:
   build:
@@ -55,21 +54,21 @@ jobs:
     needs: build
     steps:
       - uses: actions/checkout@v2
+
       - name: Create Folder for Application
+        #  mkdir -p -m 777 $DIRECTORY_APPLICATION/app/uploads &&
+        #  mkdir -p -m 777 $DIRECTORY_APPLICATION/app/temp  &&
+        #  mkdir -p -m 777 $DIRECTORY_APPLICATION/app/logs &&
         run: |
-          mkdir -p -m 777 $DIRECTORY_APPLICATION/app/uploads
-          mkdir -p -m 777 $DIRECTORY_APPLICATION/app/logs
           mkdir -p -m 777 $DIRECTORY_APPLICATION/app/temp
           rsync -qr -I   ./uploads/  $DIRECTORY_APPLICATION/app/uploads
+
+      # - name: Remove Stack
+      #   run: |
+      #     docker stack rm $STACK_NAME
+      #     sleep 20
+
       - name: Create Stack
         run: |
-          docker stack deploy -c production-stack.yml $STACK_NAME
-
-  clear_system:
-      runs-on: "docker-stack"
-      needs: deploy
-      steps:
-        - name: Clear docker system
-          run: |
-            sleep 5
-            docker system prune --force
+          docker stack deploy -c stage-stack.yml $STACK_NAME
+          docker system prune --force
