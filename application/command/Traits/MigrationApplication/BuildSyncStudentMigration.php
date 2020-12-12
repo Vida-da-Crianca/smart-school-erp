@@ -20,13 +20,10 @@ trait BuildSyncStudentMigration
 
         $build = [
 
-            // "ci_csrf_token" => "",
-            // "sibling_name" => "",
-            // "sibling_id" => "0",
             "admission_no" => $data->aluno->rm, //RM
             "roll_no" => $data->aluno->ra,
-            "class_id" => $data->section->classe->first()->id,
-            "section_id" => $data->section->id,
+            "class_id" => $data->options->classe_id,
+            "section_id" => $data->options->section_id,
             "firstname" => $firstName,
             "lastname" => $lastName,
             "gender" => $data->aluno->sexo == 1 ? "Male" : ($data->aluno->sexo == 2 ?  "Female" : "No"),
@@ -79,7 +76,7 @@ trait BuildSyncStudentMigration
         $class_id = $data['class_id'];
         $section_id = $data['section_id'];
 
-        $exceptions = ['class_id', 'section_id'];
+        // $exceptions = ['class_id', 'section_id'];
         unset($data['class_id']);
         unset($data['section_id']);
         unset($data['measure_date']);
@@ -164,6 +161,6 @@ trait BuildSyncStudentMigration
         // ]);
 
 
-        return $insert_id;
+        return  ['id' => $insert_id, 'session_id' => $sessionStudent->id,] ;
     }
 }

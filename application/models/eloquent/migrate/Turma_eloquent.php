@@ -19,11 +19,11 @@ class Turma_eloquent extends  Eloquent {
         
     ];
 
-    public function series(){
+    public function serie(){
   
 
         get_instance()->load->model('eloquent/migrate/Serie_eloquent');
-        return $this->hasMany('Serie_eloquent', 'codserie', 'codserie');
+        return $this->hasOne('Serie_eloquent', 'codserie', 'codserie');
 
     }
 

@@ -235,14 +235,16 @@ $language_name = $language["short_code"];
                                                     $fee_fine = $fee_fine + $fee_deposits_value->amount_fine;
                                                 }
                                             }
-
+                                            
                                             $total_amount = $total_amount + $fee_value->amount;
                                             $total_discount_amount = $total_discount_amount + $fee_discount;
                                             $total_deposite_amount = $total_deposite_amount + $fee_paid;
                                             $total_fine_amount = $total_fine_amount + $fee_fine;
-                                            $feetype_balance = $fee_value->amount - ($fee_paid + $fee_discount);
+                                            $feetype_balance = number_format($fee_value->amount, 2) - number_format(($fee_paid + $fee_discount), 2);
                                             $total_balance_amount = $total_balance_amount + $feetype_balance;
                                             $description = $fee_value->name . " (" . $fee_value->type . ")";
+
+                                            // dump([$fee_value->title, $fee_paid, $fee_discount, $fee_value->amount,  $fee_paid + $fee_discount, $feetype_balance]);
 
                                     ?>
                                             <?php
@@ -260,14 +262,13 @@ $language_name = $language["short_code"];
                                                     <input <?php echo  $fee_value->deposite ? 'disabled' : '' ?> class="checkbox" type="checkbox" name="fee_checkbox" data-fee_date_payment="<?php echo $fee_value->due_date; ?>" data-fee_fine="<?php echo $fee_fine; ?>" data-fee_is_pdf="<?php echo $fee_value->billet->count() > 0 ? $fee_value->billet->first()->id : 0; ?>" data-fee_title="<?php echo $fee_value->title; ?>" data-fee_amount="<?php echo $fee_value->amount; ?>" data-fee_discount="<?php echo  $fee_discount; ?>" data-fee_master_id="<?php echo $fee_value->id; ?>" data-fee_session_group_id="<?php echo $fee_value->fee_session_group_id; ?>" data-fee_groups_feetype_id="<?php echo $fee_value->feetype_id; ?>" data-fee_line_1="<?php echo $description; ?>" data-fee_line_2="<?php echo $fee_value->code; ?>">
                                                 </td>
                                                 <td align="left">
-                                                <?php
-                                                                    echo $fee_value->id;
-                                                                    if($fee_value->billet->count() > 0){
-                                                                        echo '<br/><small class="text-success">'.$fee_value->billet->first()->bank_bullet_id.'</small>';
-
-                                                                    }
-                                                                    ?>
-                                                                    </td>
+                                                    <?php
+                                                    echo $fee_value->id;
+                                                    if ($fee_value->billet->count() > 0) {
+                                                        echo '<br/><small class="text-success">' . $fee_value->billet->first()->bank_bullet_id . '</small>';
+                                                    }
+                                                    ?>
+                                                </td>
                                                 <td align="left"><?php
                                                                     echo $fee_value->title;
                                                                     ?></td>
@@ -284,15 +285,20 @@ $language_name = $language["short_code"];
                                                 </td>
                                                 <td align="left" class="text text-left width85">
                                                     <?php
+                                                   
                                                     if ($feetype_balance == 0) {
-                                                    ?><span class="label label-success"><?php echo $this->lang->line('paid'); ?></span><?php
-                                                                                                                                    } else if (!empty($fee_value->amount_detail)) {
-                                                                                                                                        ?><span class="label label-warning"><?php echo $this->lang->line('partial'); ?></span><?php
-                                                                                                                                                                                                                            } else {
-                                                                                                                                                                                                                                ?><span class="label label-danger"><?php echo $this->lang->line('unpaid'); ?></span><?php
-                                                                                                                                                                                                                                                                                                                }
-                                                                                                                                                                                                                                                                                                                    ?>
-
+                                                    ?><span class="label label-success"><?php echo $this->lang->line('paid'); ?>
+                                                        </span>
+                                                    <?php } else if (!empty($fee_value->amount_detail)) { ?>
+                                                        <span class="label label-warning">
+                                                            <?php echo $this->lang->line('partial'); ?></span>
+                                                    <?php
+                                                    } else { ?>
+                                                        <span class="label label-danger">
+                                                            <?php echo $this->lang->line('unpaid'); ?>
+                                                        </span><?php
+                                                            }
+                                                                ?>
                                                 </td>
                                                 <td class="text text-right"><?php echo $fee_value->amountReal; ?></td>
 

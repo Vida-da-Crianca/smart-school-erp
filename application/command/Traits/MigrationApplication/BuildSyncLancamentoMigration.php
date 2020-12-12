@@ -10,7 +10,7 @@ trait  BuildSyncLancamentoMigration
 
 
 
-    public function buildFee($data, $user_id, $class_id)
+    public function buildFee($data, $user)
     {
 
         return [
@@ -18,9 +18,9 @@ trait  BuildSyncLancamentoMigration
             'feetype_id' => 39,
             'amount' => $data->valor,
             'due_date' => $data->datavencimento,
-            'user_id' => $user_id,
-            'class_id' => $class_id,
-            'student_session_id' => $user_id,
+            'user_id' => $user->user_id,
+            'class_id' => $user->classe_id,
+            'student_session_id' => $user->session_id,
         ];
     }
 

@@ -25,6 +25,7 @@ class AppImport extends BaseCommand
     protected $current_session;
 
 
+
     public function __construct($CI)
     {
         $this->CI = $CI;
@@ -41,12 +42,13 @@ class AppImport extends BaseCommand
     protected function start()
     {
         $inTest  = FALSE;
-        
+
 
         $this->CI->load->model([
             'eloquent/migrate/Aluno_eloquent',
             'eloquent/migrate/Turma_eloquent',
             'eloquent/Section',
+            'eloquent/Student_classe',
             'eloquent/Student_fee_master_eloquent',
             'eloquent/Student_fee_item_eloquent',
             'eloquent/Student_deposite_eloquent',
@@ -68,72 +70,98 @@ class AppImport extends BaseCommand
 
         // DB::table('chat_users')->truncate();
         // DB::table('students')->delete();
+        // DB::table('student_fees_master')->delete();
+        // DB::table('student_fee_items')->delete();
+        // DB::table('student_fees_deposite')->delete();
+        // DB::table('users')->delete();
+
+        // return;
+
+        // DB::beginTransaction();
+        // $this->CI->db->trans_start(TRUE);
 
         // resturn;
         // return;
         // \Student_eloquent::delete();
         // return;
         // dump(Aluno_eloquent::all());
-        $d = \Turma_eloquent::whereIn('ano', ['2020'])->orderBy('ano', 'desc')->with(
-            [
-                'matriculas.aluno.guardian',
-                'matriculas.aluno.mother',
-                'matriculas.aluno.father',
-                'matriculas.serie', 'matriculas.lancamentos'
-            ]
-        )
-            ->select('codturma', 'descricao', 'ano')
+        $d = \Turma_eloquent::whereIn('ano', ['2020'])->orderBy('ano', 'desc')
+            ->with(
+                [
+                    'serie',
+                    'matriculas.aluno',
+                    'matriculas.aluno.guardian',
+                    'matriculas.aluno.mother',
+                    'matriculas.aluno.father',
+                    'matriculas.lancamentos' => function ($query) {
+                        return $query->where('situacao', 0)
+                            ->whereYear('datavencimento', '2020');
+                    }
+                ]
+            )
+            ->select('codturma', 'descricao', 'ano', 'codserie')
             ->get();
         try {
 
             foreach ($d as $row) {
 
-                $section = \Section::where('section', 'like', "%{$row->descricao}%")
-                    ->with(['classe'])
-                    ->first();
+                $section_id = \Section::where('section', 'like', "%{$row->descricao}%")
+                    ->first()->id;
+                $classe_id = \Student_classe::where('class', 'like', "%{$row->serie->descricao}%")->first()->id;
 
-                if (!$section) continue;
+                $options = (object) array_merge(
+                    compact('classe_id'),
+                    compact('section_id')
+                );
+
+
+                if (!$options) continue;
+
+                
 
                 foreach ($row->matriculas as $v) {
-                    // $this->CI->db->trans_start($inTest);
-                    // DB::beginTransaction();
-                    $v->section = $section;
+
                     if (!$v->aluno || $this->isTest($v->aluno->nome)) continue;
-                   
+
+                    dump(sprintf('%s -  %s /%s', $v->aluno->nome, $row->descricao , $row->serie->descricao));
+
                     if ($v->lancamentos->count() == 0) {
-                        log_message('info', sprintf('Student %s : lancamentos %s', $v->aluno->nome, $v->lancamentos->count()));
+                        // log_message('info', sprintf('Student %s : lancamentos %s', $v->aluno->nome, $v->lancamentos->count()));
                         continue;
                     }
-                    $item = $this->buildStudent($v);
+                    // if ($v->aluno->codaluno != 77) continue;
 
-                    $user_id = ($this->syncStudent($item));
-                    if (!$user_id) {
-                        $user_id = null;
-                        log_message('error', sprintf('Failure created student %s', json_encode($item, JSON_PRETTY_PRINT)));
+
+
+                    // continue;
+
+                    $v->options = $options;
+                    $student = $this->buildStudent($v);
+                    $user = (object) ($this->syncStudent($student));
+                    if (!$user->id) {
+                        $user  = null;
+                        log_message('error', sprintf('Failure created student %s', json_encode($student, JSON_PRETTY_PRINT)));
                         continue;
                     }
-                    
-
                     foreach ($v->lancamentos as $lanc) {
-                        $fee = $this->buildFee($lanc, $user_id, $section->classe->first()->id);
+                        $fee = $this->buildFee($lanc, (object)
+                        [
+                            'user_id' => $user->id,
+                            'classe_id' => $options->classe_id,
+                            'session_id' => $user->session_id
+                        ]);
                         $fee_id = ($this->syncFeeItems($fee));
-                        if ($lanc->datapagamento) {
-                            $feePay = $this->buildPayment((object) array_merge($fee, [
-                                'id' => $fee_id,
-                                'fee_discount' => $lanc->desconto,
 
-                            ]));
-                            $this->syncDeposite($feePay);
-                        }
+                        if ($lanc->valorpago == 0 || $lanc->datapagamento == null) continue;
+
+                        $feePay = $this->buildPayment((object) array_merge($fee, [
+                            'id' => $fee_id,
+                            'fee_discount' => $lanc->desconto,
+                            'amount_pay' =>  $lanc->valorpago
+
+                        ]));
+                        $this->syncDeposite($feePay);
                     }
-
-                    // if ($inTest) {
-                    //     DB::rollBack();
-                    // }
-                    // if (!$inTest) {
-                    //     DB::commit();
-                    // }
-                    // $this->CI->db->trans_complete();
                 }
             }
         } catch (\Exception $e) {
@@ -152,6 +180,6 @@ class AppImport extends BaseCommand
 
     public function isTest($str)
     {
-        return preg_match('#teste#', $str);
+        return strpos(strtolower($str), 'teste') != false;
     }
 }

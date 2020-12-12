@@ -20,7 +20,7 @@ trait BuildPaymentMigration
             'created_at' => $item->due_date,
             'amount_detail' => json_encode(['1' => [
 
-                'amount' => $item->amount,
+                'amount' => $item->amount_pay,
                 'date' => $item->due_date,
                 'description' => 'Sistema Anterior Collected By: IMPORTADO',
                 'amount_discount' => $item->fee_discount,

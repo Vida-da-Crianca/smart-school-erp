@@ -18,7 +18,7 @@ class Serie_eloquent extends  Eloquent {
        
         
     ];
-
+     
 
    
 }
