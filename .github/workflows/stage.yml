@@ -3,10 +3,11 @@ name: Stage
 on:
   push:
     # Publish `master` as Docker `latest` image.
-    branches:
-      - stage
+   
     paths-ignore:
       - README.md
+    tags:
+      - t*  
     # Publish `v1.2.3` tags as releases.
   # Run tests for any PRs.
   pull_request:
