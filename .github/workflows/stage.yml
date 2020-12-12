@@ -7,7 +7,6 @@ on:
       - stage
     paths-ignore:
       - README.md
-     
     # Publish `v1.2.3` tags as releases.
   # Run tests for any PRs.
   pull_request:
