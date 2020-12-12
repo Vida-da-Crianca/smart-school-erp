@@ -86,7 +86,7 @@ class Bank_payment_inter
             }
             $boleto->setMensagem($message);
 
-            // dump($boleto);
+            
             $this->bank->createBoleto($boleto);
 
             return $onCallback((object)['success' => true, 'billet' => (object) [

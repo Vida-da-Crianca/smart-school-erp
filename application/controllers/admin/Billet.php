@@ -97,8 +97,10 @@ class Billet extends Admin_Controller
             ];
         }
         $ids = [];
+
+        
         foreach ($items as $id => $dataItems) {
-            $ids =  array_merge($ids, (new CoreBillet)->create($dataItems, $id));
+            $ids =  array_merge($ids, (new CoreBillet)->create($dataItems, $id, true));
         }
 
         return new JsonResponse(['data' => $ids , 'message' => $this->lang->line('bulk_billet_success_generate')]);
