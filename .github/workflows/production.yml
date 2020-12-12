@@ -58,10 +58,11 @@ jobs:
       - uses: actions/checkout@v2
       - name: Create Folder for Application
         run: |
-          mkdir -p -m 777 $DIRECTORY_APPLICATION/app/uploads
-          mkdir -p -m 777 $DIRECTORY_APPLICATION/app/logs
-          mkdir -p -m 777 $DIRECTORY_APPLICATION/app/temp
-          rsync -qr -I   ./uploads/  $DIRECTORY_APPLICATION/app/uploads
+          rm -rf $DIRECTORY_APPLICATION/*
+          mkdir -p -m 777 $DIRECTORY_APPLICATION/uploads
+          mkdir -p -m 777 $DIRECTORY_APPLICATION/logs
+          mkdir -p -m 777 $DIRECTORY_APPLICATION/temp
+          rsync -qr -I   ./uploads/  $DIRECTORY_APPLICATION/uploads
       - name: Create Stack
         run: |
           IMAGE_ID=carlosocarvalho/$IMAGE_NAME
