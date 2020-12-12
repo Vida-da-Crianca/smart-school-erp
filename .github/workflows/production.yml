@@ -19,6 +19,7 @@ env:
   DOCKER_PWD: ${{secrets.DOCKER_PASSWORD}}
   DIRECTORY_APPLICATION: /var/apps/production/erp/app
   IMAGE_ID: ''
+  VERSION: 0
 
 jobs:
   build:
