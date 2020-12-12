@@ -40,7 +40,7 @@ class BilletGenerateCommand extends BaseCommand
 
         $this->CI->load->library(['bank_payment_inter', 'mailer']);
         $this->CI->load->model(['eloquent/Billet_eloquent', 'eloquent/Email_setting_eloquent']);
-        
+
         DB::beginTransaction();
 
         try {
@@ -49,9 +49,17 @@ class BilletGenerateCommand extends BaseCommand
             $billets = \Billet_eloquent::whereNull('bank_bullet_id')
                 ->with(['feeItems', 'student'])
                 ->get()->groupBy('user_id');
-               
+
             foreach ($billets as $row) {
+
                 $group = $row->groupBy('due_date');
+
+                // if (!$row->student) {
+                //     discord_exception(
+                //         sprintf('%s%s----%s', 'Sem dados do usuário' , PHP_EOL, $row->toArray())
+                //     );
+                //     continue;
+                // }
 
                 //dump($group->toArray());
                 $this->buildByOnDueDate($group);
@@ -77,15 +85,15 @@ class BilletGenerateCommand extends BaseCommand
 
     protected function sendMail($options)
     {
-        $content = $this->CI->load->view('mailer/billet.tpl.php', $options ,  TRUE);
+        $content = $this->CI->load->view('mailer/billet.tpl.php', $options,  TRUE);
         $this->CI->mailer->send_mail($options->email, 'Envio de boletos', $content /**/);
     }
 
 
     public function buildByOnDueDate($data)
     {
-        
-        
+
+
         foreach ($data as $row) {
 
             $student = null;
@@ -95,9 +103,9 @@ class BilletGenerateCommand extends BaseCommand
             $billet->due_date = null;
             $billet->description = null;
             $billet->id = [];
-            $billet->mail_items= [];
+            $billet->mail_items = [];
             $billet->custom_number = substr(md5(rand(10, 1000) . date('YmdHis')), 0, 10);
-           
+
             $this->callGrouped($row, function ($item) use (&$billet, &$student, &$descriptions, &$items) {
 
                 $billet->id[] = $item->id;
@@ -106,24 +114,39 @@ class BilletGenerateCommand extends BaseCommand
                 $billet->price +=  $item->price;
                 $billet->due_date = $item->due_date;
                 $student = $item->student;
-                
-                $billet->mail_items[] = (object)[ 
+
+                $billet->mail_items[] = (object)[
                     'name' => $student->full_name,
                     'due_date' => new \DateTime($first->due_date),
                     'description' => $first->title,
                     'price' => sprintf('%s', number_format($first->amount - $body->fee_discount, 2, ',', '.'))
                 ];
-                
+
                 $descriptions[] =  sprintf('%s - %s - R$ %s - Desc. R$ %s', $student->full_name, $first->title, number_format($first->amount, 2, ',', '.'), number_format($body->fee_discount, 2, ',', '.'));
             });
 
-            if (count($billet->id) == 0) continue;
+            if (count($billet->id) == 0 || !$student) {
+
+                discord_exception(
+                    sprintf('%s%s----%s', sprintf('Sem dados do usuário (%s)', json_encode($billet->id)), PHP_EOL, json_encode($row->toArray(), JSON_PRETTY_PRINT))
+                );
+                if (count($billet->id) > 0) {
+
+                    \Billet_eloquent::whereIn('id', $billet->id)
+                        ->update([
+                            'deleted_at' => date('Y-m-d H:i:s'),
+                            'is_active' => 0
+                        ]);
+                    DB::commit();
+                }
+
+                continue;
+            }
 
             $payment = $this->buildOptionsStudentPayment($student);
             $billet->description = implode(PHP_EOL, $descriptions);
-            
-            $this->buildOptionsBilletPayment($payment, $billet);
 
+            $this->buildOptionsBilletPayment($payment, $billet);
             $this->push($payment, function ($options) use ($billet, $student) {
                 //  if($id == null) return;
                 $this->onPush($options, $billet, $student);
@@ -133,8 +156,8 @@ class BilletGenerateCommand extends BaseCommand
 
 
     public function onPush($options, $billet, $student)
-    {   
-       
+    {
+
         if (!$options->success) {
             discord_log(sprintf('%s', json_encode($options, JSON_PRETTY_PRINT)), 'Falha ao gerar boleto');
             return;
@@ -148,22 +171,21 @@ class BilletGenerateCommand extends BaseCommand
         DB::commit();
         discord_log(sprintf('%s', json_encode($options, JSON_PRETTY_PRINT)), 'Novo Boleto');
         $items = [];
-        foreach($billet->mail_items as $row){
-            $row->billet = $options->billet->number; 
-
-            $items[]= $row;
+        foreach ($billet->mail_items as $row) {
+            $row->billet = $options->billet->number;
+            $items[] = $row;
         }
         $data = (object) [
             'name' => $student->guardian_name,
-            'email' =>$student->guardian_email,
+            'email' => $student->guardian_email,
             'id' => $options->billet->number,
-            'link' => site_url('billet/live/'.$options->billet->number),
+            'link' => site_url('billet/live/' . $options->billet->number),
             'code' => $options->billet->barcode,
             'file' => '',
             'due_date' =>  new \DateTime($billet->due_date),
             'items' => $items
         ];
-       
+
         $this->sendMail($data);
     }
 
@@ -178,7 +200,7 @@ class BilletGenerateCommand extends BaseCommand
         $payment->address_city = $student->guardian_city;
         $payment->address_number = $student->guardian_address_number;
         $payment->address_postal_code = $student->guardian_postal_code;
-        
+
 
         return $payment;
     }
@@ -195,7 +217,7 @@ class BilletGenerateCommand extends BaseCommand
 
     public function push($payment, \Closure $callback)
     {
-       
+
         $this->CI->bank_payment_inter->create($payment, $callback);
     }
 }

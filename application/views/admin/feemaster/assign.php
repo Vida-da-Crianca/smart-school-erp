@@ -161,7 +161,7 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                                                             </td>
                                                                             <td style="width: 150px;">
                                                                                 <div class="input-group date">
-                                                                                    <input type="text" class="form-control idate" id="date_payment_<?php echo $i; ?>" name="date_payment[]" value="<?php  ?>">
+                                                                                    <input type="text" class="form-control idate" id="date_payment_<?php echo $i; ?>" name="date_payment[]" value="<?php  echo  date('d/m/Y'); ?>">
                                                                                     <div class="input-group-addon">
                                                                                         <span class="glyphicon glyphicon-th"></span>
                                                                                     </div>
@@ -169,7 +169,7 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
 
                                                                             </td>
                                                                             <td style="width: 60px;">
-                                                                                <input class="form-control" name="number_multiply_payment[]" id="number_multiply_payment<?php echo $i; ?>" value="1" />
+                                                                                <input class="form-control" name="number_multiply_payment[]" id="number_multiply_payment<?php echo $i; ?>" value="0" />
                                                                             </td>
                                                                         </tr>
                                                                 <?php

@@ -762,6 +762,7 @@ class Studentfee extends Admin_Controller
             $type_id = $listOfType[$key];
             $price  = $this->input->post('price')[$key];
             $title =  $this->input->post('title')[$key];
+            if($v == 0) continue;
 
             for ($i = 0; $i < $v; $i += 1) {
                 $datePayment = new DateTime($datePaymentDefault);
@@ -780,9 +781,7 @@ class Studentfee extends Admin_Controller
         foreach ($this->input->post('student_session_id') as $k => $v) {
             $class_id = $this->input->post('class_id')[$k];
             foreach ($data as $row) {
-
                 $register = array_merge($row, ['user_id' => $v, 'student_session_id' => $v, 'class_id' => $class_id]);
-
                 // dump($register);
                 Student_fee_item_eloquent::updateOrCreate(
                     [
