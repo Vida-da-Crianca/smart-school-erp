@@ -1494,3 +1494,9 @@ $lang['fees_item_code'] = 'Código';
 $lang['inter_moura'] = 'Mora %';
 $lang['inter_juros'] = 'Multa %';
 
+//pagameentos list
+$lang['manual_payment'] = 'Baixa manual';
+$lang['manual'] = 'Manual(Siscob)';
+$lang['billet'] = 'Boleto';
+$lang['s/n'] = '<b>Importado(Sistema Antigo)</b>';
+

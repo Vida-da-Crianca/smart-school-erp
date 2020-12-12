@@ -79,7 +79,7 @@
 
             <div class="col-sm-9 col-sm-offset-3 checkbox">
                 <label>
-                    <input name="generate_invoice"  value="1" type="checkbox"> <?php echo $this->lang->line('generate_invoice'); ?>
+                    <input name="generate_invoice" value="1" type="checkbox"> <?php echo $this->lang->line('generate_invoice'); ?>
                 </label>
             </div>
         </div>
@@ -109,6 +109,9 @@
                 </label>
                 <label class="radio-inline">
                     <input type="radio" name="payment_mode_fee" value="card"><?php echo $this->lang->line('card'); ?>
+                </label>
+                <label class="radio-inline">
+                    <input type="radio" name="payment_mode_fee" value="manual"><?php echo $this->lang->line('manual_payment'); ?>
                 </label>
                 <span class="text-danger" id="payment_mode_error"></span>
             </div>

@@ -395,7 +395,10 @@ $language_name = $language["short_code"];
 
 
                                                             </td>
-                                                            <td class="text text-left"><?php echo $this->lang->line(strtolower($fee_deposits_value->payment_mode)); ?></td>
+
+                                                            <td class="text text-left"><?php
+                                                            
+                                                            echo $this->lang->line(strtolower($fee_deposits_value->payment_mode)); ?></td>
                                                             <td class="text text-left">
 
                                                                 <?php echo date($this->customlib->getSchoolDateFormat(), $this->customlib->dateyyyymmddTodateformat($fee_deposits_value->date)); ?>
@@ -645,6 +648,9 @@ $language_name = $language["short_code"];
                                 </label>
                                 <label class="radio-inline">
                                     <input type="radio" name="payment_mode_fee" value="card"><?php echo $this->lang->line('card'); ?>
+                                </label>
+                                <label class="radio-inline">
+                                    <input type="radio" name="payment_mode_fee" value="manual"><?php echo $this->lang->line('manual_payment'); ?>
                                 </label>
                                 <span class="text-danger" id="payment_mode_error"></span>
                             </div>
