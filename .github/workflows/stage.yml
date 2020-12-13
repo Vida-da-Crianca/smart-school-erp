@@ -19,6 +19,8 @@ env:
   DOCKER_USER: ${{secrets.DOCKER_USER}}
   DOCKER_PWD: ${{secrets.DOCKER_PASSWORD}}
   DIRECTORY_APPLICATION: /var/apps/erpjb/production
+  IMAGE_ID: ''
+  VERSION: 0
 
 jobs:
   build:
@@ -82,6 +84,6 @@ jobs:
           [ "$VERSION" == "master" ] && VERSION=latest
           echo IMAGE_ID=$IMAGE_ID
           echo VERSION=$VERSION
-          
+
           docker stack deploy -c stage-stack.yaml $STACK_NAME
           docker system prune --force
