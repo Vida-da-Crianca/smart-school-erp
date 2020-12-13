@@ -64,13 +64,24 @@ jobs:
           mkdir -p -m 777 $DIRECTORY_APPLICATION/app/temp
           rsync -qr -I   ./uploads/  $DIRECTORY_APPLICATION/app/uploads
 
-      - name: Remove Stack
-        run: |
-          docker stack rm $STACK_NAME
-          sleep 20
+      # - name: Remove Stack
+      #   run: |
+      #     docker stack rm $STACK_NAME
+      #     sleep 20
 
       - name: Create Stack
         run: |
+          IMAGE_ID=carlosocarvalho/$IMAGE_NAME
+          # Change all uppercase to lowercase
+          IMAGE_ID=$(echo $IMAGE_ID | tr '[A-Z]' '[a-z]')
+          # Strip git ref prefix from version
+          VERSION=$(echo "${{ github.ref }}" | sed -e 's,.*/\(.*\),\1,')
+          # Strip "v" prefix from tag name
+          [[ "${{ github.ref }}" == "refs/tags/"* ]] && VERSION=$(echo $VERSION | sed -e 's/^v//')
+          # Use Docker `latest` tag convention
+          [ "$VERSION" == "master" ] && VERSION=latest
+          echo IMAGE_ID=$IMAGE_ID
+          echo VERSION=$VERSION
           
           docker stack deploy -c stage-stack.yaml $STACK_NAME
           docker system prune --force

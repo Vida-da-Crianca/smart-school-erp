@@ -23,7 +23,7 @@ services:
         source: mysql.conf
         target: /etc/mysql/conf.d/group.cnf 
   jobs:
-    image: carlosocarvalho/erpjb-school:main
+    image: $IMAGE_ID:$VERSION
     working_dir: /app/
     volumes:
       - /var/apps/erpjb/production/app/uploads:/app/uploads
@@ -52,7 +52,7 @@ services:
       "/app/schedule-run.sh"
     ] 
   app:
-    image: carlosocarvalho/erpjb-school:main
+    image: $IMAGE_ID:$VERSION
     environment:
       - ENVIRONMENT=production
       - DB_HOST=db
