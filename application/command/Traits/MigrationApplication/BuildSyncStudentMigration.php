@@ -9,8 +9,11 @@ trait BuildSyncStudentMigration
 
 
     public function buildStudent($data)
-    {
-        $guardianType = isset($data->aluno->mother->id) && $data->aluno->mother->id == $data->aluno->codresp_financeiro ?  "mother" : "father";
+    {   
+       
+        $guardianType = isset($data->aluno->mother->codresp) && $data->aluno->mother->codresp == $data->aluno->codresp_financeiro ?  "mother" :
+        ($data->aluno->father->codresp == $data->aluno->codresp_financeiro ?  "father" : 'other');
+
         $student = isset($data->aluno->nome) ?  preg_split('#\s#', $data->aluno->nome) :  [];
         $firstName =  current($student);
         unset($student[0]);
@@ -42,7 +45,7 @@ trait BuildSyncStudentMigration
             "mother_phone" => $data->aluno->mother->telefone ?? $data->aluno->mother->telefone,
             "mother_occupation" => null,
             "guardian_is" => $guardianType,
-            "guardian_name" => $data->aluno->mother->nome ?? $data->aluno->mother->nome,
+            "guardian_name" => $data->aluno->guardian->nome ?? $data->aluno->guardian->nome,
             "guardian_relation" => $guardianType,
             "guardian_phone" => $data->aluno->guardian->telefone ?? $data->aluno->guardian->telefone,
             "guardian_occupation" => $data->aluno->guardian->profissao ?? $data->aluno->guardian->profissao,
@@ -126,14 +129,6 @@ trait BuildSyncStudentMigration
 
         $this->CI->user_model->add($data_student_login);
 
-        // if ($sibling_id > 0) {
-        //     $student_sibling = $this->student_model->get($sibling_id);
-        //     $update_student  = array(
-        //         'id'        => $insert_id,
-        //         'parent_id' => $student_sibling['parent_id'],
-        //     );
-        //     $student_sibling = $this->student_model->add($update_student);
-        // } else {
         $parent_password   = $this->CI->role->get_random_password($chars_min = 6, $chars_max = 6, $use_upper_case = false, $include_numbers = true, $include_special_chars = false);
         $temp              = $insert_id;
         $data_parent_login = array(
@@ -149,17 +144,7 @@ trait BuildSyncStudentMigration
             'parent_id' => $ins_parent_id,
         );
         $this->CI->student_model->add($update_student);
-        // }
-
-        // \Student_fee_master_eloquent::updateOrCreate([
-        //     'student_session_id' => $insert_id,
-        //     'fee_session_group_id' => $deposite->id,
-        // ], [
-        //      'is_active' => 'yes',
-        //      'student_session_id' => $insert_id,
-
-        // ]);
-
+       
 
         return  ['id' => $insert_id, 'session_id' => $sessionStudent->id,] ;
     }

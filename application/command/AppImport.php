@@ -123,8 +123,8 @@ class AppImport extends BaseCommand
 
                     if (!$v->aluno || $this->isTest($v->aluno->nome)) continue;
 
-                    dump(sprintf('%s -  %s /%s', $v->aluno->nome, $row->descricao , $row->serie->descricao));
-
+                    // dump(sprintf('%s -  %s /%s', $v->aluno->nome, $row->descricao , $row->serie->descricao));
+                     
                     if ($v->lancamentos->count() == 0) {
                         // log_message('info', sprintf('Student %s : lancamentos %s', $v->aluno->nome, $v->lancamentos->count()));
                         continue;
@@ -136,7 +136,16 @@ class AppImport extends BaseCommand
                     // continue;
 
                     $v->options = $options;
+
+                    // if( $v->aluno->codaluno != 342 ) continue;
                     $student = $this->buildStudent($v);
+                     
+                     
+                    // dump($student);
+
+                    // continue;
+                    
+
                     $user = (object) ($this->syncStudent($student));
                     if (!$user->id) {
                         $user  = null;
