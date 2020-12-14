@@ -50,12 +50,12 @@ services:
     deploy:
       labels:
         traefik.http.services.erp-production.loadbalancer.server.port: "80"
-        traefik.http.routers.erp-production.rule: (Host(`erp.carlosocarvalho.com.br`))
+        traefik.http.routers.erp-production.rule: (Host(`eeividadecrianca.com.br`))
         traefik.docker.network: proxy
         traefik.enable: "true"
         traefik.http.routers.erp-production.entrypoints: http
         traefik.http.routers.erp-production-secure.entrypoints: https
-        traefik.http.routers.erp-production-secure.rule: Host(`erp.carlosocarvalho.com.br`)
+        traefik.http.routers.erp-production-secure.rule: Host(`eeividadecrianca.com.br`)
         traefik.http.routers.erp-production-secure.tls: "true"
         traefik.http.routers.erp-production-secure.tls.certresolver: le
         traefik.http.middlewares.erp-production_redirect.redirectscheme.scheme: https
