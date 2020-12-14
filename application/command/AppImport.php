@@ -57,7 +57,8 @@ class AppImport extends BaseCommand
             'customfield_model',
             'student_model',
             'user_model',
-            'setting_model'
+            'setting_model',
+            'customfield_model'
         ]);
 
         $this->current_session = $this->CI->setting_model->getCurrentSession();
@@ -93,6 +94,8 @@ class AppImport extends BaseCommand
                     'matriculas.aluno.guardian',
                     'matriculas.aluno.mother',
                     'matriculas.aluno.father',
+                    'matriculas.aluno.city.uf',
+                    'matriculas.aluno.cityBirthDay.uf',
                     'matriculas.lancamentos' => function ($query) {
                         return $query->where('situacao', 0)
                             ->whereYear('datavencimento', '2020');
@@ -131,7 +134,8 @@ class AppImport extends BaseCommand
                     }
                     // if ($v->aluno->codaluno != 77) continue;
 
-
+                   
+                    // dump($this->);
 
                     // continue;
 
@@ -140,13 +144,13 @@ class AppImport extends BaseCommand
                     // if( $v->aluno->codaluno != 342 ) continue;
                     $student = $this->buildStudent($v);
                      
-                     
-                    // dump($student);
-
-                    // continue;
+                    $user = (object) ($this->syncStudent($student));
+                    $v->aluno->id = $user->id;
+                    $this->buildCustomFields($v->aluno);
+                    
                     
 
-                    $user = (object) ($this->syncStudent($student));
+                    
                     if (!$user->id) {
                         $user  = null;
                         log_message('error', sprintf('Failure created student %s', json_encode($student, JSON_PRETTY_PRINT)));

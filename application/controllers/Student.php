@@ -1226,6 +1226,11 @@ class Student extends Admin_Controller
                 );
                 $custom_value_array[] = $array_custom;
             }
+
+
+            // dump($custom_value_array);
+
+            // exit;
             $this->customfield_model->updateRecord($custom_value_array, $id, 'students');
 
             $student_id      = $this->input->post('student_id');

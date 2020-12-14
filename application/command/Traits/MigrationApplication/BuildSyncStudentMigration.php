@@ -9,10 +9,9 @@ trait BuildSyncStudentMigration
 
 
     public function buildStudent($data)
-    {   
-       
-        $guardianType = isset($data->aluno->mother->codresp) && $data->aluno->mother->codresp == $data->aluno->codresp_financeiro ?  "mother" :
-        ($data->aluno->father->codresp == $data->aluno->codresp_financeiro ?  "father" : 'other');
+    {
+
+        $guardianType = isset($data->aluno->mother->codresp) && $data->aluno->mother->codresp == $data->aluno->codresp_financeiro ?  "mother" : ($data->aluno->father->codresp == $data->aluno->codresp_financeiro ?  "father" : 'other');
 
         $student = isset($data->aluno->nome) ?  preg_split('#\s#', $data->aluno->nome) :  [];
         $firstName =  current($student);
@@ -63,7 +62,7 @@ trait BuildSyncStudentMigration
             "adhar_no" => "",
             "previous_school" => "",
             "note" => "",
-            'is_active'           => 'yes',
+            'is_active' => 'yes',
 
         ];
 
@@ -144,8 +143,65 @@ trait BuildSyncStudentMigration
             'parent_id' => $ins_parent_id,
         );
         $this->CI->student_model->add($update_student);
-       
 
-        return  ['id' => $insert_id, 'session_id' => $sessionStudent->id,] ;
+
+        return  ['id' => $insert_id, 'session_id' => $sessionStudent->id,];
+    }
+
+    public function syncStudentCustomFields($id)
+    {
+
+    }
+
+    public function buildCustomFields($data)
+    {
+        
+        
+        $options =  [
+            [
+                "belong_table_id" => $data->id,
+                "custom_field_id" => 3,
+                "field_value" => "",
+            ],
+            //estado nascimento
+            [
+                "belong_table_id" => $data->id,
+                "custom_field_id" => 4,
+                "field_value" => $data->cityBirthDay->uf->sigla ?? $data->cityBirthDay->uf->sigla,
+            ],
+            //cidade nascimento
+            [
+                "belong_table_id" => $data->id,
+                "custom_field_id" => 10,
+                "field_value" => $data->cityBirthDay->nome ?? $data->cityBirthDay->nome,
+            ],
+            //	Certidão de nascimento
+            [
+                "belong_table_id" => $data->id,
+                "custom_field_id" => 6,
+                "field_value" => $data->certidao,
+            ],
+            //O aluno vem para a escola de que forma?
+            [
+                "belong_table_id" => $data->id,
+                "custom_field_id" => 7,
+                "field_value" =>  [
+                   0 => '', 
+                   1 => 'A pé e sozinho',
+                    2 => 'De ônibus e sozinho',
+                    3 => 'Alguém vem sempre trazê-lo',
+                    4 => 'Transporte escolar'
+                ][$data->meio_transporte],
+            ],
+            //O aluno(a) está autorizado(a) a sair da escola sozinho(a)?
+            [
+                "belong_table_id" => $data->id,
+                "custom_field_id" => 8,
+                "field_value" => "Não",
+            ]
+        ];
+        
+        
+         $this->CI->customfield_model->updateRecord($options, $data->id, 'students');
     }
 }

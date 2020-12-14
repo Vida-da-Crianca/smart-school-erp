@@ -525,6 +525,8 @@ class Studentfee extends Admin_Controller
                 'id' => $id,
                 'category' => $this->input->post('category'),
             );
+
+         
             $this->studentfee_model->add($data);
             $this->session->set_flashdata('msg', '<div studentfee="alert alert-success text-center">' . $this->lang->line('update_message') . '</div>');
             redirect('studentfee/index');

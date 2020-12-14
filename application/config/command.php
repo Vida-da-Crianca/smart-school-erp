@@ -4,6 +4,7 @@
 
 use Application\Command\AppImport;
 use Application\Command\CleanDirectoryTemp;
+use Application\Command\SupplierMigration;
 
 return [
 
@@ -18,4 +19,5 @@ return [
     'schedule_run' => Application\Command\ScheduleCommand::class,
     'clean_directory' => CleanDirectoryTemp::class,
     'app_import' => AppImport::class,
+    'supplier_migration' => SupplierMigration::class
 ];

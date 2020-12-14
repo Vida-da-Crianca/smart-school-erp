@@ -53,5 +53,24 @@ class Aluno_eloquent extends  Eloquent {
             'codresp_financeiro'
         );
     }
+
+
+    public function city(){
+        get_instance()->load->model('eloquent/migrate/Cidade');
+        return $this->hasOne(
+            'Cidade',
+            'codcidade',
+            'codcidade'
+        );
+    }
+
+    public function cityBirthDay(){
+        get_instance()->load->model('eloquent/migrate/Cidade');
+        return $this->hasOne(
+            'Cidade',
+            'codcidade',
+            'nasc_codcidade'
+        );
+    }
    
 }
