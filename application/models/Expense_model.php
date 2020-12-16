@@ -40,9 +40,9 @@ class Expense_model extends MY_Model {
         if ($id != null) {
             $this->db->where('expenses.id', $id);
         } else {
-            $this->db->order_by('expenses.id', 'DESC');
+            $this->db->order_by('expenses.date', 'DESC');
         }
-
+       // $this->db->order_by('');
         $query = $this->db->get();
         if ($id != null) {
             return $query->row_array();
