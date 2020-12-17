@@ -37,7 +37,8 @@ class ExpenseMigration extends BaseCommand
     {
         $this->CI->load->model(['eloquent/migrate/Movimento', 'eloquent/Staff',
          'eloquent/Supplier',
-         'eloquent/Expense']);
+         'eloquent/Expense',
+         'eloquent/ExpenseHead']);
 
         $items =  \Movimento::with(['staff', 'supplier'])->orderBy('codmovimento', 'desc')->get();
 

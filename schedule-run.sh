@@ -3,6 +3,7 @@
 List=(
     billet:generate
     invoice:cancel
+    invoice:create
     invoice:tribute
     billet:paid
     billet:cancel

@@ -17,9 +17,9 @@ trait  BuildSyncExpense
        
        // $isTeach = $isTeach !=  0 ? $isTeach : (!empty($data->cargo) &&  strpos('professora', Str::slug($data->cargo))  ? 4 : 0); 
         
-        
+        $expense_head =  \ExpenseHead::where('category_last_id', $data->codcategoria)->first()->id;
         return [
-            'exp_head_id' => 1,
+            'exp_head_id' => $expense_head !=  null ? $expense_head : 1,
             'name' =>$data->staff->nome ??  $data->supplier->nome  ,
             'invoice_no' =>  substr(md5($data->codmovimento), 0, 10),
             'date' => $data->datavencimento,

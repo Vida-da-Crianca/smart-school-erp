@@ -3,6 +3,7 @@
 //Register your commands
 
 use Application\Command\AppImport;
+use Application\Command\CategoryExpenseMigration;
 use Application\Command\CleanDirectoryTemp;
 use Application\Command\ExpenseMigration;
 use Application\Command\StaffMigration;
@@ -24,4 +25,5 @@ return [
     'supplier_migration' => SupplierMigration::class,
     'staff_migration' => StaffMigration::class,
     'expense_migration' => ExpenseMigration::class,
+    'expense_category_migration' => CategoryExpenseMigration::class
 ];
