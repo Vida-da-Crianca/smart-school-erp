@@ -658,7 +658,7 @@ $lang['you_can_edit_record'] = "Você Pode Editar O Registo";
 #Version 4.0.0
 
 $lang['access_denied'] = 'Acesso Negado!' ;
-$lang['account_title'] = 'Título Da Conta' ;
+$lang['account_title'] = 'Tipo da conta' ;
 $lang['action_taken'] = 'Ação Tomada' ;
 $lang['add_event'] = "Adicionar Evento" ;
 $lang['add_gallery'] = "Adicionar Galeria" ;
