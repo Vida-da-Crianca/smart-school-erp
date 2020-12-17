@@ -99,7 +99,7 @@ class InvoiceCommand extends BaseCommand
                 'rps_num' => '',
                 'id_sis_legado' => '',
                 'iss' => $options['iss'],
-                'aliquota_simples' => $al,
+                'aliquota_simples' => $aliquota,
                 // 'aliquota_atividade'=> $options['aliquota_atividade'],
                 // 'retencao_iss' => '2.80%',
                 'rps_serie' => $options['serie'],
