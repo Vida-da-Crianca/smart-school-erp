@@ -32,7 +32,8 @@ class Invoice_eloquent extends  Eloquent
         'autenticidade',
         'user_id',
         'bullet_id',
-        'due_date'
+        'due_date',
+        'latest_try_at'
     ];
 
 

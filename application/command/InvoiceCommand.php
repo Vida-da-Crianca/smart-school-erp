@@ -5,6 +5,7 @@ namespace Application\Command;
 
 use AG\DiscordMsg;
 use Application\Command\Traits\ExceptionsFailInvoice;
+use Carbon\Carbon;
 use CarlosOCarvalho\Sigiss\Drivers\Barretos;
 use CarlosOCarvalho\Sigiss\Provider;
 use CarlosOCarvalho\Sigiss\SigissService;
@@ -64,12 +65,24 @@ class InvoiceCommand extends BaseCommand
           
         $options = $settings->toArray();
         $aliquota = str_replace([',','%'], ['.',''],$options['simple_rate']);
+        $first = Carbon::now();
         foreach ($invoices as $item) {
+            
+            if( $item->latest_try_at !=  null){
+                $timed = Carbon::create($item->latest_try_at);
+                if($timed->diffInMinutes() != 10)
+                  continue;
+            }
+            
+
+            
+             
             $this->buildInvoiceDescription($item);
             $calc = ($aliquota / 100) * $item->price;
             $al = number_format($calc,2,',', '.');
-
-            dump($al);
+            
+           
+            
             $data  = [
                 'valor' => $item->price,
                 'base'  => $item->price,
@@ -94,6 +107,9 @@ class InvoiceCommand extends BaseCommand
             ];
 
             // dump($data);
+            // continue;
+            \Invoice_eloquent::where('id', $item->id)->update(['latest_try_at' => Carbon::now()]);
+            
             $service  =  new SigissService($provider);
             try {
 
@@ -103,19 +119,27 @@ class InvoiceCommand extends BaseCommand
 
                 // dump($service->getBody());
 
-                // if ($response->RetornoNota->Resultado > 0) {
-                //     unset($item->_description);
-                //     $item->update(['invoice_number' => $response->RetornoNota->Nota, 
-                //     'status' => Invoice_eloquent::VALID,
-                //     'body' => json_encode($response->RetornoNota)]);
-                //     discord_log(sprintf('%s', json_encode($response->RetornoNota, JSON_PRETTY_PRINT)) , 'Nova Nota Fiscal');
+                if ($response->RetornoNota->Resultado > 0) {
+                    unset($item->_description);
+                    $item->update(['invoice_number' => $response->RetornoNota->Nota, 
+                    'status' => Invoice_eloquent::VALID,
+                    'body' => json_encode($response->RetornoNota)]);
+                    discord_log(sprintf('%s', json_encode($response->RetornoNota, JSON_PRETTY_PRINT)) , 'Nova Nota Fiscal');
 
-                // }
+                }
+                if ($response->RetornoNota->Resultado == 0) {
+                    discord_exception(
+                        sprintf('%s', json_encode($response, JSON_PRETTY_PRINT)),
+                        'Falha ao criar nota'
+                    );
+                }
+                
 
                 dump($response);
 
            
             } catch (\Exception $e) {
+
                 $response = $service->getClientSoap()->__getLastResponse();
                 discord_exception(
                     sprintf('%s %s----%s', json_encode($service->getBody(), JSON_PRETTY_PRINT), PHP_EOL, $e->getMessage())
@@ -126,6 +150,8 @@ class InvoiceCommand extends BaseCommand
 
         return 0;
     }
+
+    
 
 
     public function buildInvoiceDescription(&$item)
