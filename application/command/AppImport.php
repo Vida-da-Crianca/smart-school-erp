@@ -70,6 +70,7 @@ class AppImport extends BaseCommand
         // DB::table('chat_connections')->truncate();
 
         // DB::table('chat_users')->truncate();
+
         // DB::table('students')->delete();
         // DB::table('student_fees_master')->delete();
         // DB::table('student_fee_items')->delete();

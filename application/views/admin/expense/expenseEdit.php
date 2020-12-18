@@ -55,6 +55,16 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                     <span class="text-danger"><?php echo form_error('exp_head_id'); ?></span>
                                 </div>
                                 <div class="form-group">
+                                <input type="hidden" name="owner_id"  value="<?php echo set_value('owner_id', $expense['owner_id']) ?>"> 
+                                    <label><?php echo $this->lang->line('expense_type'); ?></label> <small class="req">*</small> <br />
+                                    <label class="radio-inline">
+                                        <input type="radio" name="owner_type" id="owner_type_1" <?php echo $expense['owner_type'] ==  'F' ? 'checked' : '' ?> value="F"> Funcionário
+                                    </label>
+                                    <label class="radio-inline">
+                                        <input type="radio" name="owner_type" id="owner_type_1" <?php echo $expense['owner_type'] ==  'J' ? 'checked' : '' ?> value="J"> Fornecedor
+                                    </label>
+                                </div>
+                                <div class="form-group">
                                     <label for="exampleInputEmail1"><?php echo $this->lang->line('name'); ?></label><small class="req"> *</small>
                                     <input id="name" name="name" placeholder="" type="text" class="form-control"  value="<?php echo set_value('name', $expense['name']); ?>" />
                                     <span class="text-danger"><?php echo form_error('name'); ?></span>
@@ -68,6 +78,14 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                     <label for="exampleInputEmail1"><?php echo $this->lang->line('date'); ?></label><small class="req"> *</small>
                                     <input id="date" name="date" placeholder="" type="text" class="form-control date"  value="<?php echo set_value('date', date($this->customlib->getSchoolDateFormat(), $this->customlib->dateyyyymmddTodateformat($expense['date']))); ?>" readonly="readonly" />
                                     <span class="text-danger"><?php echo form_error('date'); ?></span>
+                                </div>
+                                <div class="form-group">
+                                    <label for="exampleInputEmail1"><?php echo $this->lang->line('expense_payment_at'); ?></label> <small class="req">*</small>
+                                    <input id="date" name="payment_at" placeholder="" type="text" class="form-control date" 
+                                    
+                                    value="<?php echo set_value('payment_at', date($this->customlib->getSchoolDateFormat(), $this->customlib->dateyyyymmddTodateformat($expense['payment_at']))); ?>"
+                                    />
+                                    <span class="text-danger"><?php echo form_error('payment_at'); ?></span>
                                 </div>
                                 <div class="form-group">
                                     <label for="exampleInputEmail1"><?php echo $this->lang->line('amount'); ?></label><small class="req"> *</small>
@@ -212,8 +230,63 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
     </section><!-- /.content -->
 </div><!-- /.content-wrapper -->
 
-<script type="text/javascript">
-  
+<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+<script>
+    $(document).ready(function() {
+        $('.detail_popover').popover({
+            placement: 'right',
+            trigger: 'hover',
+            container: 'body',
+            html: true,
+            content: function() {
+                return $(this).closest('td').find('.fee_detail_popover').html();
+            }
+        });
+    });
+
+    initializeAutocomplete();
+
+    $('input[name="owner_type"]').on('change', function() {
+        initializeAutocomplete()
+    })
+
+    function initializeAutocomplete() {
+
+        // $('input[name="name"]').autocomplete( "destroy" );
+        $('input[name="name"]').autocomplete({
+            minLength: 2,
+            select: function( event, ui ) {
+               console.log(ui)
+               $('input[name="owner_id"]').val(ui.item.id)
+            },
+            source: function(request, response) {
+                $.ajax({
+                    url: '<?php echo site_url('/admin/expense/owner_ajax');  ?>?type=' + $('input[name="owner_type"]:checked').val(),
+                    dataType: "json",
+                    data: {
+                        q: request.term
+                    },
+                    success: function({
+                        data
+                    }) {
+                        var items = [];
+
+                        data.forEach(row => {
+                            items.push({
+                                label: row.name,
+                                value: row.name,
+                                id: row.id
+                            })
+                        })
+                        //cache[`${term}_${$('input[name="owner_type"]:checked').val()}`] = items
+                        response(items);
+                    }
+                });
+            },
+
+
+        });
+    }
 </script>
 <script>
     $(document).ready(function () {

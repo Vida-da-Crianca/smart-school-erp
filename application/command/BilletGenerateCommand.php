@@ -168,6 +168,8 @@ class BilletGenerateCommand extends BaseCommand
                 'bank_bullet_id' => $options->billet->number,
             ]);
 
+            
+
         DB::commit();
         discord_log(sprintf('%s', json_encode($options, JSON_PRETTY_PRINT)), 'Novo Boleto');
         $items = [];

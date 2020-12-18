@@ -7,3 +7,8 @@
     overflow: hidden;
     text-overflow: ellipsis;
 }
+
+
+.ui-autocomplete-loading {
+    background: url('../../images/loading-ui.gif') no-repeat right center;
+}

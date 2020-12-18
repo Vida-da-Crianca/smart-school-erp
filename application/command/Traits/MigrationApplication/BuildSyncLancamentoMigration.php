@@ -12,9 +12,10 @@ trait  BuildSyncLancamentoMigration
 
     public function buildFee($data, $user)
     {
-
+        
+        $cod = $data->codboleto > 0 ? sprintf(' Siscob %s',$data->codboleto) : null;
         return [
-            'title' => strip_tags($data->descricao),
+            'title' =>  sprintf('%s %s',strip_tags($data->descricao), $cod),
             'feetype_id' => 39,
             'amount' => $data->valor,
             'due_date' => $data->datavencimento,

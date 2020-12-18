@@ -21,7 +21,7 @@ trait BuildSyncStudentMigration
 
 
         $build = [
-
+            'dis_reason' =>  $data->codmotivo,
             "admission_no" => $data->aluno->rm, //RM
             "roll_no" => $data->aluno->ra,
             "class_id" => $data->options->classe_id,
@@ -62,7 +62,8 @@ trait BuildSyncStudentMigration
             "adhar_no" => "",
             "previous_school" => "",
             "note" => "",
-            'is_active' => 'yes',
+            'is_active' => $data->codmotivo == null || empty($data->codmotivo) ? 'yes' : 'no',
+            'disable_at	' => $data->codmotivo == null || empty($data->codmotivo) ? date('Y-m-d') : null,
 
         ];
 

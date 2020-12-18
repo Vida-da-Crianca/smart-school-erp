@@ -1,5 +1,7 @@
 <?php
 
+use Application\Core\JsonResponse;
+
 if (!defined('BASEPATH'))
     exit('No direct script access allowed');
 
@@ -25,7 +27,10 @@ class Expense extends Admin_Controller {
         $this->form_validation->set_rules('amount', $this->lang->line('amount'), 'trim|required|xss_clean');
         $this->form_validation->set_rules('name', $this->lang->line('name'), 'trim|required|xss_clean');
         $this->form_validation->set_rules('date', $this->lang->line('date'), 'trim|required|xss_clean');
+        $this->form_validation->set_rules('payment_at', $this->lang->line('date'), 'trim|xss_clean');
+        $this->form_validation->set_rules('owner_id', $this->lang->line('date'), 'trim|xss_clean');
         $this->form_validation->set_rules('documents', $this->lang->line('documents'), 'callback_handle_upload');
+        $this->form_validation->set_rules('owner_type', $this->lang->line('owner_type'), 'trim|required|xss_clean');
         if ($this->form_validation->run() == FALSE) {
             
         } else {
@@ -36,6 +41,10 @@ class Expense extends Admin_Controller {
                 'amount' => $this->input->post('amount'),
                 'invoice_no' => $this->input->post('invoice_no'),
                 'note' => $this->input->post('description'),
+                'owner_id' => $this->input->post('owner_id'),
+                'owner_type' => $this->input->post('owner_type'),
+                'payment_at' => date('Y-m-d', $this->customlib->datetostrtotime($this->input->post('payment_at'))),
+              
             );
 
             $insert_id = $this->expense_model->add($data);
@@ -184,6 +193,8 @@ class Expense extends Admin_Controller {
         $this->form_validation->set_rules('amount', $this->lang->line('amount'), 'trim|required|xss_clean');
         $this->form_validation->set_rules('name', $this->lang->line('name'), 'trim|required|xss_clean');
         $this->form_validation->set_rules('date', $this->lang->line('date'), 'trim|required|xss_clean');
+        $this->form_validation->set_rules('payment_at', $this->lang->line('date'), 'trim|xss_clean');
+        $this->form_validation->set_rules('owner_type', $this->lang->line('owner_type'), 'trim|required|xss_clean');
         if ($this->form_validation->run() == FALSE) {
             $this->load->view('layout/header', $data);
             $this->load->view('admin/expense/expenseEdit', $data);
@@ -197,6 +208,9 @@ class Expense extends Admin_Controller {
                 'date' => date('Y-m-d', $this->customlib->datetostrtotime($this->input->post('date'))),
                 'amount' => $this->input->post('amount'),
                 'note' => $this->input->post('description'),
+                'owner_id' => $this->input->post('owner_id'),
+                'owner_type' => $this->input->post('owner_type'),
+                'payment_at' => date('Y-m-d', $this->customlib->datetostrtotime($this->input->post('payment_at'))),
             );
             $insert_id = $this->expense_model->add($data);
             if (isset($_FILES["documents"]) && !empty($_FILES['documents']['name'])) {
@@ -271,6 +285,36 @@ class Expense extends Admin_Controller {
             $this->load->view('admin/expense/expenseSearch', $data);
             $this->load->view('layout/footer', $data);
         }
+    }
+
+
+    public function owner_ajax(){
+
+        $this->load->model(['eloquent/Supplier', 'eloquent/Staff']);
+        $data = [];
+        if($this->input->get('type') == 'J'  && $this->input->get('q')){
+            $items =   Supplier::where('item_supplier', 'like', '%'.$this->input->get('q').'%')
+            ->limit(20)
+            ->get();
+
+            foreach($items as $row){
+                $data[] = ['id' => $row->id, 'name' => $row->item_supplier];
+            }
+            
+        } 
+
+        if($this->input->get('type') == 'F' && $this->input->get('q')){
+            $items = Staff::where('name', 'like', '%'.$this->input->get('q').'%' )
+            ->orWhere('surname', 'like', '%'.$this->input->get('q').'%' )
+            ->limit(20)
+            ->get();
+            foreach($items as $row){
+                $data[] = ['id' => $row->id, 'name' => sprintf('%s %s',$row->name, $row->surname)];
+            }
+        } 
+       
+
+        return new JsonResponse( compact('data')) ;
     }
 
 }

@@ -1500,3 +1500,7 @@ $lang['manual'] = 'Manual(Siscob)';
 $lang['billet'] = 'Boleto';
 $lang['s/n'] = '<b>Importado(Sistema Antigo)</b>';
 
+
+$lang['expense_type'] = 'Para ';
+$lang['expense_payment_at'] = 'Data Pagamento'; 
+

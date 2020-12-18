@@ -35,15 +35,19 @@ class Expense_model extends MY_Model {
     }
 
     public function get($id = null) {
-        $this->db->select('expenses.id,expenses.date,expenses.name,expenses.invoice_no,expenses.amount,expenses.documents,expenses.note,expense_head.exp_category,expenses.exp_head_id')->from('expenses');
+        $this->db->select('expenses.id,expenses.date,expenses.name,
+        expenses.owner_type,
+        expenses.owner_id,
+        expenses.payment_at,
+        expenses.invoice_no,expenses.amount,expenses.documents,expenses.note,expense_head.exp_category,expenses.exp_head_id')->from('expenses');
         $this->db->join('expense_head', 'expenses.exp_head_id = expense_head.id');
         if ($id != null) {
             $this->db->where('expenses.id', $id);
         } else {
-            $this->db->order_by('expenses.date', 'DESC');
+            $this->db->order_by('expenses.id', 'DESC');
         }
        // $this->db->order_by('');
-        $query = $this->db->get();
+        $query = $this->db->limit(10)->get();
         if ($id != null) {
             return $query->row_array();
         } else {
