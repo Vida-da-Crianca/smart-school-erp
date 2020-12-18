@@ -83,7 +83,7 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                     <label for="exampleInputEmail1"><?php echo $this->lang->line('expense_payment_at'); ?></label> <small class="req">*</small>
                                     <input id="date" name="payment_at" placeholder="" type="text" class="form-control date" 
                                     
-                                    value="<?php echo set_value('payment_at', date($this->customlib->getSchoolDateFormat(), $this->customlib->dateyyyymmddTodateformat($expense['payment_at']))); ?>"
+                                    value="<?php echo set_value('payment_at', $expense['payment_at'] == null ? '' :date($this->customlib->getSchoolDateFormat(), $this->customlib->dateyyyymmddTodateformat($expense['payment_at']))); ?>"
                                     />
                                     <span class="text-danger"><?php echo form_error('payment_at'); ?></span>
                                 </div>
@@ -155,7 +155,7 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                     } else {
                                         foreach ($expenselist as $expense) {
                                             ?>
-                                            <tr>
+                                            <tr  class="<?php  echo $expense['payment_at'] != null ?  'success' : 'danger' ?>">
                                                 <td class="mailbox-name">
                                                     <a href="#" data-toggle="popover" class="detail_popover"><?php echo $expense['name'] ?></a>
 

@@ -43,7 +43,7 @@ class Expense extends Admin_Controller {
                 'note' => $this->input->post('description'),
                 'owner_id' => $this->input->post('owner_id'),
                 'owner_type' => $this->input->post('owner_type'),
-                'payment_at' => date('Y-m-d', $this->customlib->datetostrtotime($this->input->post('payment_at'))),
+                'payment_at' => !$this->input->post('payment_at') ? null : date('Y-m-d', $this->customlib->datetostrtotime($this->input->post('payment_at'))),
               
             );
 
@@ -61,7 +61,7 @@ class Expense extends Admin_Controller {
             $this->session->set_flashdata('msg', '<div class="alert alert-success text-left">' . $this->lang->line('success_message') . '</div>');
             redirect('admin/expense/index');
         }
-        $expense_result = $this->expense_model->get();
+        $expense_result = $this->expense_model->get(null, date('Y-m-d'));
         $data['expenselist'] = $expense_result;
         $expnseHead = $this->expensehead_model->get();
         $data['expheadlist'] = $expnseHead;
@@ -210,7 +210,7 @@ class Expense extends Admin_Controller {
                 'note' => $this->input->post('description'),
                 'owner_id' => $this->input->post('owner_id'),
                 'owner_type' => $this->input->post('owner_type'),
-                'payment_at' => date('Y-m-d', $this->customlib->datetostrtotime($this->input->post('payment_at'))),
+                'payment_at' => !$this->input->post('payment_at') ? null : date('Y-m-d', $this->customlib->datetostrtotime($this->input->post('payment_at'))),
             );
             $insert_id = $this->expense_model->add($data);
             if (isset($_FILES["documents"]) && !empty($_FILES['documents']['name'])) {

@@ -34,7 +34,7 @@ class Expense_model extends MY_Model {
         }
     }
 
-    public function get($id = null) {
+    public function get($id = null, $date = null) {
         $this->db->select('expenses.id,expenses.date,expenses.name,
         expenses.owner_type,
         expenses.owner_id,
@@ -46,8 +46,13 @@ class Expense_model extends MY_Model {
         } else {
             $this->db->order_by('expenses.id', 'DESC');
         }
+
+        if( $date != null) {
+            $this->db->where("expenses.date", sprintf('%s',$date));
+            // $this->db->where("expenses.date", sprintf('%s 23:59:59',$date));
+        }
        // $this->db->order_by('');
-        $query = $this->db->limit(10)->get();
+        $query = $this->db->get();
         if ($id != null) {
             return $query->row_array();
         } else {

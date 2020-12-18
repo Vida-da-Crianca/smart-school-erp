@@ -275,6 +275,7 @@ class Student extends Admin_Controller
         $this->form_validation->set_rules('section_id', $this->lang->line('section'), 'trim|required|xss_clean');
 
         // $this->form_validation->set_rules('rte', $this->lang->line('rtl'), 'trim|required|xss_clean');
+        $this->form_validation->set_rules('guardian_email', $this->lang->line('guardian_email'), 'trim|required|xss_clean');
         $this->form_validation->set_rules('guardian_name', $this->lang->line('guardian_name'), 'trim|required|xss_clean');
         $this->form_validation->set_rules('guardian_phone', $this->lang->line('guardian_phone'), 'trim|required|xss_clean');
         $this->form_validation->set_rules('guardian_document', $this->lang->line('guardian_phone'), 'required|only_numeric|trim|numeric|exact_length[11]|xss_clean');
@@ -1184,6 +1185,7 @@ class Student extends Admin_Controller
         $this->form_validation->set_rules('gender', $this->lang->line('gender'), 'trim|required|xss_clean');
         $this->form_validation->set_rules('guardian_name', $this->lang->line('guardian_name'), 'trim|required|xss_clean');
         $this->form_validation->set_rules('guardian_document', $this->lang->line('guardian_document'), 'only_numeric|trim|required|numeric|exact_length[11]|xss_clean');
+        $this->form_validation->set_rules('guardian_email', $this->lang->line('guardian_email'), 'trim|required|xss_clean');
         $this->form_validation->set_rules('guardian_postal_code', $this->lang->line('guardian_postal_code'), 'only_numeric|trim|required|numeric|exact_length[8]|xss_clean');
         $this->form_validation->set_rules('guardian_district', $this->lang->line('guardian_district'), 'trim|required|xss_clean');
         $this->form_validation->set_rules('guardian_city', $this->lang->line('guardian_city'), 'trim|required|xss_clean');

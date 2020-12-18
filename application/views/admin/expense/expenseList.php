@@ -154,8 +154,9 @@
                                         } else {
                                             foreach ($expenselist as $expense) {
                                             ?>
-                                                <tr>
-                                                    <td class="mailbox-name">
+                                                <tr class="<?php  echo $expense['payment_at'] != null ?  'success' : 'danger' ?>">
+                                                    <td class="mailbox-name ">
+                                                       
                                                         <a href="#" data-toggle="popover" class="detail_popover"><?php echo $expense['name'] ?></a>
 
                                                         <div class="fee_detail_popover" style="display: none">
