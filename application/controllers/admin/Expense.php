@@ -184,7 +184,7 @@ class Expense extends Admin_Controller {
         $expense = $this->expense_model->get($id);
         $data['expense'] = $expense;
         $data['title_list'] = 'Fees Master List';
-        $expense_result = $this->expense_model->get();
+        $expense_result = $this->expense_model->get(null,  date('Y-m-d'));
         $data['expenselist'] = $expense_result;
         $expnseHead = $this->expensehead_model->get();
         $data['expheadlist'] = $expnseHead;
