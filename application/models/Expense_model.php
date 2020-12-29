@@ -18,14 +18,18 @@ class Expense_model extends MY_Model {
      */
     public function search($text = null, $start_date = null, $end_date = null) {
         if (!empty($text)) {
-            $this->db->select('expenses.id,expenses.date,expenses.invoice_no,expenses.name,expenses.amount,expenses.documents,expenses.note,expense_head.exp_category,expenses.exp_head_id')->from('expenses');
+            $this->db->select('expenses.id,expenses.date,expenses.invoice_no,expenses.name,expenses.amount,
+            expenses.payment_at,
+            expenses.documents,expenses.note,expense_head.exp_category,expenses.exp_head_id')->from('expenses');
             $this->db->join('expense_head', 'expenses.exp_head_id = expense_head.id');
 
             $this->db->like('expenses.name', $text);
             $query = $this->db->get();
             return $query->result_array();
         } else {
-            $this->db->select('expenses.id,expenses.date,expenses.name,expenses.invoice_no,expenses.amount,expenses.documents,expenses.note,expense_head.exp_category,expenses.exp_head_id')->from('expenses');
+            $this->db->select('expenses.id,
+            expenses.payment_at,
+            expenses.date,expenses.name,expenses.invoice_no,expenses.amount,expenses.documents,expenses.note,expense_head.exp_category,expenses.exp_head_id')->from('expenses');
             $this->db->join('expense_head', 'expenses.exp_head_id = expense_head.id');
             $this->db->where('expenses.date >=', $start_date);
             $this->db->where('expenses.date <=', $end_date);
