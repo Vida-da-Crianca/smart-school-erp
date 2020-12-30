@@ -73,17 +73,15 @@ class PaidBillet extends BaseCommand
                 ]);
 
                 $deposite->save();
-                \Invoice_eloquent::updateOrCreate([
-                    'user_id' => $row->user_id,
-                    'student_fees_deposite_id' => $deposite->id,
-                ], [
-                    'price' => $row->price,
-                    'status' => \Invoice_eloquent::PENDING_CREATE,
-                    'student_fees_deposite_id' => $deposite->id,
-                    'due_date' => $dateStatus->format('Y-m-d H:i:s'),
-                    'bullet_id' => $row->id
 
+                \Invoice_eloquent::where([
+                    'user_id' => $row->user_id,
+                    'bullet_id' => $row->id
+                ])->update([
+                    'student_fees_deposite_id' => $deposite->id,
+                    'student_fees_deposite_id' => $deposite->id,
                 ]);
+                
             }
         }
 

@@ -58,6 +58,7 @@
     <script src="<?php echo base_url(); ?>backend/js/school-custom.js"></script>
     <script src="<?php echo base_url(); ?>backend/js/school-admin-custom.js"></script>
     <script src="<?php echo base_url(); ?>backend/js/sstoast.js"></script>
+    <script src="<?php echo base_url(); ?>backend/js/money-mask.js"></script>
 
     <!-- fullCalendar -->
     <link rel="stylesheet" href="<?php echo base_url() ?>backend/fullcalendar/dist/fullcalendar.min.css">

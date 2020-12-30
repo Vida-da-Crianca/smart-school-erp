@@ -89,7 +89,7 @@ class InvoiceCommand extends BaseCommand
                 'descricaoNF' => sprintf('%s %s %s', $item->student->full_name, PHP_EOL, $item->_description),
                 'tomador_tipo' => 2,
                 'tomador_cnpj' => $item->student->guardian_document, //cnoj da empresa
-                'tomador_email' => $item->student->guardian_email,
+                'tomador_email' =>  getenv('ENVIRONMENT') === 'develoment' ?  getenv('MAIL_NOTA') : $item->student->guardian_email,
                 'tomador_razao' => $item->student->guardian_name,
                 'tomador_endereco' => $item->student->guardian_address,
                 'tomador_numero' => $item->student->guardian_address_number,

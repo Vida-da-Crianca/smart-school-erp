@@ -39,7 +39,8 @@ class BilletGenerateCommand extends BaseCommand
     {
 
         $this->CI->load->library(['bank_payment_inter', 'mailer']);
-        $this->CI->load->model(['eloquent/Billet_eloquent', 'eloquent/Email_setting_eloquent']);
+        $this->CI->load->model(['eloquent/Billet_eloquent', 'eloquent/Email_setting_eloquent', 'eloquent/Invoice_eloquent']);
+
 
         DB::beginTransaction();
 
@@ -53,15 +54,6 @@ class BilletGenerateCommand extends BaseCommand
             foreach ($billets as $row) {
 
                 $group = $row->groupBy('due_date');
-
-                // if (!$row->student) {
-                //     discord_exception(
-                //         sprintf('%s%s----%s', 'Sem dados do usuário' , PHP_EOL, $row->toArray())
-                //     );
-                //     continue;
-                // }
-
-                //dump($group->toArray());
                 $this->buildByOnDueDate($group);
             }
         } catch (\Exception $e) {
@@ -137,6 +129,8 @@ class BilletGenerateCommand extends BaseCommand
                             'deleted_at' => date('Y-m-d H:i:s'),
                             'is_active' => 0
                         ]);
+
+
                     DB::commit();
                 }
 
@@ -168,15 +162,23 @@ class BilletGenerateCommand extends BaseCommand
                 'bank_bullet_id' => $options->billet->number,
             ]);
 
-            
+        
 
         DB::commit();
         discord_log(sprintf('%s', json_encode($options, JSON_PRETTY_PRINT)), 'Novo Boleto');
+        \Invoice_eloquent::create([
+            'price' =>  $billet->price,
+            'status' => \Invoice_eloquent::PENDING_CREATE,
+            'due_date' =>  $billet->due_date,
+            'bullet_id' => $billet->id[0],
+            'user_id' =>  $student->id,
+        ]);
         $items = [];
         foreach ($billet->mail_items as $row) {
             $row->billet = $options->billet->number;
             $items[] = $row;
         }
+
         $data = (object) [
             'name' => $student->guardian_name,
             'email' => $student->guardian_email,
@@ -219,7 +221,7 @@ class BilletGenerateCommand extends BaseCommand
 
     public function push($payment, \Closure $callback)
     {
-
-        $this->CI->bank_payment_inter->create($payment, $callback);
+    //    $callback(['success']);    
+       $this->CI->bank_payment_inter->create($payment, $callback);
     }
 }

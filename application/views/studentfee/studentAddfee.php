@@ -235,7 +235,7 @@ $language_name = $language["short_code"];
                                                     $fee_fine = $fee_fine + $fee_deposits_value->amount_fine;
                                                 }
                                             }
-                                            
+
                                             $total_amount = $total_amount + $fee_value->amount;
                                             $total_discount_amount = $total_discount_amount + $fee_discount;
                                             $total_deposite_amount = $total_deposite_amount + $fee_paid;
@@ -285,7 +285,7 @@ $language_name = $language["short_code"];
                                                 </td>
                                                 <td align="left" class="text text-left width85">
                                                     <?php
-                                                   
+
                                                     if ($feetype_balance == 0) {
                                                     ?><span class="label label-success"><?php echo $this->lang->line('paid'); ?>
                                                         </span>
@@ -397,8 +397,8 @@ $language_name = $language["short_code"];
                                                             </td>
 
                                                             <td class="text text-left"><?php
-                                                            
-                                                            echo $this->lang->line(strtolower($fee_deposits_value->payment_mode)); ?></td>
+
+                                                                                        echo $this->lang->line(strtolower($fee_deposits_value->payment_mode)); ?></td>
                                                             <td class="text text-left">
 
                                                                 <?php echo date($this->customlib->getSchoolDateFormat(), $this->customlib->dateyyyymmddTodateformat($fee_deposits_value->date)); ?>
@@ -1408,6 +1408,20 @@ $language_name = $language["short_code"];
 
 <script type="text/javascript">
     $(document).ready(function() {
+        accounting.settings = {
+                currency: {
+                    symbol : "R$ ",   // default currency symbol is '$'
+                    format: "%s%v", // controls output: %s = symbol, %v = value/number (can be object: see below)
+                    decimal : ",",  // decimal point separator
+                    thousand: ".",  // thousands separator
+                    precision : 2   // decimal places
+                },
+                number: {
+                    precision : 0,  // default precision on numbers is 0
+                    thousand: ",",
+                    decimal : "."
+                }
+            }
 
 
 
@@ -1571,13 +1585,25 @@ $language_name = $language["short_code"];
                                         </div>
                                 </div>
                                 <div class="form-group col-xs-12">
-                                        <label for="inputPassword3" class="col-sm-3 control-label"> <?php echo $this->lang->line('discount'); ?> <?php echo $this->lang->line('group'); ?></label>
+                                        <label for="inputPassword3" class="col-sm-3 control-label"> <?php echo $this->lang->line('discount'); ?></label>
                                         <div class="col-sm-9">
-                                            <select disabled class="form-control modal_discount_group" id="billet_discount_group">
-                                                <option value=""><?php echo $this->lang->line('select'); ?></option>
-                                            </select>
-
-                                            <span class="text-danger" id="amount_error"></span>
+                                            <div class="row">
+                                                <div class="col-xs-12"  style="display: flex; ">
+                                                    <div class="form-check form-check-inline">
+                                                        <input class="form-check-input" type="radio" name="discount_option" id="discount_option_1" value="1">
+                                                        <label class="form-check-label"  for="discount_option_1">Percentual %</label>
+                                                    </div>
+                                                    <div class="form-check form-check-inline" style="margin-left:15px;">
+                                                        <input class="form-check-input" checked type="radio" name="discount_option" id="discount_option_2" value="2">
+                                                        <label class="form-check-label" for="discount_option_2">Valor</label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-xs-5" >
+                                                    <input name="discount_value" value="" class="form-control" placeholder="0.00" />
+                                                </div>
+                                                
+                                            </div>
+                                           
                                         </div>
                                 </div>
                                 <div class="form-group col-xs-12 ">
@@ -1601,49 +1627,48 @@ $language_name = $language["short_code"];
             if (hasPaymentOld.length > 0) {
                 $("#listBilletModal .modal-body").html(html);
                 setTimeout(function() {
-
-
-                    array_to_collect_fees = buildListItemsWithDiscount(array_to_collect_fees, 0);
+                    array_to_collect_fees = buildListItemsWithDiscount(array_to_collect_fees);
                 }, 200)
 
 
-                $.ajax({
-                    type: "post",
-                    url: '<?php echo site_url("studentfee/geBalanceFee") ?>',
-                    dataType: 'JSON',
-                    data: {
-                        'fee_groups_feetype_id': feeGroupsFeetypeId,
-                        'student_fees_master_id': $('[data-student_fees_master_id]').data('student_fees_master_id'),
-                        'student_session_id': <?php echo $student['student_session_id'] ?>
-                    },
+                // $.ajax({
+                //     type: "post",
+                //     url: '<?php echo site_url("studentfee/geBalanceFee") ?>',
+                //     dataType: 'JSON',
+                //     data: {
+                //         'fee_groups_feetype_id': feeGroupsFeetypeId,
+                //         'student_fees_master_id': $('[data-student_fees_master_id]').data('student_fees_master_id'),
+                //         'student_session_id': <?php echo $student['student_session_id'] ?>
+                //     },
 
-                    success: function(data) {
+                //     success: function(data) {
 
-                        if (data.status === "success") {
-                            fee_amount = data.balance;
+                //         if (data.status === "success") {
+                //             fee_amount = data.balance;
 
-                            $('#amount').val(data.balance);
-                            $('#amount_fine').val(data.remain_amount_fine);
+                //             $('#amount').val(data.balance);
+                //             $('#amount_fine').val(data.remain_amount_fine);
 
-                            var discount_group_dropdown;
-                            $.each(data.discount_not_applied, function(i, obj) {
-                                discount_group_dropdown += "<option value=" + obj.student_fees_discount_id + " data-disamount=" + obj.amount + ">" + obj.code + "</option>";
-                            });
-                            $('#billet_discount_group').prop('disabled', false).append(discount_group_dropdown);
+                //             var discount_group_dropdown;
+                //             $.each(data.discount_not_applied, function(i, obj) {
+                //                 discount_group_dropdown += "<option value=" + obj.student_fees_discount_id + " data-disamount=" + obj.amount + ">" + obj.code + "</option>";
+                //             });
+                //             $('#billet_discount_group').prop('disabled', false).append(discount_group_dropdown);
 
-                            $('#billet_discount_group').change(function() {
-                                var discount = $(this).find('option:selected').data('disamount')
+                //             $('#billet_discount_group').change(function() {
+                //                 var discount = $(this).find('option:selected').data('disamount')
 
-                                array_to_collect_fees = buildListItemsWithDiscount(array_to_collect_fees, discount);
-                            })
+                //                 array_to_collect_fees = buildListItemsWithDiscount(array_to_collect_fees, discount);
+                //             })
 
 
-                        }
-                    }
-                })
-
+                //         }
+                //     }
+                // })
+                
 
                 var $modal = $("#listBilletModal .modal-footer");
+
                 $("#listBilletModal .modal-body").html(html);
                 $(".date").datepicker({
                     format: date_format,
@@ -1652,6 +1677,17 @@ $language_name = $language["short_code"];
                     startDate: '+0d',
                     todayHighlight: true
                 });
+
+                toggleMaskDiscount()
+
+                $('[name="discount_option"]').change(function() {
+                    toggleMaskDiscount()
+                    array_to_collect_fees = buildListItemsWithDiscount(array_to_collect_fees);
+                })
+                $('[name="discount_value"]').focusout(function() {
+                    array_to_collect_fees = buildListItemsWithDiscount(array_to_collect_fees);
+                })
+
                 $("#listBilletModal").modal('show');
                 $this.button('reset');
                 var fvalidator = $('form#billet_fee_group');
@@ -1684,20 +1720,41 @@ $language_name = $language["short_code"];
 
         });
 
-        // console.log(getDaysExceptions());
+        function toggleMaskDiscount() {
+            var discount_option = $('[name="discount_option"]:checked').val()
+            if (discount_option == 2) {
+                $('[name="discount_value"]').unmask().mask("#.##0,00", {
+                    reverse: true
+                });
+            } else {
+                $('[name="discount_value"]').unmask().mask('##0,00%', {
+                    reverse: true
+                });
+            }
+        }
 
-        function buildListItemsWithDiscount(items, discount) {
+        // console.log(getDaysExceptions());
+        function getDiscount(amount) {
+            var discount_option = $('[name="discount_option"]:checked').val()
+            var discount_value = Math.floor( String($('[name="discount_value"]').val()).replace('.','').replace(',','.').replace('%',''))
+            if (discount_option == 1) {
+                return (discount_value / 100 ) * amount
+            }
+            return discount_value
+        }
+
+        function buildListItemsWithDiscount(items) {
             var collect_fees = [],
                 listOfItemSelected = [];
             items.forEach(function(item) {
-                item["fee_discount"] = discount;
+                item["fee_discount"] = getDiscount(item["fee_amount"]);
                 collect_fees.push(item)
                 listOfItemSelected.push(`
                                <tr>
                                   <td>${item["fee_title"]}</td>
-                                  <td  data-value="${item["fee_amount"]}" >${item["fee_amount"]}</td>
-                                  <td data-value="${item["fee_discount"]}">${item["fee_discount"]}</td>
-                                  <td >${item["fee_amount"] - item["fee_discount"]}</td>
+                                  <td  data-value="${item["fee_amount"]}" >${accounting.formatMoney(item["fee_amount"])}</td>
+                                  <td data-value="${item["fee_discount"]}">${accounting.formatMoney(item["fee_discount"])}</td>
+                                  <td >${accounting.formatMoney(item["fee_amount"] - item["fee_discount"])}</td>
                                </tr>
                             `)
 
