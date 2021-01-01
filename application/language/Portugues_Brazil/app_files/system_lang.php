@@ -1498,9 +1498,19 @@ $lang['inter_juros'] = 'Multa %';
 $lang['manual_payment'] = 'Baixa manual';
 $lang['manual'] = 'Manual(Siscob)';
 $lang['billet'] = 'Boleto';
-$lang['s/n'] = '<b>Importado(Sistema Antigo)</b>';
+$lang['s/n'] = 'Boleto(Siscob)';
 
 
 $lang['expense_type'] = 'Para ';
 $lang['expense_payment_at'] = 'Data Pagamento'; 
+$lang['received_finance'] = 'Recebimentos';
+$lang['report_guardian_name'] = 'Reponsável do Financeiro / Estudante';
+$lang['report_invoice_no'] = 'Nº Nota';
+$lang['report_billet_no'] = 'Nº Boleto';
+$lang['report_amount'] = 'Valor';
+$lang['report_type_payment'] = 'Tipo Pagamento';
+$lang['report_fee_discount'] = 'Descontos';
+$lang['report_fee_fine'] = 'Acréscimos';
+$lang['report_fee_total'] = 'Total';
+$lang['report_fee_due_date'] = 'Data Recebimento';
 

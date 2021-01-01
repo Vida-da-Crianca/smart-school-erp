@@ -24,8 +24,8 @@ class Student_deposite_eloquent extends  Eloquent {
 
     public function student(){
 
-        get_instance()->load->model('Student_orm');
-        return $this->hasOne('Student_orm', 'parent_id', 'id');
+        get_instance()->load->model('eloquent/Student_eloquent');
+        return $this->hasOne('Student_eloquent', 'id','student_fees_master_id');
     }
 
 
@@ -37,6 +37,15 @@ class Student_deposite_eloquent extends  Eloquent {
     public function feeItem(){
         get_instance()->load->model('eloquent/Student_fee_item_eloquent');
         return $this->belongsTo('Student_fee_item_eloquent', 'student_fees_master_id', 'id');
+    }
+
+    public function getDetailAttribute(){
+        return (object) json_decode($this->amount_detail, true)[1];
+    }
+
+    public function invoice(){
+        get_instance()->load->model('eloquent/Invoice_eloquent');
+        return $this->belongsTo('Invoice_eloquent', 'student_fees_deposite_id', 'id');
     }
 
 }

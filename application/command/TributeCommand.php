@@ -51,7 +51,8 @@ class TributeCommand extends BaseCommand
             'eloquent/Invoice_eloquent', 'eloquent/Invoice_setting_eloquent',
             'eloquent/Invoice_resume_eloquent'
         ]);
-        if (!$isValid) return;
+        if (!$isValid  && \Invoice_resume_eloquent::where('due_date', date('Y-m-01'))->count() > 0) return;
+
         $this->buildTotalOldMonth();
         $settings = \Invoice_setting_eloquent::get()->pluck('value', 'key');
         $data = json_decode(file_get_contents(sprintf('%stributos_items.json', getenv('BASE_DIR'))));
@@ -92,7 +93,7 @@ class TributeCommand extends BaseCommand
             json_encode(
                 [
                     'total' => $total,
-                    'hora' => $dateTime->format('d/m/Y H:i:s') ,
+                    'hora' => $dateTime->format('d/m/Y H:i:s'),
                     'aliquota' =>
                     str_replace('.', ',', number_format($calcA, 2)) . "%", 'iss' => str_replace('.', ',', number_format($calcB, 2)) . "%",
                     'meses' => \Invoice_resume_eloquent::whereBetween('due_date', [$dateTime->format('Y-m-01'), $now])->get()
