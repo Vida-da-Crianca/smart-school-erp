@@ -3,7 +3,12 @@ services:
   redis:
     image: redis:6.0.9
     networks:
-      - erp_net  
+      - erp_net
+  memcahed:
+    image: memcached:1.6-alpine
+    networks:
+      - erp_net
+
   db:
     image: mysql:8
     environment:
