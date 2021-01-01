@@ -17,6 +17,7 @@ COPY ./openssl.cnf /etc/ssl/openssl.cnf
 
 RUN touch /app/.env && \
    chmod 777 /app/application/config/license.php && \
+   chmod 777 application/config/config.php && \
    mkdir -p -m 777 /app/temp
 
 RUN chmod +x /app/schedule-run.sh   
