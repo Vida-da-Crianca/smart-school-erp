@@ -1119,6 +1119,8 @@ class Report extends Admin_Controller
         $data['label'] = date($this->customlib->getSchoolDateFormat(), strtotime($start_date)) . " " . $this->lang->line('to') . " " . date($this->customlib->getSchoolDateFormat(), strtotime($end_date));
         $incomeList = [];
         $deposite = new Student_deposite_eloquent;
+
+     
         if( $this->input->post('search_type') != ''){
            
             $opt = $deposite->whereBetween('student_fees_deposite.created_at', [sprintf('%s 00:00:00',$start_date), sprintf('%s 23:59:59',$end_date)])
@@ -1130,8 +1132,13 @@ class Report extends Admin_Controller
             ->where('student_session.class_id', $this->input->post('class_id')  )
             ->select('student_fees_deposite.*');
              
-             $incomeList = $opt->get();
+             $incomeList = $opt->get()->filter(function($row){
+                  if($row->invoice)  return $row;
+                // return $row;
+             });
         }
+
+        // dump( $incomeList->toArray());
 
         $data['incomeList'] = $incomeList;
         $this->load->view('layout/header', $data);

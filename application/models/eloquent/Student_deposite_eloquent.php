@@ -45,7 +45,7 @@ class Student_deposite_eloquent extends  Eloquent {
 
     public function invoice(){
         get_instance()->load->model('eloquent/Invoice_eloquent');
-        return $this->belongsTo('Invoice_eloquent', 'student_fees_deposite_id', 'id');
+        return $this->belongsTo('Invoice_eloquent','id', 'student_fees_deposite_id');
     }
 
 }

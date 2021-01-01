@@ -159,9 +159,12 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                             <h3 class="box-title titlefix"><i class="fa fa-money"></i> <?php echo $this->lang->line('income') . " " . $this->lang->line('report'); ?></h3>
                         </div>
                         <div class="box-body table-responsive">
-                            <div class="download_label"><?php echo  $this->lang->line('income') . " " . $this->lang->line('report') . "<br>";
-                                                        $this->customlib->get_postmessage(); ?></div>
-                            <table class="table table-striped table-bordered table-hover example">
+                            <div class="download_label">
+                                <?php echo  $this->lang->line('income') . " " . $this->lang->line('report') . "<br>";
+                                $this->customlib->get_postmessage();
+                                ?>
+                            </div>
+                            <table id="deposite_table" class="table table-striped table-bordered table-hover">
                                 <thead>
                                     <tr>
                                         <th><?php echo $this->lang->line('report_guardian_name'); ?></th>
@@ -240,26 +243,32 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                             $count++;
                                         }
                                         ?>
-                                        <tr class="box box-solid total-bg">
-                                            <td colspan="4" align="left"></td>
-                                            <td class="text-right"><?php echo $this->lang->line('grand_total'); ?></td>
-                                            <td class="text">
-                                                <?php echo ($currency_symbol . number_format($sum_amount, 2, ',', '.')); ?>
-                                            </td>
-                                            <td class="text">
-                                                <?php printf('%s %s', $currency_symbol, number_format($sum_discount, 2, ',', '.')); ?>
-                                            </td>
-                                            <td class="text">
-                                                <?php printf('%s %s', $currency_symbol, number_format($sum_fine, 2, ',', '.')); ?>
-                                            </td>
-                                            <td class="text text-right">
-                                                <?php printf('<span class="%s"> %s %s</span>', $sum_total < 0 ? 'amount_negative' : '',  $currency_symbol, number_format($sum_total, 2, ',', '.')); ?>
-                                            </td>
-                                        </tr>
+
                                     <?php
                                     }
                                     ?>
                                 </tbody>
+                                <tfoot>
+                                    <tr>
+                                        <td colspan="9"></td>
+                                    </tr>
+                                    <tr class="box box-solid total-bg">
+                                        <td colspan="4" align="left"></td>
+                                        <td class="text-right"><?php echo $this->lang->line('grand_total'); ?></td>
+                                        <td class="text">
+                                            <?php echo ($currency_symbol . number_format($sum_amount, 2, ',', '.')); ?>
+                                        </td>
+                                        <td class="text">
+                                            <?php printf('%s %s', $currency_symbol, number_format($sum_discount, 2, ',', '.')); ?>
+                                        </td>
+                                        <td class="text">
+                                            <?php printf('%s %s', $currency_symbol, number_format($sum_fine, 2, ',', '.')); ?>
+                                        </td>
+                                        <td class="text text-right">
+                                            <?php printf('<span class="%s"> %s %s</span>', $sum_total < 0 ? 'amount_negative' : '',  $currency_symbol, number_format($sum_total, 2, ',', '.')); ?>
+                                        </td>
+                                    </tr>
+                                </tfoot>
                             </table>
                         </div>
                     </div>
@@ -269,8 +278,122 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
 </div>
 </section>
 </div>
-
+<!-- <script src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script> -->
 <script>
+    $(document).ready(function($) {
+        $('#deposite_table').DataTable({
+            dom: "Bfrtip",
+            buttons: [
+
+                {
+                    extend: 'copyHtml5',
+                    text: '<i class="fa fa-files-o"></i>',
+                    titleAttr: 'Copy',
+                    title: $('.download_label').html(),
+                    exportOptions: {
+                        columns: ':visible'
+                    }
+                },
+
+                {
+                    extend: 'excelHtml5',
+                    text: '<i class="fa fa-file-excel-o"></i>',
+                    titleAttr: 'Excel',
+                   
+                    title: $('.download_label').html(),
+                    exportOptions: {
+                        columns: ':visible'
+                    }
+                },
+
+                {
+                    extend: 'csvHtml5',
+                    text: '<i class="fa fa-file-text-o"></i>',
+                    titleAttr: 'CSV',
+                    title: $('.download_label').html(),
+                    exportOptions: {
+                        columns: ':visible'
+                    }
+                },
+
+                {
+                    extend: 'pdfHtml5',
+                    text: '<i class="fa fa-file-pdf-o"></i>',
+                    titleAttr: 'PDF',
+                    title: $('.download_label').html(),
+                    exportOptions: {
+                        columns: ':visible'
+                        
+                    }
+                },
+
+                {
+                    extend: 'print',
+                    text: '<i class="fa fa-print"></i>',
+                    titleAttr: 'Print',
+                    title: $('.download_label').html(),
+                        customize: function ( win ) {
+                    $(win.document.body)
+                        .css( 'font-size', '10pt' );
+ 
+                    $(win.document.body).find( 'table' )
+                        .addClass( 'compact' )
+                        .css( 'font-size', 'inherit' );
+                },
+                    exportOptions: {
+                        columns: ':visible'
+                    }
+                },
+
+                {
+                    extend: 'colvis',
+                    text: '<i class="fa fa-columns"></i>',
+                    titleAttr: 'Columns',
+                    title: $('.download_label').html(),
+                    postfixButtons: ['colvisRestore']
+                },
+            ],
+            "footerCallback": function(row, data, start, end, display) {
+                var api = this.api(),
+                    data;
+
+                    console.log(data)
+
+                // Remove the formatting to get integer data for summation
+                // var intVal = function(i) {
+                //     return typeof i === 'string' ?
+                //         i.replace(/[\$,]/g, '') * 1 :
+                //         typeof i === 'number' ?
+                //         i : 0;
+                // };
+
+                // // Total over all pages
+                // total = api
+                //     .column(4)
+                //     .data()
+                //     .reduce(function(a, b) {
+                //         return intVal(a) + intVal(b);
+                //     }, 0);
+
+                // // Total over this page
+                // pageTotal = api
+                //     .column(4, {
+                //         page: 'current'
+                //     })
+                //     .data()
+                //     .reduce(function(a, b) {
+                //         return intVal(a) + intVal(b);
+                //     }, 0);
+
+                // // Update footer
+                // $(api.column(4).footer()).html(
+                //     '$' + pageTotal + ' ( $' + total + ' total)'
+                // );
+            }
+        });
+
+    })
+    // $('#deposite_table').DataTable();
     <?php
     if ($search_type == 'period') {
     ?>
