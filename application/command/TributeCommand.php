@@ -88,15 +88,21 @@ class TributeCommand extends BaseCommand
         ]);
 
         discord_log(
-            
+
             json_encode(
-                [   'total' => $total,
+                [
+                    'total' => $total,
+                    'hora' => $dateTime->format('d/m/Y H:i:s') ,
                     'aliquota' =>
-                str_replace('.', ',', number_format($calcA, 2)) . "%", 'iss' => str_replace('.', ',', number_format($calcB, 2)) . "%",
-                'meses' => \Invoice_resume_eloquent::whereBetween('due_date', [$dateTime->format('Y-m-01'), $now])->get()
-    
-    
-    ], JSON_PRETTY_PRINT), 'Calculo do Tributo');
+                    str_replace('.', ',', number_format($calcA, 2)) . "%", 'iss' => str_replace('.', ',', number_format($calcB, 2)) . "%",
+                    'meses' => \Invoice_resume_eloquent::whereBetween('due_date', [$dateTime->format('Y-m-01'), $now])->get()
+
+
+                ],
+                JSON_PRETTY_PRINT
+            ),
+            'Calculo do Tributo'
+        );
     }
 
 
