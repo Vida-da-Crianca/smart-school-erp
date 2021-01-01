@@ -40,8 +40,8 @@ services:
       - DB_PASSWORD=erpjb@2020
       - DB_USER=root
       - BANK_INTER_PDF_FILES=temp/
-      - DISCORD_EXCEPTIONS=https://discord.com/api/webhooks/783155960201347072/TN1yr1WndAI9Ug9vuDxb_qUQOnERJ8qs_XmzUOwYLUM35pRDdE5CJl3qfxxSjezIEZQh
-      - DISCORD_HOOK=https://discord.com/api/webhooks/783101033672605698/d61CeThzLZcUHI_N7NBcIM1qTEF6HLgNw7gO8CAqhKVmuy_6BEHAMUW1nbEYOgev6Nyu
+      - DISCORD_EXCEPTIONS=https://discord.com/api/webhooks/794558220210929665/dEPJ0vReTea20tkskBfUpBklStkm7kasX42bqAZvIv3rCwqaz-2vgLEu_uNpOvt8p1Uv
+      - DISCORD_HOOK=https://discord.com/api/webhooks/794557932775014471/PuvTfwHF9_afVU-dNZbP7rlWB2IkUPX0ZaIe9kxZXFbfv1buzBzfsRQkyRBK_k7pM7NF
       - BASE_URL=https://erpjb.com.br
       - LICENSE_APP=63AH2N-XTFFLP-952QAM-UTBUai9NL0Q5R2lLeE4xbXZBMGVMVnEwMlpvTTU0QmNFcml6emVLNkk0MD0=
     tty: true
