@@ -14,7 +14,7 @@ use Symfony\Component\Console\Application;
 
 
 
-date_default_timezone_set('America/Sao_Paulo');
+
 
 
 set_time_limit(0);
