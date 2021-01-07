@@ -35,7 +35,7 @@ class Mailer
           
 
             $mail->IsSMTP();
-            $mail->SMTPDebug = SMTP::DEBUG_SERVER;  
+            // $mail->SMTPDebug = SMTP::DEBUG_SERVER;  
             $mail->SMTPAuth   = true;
             $mail->SMTPSecure = $this->CI->mail_config->ssl_tls;
             $mail->Host       = $this->CI->mail_config->smtp_server;
