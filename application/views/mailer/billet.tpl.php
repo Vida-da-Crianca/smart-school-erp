@@ -348,7 +348,7 @@
 						<table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%">
 							<tr>
 								<td class="logo" style="text-align: center;">
-									<img src="<?php echo base_url('uploads/logo-email.png') ?>" alt="Logo ESCOLA DE EDUCACAO INFANTIL E ENSIN" style="width: 200px; max-width: 600px; height: auto; margin: auto; display: block;">
+									<img src="<?php echo base_url('uploads/logo-email.png') ?>" alt="Logo ESCOLA DE EDUCACAO INFANTIL E ENSIN" style="width: 200px; max-width: 250px; height: auto; margin: auto; display: block;">
 									<h2>ESCOLA DE EDUCACAO INFANTIL E ENSIN</h2>
 								</td>
 							</tr>

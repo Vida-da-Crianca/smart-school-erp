@@ -4,6 +4,12 @@ if (!defined('BASEPATH')) {
     exit('No direct script access allowed');
 }
 
+
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+use PHPMailer\PHPMailer\SMTP;
+
+
 class Mailer
 {
 
@@ -22,12 +28,14 @@ class Mailer
     public function send_mail($toemail, $subject, $body, $FILES = array(), $cc = "")
     {
 
-        $mail          = new PHPMailer();
+        $mail          = new \PHPMailer\PHPMailer\PHPMailer;
         $mail->CharSet = 'UTF-8';
         $school_name   = $this->sch_setting[0]['name'];
         if ($this->CI->mail_config->email_type == "smtp") {
+          
 
             $mail->IsSMTP();
+            $mail->SMTPDebug = SMTP::DEBUG_SERVER;  
             $mail->SMTPAuth   = true;
             $mail->SMTPSecure = $this->CI->mail_config->ssl_tls;
             $mail->Host       = $this->CI->mail_config->smtp_server;
@@ -35,8 +43,9 @@ class Mailer
             $mail->Username   = $this->CI->mail_config->smtp_username;
             $mail->Password   = $this->CI->mail_config->smtp_password;
         }
-        $mail->SetFrom($this->CI->mail_config->smtp_username, $school_name);
-        $mail->AddReplyTo($this->CI->mail_config->smtp_username, $this->CI->mail_config->smtp_username);
+        $mail->SetFrom('financeiro@eeividadecrianca.com.br', $school_name);
+        // $mail->SetFrom($this->CI->mail_config->smtp_username, $school_name);
+        // $mail->AddReplyTo($this->CI->mail_config->smtp_username, $this->CI->mail_config->smtp_username);
         if (!empty($FILES)) {
             if (isset($_FILES['files']) && !empty($_FILES['files'])) {
                 $no_files = count($_FILES["files"]['name']);
@@ -55,12 +64,13 @@ class Mailer
 
             $mail->AddCC($cc);
         }
-
+        $mail->isHTML(true);   
+       
         $mail->Subject = $subject;
         $mail->Body    = $body;
         $mail->AltBody = $body;
         $mail->AddAddress($toemail);
-        if ($mail->Send()) {
+        if ($mail->send()) {
             return true;
         } else {
             return false;

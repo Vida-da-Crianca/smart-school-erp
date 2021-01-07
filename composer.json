@@ -10,7 +10,8 @@
         "carlosocarvalho/sigis-php-sdk": "^2.0",
         "maknz/slack": "^1.7",
         "agorlov/discordmsg": "^1.0",
-        "nesbot/carbon": "^2.42"
+        "nesbot/carbon": "^2.42",
+        "phpmailer/phpmailer": "^6.2"
         
     },
     "require-dev": {

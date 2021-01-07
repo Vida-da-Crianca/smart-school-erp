@@ -155,6 +155,9 @@ class Site extends Public_Controller {
 
             $result = $this->staff_model->getByEmail($email);
 
+
+           
+
             if ($result && $result->email != "") {
                 if ($result->is_active == '1') {
                     $verification_code = $this->enc_lib->encrypt(uniqid(mt_rand()));
@@ -170,6 +173,8 @@ class Site extends Public_Controller {
                 }
 
                 redirect('site/login', 'refresh');
+
+                // die();
             } else {
 
                 $data = array(
