@@ -6,6 +6,7 @@ use Application\Command\AppImport;
 use Application\Command\CategoryExpenseMigration;
 use Application\Command\CleanDirectoryTemp;
 use Application\Command\ExpenseMigration;
+use Application\Command\MailerTester;
 use Application\Command\StaffMigration;
 use Application\Command\SupplierMigration;
 
@@ -25,5 +26,6 @@ return [
     'supplier_migration' => SupplierMigration::class,
     'staff_migration' => StaffMigration::class,
     'expense_migration' => ExpenseMigration::class,
-    'expense_category_migration' => CategoryExpenseMigration::class
+    'expense_category_migration' => CategoryExpenseMigration::class,
+    'mailer_teste' => MailerTester::class,
 ];

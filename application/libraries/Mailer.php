@@ -16,6 +16,8 @@ class Mailer
     public $mail_config;
     private $sch_setting;
 
+    protected $isDebug = 0;
+
     public function __construct()
     {
         $this->CI = &get_instance();
@@ -25,23 +27,38 @@ class Mailer
         $this->sch_setting = $this->CI->setting_model->get();
     }
 
+    public function setDebug($mode){
+        $this->isDebug = $mode;
+        return $this;
+    }
+
     public function send_mail($toemail, $subject, $body, $FILES = array(), $cc = "")
     {
 
         $mail          = new \PHPMailer\PHPMailer\PHPMailer;
         $mail->CharSet = 'UTF-8';
         $school_name   = $this->sch_setting[0]['name'];
+        $mail->SMTPOptions = [
+            'ssl' => [
+                'verify_peer' => false,
+                'verify_peer_name' => false,
+                'allow_self_signed' => true,
+            ]
+        ];
+
         if ($this->CI->mail_config->email_type == "smtp") {
           
 
             $mail->IsSMTP();
-            // $mail->SMTPDebug = SMTP::DEBUG_SERVER;  
+            $mail->SMTPDebug = $this->idDebug;  
             $mail->SMTPAuth   = true;
             $mail->SMTPSecure = $this->CI->mail_config->ssl_tls;
             $mail->Host       = $this->CI->mail_config->smtp_server;
             $mail->Port       = $this->CI->mail_config->smtp_port;
             $mail->Username   = $this->CI->mail_config->smtp_username;
             $mail->Password   = $this->CI->mail_config->smtp_password;
+
+            
         }
         $mail->SetFrom('financeiro@eeividadecrianca.com.br', $school_name);
         // $mail->SetFrom($this->CI->mail_config->smtp_username, $school_name);
