@@ -90,7 +90,7 @@ class Mailsmsconf {
 
                 if ($chk_mail_sms['mail'] && $chk_mail_sms['template'] != "") {
                     if (!empty($sender_details['email'])) {
-                        $subject = "Redefinição de senha";
+                        $subject = "Redefinir a senha";
                         $this->CI->mailer->send_mail($sender_details['email'], $subject, $msg);
                     }
                 }
