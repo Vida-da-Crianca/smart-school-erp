@@ -1094,18 +1094,19 @@ class Report extends Admin_Controller
         $data['date_type'] = $this->customlib->date_type();
         $data['date_typeid'] = '';
         $data['class_id'] = $this->input->post('class_id');
-        $this->load->model(['eloquent/Student_deposite_eloquent','eloquent/Student_classe']);
+        $data['invoioce_filter'] = $this->input->post('invoioce_filter');
+        $this->load->model(['eloquent/Student_deposite_eloquent', 'eloquent/Student_classe']);
 
         $options = Student_classe::all()->pluck('class', 'id')->toArray();
-        
+
         $data['options_classe'] = array_merge([null => 'Todos'], $options);
 
         if (isset($_POST['search_type']) && $_POST['search_type'] != '') {
 
-           $dates = $this->customlib->get_betweendate($_POST['search_type']);
-           
+            $dates = $this->customlib->get_betweendate($_POST['search_type']);
 
-           
+
+
             $data['search_type'] = $_POST['search_type'];
         } else {
 
@@ -1120,22 +1121,23 @@ class Report extends Admin_Controller
         $incomeList = [];
         $deposite = new Student_deposite_eloquent;
 
-     
-        if( $this->input->post('search_type') != ''){
-           
-            $opt = $deposite->whereBetween('student_fees_deposite.created_at', [sprintf('%s 00:00:00',$start_date), sprintf('%s 23:59:59',$end_date)])
-            ->with(['student.session','invoice.billet','feeItem'])
-            ;
-            if( $this->input->post('class_id') != '')
-            $opt->join('students','students.id','=','student_fees_deposite.student_fees_master_id')
-            ->join('student_session','students.id','=','student_session.student_id')
-            ->where('student_session.class_id', $this->input->post('class_id')  )
-            ->select('student_fees_deposite.*');
-             
-             $incomeList = $opt->get()->filter(function($row){
-                  if($row->invoice)  return $row;
-                // return $row;
-             });
+
+        if ($this->input->post('search_type') != '') {
+
+            $opt = $deposite->whereBetween('student_fees_deposite.created_at', [sprintf('%s 00:00:00', $start_date), sprintf('%s 23:59:59', $end_date)])
+                ->with(['student.session', 'invoice.billet', 'feeItem']);
+            if ($this->input->post('class_id') != '')
+                $opt->join('students', 'students.id', '=', 'student_fees_deposite.student_fees_master_id')
+                    ->join('student_session', 'students.id', '=', 'student_session.student_id')
+                    ->where('student_session.class_id', $this->input->post('class_id'))
+                    ->select('student_fees_deposite.*');
+
+            $incomeList = $opt->get()->filter(function ($row) {
+                $filter_invoice = $this->input->post('invoioce_filter');
+                if ($filter_invoice == 1 && $row->invoice)  return $row;
+                if ($filter_invoice == 2 && !$row->invoice)  return $row;
+                if (!$filter_invoice)  return $row;
+            });
         }
 
         // dump( $incomeList->toArray());

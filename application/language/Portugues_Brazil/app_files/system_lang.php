@@ -1513,4 +1513,5 @@ $lang['report_fee_discount'] = 'Descontos';
 $lang['report_fee_fine'] = 'Acréscimos';
 $lang['report_fee_total'] = 'Total';
 $lang['report_fee_due_date'] = 'Data Recebimento';
+$lang['invoice_or_no'] = 'Nota fiscal';
 

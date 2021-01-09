@@ -140,6 +140,24 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                     <span class="text-danger"><?php echo form_error('class_id'); ?></span>
                                 </div>
                             </div>
+                            <div class="col-sm-6 col-md-4">
+                                <div class="form-group">
+                                    <label><?php echo $this->lang->line('search') . " " . $this->lang->line('invoice_or_no'); ?></label>
+                                    <?php
+                                    $options_invoice_filter = [
+                                        null => 'Todos',
+                                        1  => 'Com Nota',
+                                        2  => 'Sem nota' 
+                                     ];
+                                    print(form_dropdown('invoioce_filter',$options_invoice_filter, $invoioce_filter, 'class="form-control" '));
+                                    ?>
+                                    <!-- <select class="form-control" name="class_id">
+
+                                        
+                                    </select> -->
+                                    <span class="text-danger"><?php echo form_error('class_id'); ?></span>
+                                </div>
+                            </div>
 
                             <div id='date_result'>
 
