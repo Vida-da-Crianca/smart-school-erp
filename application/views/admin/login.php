@@ -90,7 +90,7 @@
                                             </div>
                                             <button type="submit" class="btn"><?php echo $this->lang->line('sign_in'); ?></button>
                                         </form>
-                                        <a href="<?php echo site_url('site/forgotpassword') ?>" class="forgot"><i class="fa fa-key"></i> <?php echo $this->lang->line('forgot_password'); ?>?</a> <a style="color:#0;" target="_blank" href="https://eeividadecrianca.com.br/site/userlogin" class="forgot pull-right"> <i class="fa fa-user"></i><font _mstmutation="1"> Portal Aluno</font></a> <a style="color:#0;padding-right: 20px;" href="https://eeividadecrianca.com.br" target="_blank" class="forgot pull-right"> <i class="fa fa-empire"></i> Voltar ao Site</a>
+                                        <a href="<?php echo site_url('site/forgotpassword') ?>" class="forgot"><i class="fa fa-key"></i> <?php echo $this->lang->line('forgot_password'); ?>?</a>
                                     </div>
                                 </div>
                             </div>
