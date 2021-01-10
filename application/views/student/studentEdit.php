@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
 // echo "<pre>";
 // print_r($student);
@@ -502,7 +502,7 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                         if ($sch_setting->father_pic) { ?>
                                             <div class="col-md-3">
                                                 <div class="form-group">
-                                                    <label for="exampleInputFile"><?php echo $this->lang->line('father') . " " . $this->lang->line('photo'); ?></label>
+                                                    <label for="exampleInputFile"><?php echo $this->lang->line('Pai') . " " . $this->lang->line('photo'); ?></label>
                                                     <div><input class="filestyle form-control" type='file' name='father_pic' id="file" size='20' />
                                                     </div>
                                                     <span class="text-danger"><?php echo form_error('father_pic'); ?></span>
@@ -543,7 +543,7 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                         if ($sch_setting->mother_pic) { ?>
                                             <div class="col-md-3">
                                                 <div class="form-group">
-                                                    <label for="exampleInputFile"><?php echo $this->lang->line('mother') . " " . $this->lang->line('photo'); ?></label>
+                                                    <label for="exampleInputFile"><?php echo $this->lang->line('mãe') . " " . $this->lang->line('photo'); ?></label>
                                                     <div><input class="filestyle form-control" type='file' name='mother_pic' id="file" size='20' />
                                                     </div>
                                                     <span class="text-danger"><?php echo form_error('mother_pic'); ?></span>
@@ -556,17 +556,17 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                             <label><?php echo $this->lang->line('if_guardian_is'); ?></label><small class="req"> *</small>&nbsp;&nbsp;&nbsp;
                                             <label class="radio-inline">
                                                 <input type="radio" name="guardian_is" <?php
-                                                                                        if ($student['guardian_is'] == "father") {
+                                                                                        if ($student['guardian_is'] == "Pai") {
                                                                                             echo "checked";
                                                                                         }
-                                                                                        ?> value="father"> <?php echo $this->lang->line('father'); ?>
+                                                                                        ?> value="Pai"> <?php echo $this->lang->line('Pai'); ?>
                                             </label>
                                             <label class="radio-inline">
                                                 <input type="radio" name="guardian_is" <?php
-                                                                                        if ($student['guardian_is'] == "mother") {
+                                                                                        if ($student['guardian_is'] == "mãe") {
                                                                                             echo "checked";
                                                                                         }
-                                                                                        ?> value="mother"> <?php echo $this->lang->line('mother'); ?>
+                                                                                        ?> value="mãe"> <?php echo $this->lang->line('mãe'); ?>
                                             </label>
                                             <label class="radio-inline">
                                                 <input type="radio" name="guardian_is" <?php
@@ -1027,12 +1027,12 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                     $('#guardian_name').val($('#father_name').val());
                     $('#guardian_phone').val($('#father_phone').val());
                     $('#guardian_occupation').val($('#father_occupation').val());
-                    $('#guardian_relation').val("Father")
-                } else if (value == "mother") {
+                    $('#guardian_relation').val("Pai")
+                } else if (value == "mãe") {
                     $('#guardian_name').val($('#mother_name').val());
                     $('#guardian_phone').val($('#mother_phone').val());
                     $('#guardian_occupation').val($('#mother_occupation').val());
-                    $('#guardian_relation').val("Mother")
+                    $('#guardian_relation').val("Mãe")
                 } else {
                     $('#guardian_name').val("");
                     $('#guardian_phone').val("");
