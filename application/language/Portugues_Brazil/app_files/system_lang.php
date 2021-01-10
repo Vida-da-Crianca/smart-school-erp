@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 
 $lang['absent'] = "Ausente";
 $lang['absent_student'] = "Aluno ausente";
@@ -693,7 +693,7 @@ $lang['calculate'] = 'Calcular' ;
 $lang['calendar'] = 'Calendário' ;
 $lang['call_duration'] = "Duração Da Chamada" ;
 $lang['call_type'] = 'Tipo De Chamada De' ;
-$lang['call_us'] = 'Chame Gente' ;
+$lang['call_us'] = 'Ligue pra nós' ;
 $lang['card'] = 'Cartão' ;
 $lang['certificate'] = 'Certificado' ;
 $lang['class_teacher'] = 'Professor' ;
