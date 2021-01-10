@@ -112,7 +112,7 @@ if(empty($notice)){
                                         <?php echo $this->lang->line('sign_in'); ?></button>
                                 </form>
                                 
-                                <p><a href="<?php echo site_url('site/ufpassword') ?>" class="forgot"> <i class="fa fa-key"></i> <?php echo $this->lang->line('forgot_password'); ?></a> <a style="color:#0;" target="_blank" href="https://eeividadecrianca.com.br/site/login" class="forgot pull-right"> <i class="fa fa-user"></i><font _mstmutation="1"> Admin Login</font></a> </p> 
+                                <p><a href="<?php echo site_url('site/ufpassword') ?>" class="forgot"> <i class="fa fa-key"></i> <?php echo $this->lang->line('forgot_password'); ?></a> <a style="color:#0;" target="_blank" href="https://eeividadecrianca.com.br/site/login" class="forgot pull-right"> <i class="fa fa-user"></i><font _mstmutation="1"> Portal Colaborador</font></a> <a style="color:#0;padding-right: 20px;" href="https://eeividadecrianca.com.br" target="_blank" class="forgot pull-right"> <i class="fa fa-empire"></i> Retornar ao Site</a> </p> 
                             </div>
                           </div>  
                         </div>
