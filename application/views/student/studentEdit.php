@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
 // echo "<pre>";
 // print_r($student);
@@ -1027,12 +1027,12 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                     $('#guardian_name').val($('#father_name').val());
                     $('#guardian_phone').val($('#father_phone').val());
                     $('#guardian_occupation').val($('#father_occupation').val());
-                    $('#guardian_relation').val("Pai")
+                    $('#guardian_relation').val("Father")
                 } else if (value == "mother") {
                     $('#guardian_name').val($('#mother_name').val());
                     $('#guardian_phone').val($('#mother_phone').val());
                     $('#guardian_occupation').val($('#mother_occupation').val());
-                    $('#guardian_relation').val("Mãe")
+                    $('#guardian_relation').val("Mother")
                 } else {
                     $('#guardian_name').val("");
                     $('#guardian_phone').val("");
