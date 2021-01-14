@@ -213,13 +213,15 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                     } else {
                                         foreach ($incomeList as $item) {
                                             $detail = $item->detail;
-                                            $sum_amount += $detail->amount;
+                                            $sum_amount += $item->amount;
                                             $sum_discount += $detail->amount_discount;
                                             $sum_fine +=  $detail->amount_fine;
-                                            $sum_total += ($detail->amount - $detail->amount_discount) + $detail->amount_fine;
-                                            $row_total = ($detail->amount - $detail->amount_discount) + $detail->amount_fine;
-                                        ?>
+                                            $sum_total += ($item->amount - $detail->amount_discount) + $detail->amount_fine;
+                                            $row_total = ($item->amount - $detail->amount_discount) + $detail->amount_fine;
+                                        ?>  
+                                        
                                             <tr>
+                                               
                                                 <td align="left">
                                                     <?php
 
@@ -235,7 +237,7 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                                 </td>
 
                                                 <td>
-                                                    <?php printf('%s %s', $currency_symbol, number_format($detail->amount, 2, ',', '.')); ?>
+                                                    <?php printf('%s %s', $currency_symbol, number_format($item->amount, 2, ',', '.')); ?>
                                                 </td>
 
                                                 <td>

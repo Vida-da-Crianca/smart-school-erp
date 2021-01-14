@@ -36,7 +36,7 @@ class Student_deposite_eloquent extends  Eloquent {
 
     public function feeItem(){
         get_instance()->load->model('eloquent/Student_fee_item_eloquent');
-        return $this->belongsTo('Student_fee_item_eloquent', 'student_fees_master_id', 'id');
+        return $this->belongsTo('Student_fee_item_eloquent', 'student_fees_id', 'id');
     }
 
     public function getDetailAttribute(){

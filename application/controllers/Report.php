@@ -1125,12 +1125,13 @@ class Report extends Admin_Controller
         if ($this->input->post('search_type') != '') {
 
             $opt = $deposite->whereBetween('student_fees_deposite.created_at', [sprintf('%s 00:00:00', $start_date), sprintf('%s 23:59:59', $end_date)])
-                ->with(['student.session', 'invoice.billet', 'feeItem']);
+                ->with(['student.session', 'invoice.billet']);
             if ($this->input->post('class_id') != '')
                 $opt->join('students', 'students.id', '=', 'student_fees_deposite.student_fees_master_id')
                     ->join('student_session', 'students.id', '=', 'student_session.student_id')
+                    ->join('student_fee_items','student_fee_items.id', '=','student_fees_deposite.student_fees_id')
                     ->where('student_session.class_id', $this->input->post('class_id'))
-                    ->select('student_fees_deposite.*');
+                    ->select('student_fees_deposite.*', 'student_fee_items.amount');
 
             $incomeList = $opt->get()->filter(function ($row) {
                 $filter_invoice = $this->input->post('invoioce_filter');

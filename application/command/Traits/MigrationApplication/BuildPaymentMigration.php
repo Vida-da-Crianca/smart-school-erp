@@ -37,7 +37,7 @@ trait BuildPaymentMigration
 
     function syncDeposite($data, $hasDeposite = null)
     {
-
+       dump(!$hasDeposite);
         $deposite = !$hasDeposite ?  new \Student_deposite_eloquent : $hasDeposite;
         $deposite->fill($data);
 
