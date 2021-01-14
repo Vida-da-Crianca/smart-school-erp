@@ -7,6 +7,7 @@ use Application\Command\CategoryExpenseMigration;
 use Application\Command\CleanDirectoryTemp;
 use Application\Command\ExpenseMigration;
 use Application\Command\MailerTester;
+use Application\Command\OrderDiscount;
 use Application\Command\StaffMigration;
 use Application\Command\SupplierMigration;
 
@@ -28,4 +29,5 @@ return [
     'expense_migration' => ExpenseMigration::class,
     'expense_category_migration' => CategoryExpenseMigration::class,
     'mailer_teste' => MailerTester::class,
+    'order_discount' => OrderDiscount::class
 ];

@@ -16,4 +16,17 @@ class Lancamento extends  Eloquent
 
     protected $connection = 'mysql_2';
     protected $fillable = [];
+
+
+    public function boleto(){
+
+
+        get_instance()->load->model('eloquent/migrate/Boleto');
+        return $this->belongsTo(
+            'Boleto',
+            'codboleto',
+            'codboleto'
+        );
+
+    }
 }

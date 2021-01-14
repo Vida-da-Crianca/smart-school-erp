@@ -18,6 +18,7 @@ trait BuildPaymentMigration
             'student_fees_master_id' => $item->user_id,
             'student_fees_id' => $item->id,
             'created_at' => $item->due_date,
+            'is_active' => 'yes',
             'amount_detail' => json_encode(['1' => [
 
                 'amount' => $item->amount_pay,
@@ -34,11 +35,12 @@ trait BuildPaymentMigration
     }
 
 
-    function syncDeposite($data)
+    function syncDeposite($data, $hasDeposite = null)
     {
 
-        $deposite = new \Student_deposite_eloquent;
+        $deposite = !$hasDeposite ?  new \Student_deposite_eloquent : $hasDeposite;
         $deposite->fill($data);
+
         $deposite->save();
     }
 }

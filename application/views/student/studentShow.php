@@ -129,7 +129,7 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                      <b><?php  echo $this->lang->line('disable')." ".$this->lang->line('note') ?></b> <span class="pull-right text-aqua"><?php echo $student['dis_note'] ?></span>
                                 </li>
                                  <li class="list-group-item listnoback">
-                                    <b><?php  echo $this->lang->line('disable')." ".$this->lang->line('date') ?></b> <span class="pull-right text-aqua"><?php echo date($this->customlib->getSchoolDateFormat(),$this->customlib->dateyyyymmddTodateformat($student['disable_at'])); ?></span>
+                                    <b><?php  echo $this->lang->line('disable')." ".$this->lang->line('date') ?></b> <span class="pull-right text-aqua"><?php  echo !isset($student['disable_at']) ? '-' : date($this->customlib->getSchoolDateFormat(),$this->customlib->dateyyyymmddTodateformat($student['disable_at'])); ?></span>
                                 </li>
 
 
