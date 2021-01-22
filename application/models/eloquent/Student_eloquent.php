@@ -27,4 +27,8 @@ class Student_eloquent extends  Eloquent
         get_instance()->load->model('eloquent/Student_session_eloquent');
         return $this->belongsTo('Student_session_eloquent', 'studend_id', 'id');
     }
+
+    public function getTableColumns() {
+        return $this->getConnection()->getSchemaBuilder()->getColumnListing($this->getTable());
+    }
 }

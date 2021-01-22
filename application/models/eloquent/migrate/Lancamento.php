@@ -29,4 +29,13 @@ class Lancamento extends  Eloquent
         );
 
     }
+
+
+    public function aluno(){
+        get_instance()->load->model('eloquent/migrate/Aluno_eloquent');
+        return $this->belongsTo(
+            'Aluno_eloquent',
+            'codaluno'
+        );
+    }
 }

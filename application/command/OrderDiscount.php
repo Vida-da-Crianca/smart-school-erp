@@ -9,7 +9,8 @@ use Application\Command\Traits\MigrationApplication\BuildSyncStudentMigration;
 use Packages\Commands\BaseCommand;
 use Section;
 use Illuminate\Database\Capsule\Manager as DB;
-
+use Illuminate\Database\Eloquent\Collection;
+use stdClass;
 
 class OrderDiscount extends BaseCommand
 {
@@ -82,6 +83,7 @@ class OrderDiscount extends BaseCommand
         try {
 
             $items = \Lancamento::whereYear('tblancamento.datavencimento', '2020')
+                ->with(['aluno'])
                 ->where('tbboleto.codremessa', '<>', 0)
                 ->join('tbboleto', 'tblancamento.codboleto', '=', 'tbboleto.codboleto')
                 ->select(
@@ -89,11 +91,28 @@ class OrderDiscount extends BaseCommand
                 )
                 ->get();
             foreach ($items as $item) {
-                $fee = \Student_fee_item_eloquent::where('title', 'like', sprintf('%%Siscob %s', $item->codboleto))
+                $fee = new \stdClass;
+                $amount = $item->valor - $item->desconto_previsto;
+                $feeItems =  \Student_fee_item_eloquent::where('title', 'like', sprintf('%%Siscob %s', $item->codboleto))
                     ->with(['deposite'])
-                    ->first();
-                if (!$fee->id) continue;
+                    ->get();
+                if ($feeItems->count() == 0) continue;
 
+
+
+                // if ($item->codboleto != '1976')  continue;
+
+
+                $feeItems->each(function ($row) use (&$fee, $item) {
+
+                    $cod =  sprintf(' Siscob %s', $item->codboleto);
+                    $title = sprintf('%s %s', strip_tags($item->descricao), $cod);
+                    if ($row->title == $title)
+                        $fee = $row;
+                });
+
+
+                if (!$fee->id) continue;
 
                 $feePay = $this->buildPayment((object) array_merge([
                     'feetype_id' => $fee->feetype_id,
@@ -102,9 +121,13 @@ class OrderDiscount extends BaseCommand
                 ], [
                     'id' => $fee->id,
                     'fee_discount' => $item->desconto_previsto,
-                    'amount_pay' =>  $item->valor - $item->desconto_previsto
+                    'amount_pay' =>  $amount
 
                 ]));
+
+                // // dump($item->toArray());
+                // dump($fee->id);
+                // dump($feePay);
 
                 $this->syncDeposite($feePay, $fee->deposite);
             }

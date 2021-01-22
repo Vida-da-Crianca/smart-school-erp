@@ -157,7 +157,7 @@ class Student extends Admin_Controller
         $studentSession        = $this->student_model->getStudentSession($id);
         $timeline              = $this->timeline_model->getStudentTimeline($id, $status = '');
         $data["timeline_list"] = $timeline;
-
+        $data['user_id'] = $id;
         $student_session_id = $studentSession["student_session_id"];
 
         $student_session         = $studentSession["session"];
@@ -174,6 +174,9 @@ class Student extends Admin_Controller
 
         $student_doc = $this->student_model->getstudentdoc($id);
 
+        $this->load->model('eloquent/Document');
+
+        $data['documents'] =  Document::all();
         $data['student_doc']    = $student_doc;
         $data['student_doc_id'] = $id;
         $category_list          = $this->category_model->get();

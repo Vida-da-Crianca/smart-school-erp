@@ -169,6 +169,29 @@
                 }
             }
 
+            if ($this->module_lib->hasActive('document_generate')  && $this->rbac->hasPrivilege('document_generate')) : ?>
+
+
+                <li class="treeview <?php echo set_Topmenu('documents'); ?>">
+                    <a href="#">
+                        <i class="fa fa-file ftlayer"></i> <span> <?php echo $this->lang->line('document_generate_collection'); ?></span> <i class="fa fa-angle-left pull-right"></i>
+                    </a>
+                    <ul class="treeview-menu">
+                        <?php if ($this->rbac->hasPrivilege('document_generate', 'can_view')) : ?>
+                            <li class="<?php echo set_Submenu('admin/documents'); ?>"><a href="<?php echo base_url(); ?>admin/documents"><i class="fa fa-angle-double-right"></i> <?php echo $this->lang->line('document_generate_collection_list'); ?></a></li>
+                        <?php endif; ?>
+
+
+                        <?php if ($this->rbac->hasPrivilege('document_create', 'can_add')) : ?>
+                            <li class="<?php echo set_Submenu('admin/documents/create'); ?>"><a href="<?php echo base_url(); ?>admin/documents/create"><i class="fa fa-angle-double-right"></i> <?php echo $this->lang->line('document_generate_create'); ?></a></li>
+                        <?php endif; ?>
+
+                    </ul>
+                </li>
+
+                <?php
+            endif;
+
             if ($this->module_lib->hasActive('fees_collection')) {
                 if (($this->rbac->hasPrivilege('collect_fees', 'can_view') ||
                     $this->rbac->hasPrivilege('search_fees_payment', 'can_view') ||
@@ -798,7 +821,8 @@
 
                             <?php if ($this->rbac->hasPrivilege('books', 'can_view')) { ?>
                                 <li class="<?php echo set_Submenu('book/getall'); ?>">
-                                    <a href="<?php echo base_url(); ?>admin/book/getall"><i class="fa fa-angle-double-right"></i><?php echo $this->lang->line('book_list'); ?></a></li>
+                                    <a href="<?php echo base_url(); ?>admin/book/getall"><i class="fa fa-angle-double-right"></i><?php echo $this->lang->line('book_list'); ?></a>
+                                </li>
                             <?php }
                             if ($this->rbac->hasPrivilege('issue_return', 'can_view')) { ?>
                                 <li class="<?php echo set_Submenu('member/index'); ?>"><a href="<?php echo base_url(); ?>admin/member"><i class="fa fa-angle-double-right"></i><?php echo $this->lang->line('issue_return'); ?></a></li>
@@ -1245,17 +1269,17 @@
                         <ul class="treeview-menu">
                             <?php
                             if ($this->rbac->hasPrivilege('general_setting', 'can_view')) {
-                                ?>
+                            ?>
                                 <li class="<?php echo set_Submenu('schsettings/index'); ?>"><a href="<?php echo base_url(); ?>schsettings"><i class="fa fa-angle-double-right"></i> <?php echo $this->lang->line('general_settings'); ?></a></li>
                             <?php
                             }
                             if ($this->rbac->hasPrivilege('invoice_setting', 'can_view')) {
-                                ?>
+                            ?>
                                 <li class="<?php echo set_Submenu('invoices'); ?>"><a href="<?php echo base_url(); ?>invoices"><i class="fa fa-angle-double-right"></i> <?php echo $this->lang->line('invoice_settings'); ?></a></li>
                             <?php
                             }
 
-                            
+
                             if ($this->rbac->hasPrivilege('session_setting', 'can_view')) {
                             ?>
                                 <li class="<?php echo set_Submenu('sessions/index'); ?>"><a href="<?php echo base_url(); ?>sessions"><i class="fa fa-angle-double-right"></i> <?php echo $this->lang->line('session_setting'); ?></a></li>

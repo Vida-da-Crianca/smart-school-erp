@@ -11,7 +11,8 @@
         "maknz/slack": "^1.7",
         "agorlov/discordmsg": "^1.0",
         "nesbot/carbon": "^2.42",
-        "phpmailer/phpmailer": "^6.2"
+        "phpmailer/phpmailer": "^6.2",
+        "spipu/html2pdf": "^5.2"
         
     },
     "require-dev": {

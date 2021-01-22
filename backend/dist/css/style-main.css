@@ -3915,3 +3915,27 @@ input[type=checkbox], input[type=radio] {
 .filter-option span.flag-icon{margin-top: 13px;}
 /*.bootstrap-select.btn-group .dropdown-menu li>a {padding-right: 40px;}*/
 /*.bootstrap-select.btn-group .dropdown-menu li>a {padding-left: 30px !important;}*/
+
+
+.documents_contract_container{
+
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: -12px 0 -12px;
+    width: calc(100% + 12px);
+    
+}
+
+.documents_contract_container .action_main{
+    display: flex;
+    flex: 1;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    padding: 10px;
+    background-color: #e7e7e7;
+    border: 1px solid #ddd;
+    border-radius: 2px;
+    
+}
