@@ -91,7 +91,8 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
 
     <section class="content-header">
         <h1>
-            <i class="fa fa-bus"></i> <?php echo $this->lang->line('transport'); ?></h1>
+            <i class="fa fa-bus"></i> <?php echo $this->lang->line('transport'); ?>
+        </h1>
     </section>
     <!-- Main content -->
     <section class="content">
@@ -147,9 +148,9 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                     $options_invoice_filter = [
                                         null => 'Todos',
                                         1  => 'Com Nota',
-                                        2  => 'Sem nota' 
-                                     ];
-                                    print(form_dropdown('invoioce_filter',$options_invoice_filter, $invoioce_filter, 'class="form-control" '));
+                                        2  => 'Sem nota'
+                                    ];
+                                    print(form_dropdown('invoioce_filter', $options_invoice_filter, $invoioce_filter, 'class="form-control" '));
                                     ?>
                                     <!-- <select class="form-control" name="class_id">
 
@@ -213,15 +214,15 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                     } else {
                                         foreach ($incomeList as $item) {
                                             $detail = $item->detail;
-                                            $sum_amount += $item->amount;
+                                            $sum_amount += $item->feeItem->amount;
                                             $sum_discount += $detail->amount_discount;
                                             $sum_fine +=  $detail->amount_fine;
-                                            $sum_total += ($item->amount - $detail->amount_discount) + $detail->amount_fine;
-                                            $row_total = ($item->amount - $detail->amount_discount) + $detail->amount_fine;
-                                        ?>  
-                                        
+                                            $sum_total += ($item->feeItem->amount - $detail->amount_discount) + $detail->amount_fine;
+                                            $row_total = ($item->feeItem->amount - $detail->amount_discount) + $detail->amount_fine;
+                                        ?>
+
                                             <tr>
-                                               
+
                                                 <td align="left">
                                                     <?php
 
@@ -237,7 +238,7 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                                 </td>
 
                                                 <td>
-                                                    <?php printf('%s %s', $currency_symbol, number_format($item->amount, 2, ',', '.')); ?>
+                                                    <?php printf('%s %s', $currency_symbol, number_format($item->feeItem->amount, 2, ',', '.')); ?>
                                                 </td>
 
                                                 <td>
@@ -319,7 +320,7 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                     extend: 'excelHtml5',
                     text: '<i class="fa fa-file-excel-o"></i>',
                     titleAttr: 'Excel',
-                   
+
                     title: $('.download_label').html(),
                     exportOptions: {
                         columns: ':visible'
@@ -343,7 +344,7 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                     title: $('.download_label').html(),
                     exportOptions: {
                         columns: ':visible'
-                        
+
                     }
                 },
 
@@ -352,14 +353,14 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                     text: '<i class="fa fa-print"></i>',
                     titleAttr: 'Print',
                     title: $('.download_label').html(),
-                        customize: function ( win ) {
-                    $(win.document.body)
-                        .css( 'font-size', '10pt' );
- 
-                    $(win.document.body).find( 'table' )
-                        .addClass( 'compact' )
-                        .css( 'font-size', 'inherit' );
-                },
+                    customize: function(win) {
+                        $(win.document.body)
+                            .css('font-size', '10pt');
+
+                        $(win.document.body).find('table')
+                            .addClass('compact')
+                            .css('font-size', 'inherit');
+                    },
                     exportOptions: {
                         columns: ':visible'
                     }
@@ -377,7 +378,7 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                 var api = this.api(),
                     data;
 
-                    console.log(data)
+                console.log(data)
 
                 // Remove the formatting to get integer data for summation
                 // var intVal = function(i) {

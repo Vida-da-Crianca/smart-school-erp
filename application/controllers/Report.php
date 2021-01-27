@@ -1102,14 +1102,9 @@ class Report extends Admin_Controller
         $data['options_classe'] = array_merge([null => 'Todos'], $options);
 
         if (isset($_POST['search_type']) && $_POST['search_type'] != '') {
-
             $dates = $this->customlib->get_betweendate($_POST['search_type']);
-
-
-
             $data['search_type'] = $_POST['search_type'];
         } else {
-
             $dates = $this->customlib->get_betweendate('this_year');
             $data['search_type'] = '';
         }
@@ -1121,19 +1116,18 @@ class Report extends Admin_Controller
         $incomeList = [];
         $deposite = new Student_deposite_eloquent;
 
-
         if ($this->input->post('search_type') != '') {
 
             $opt = $deposite->whereBetween('student_fees_deposite.created_at', [sprintf('%s 00:00:00', $start_date), sprintf('%s 23:59:59', $end_date)])
-                ->with(['student.session', 'invoice.billet']);
+                ->with(['student.session', 'invoice.billet', 'feeItem']);
             if ($this->input->post('class_id') != '')
                 $opt->join('students', 'students.id', '=', 'student_fees_deposite.student_fees_master_id')
                     ->join('student_session', 'students.id', '=', 'student_session.student_id')
-                    ->join('student_fee_items','student_fee_items.id', '=','student_fees_deposite.student_fees_id')
+                    ->join('student_fee_items', 'student_fee_items.id', '=', 'student_fees_deposite.student_fees_id')
                     ->where('student_session.class_id', $this->input->post('class_id'))
-                    ->select('student_fees_deposite.*', 'student_fee_items.amount');
+                    ->select('student_fees_deposite.*');
 
-            $incomeList = $opt->get()->filter(function ($row) {
+            $incomeList = $opt->orderBy('student_fees_deposite.created_at','ASC')->get()->filter(function ($row) {
                 $filter_invoice = $this->input->post('invoioce_filter');
                 if ($filter_invoice == 1 && $row->invoice)  return $row;
                 if ($filter_invoice == 2 && !$row->invoice)  return $row;
