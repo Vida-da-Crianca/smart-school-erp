@@ -93,38 +93,38 @@ jobs:
               sleep 5
               docker system prune --force
 
-  deployProduction:
-    name: "Deploy Production"
-    runs-on: "docker-stack"
-    needs: [build, deployStage]
-    environment:
-      name: Production
-      url: https://eeividadecrianca.com.br
-    steps:
-      - uses: actions/checkout@v2
-      - name: Create Folder for Application
-        run: |
-          rm -rf $DIRECTORY_APPLICATION/$PRODUCTION_PATH/*
-          mkdir -p -m 777 $DIRECTORY_APPLICATION/$PRODUCTION_PATH/uploads
-          mkdir -p -m 777 $DIRECTORY_APPLICATION/$PRODUCTION_PATH/logs
-          mkdir -p -m 777 $DIRECTORY_APPLICATION/$PRODUCTION_PATH/temp
-          rsync -qr -I   ./uploads/  $DIRECTORY_APPLICATION/$PRODUCTION_PATH/uploads
-      - name: Deploy Stack
-        run: |
-          IMAGE_ID=carlosocarvalho/$IMAGE_NAME
-          # Change all uppercase to lowercase
-          IMAGE_ID=$(echo $IMAGE_ID | tr '[A-Z]' '[a-z]')
-          # Strip git ref prefix from version
-          VERSION=$(echo "${{ github.ref }}" | sed -e 's,.*/\(.*\),\1,')
-          # Strip "v" prefix from tag name
-          [[ "${{ github.ref }}" == "refs/tags/"* ]] && VERSION=$(echo $VERSION | sed -e 's/^v//')
-          # Use Docker `latest` tag convention
-          [ "$VERSION" == "master" ] && VERSION=latest
-          echo IMAGE_ID=$IMAGE_ID
-          echo VERSION=$VERSION
-          docker stack deploy -c production-stack.yml $STACK_NAME
+  # deployProduction:
+  #   name: "Deploy Production"
+  #   runs-on: "docker-stack"
+  #   needs: [build, deployStage]
+  #   environment:
+  #     name: Production
+  #     url: https://eeividadecrianca.com.br
+  #   steps:
+  #     - uses: actions/checkout@v2
+  #     - name: Create Folder for Application
+  #       run: |
+  #         rm -rf $DIRECTORY_APPLICATION/$PRODUCTION_PATH/*
+  #         mkdir -p -m 777 $DIRECTORY_APPLICATION/$PRODUCTION_PATH/uploads
+  #         mkdir -p -m 777 $DIRECTORY_APPLICATION/$PRODUCTION_PATH/logs
+  #         mkdir -p -m 777 $DIRECTORY_APPLICATION/$PRODUCTION_PATH/temp
+  #         rsync -qr -I   ./uploads/  $DIRECTORY_APPLICATION/$PRODUCTION_PATH/uploads
+  #     - name: Deploy Stack
+  #       run: |
+  #         IMAGE_ID=carlosocarvalho/$IMAGE_NAME
+  #         # Change all uppercase to lowercase
+  #         IMAGE_ID=$(echo $IMAGE_ID | tr '[A-Z]' '[a-z]')
+  #         # Strip git ref prefix from version
+  #         VERSION=$(echo "${{ github.ref }}" | sed -e 's,.*/\(.*\),\1,')
+  #         # Strip "v" prefix from tag name
+  #         [[ "${{ github.ref }}" == "refs/tags/"* ]] && VERSION=$(echo $VERSION | sed -e 's/^v//')
+  #         # Use Docker `latest` tag convention
+  #         [ "$VERSION" == "master" ] && VERSION=latest
+  #         echo IMAGE_ID=$IMAGE_ID
+  #         echo VERSION=$VERSION
+  #         docker stack deploy -c production-stack.yml $STACK_NAME
       
-      - name: Prune System
-        run: |
-              sleep 5
-              docker system prune --force            
+  #     - name: Prune System
+  #       run: |
+  #             sleep 5
+  #             docker system prune --force            

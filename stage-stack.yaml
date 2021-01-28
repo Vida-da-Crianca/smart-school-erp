@@ -24,16 +24,12 @@ services:
         target: /etc/mysql/conf.d/group.cnf 
   jobs:
     image: $IMAGE_ID:$VERSION
-    depends_on: 
-     - db
     working_dir: /app/
     volumes:
       - /var/apps/erpjb/production/app/uploads:/app/uploads
       - /var/apps/erpjb/production/app/logs:/app/application/logs
       - /var/apps/erpjb/production/app/temp:/app/temp
     depends_on:
-      - db
-      - redis
       - app
     environment:
       - ENVIRONMENT=production
@@ -53,11 +49,12 @@ services:
     command:
        - bash
        - -c 
-       - php man migrate -n && /app/schedule-run.sh
+       - /app/php man migrate -n && /app/schedule-run.sh
   app:
     image: $IMAGE_ID:$VERSION
     depends_on: 
      - db
+     - redis
     environment:
       - ENVIRONMENT=production
       - DB_HOST=db
