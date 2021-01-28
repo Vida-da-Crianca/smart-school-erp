@@ -27,8 +27,7 @@ jobs:
   build:
     # Ensure test job passes before pushing image.
     runs-on: "docker-stack"
-    name: Build
-    description: "Criando imagem docker"
+    name: Build as Docker Image
     if: github.event_name == 'push'
     steps:
       - uses: actions/checkout@v2
