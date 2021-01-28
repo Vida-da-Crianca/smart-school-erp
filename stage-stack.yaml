@@ -24,6 +24,8 @@ services:
         target: /etc/mysql/conf.d/group.cnf 
   jobs:
     image: $IMAGE_ID:$VERSION
+    depends_on: 
+     - db
     working_dir: /app/
     volumes:
       - /var/apps/erpjb/production/app/uploads:/app/uploads
@@ -53,6 +55,8 @@ services:
     ] 
   app:
     image: $IMAGE_ID:$VERSION
+    depends_on: 
+     - db
     environment:
       - ENVIRONMENT=production
       - DB_HOST=db

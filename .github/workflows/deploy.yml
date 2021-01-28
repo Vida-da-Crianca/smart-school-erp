@@ -1,4 +1,4 @@
-name: Production
+name: Deployment
 on:
   push:
     # Publish `master` as Docker `latest` image.
@@ -65,6 +65,7 @@ jobs:
         run: |
           rm -rf $DIRECTORY_APPLICATION/$STAGING_PATH/uploads/*
           rm -rf $DIRECTORY_APPLICATION/$STAGING_PATH/temp/*
+        
           echo "Create directories for  $DIRECTORY_APPLICATION/$STAGING_PATH/"
         
           mkdir -p -m 777 $DIRECTORY_APPLICATION/$STAGING_PATH/uploads
