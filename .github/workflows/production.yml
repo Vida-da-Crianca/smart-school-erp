@@ -69,6 +69,7 @@ jobs:
         
           mkdir -p -m 777 $DIRECTORY_APPLICATION/$STAGING_PATH/uploads
           mkdir -p -m 777 $DIRECTORY_APPLICATION/$STAGING_PATH/logs
+          mkdir -p -m 777 $DIRECTORY_APPLICATION/$STAGING_PATH/temp
           rsync -qr -I   ./uploads/  $DIRECTORY_APPLICATION/$STAGING_PATH/uploads
       
       - name:  Deploy Stack
