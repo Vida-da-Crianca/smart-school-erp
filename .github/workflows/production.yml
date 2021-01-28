@@ -19,7 +19,7 @@ env:
   DOCKER_PWD: ${{secrets.DOCKER_PASSWORD}}
   DIRECTORY_APPLICATION: /var/apps
   PRODUCTION_PATH: production/erp/app
-  STAGING_PATH: erpjb/production
+  STAGING_PATH: erpjb/production/app
   IMAGE_ID: ''
   VERSION: 0
 
