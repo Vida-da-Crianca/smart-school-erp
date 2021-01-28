@@ -2,7 +2,9 @@
 
 use Application\Core\JsonResponse;
 use Application\Support\Parser;
+use Respect\Validation\Rules\Json;
 use Spipu\Html2Pdf\Html2Pdf;
+use mikehaertl\wkhtmlto\Pdf;
 
 if (!defined('BASEPATH')) {
     exit('No direct script access allowed');
@@ -48,7 +50,7 @@ class DocumentController extends Admin_Controller
         $this->session->set_userdata('top_menu', 'documents');
         $this->session->set_userdata('sub_menu', 'admin/documents/create');
         $data = array();
-        $document = (object)['id' => 0, 'title' => null, 'body' => '<b>ok</b>'];
+        $document = (object)['id' => 0, 'title' => null, 'body' => ''];
 
         $data['document'] = $document;
 
@@ -74,11 +76,12 @@ class DocumentController extends Admin_Controller
         if ($isValidate) {
             try {
                 Document::create($this->input->post());
-                return redirect('/admin/documents');
+                return new JsonResponse(['message' =>  'Operação realizada com sucesso !!']);
             } catch (\Exception $e) {
+                return new JsonResponse(['message' =>  $e->getMessage()], 400);
             }
         }
-        $this->viewForm($data);
+        return new JsonResponse(['errors' =>  $this->form_validation->error_string()], 422);
     }
 
 
@@ -109,17 +112,18 @@ class DocumentController extends Admin_Controller
             try {
                 $document =   Document::where('id', $id)->first();
                 $document->update($this->input->post());
-                return redirect('/admin/documents');
+                return new JsonResponse(['message' =>  'Operação realizada com sucesso !!']);
             } catch (\Exception $e) {
+                return new JsonResponse(['message' =>  $e->getMessage()], 400);
             }
         }
 
-        $this->viewForm($data);
+        return new JsonResponse(['errors' =>  $this->form_validation->error_string()], 422);
     }
 
     public function destroy($id)
     {
-      
+
         $this->load->model('eloquent/Document');
         $document =   Document::where('id', $id)->first();
         $document->delete();
@@ -152,10 +156,28 @@ class DocumentController extends Admin_Controller
 
         $parser = new Parser();
         $page =  $parser->parse_string($document->body, Student_eloquent::where('id', $user_id)->first()->toArray());
+         $page = str_replace('figure','div',$page);
+        $page = preg_replace('/(<img\b[^>])/i', '$1 style="max-width:100% !important;" ', $page);
+        // $page = strip_tags($page, '<p><a><table><th><tbody><tr><td><thead><tfoot><img><strong><br><h1><h2><h3><h4><h5><h6><p><i><em><span>');
+        $page = $this->load->view('parser/pdf', ['body' => $page], true);
+        // die($page);
+        // return;
+        // die($page);
+        // $page = strip_tags($page, '<p><a><table><th><tbody><tr><td><thead><tfoot><img><strong><br><h1><h2><h3><h4><h5><h6><p><i><em><span>');
 
+      
         $html2pdf = new Html2Pdf('P', 'A4', 'pt', true, 'UTF-8', 10);
         $html2pdf->writeHTML($page);
         $html2pdf->output();
+
+       
+        // $pdf = new Pdf();
+        // $pdf->addPage($page);
+        // if (!$pdf->send('report.pdf')) {
+        //     die($pdf->getError());
+        //     // ... handle error here
+        // }
+        // // echo $pdf->toString();wkhtmltopdf --version
         die();
     }
 }

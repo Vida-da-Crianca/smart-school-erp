@@ -111,6 +111,7 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
 
                         <?php
                         if (isset($resultlist)) {
+                            
                         ?>
                             <div class="box-header ptbnull"></div>
                             <div class="">
@@ -120,6 +121,7 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                     <div class="box-tools pull-right">
                                     </div>
                                 </div>
+                                
                                 <div class="box-body">
                                     <div class="row">
                                         <div class="">
@@ -236,7 +238,7 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                                                                 $sel = "";
                                                                             }
                                                                             ?>
-                                                                            <input class="checkbox" type="checkbox" name="student_session_id[]" value="<?php echo $student['student_session_id']; ?>" <?php echo $sel; ?> />
+                                                                            <input class="checkbox" type="checkbox" name="student_session_id[]" value="<?php echo $student['student_session_id']; ?>"  />
                                                                             <input type="hidden" name="student_fees_master_id_<?php echo $student['student_session_id']; ?>" value="<?php echo $student['student_fees_master_id']; ?>">
                                                                             <input type="hidden" name="class_id[]" value="<?php echo $student['class_id'];  ?>" />
                                                                         </td>

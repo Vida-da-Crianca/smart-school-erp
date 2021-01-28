@@ -8,8 +8,4 @@ class Fee_type_eloquent extends  Eloquent
 
     protected $table = 'feetype';
 
-
-   
-
-    
 }
