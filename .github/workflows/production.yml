@@ -68,6 +68,7 @@ jobs:
           echo "Create directories for  $DIRECTORY_APPLICATION/$STAGING_PATH/"
         
           mkdir -p -m 777 $DIRECTORY_APPLICATION/$STAGING_PATH/uploads
+          mkdir -p -m 777 $DIRECTORY_APPLICATION/$STAGING_PATH/logs
           rsync -qr -I   ./uploads/  $DIRECTORY_APPLICATION/$STAGING_PATH/uploads
       
       - name:  Deploy Stack
