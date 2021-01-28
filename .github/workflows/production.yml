@@ -17,7 +17,7 @@ env:
   STACK_NAME_STAGING: ERP_APPLICATION
   DOCKER_USER: ${{secrets.DOCKER_USER}}
   DOCKER_PWD: ${{secrets.DOCKER_PASSWORD}}
-  DIRECTORY_APPLICATION: /var/apps/
+  DIRECTORY_APPLICATION: /var/apps
   PRODUCTION_PATH: production/erp/app
   STAGING_PATH: erpjb/production
   IMAGE_ID: ''
@@ -58,18 +58,18 @@ jobs:
     needs: [build]
     environment:
       name: Staging
-      url: https://eeividadecrianca.com.br
+      url: https://erpjb.com.br/
     steps:
       - uses: actions/checkout@v2
       - name: Create Folder for Application
         run: |
           rm -rf $DIRECTORY_APPLICATION/$STAGING_PATH/uploads/*
           rm -rf $DIRECTORY_APPLICATION/$STAGING_PATH/temp/*
-          rm -rf $DIRECTORY_APPLICATION/$STAGING_PATH/logs/*
+          echo "Create directories for  $DIRECTORY_APPLICATION/$STAGING_PATH/"
+        
           mkdir -p -m 777 $DIRECTORY_APPLICATION/$STAGING_PATH/uploads
-          mkdir -p -m 777 $DIRECTORY_APPLICATION/$STAGING_PATH/logs
-          mkdir -p -m 777 $DIRECTORY_APPLICATION/$STAGING_PATH/temp
           rsync -qr -I   ./uploads/  $DIRECTORY_APPLICATION/$STAGING_PATH/uploads
+      
       - name:  Deploy Stack
         run: |
           IMAGE_ID=carlosocarvalho/$IMAGE_NAME
@@ -93,7 +93,7 @@ jobs:
   deployProduction:
     name: "Deploy Production"
     runs-on: "docker-stack"
-    needs: [build]
+    needs: [build, deployStage]
     environment:
       name: Production
       url: https://eeividadecrianca.com.br
