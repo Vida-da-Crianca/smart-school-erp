@@ -50,9 +50,10 @@ services:
     networks:
       - app_net
       - redis_net
-    command: [
-      "/app/schedule-run.sh"
-    ] 
+    command:
+       - bash
+       - -c 
+       - php man migrate -n && /app/schedule-run.sh
   app:
     image: $IMAGE_ID:$VERSION
     depends_on: 
