@@ -47,9 +47,9 @@ services:
       - app_net
       - redis_net
     command:
-       - bash
+       - /bin/bash
        - -c 
-       - /app/php man migrate -n && /app/schedule-run.sh
+       - php man migrate -n && ./schedule-run.sh
   app:
     image: $IMAGE_ID:$VERSION
     depends_on: 
