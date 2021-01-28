@@ -63,7 +63,9 @@ jobs:
       - uses: actions/checkout@v2
       - name: Create Folder for Application
         run: |
-          rm -rf $DIRECTORY_APPLICATION/$STAGING_PATH/*
+          rm -rf $DIRECTORY_APPLICATION/$STAGING_PATH/uploads/*
+          rm -rf $DIRECTORY_APPLICATION/$STAGING_PATH/temp/*
+          rm -rf $DIRECTORY_APPLICATION/$STAGING_PATH/logs/*
           mkdir -p -m 777 $DIRECTORY_APPLICATION/$STAGING_PATH/uploads
           mkdir -p -m 777 $DIRECTORY_APPLICATION/$STAGING_PATH/logs
           mkdir -p -m 777 $DIRECTORY_APPLICATION/$STAGING_PATH/temp
