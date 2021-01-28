@@ -62,10 +62,8 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Create Folder for Application
+      
         run: |
-          rm -rf $DIRECTORY_APPLICATION/$STAGING_PATH/uploads/*
-          rm -rf $DIRECTORY_APPLICATION/$STAGING_PATH/temp/*
-        
           echo "Create directories for  $DIRECTORY_APPLICATION/$STAGING_PATH/"
         
           mkdir -p -m 777 $DIRECTORY_APPLICATION/$STAGING_PATH/uploads
