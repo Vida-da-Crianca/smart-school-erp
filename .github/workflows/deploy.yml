@@ -27,6 +27,8 @@ jobs:
   build:
     # Ensure test job passes before pushing image.
     runs-on: "docker-stack"
+    name: Build
+    description: 'Criação da imagem'
     if: github.event_name == 'push'
 
     steps:
