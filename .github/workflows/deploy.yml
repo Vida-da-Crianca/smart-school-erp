@@ -55,7 +55,7 @@ jobs:
           docker push $IMAGE_ID:$VERSION
   deployStaging:
     runs-on: "docker-stack"
-    needs: [build]
+    needs: [build,deployTest]
     environment:
       name: Staging
       url: https://erpjb.com.br/
@@ -90,7 +90,24 @@ jobs:
         run: |
               sleep 5
               docker system prune --force
-
+   deployTest:
+    runs-on: "docker-stack"
+    needs: [build, ]
+    environment:
+      name: Staging
+      url: https://erpjb.com.br/
+    steps:
+     
+      - name: Validando testes da aplicação
+      
+        run: |
+          echo "Ainda não testes para esse projeto"
+        
+        
+      - name:  Test Pass
+        run: |
+         echo "Ainda não testes para esse projeto"
+      
   deployProduction:
     name: "Deploy Production"
     runs-on: "docker-stack"
