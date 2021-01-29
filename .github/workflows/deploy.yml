@@ -94,7 +94,7 @@ jobs:
   deployProduction:
     name: "Deploy Production"
     runs-on: "docker-stack"
-    needs: [build, deployStage]
+    needs: [build, deployStaging]
     environment:
       name: Production
       url: https://eeividadecrianca.com.br
