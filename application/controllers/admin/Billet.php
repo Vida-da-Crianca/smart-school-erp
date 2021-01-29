@@ -41,9 +41,15 @@ class Billet extends Admin_Controller
     {
         //$data = $this->input->post();
 
-        $dateStart = implode('-', array_reverse(explode('/', $this->input->post('start'))));
+        // $dateStart = '2021-01-01'; //implode('-', array_reverse(explode('/', $this->input->post('start'))));
+        // $dateEnd = '2021-02-28'; //implode('-', array_reverse(explode('/', $this->input->post('end'))));
+       
+        $dateStart =implode('-', array_reverse(explode('/', $this->input->post('start'))));
         $dateEnd = implode('-', array_reverse(explode('/', $this->input->post('end'))));
         $this->load->model(['eloquent/Student_fee_item_eloquent']);
+
+        // $_POST['classe_id'] ='todos';
+        // $_POST['motive_id'] ='todos';
 
         $fee_item = new Student_fee_item_eloquent;
         $data  =   $fee_item->whereBetween('due_date', [$dateStart, $dateEnd])
@@ -58,7 +64,9 @@ class Billet extends Admin_Controller
 
               
             })
-            ->with(['deposite', 'student','billet'])
+            ->with(['deposite', 'session.student','billet'])
+           
+            ->select('student_fee_items.*')
             ->get()
             ->map(function($row){
                 $row->amount = number_format($row->amount,2,',', '.');
@@ -69,7 +77,11 @@ class Billet extends Admin_Controller
             })
             ->filter(function ($row) {
                 return !$row->deposite  && $row->billet->count() == 0;
-            })->all();
+            })
+            ->filter(function ($row) {
+                return $row->session->student !== null;
+            })
+            ->all();
 
         return new JsonResponse(compact('data'));
     }

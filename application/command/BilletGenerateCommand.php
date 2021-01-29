@@ -166,13 +166,13 @@ class BilletGenerateCommand extends BaseCommand
 
         DB::commit();
         discord_log(sprintf('%s', json_encode($options, JSON_PRETTY_PRINT)), 'Novo Boleto');
-        \Invoice_eloquent::create([
-            'price' =>  $billet->price,
-            'status' => \Invoice_eloquent::PENDING_CREATE,
-            'due_date' =>  $billet->due_date,
-            'bullet_id' => $billet->id[0],
-            'user_id' =>  $student->id,
-        ]);
+        // \Invoice_eloquent::create([
+        //     'price' =>  $billet->price,
+        //     'status' => \Invoice_eloquent::PENDING_CREATE,
+        //     'due_date' =>  $billet->due_date,
+        //     'bullet_id' => $billet->id[0],
+        //     'user_id' =>  $student->id,
+        // ]);
         $items = [];
         foreach ($billet->mail_items as $row) {
             $row->billet = $options->billet->number;

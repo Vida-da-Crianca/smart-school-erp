@@ -210,7 +210,7 @@
                         </label>
                    
                     </td>
-                    <td>${row.student.firstname} ${row.student.lastname}</td>
+                    <td>${row.session.student.firstname} ${row.session.student.lastname}</td>
                     <td>${row.title}</td>
                     <td>${row.due_date}</td>
                     <td>${row.amount}</td>

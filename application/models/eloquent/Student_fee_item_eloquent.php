@@ -37,6 +37,13 @@ class Student_fee_item_eloquent extends  Eloquent
         return $this->belongsTo('Student_eloquent', 'user_id', 'id');
     }
 
+    public function session()
+    {
+
+        get_instance()->load->model('eloquent/Student_session_eloquent');
+        return $this->belongsTo('Student_session_eloquent', 'student_session_id', 'id');
+    }
+
 
     public function getAmountRealAttribute()
     {
