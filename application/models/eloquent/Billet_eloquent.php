@@ -51,6 +51,18 @@ class Billet_eloquent extends  Eloquent {
            
         );
     }
+
+    public function item(){
+        get_instance()->load->model('eloquent/Student_fee_item_eloquent');
+        return $this->belongsTo(
+            'Student_fee_item_eloquent',
+            'billet_student_fee_item',
+            'billet_id',
+            'fee_item_id',
+           
+           
+        );
+    }
     
 
     public function getBodyJsonAttribute(){

@@ -14,7 +14,7 @@ class Billet {
         $CI->load->model(['eloquent/Billet_eloquent', 'eloquent/Student_deposite_eloquent']);
         $CI->load->library('bank_payment_inter');
         
-        $student = (object) $CI->student_model->getByStudentSession( $user_id );
+        $student = (object)  ($forceId  ?   ['id'=>$user_id]  : $CI->student_model->getByStudentSession( $user_id ));
         $errors = [];
         $listOfIds = [];
         foreach ($data as $values) {
@@ -27,7 +27,7 @@ class Billet {
             $billet = new \Billet_eloquent;
             $billet->body = json_encode($values);
             $billet->price = ($values['fee_amount'] + $values['fee_fine']) - $values['fee_discount'];
-            $billet->user_id = $forceId  ? $user_id : $student->id;
+            $billet->user_id =  $student->id;
             // $billet->fill($values);
             $billet->due_date = $values['due_date'];
             $billet->status = $defaultStatus;

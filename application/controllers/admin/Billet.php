@@ -90,14 +90,16 @@ class Billet extends Admin_Controller
     {
         $this->load->model(['eloquent/Student_fee_item_eloquent', 'eloquent/Billet_eloquent']);
 
-        $data = Student_fee_item_eloquent::whereIn('id', $this->input->post('student_fee_item_id'))->get();
+        $data = Student_fee_item_eloquent::whereIn('id', $this->input->post('student_fee_item_id'))->with(['session.student'])->get();
         $items = [];
         foreach ($data as $item) {
-            if (!isset($items[$item->user_id])) $items[$item->user_id] = [];
+            $userId = $item->session->student->id;
 
-            $items[$item->user_id][] = [
+            if (!isset($items[$userId])) $items[$userId] = [];
+
+            $items[$userId][] = [
                 'fee_item_id' => $item->id,
-                'user_id' => $item->user_id,
+                'user_id' => $userId,
                 'price' => $item->amount,
                 'fee_fine' => 0,
                 'fee_discount' => 0,
@@ -109,8 +111,8 @@ class Billet extends Admin_Controller
             ];
         }
         $ids = [];
-
-        
+      
+        // return new JsonResponse(['data' => $items , 'message' => $this->lang->line('bulk_billet_success_generate')]);
         foreach ($items as $id => $dataItems) {
             $ids =  array_merge($ids, (new CoreBillet)->create($dataItems, $id, true));
         }

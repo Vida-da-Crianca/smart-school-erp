@@ -219,6 +219,8 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                             $sum_fine +=  $detail->amount_fine;
                                             $sum_total += ($item->feeItem->amount - $detail->amount_discount) + $detail->amount_fine;
                                             $row_total = ($item->feeItem->amount - $detail->amount_discount) + $detail->amount_fine;
+
+                                            // dump(isset($item->student->guardian_name) ? $item->student->guardian_name : $item->id);
                                         ?>
 
                                             <tr>
