@@ -59,18 +59,28 @@ class InvoiceCommand extends BaseCommand
 
         $provider = new Provider(new Barretos($options));
 
-        $invoices = \Invoice_eloquent::with(['student', 'billet',  'feeStudentDeposite.feeGroupType.feeGroup', 'feeStudentDeposite.feeItem'])->forGenerate()->get();
+        $invoices = \Invoice_eloquent::with(['student', 'billet',  'feeStudentDeposite.feeGroupType.feeGroup', 'feeStudentDeposite.feeItem'])
+        ->forGenerate()
+        ->orderBy('id','desc')
+        ->get();
 
         if ($invoices->count() == 0) return $this->success('Not exists invoices for create');
           
         $options = $settings->toArray();
         $aliquota = str_replace([',','%'], ['.',''],$options['simple_rate']);
         $first = Carbon::now();
+        $trys = [10, 15, 20, 25, 30];
+
+        // dump($invoices->filter(function($row){ return $row->bullet_id == 66 ;})->toArray());
+        // return;
         foreach ($invoices as $item) {
             
+            $timed = Carbon::create($item->latest_try_at);
+            
+
             if( $item->latest_try_at !=  null){
                 $timed = Carbon::create($item->latest_try_at);
-                if($timed->diffInMinutes() != 10)
+                if(!in_array($timed->diffInMinutes(), $trys))
                   continue;
             }
             
@@ -86,7 +96,7 @@ class InvoiceCommand extends BaseCommand
             $data  = [
                 'valor' => $item->price,
                 'base'  => $item->price,
-                'descricaoNF' => sprintf('%s %s %s', $item->student->full_name, PHP_EOL, $item->_description),
+                'descricaoNF' => $item->description != null ?  $item->description : sprintf('%s %s %s', $item->student->full_name, PHP_EOL, $item->_description),
                 'tomador_tipo' => 2,
                 'tomador_cnpj' => $item->student->guardian_document, //cnoj da empresa
                 'tomador_email' =>  getenv('ENVIRONMENT') === 'develoment' ?  getenv('MAIL_NOTA') : $item->student->guardian_email,
@@ -105,7 +115,7 @@ class InvoiceCommand extends BaseCommand
                 'rps_serie' => $options['serie'],
                 'serie' =>  $options['serie']
             ];
-
+            // dump($item->toArray()); 
             // dump($data);
             // continue;
             \Invoice_eloquent::where('id', $item->id)->update(['latest_try_at' => Carbon::now()]);
@@ -135,7 +145,7 @@ class InvoiceCommand extends BaseCommand
                 }
                 
 
-                dump($response);
+                // dump($response);
 
            
             } catch (\Exception $e) {
@@ -157,14 +167,19 @@ class InvoiceCommand extends BaseCommand
     public function buildInvoiceDescription(&$item)
     {
         $item->_description  = 'S/N';
-        if (!$item->billet ) {
+        if (!$item->billet && !$item->description ) {
             $item->_description = $item->feeStudentDeposite->feeItem->title;
             return;
         }
-
+        
+        if( $item->description != null) return;
         $billet = $item->billet()->with('feeItems')->first();
         $collectionDescriptions = [];
         $item->price = $billet->price;
+        if($item->description !=  null){
+              
+        }
+        
         foreach ($billet->feeItems as $row) {
             $collectionDescriptions[] = sprintf('%s - R$ %s', $row->title, number_format($row->amount, 2, ',', '.'));
         }

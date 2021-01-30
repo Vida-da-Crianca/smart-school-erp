@@ -71,11 +71,11 @@ class InvoiceCancelCommand extends BaseCommand
                 $item->forceDelete();
                 continue;
             }
-            dump($item->toArray());
+            // dump($item->toArray());
             try {
                 $data  = [
                     'nota' =>  $item->invoice_number,
-                    'email' => $item->student->guardian_email,
+                    'email' =>  getenv('ENVIRONMENT') === 'develoment' ?  getenv('MAIL_NOTA') : $item->student->guardian_email,
                     'motivo' => 'Nota cancelada'
                 ];
                
@@ -87,6 +87,7 @@ class InvoiceCancelCommand extends BaseCommand
                 }
                  
                 $item->status =  \Invoice_eloquent::DELETED;
+                $item->deleted_at = date('Y-m-d H:i:s');
                 $item->save();
                 discord_log(sprintf('%s', json_encode($response->DescricaoErros, JSON_PRETTY_PRINT)) , 'Cancelamento de Nota Fiscal');
                
@@ -97,7 +98,7 @@ class InvoiceCancelCommand extends BaseCommand
 
             }
         }
-        $this->text('end cancel invoices');
+        // $this->text('end cancel invoices');
 
         return 0;
     }

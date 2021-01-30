@@ -290,10 +290,12 @@
                         $button.button('reset')
                         $formBillet.trigger('reset')
                         $("#listBilletModal .modal-body").html('');
+                        $formBillet.reset();
 
                     },
                     complete: function() {
                         $button.button('reset')
+                        loadBillet = false;
                     }
                 });
 

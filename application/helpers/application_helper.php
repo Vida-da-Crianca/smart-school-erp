@@ -44,6 +44,20 @@ if (!function_exists('discord_exception')) {
   }
 }
 
+if (!function_exists('discord_schedule_log')) {
+
+  function discord_schedule_log($message, $title = 'Shedule Logs')
+  {
+    if (!getenv('DISCORD_SCHEDULE_HOOK')) return;
+    (new DiscordMsg(
+      sprintf('**%s** %s``` %s ```', $title, PHP_EOL, $message), // message
+      getenv('DISCORD_SCHEDULE_HOOK'),
+      ''
+    ))->send();
+  }
+}
+
+
 
 if (!function_exists('only_numeric')) {
 
@@ -88,18 +102,19 @@ function getEditorVariables()
 
 
   $options =  (new Student_eloquent)->getTableColumns();
-  $only = ['email', 'guardian_name', 'state', 'city', 'firstname', 'lastname', 'guardian_occupation', "guardian_address",
-  "guardian_address_number",
-  "guardian_email",
-  "guardian_document",
-  "guardian_state",
-  "guardian_city",
-  "guardian_district",
-  "guardian_postal_code",
-  "guardian_postal_phone"
+  $only = [
+    'email', 'guardian_name', 'state', 'city', 'firstname', 'lastname', 'guardian_occupation', "guardian_address",
+    "guardian_address_number",
+    "guardian_email",
+    "guardian_document",
+    "guardian_state",
+    "guardian_city",
+    "guardian_district",
+    "guardian_postal_code",
+    "guardian_postal_phone"
 
-];
-  
+  ];
+
   $options = array_filter($options, function ($v) use ($only) {
     return in_array($v, $only);
   });

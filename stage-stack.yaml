@@ -49,7 +49,7 @@ services:
     command:
        - /bin/bash
        - -c 
-       - php man migrate -n && ./schedule-run.sh
+       - php man migrate -n && php man schedule:run
   app:
     image: $IMAGE_ID:$VERSION
     depends_on: 

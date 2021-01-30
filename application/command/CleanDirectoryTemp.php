@@ -37,7 +37,7 @@ class CleanDirectoryTemp extends BaseCommand
 
         $dateTime = new \DateTime();
         $second = Carbon::create($dateTime->format('Y'), $dateTime->format('m'), $dateTime->format('d'), 0, 0);
-        $first = Carbon::create($dateTime->format('Y'), $dateTime->format('m'), $dateTime->format('d'), 0, 20);
+        $first = Carbon::create($dateTime->format('Y'), $dateTime->format('m'), $dateTime->format('d'), 3, 0);
 
         $isValid = Carbon::create(
             $dateTime->format('Y'),

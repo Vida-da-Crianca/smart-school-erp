@@ -41,7 +41,7 @@ class BilletGenerateCommand extends BaseCommand
         $this->CI->load->library(['bank_payment_inter', 'mailer']);
         $this->CI->load->model(['eloquent/Billet_eloquent', 'eloquent/Email_setting_eloquent', 'eloquent/Invoice_eloquent']);
 
-
+     
         DB::beginTransaction();
 
         try {
@@ -116,7 +116,8 @@ class BilletGenerateCommand extends BaseCommand
 
                 $descriptions[] =  sprintf('%s - %s - R$ %s - Desc. R$ %s', $student->full_name, $first->title, number_format($first->amount, 2, ',', '.'), number_format($body->fee_discount, 2, ',', '.'));
             });
-
+            //   dump( $billet->mail_items);
+            // continue;
             if (count($billet->id) == 0 || !$student) {
 
                 discord_exception(
@@ -181,7 +182,7 @@ class BilletGenerateCommand extends BaseCommand
 
         $data = (object) [
             'name' => $student->guardian_name,
-            'email' => $student->guardian_email,
+            'email' => getenv('ENVIRONMENT') == 'development' ?  'contato@carlosocarvalho.com.br': $student->guardian_email,
             'id' => $options->billet->number,
             'link' => site_url('billet/live/' . $options->billet->number),
             'code' => $options->billet->barcode,

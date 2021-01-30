@@ -6,6 +6,7 @@ use Application\Command\AppImport;
 use Application\Command\CategoryExpenseMigration;
 use Application\Command\CleanDirectoryTemp;
 use Application\Command\ExpenseMigration;
+use Application\Command\InvoiceCheckOnBillet;
 use Application\Command\MailerTester;
 use Application\Command\OrderDiscount;
 use Application\Command\StaffMigration;
@@ -29,5 +30,6 @@ return [
     'expense_migration' => ExpenseMigration::class,
     'expense_category_migration' => CategoryExpenseMigration::class,
     'mailer_teste' => MailerTester::class,
-    'order_discount' => OrderDiscount::class
+    'order_discount' => OrderDiscount::class,
+    'invoice_check_billet' => InvoiceCheckOnBillet::class,
 ];

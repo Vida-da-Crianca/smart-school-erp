@@ -33,7 +33,8 @@ class Invoice_eloquent extends  Eloquent
         'user_id',
         'bullet_id',
         'due_date',
-        'latest_try_at'
+        'latest_try_at',
+        'description',
     ];
 
 
@@ -68,7 +69,9 @@ class Invoice_eloquent extends  Eloquent
                 return $q->where('invoice_number', '=', '')
                     ->orWhereNull('invoice_number');
             })
-            ->where('price', '>', '0');
+            ->where('price', '>', '0')
+            ->where('bullet_id' ,'>', 0)
+            ->orderBy('id','desc');
     }
 
     public function scopeForDelete($query)
