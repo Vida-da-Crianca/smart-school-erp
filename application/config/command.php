@@ -3,6 +3,7 @@
 //Register your commands
 
 use Application\Command\AppImport;
+use Application\Command\BilletOld;
 use Application\Command\CategoryExpenseMigration;
 use Application\Command\CleanDirectoryTemp;
 use Application\Command\ExpenseMigration;
@@ -32,4 +33,5 @@ return [
     'mailer_teste' => MailerTester::class,
     'order_discount' => OrderDiscount::class,
     'invoice_check_billet' => InvoiceCheckOnBillet::class,
+    'billet_old' => BilletOld::class,
 ];

@@ -393,35 +393,35 @@
 										</table>
 									</div>
 
+									<?php if ($code != null) : ?>
+										<div style="padding: 16px 25px; ">
 
+											<table id="customers">
+												<thead>
+													<tr>
+														<th>Código de Barras do Boleto</th>
+													</tr>
+												</thead>
+												<tbody>
+													<tr>
+														<td><?php echo $code; ?></td>
+													</tr>
+												</tbody>
+											</table>
+										</div>
+
+									<?php endif; ?>
 									<div style="padding: 16px 25px; ">
 
 										<table id="customers">
-											<thead>
-												<tr>
-													<th>Código de Barras do Boleto</th>
-												</tr>
-											</thead>
-											<tbody>
-												<tr>
-													<td><?php echo $code; ?></td>
-												</tr>
-											</tbody>
-										</table>
-									</div>
 
-
-									<div style="padding: 16px 25px; ">
-
-										<table id="customers">
-											
 											<tbody>
 
 												<tr>
 													<td>
-													<a href="<?php echo $link; ?>"> Link para visualizar o boleto aqui </a>	
+														<a href="<?php echo $link; ?>"> Link para visualizar o boleto aqui </a>
 													</td>
-													
+
 												</tr>
 
 											</tbody>
@@ -443,8 +443,8 @@
 									<table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
 										<tr>
 											<td style="text-align: left; padding-right: 10px;">
-												
-												<p>Atenciosamente,<br/> Departamento Financeiro</p>
+
+												<p>Atenciosamente,<br /> Departamento Financeiro</p>
 											</td>
 										</tr>
 									</table>

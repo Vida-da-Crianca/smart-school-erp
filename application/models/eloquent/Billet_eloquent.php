@@ -1,7 +1,6 @@
-<?php 
+<?php
 
-
-
+use Carbon\Carbon;
 use \Illuminate\Database\Eloquent\Model as Eloquent;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -67,5 +66,13 @@ class Billet_eloquent extends  Eloquent {
 
     public function getBodyJsonAttribute(){
         return json_decode($this->body);
+    }
+
+
+
+    public function scopeIsOld($query)
+    {
+        return $query->where('status', self::PAID_PENDING)
+             ->where('due_date','<=', Carbon::now()->subDay(3));
     }
 }

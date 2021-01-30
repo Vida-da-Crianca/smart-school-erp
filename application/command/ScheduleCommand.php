@@ -53,7 +53,8 @@ class ScheduleCommand extends BaseCommand
             'billet:paid' => 60 * 60,
             'billet:cancel' => 10 * (60),
             'clean:directory' => 2 * (60 * 60),
-            'invoice:billet-check' => 10 * 60
+            'invoice:billet-check' => 10 * 60,
+            'billet:old' => 60
 
         ];
         foreach ($comandList as $name => $interval) {

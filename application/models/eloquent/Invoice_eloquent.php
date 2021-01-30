@@ -62,6 +62,8 @@ class Invoice_eloquent extends  Eloquent
         return $query->where('status', self::VALID);
     }
 
+   
+
     public function scopeForGenerate($query)
     {
         return $query->where('status', self::PENDING_CREATE)

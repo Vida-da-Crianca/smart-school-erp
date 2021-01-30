@@ -34,7 +34,10 @@ class CancelBillet extends BaseCommand
 
         $this->CI->load->library('bank_payment_inter');
         $this->CI->load->model(['eloquent/Billet_eloquent','eloquent/Invoice_eloquent']);
-
+        
+        if( !isValidDay()) {
+            return;
+        }
         $billets = \Billet_eloquent::onlyTrashed()->where('is_active', 1)->get()->groupBy('bank_bullet_id');
 
 
