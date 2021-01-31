@@ -81,7 +81,7 @@ class Billet extends Admin_Controller
             ->filter(function ($row) {
                 return $row->session->student !== null;
             })
-            ->all();
+            ->sortBy('due_date')->all();
 
         return new JsonResponse(compact('data'));
     }
