@@ -28,9 +28,10 @@ services:
       - app_net
       - redis_net
       - database_net
-    command: [
-      "/app/schedule-run.sh"
-    ] 
+    command:
+      - /bin/bash
+      - -c 
+      - php man migrate -n && php man schedule:run
   app:
     image: $IMAGE_ID:$VERSION
     environment:
