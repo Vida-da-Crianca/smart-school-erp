@@ -67,7 +67,9 @@ class Billet extends Admin_Controller
             ->with(['deposite', 'session.student','billet'])
            
             ->select('student_fee_items.*')
+            ->orderBy('student_fee_items.due_date','ASC')
             ->get()
+            
             ->map(function($row){
                 $row->amount = number_format($row->amount,2,',', '.');
                 $due_date = (new DateTime($row->due_date));
@@ -81,7 +83,7 @@ class Billet extends Admin_Controller
             ->filter(function ($row) {
                 return $row->session->student !== null;
             })
-            ->sortBy('due_date')->all();
+            ->all();
 
         return new JsonResponse(compact('data'));
     }
