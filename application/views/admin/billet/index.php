@@ -189,18 +189,30 @@
                     </label>
                
                  </th>
-                 <th>Estudante</th>
+                 <th></th>
                  <th>Descricao</th>
                  <th>Vencimento</th>
-                 <th></th>
+                 <th>Valor</th>
                </tr>
              </thead>
              <tbody>`
             ]
-
+            var total = 0
             for (var i in data) {
-                var row = data[i]
+                var listOfItems = data[i]
+                
+                var user = listOfItems[0];
+                
                 table.push(`
+                   <tr class="">
+                    <th colspan="5" style="background-color: #f8f8f8;">
+                    Estudante : ${user.session.student.firstname} ${user.session.student.lastname}</td>
+                   </tr>
+                `)
+
+                for(let row of listOfItems){
+                    total += row.amount_raw;
+                    table.push(`
                    <tr class="${!row.is_valid ? 'text-danger': ''}">
                     <td >
                     
@@ -210,14 +222,29 @@
                         </label>
                    
                     </td>
-                    <td>${row.session.student.firstname} ${row.session.student.lastname}</td>
-                    <td>${row.title}</td>
+                    
+                    <td colspan="2">${row.title}</td>
                     <td>${row.due_date}</td>
-                    <td>${row.amount}</td>
+                    <td  style="text-align:right;">${row.amount}</td>
                    </tr>
                 `)
+                }
+                
+                
             }
-            table.push(`</tbody></table>`)
+            table.push(`
+                   </tbody>
+                   </tfoot>
+                   <tr>
+                    <th colspan="4" style="text-align:right;">
+                        Total
+                   
+                    </th>
+                  
+                    <th  style="text-align:right;">${accounting.formatNumber(total, 2, ".", ",")}</th>
+                   </tr></tfoot>
+                `)
+            table.push(`</table>`)
 
             var html = `
                 <div class="row">

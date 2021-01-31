@@ -52,6 +52,7 @@ class Billet extends Admin_Controller
         // $_POST['motive_id'] ='todos';
 
         $fee_item = new Student_fee_item_eloquent;
+        $total = 0;
         $data  =   $fee_item->whereBetween('due_date', [$dateStart, $dateEnd])
             ->where(function ($q) {
                
@@ -70,19 +71,23 @@ class Billet extends Admin_Controller
             ->orderBy('student_fee_items.due_date','ASC')
             ->get()
             
-            ->map(function($row){
-                $row->amount = number_format($row->amount,2,',', '.');
-                $due_date = (new DateTime($row->due_date));
-                $row->is_valid = $due_date > (new DateTime()) ;
-                $row->due_date =  $due_date->format('d/m/Y');
-                return $row;
-            })
+            
             ->filter(function ($row) {
                 return !$row->deposite  && $row->billet->count() == 0;
             })
             ->filter(function ($row) {
                 return $row->session->student !== null;
             })
+            ->map(function($row){
+                $row->amount_raw =  $row->amount;
+                $row->amount = number_format($row->amount,2,',', '.');
+                $due_date = (new DateTime($row->due_date));
+                $row->is_valid = $due_date > (new DateTime()) ;
+                $row->due_date =  $due_date->format('d/m/Y');
+              
+                return $row;
+            })
+            ->groupBy('user_id')
             ->all();
 
         return new JsonResponse(compact('data'));
