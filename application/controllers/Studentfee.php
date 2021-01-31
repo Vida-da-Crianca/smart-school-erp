@@ -422,7 +422,7 @@ class Studentfee extends Admin_Controller
         $data['student'] = $student;
         $this->load->model(['eloquent/Student_eloquent', 'eloquent/Student_fee_item_eloquent']);
         $student_due_fee = $this->studentfeemaster_model->getStudentFees2($id);
-      dump($student_due_fee);
+    //   dump($student_due_fee);
         // $dsd = Student_eloquent::where('id', $id)->with('fees')->get('id');
         $due_date = $this->input->get('due_date') ? $this->input->get('due_date') :  date('Y');
 
