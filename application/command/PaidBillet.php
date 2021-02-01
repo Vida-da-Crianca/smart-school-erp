@@ -44,11 +44,7 @@ class PaidBillet extends BaseCommand
 
             $dateStatus = new \DateTime(implode('-', array_reverse(explode('/', $dateTimeExplode[0]))));
 
-
-
             if ($b->situacao == 'PAGO') {
-
-
                 $row->update(['status' => \Billet_eloquent::PAID,
                 'received_at'=> $dateStatus->format('Y-m-d H:i:s'),
                 ]);
@@ -71,9 +67,7 @@ class PaidBillet extends BaseCommand
                         'inv_no' => 1,
                     ]])
                 ]);
-
                 $deposite->save();
-
                 \Invoice_eloquent::where([
                     'user_id' => $row->user_id,
                     'bullet_id' => $row->id
@@ -81,7 +75,6 @@ class PaidBillet extends BaseCommand
                     'student_fees_deposite_id' => $deposite->id,
                     'student_fees_deposite_id' => $deposite->id,
                 ]);
-                
             }
         }
 
