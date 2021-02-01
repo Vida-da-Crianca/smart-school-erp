@@ -62,12 +62,13 @@ class InvoiceCommand extends BaseCommand
         $invoices = \Invoice_eloquent::with(['student', 'billet',  'feeStudentDeposite.feeGroupType.feeGroup', 'feeStudentDeposite.feeItem'])
         ->forGenerate()
         ->orderBy('id','desc')
+        // ->limit(1)
         ->get();
 
         if ($invoices->count() == 0) return $this->success('Not exists invoices for create');
           
         $options = $settings->toArray();
-        $aliquota = str_replace([',','%'], ['.',''],$options['simple_rate']);
+        $aliquota = str_replace([',','%'], ['.',''],$options['iss']);
         $first = Carbon::now();
         $trys = [10, 15, 20, 25, 30];
 

@@ -11,6 +11,7 @@
  * Thanks!
  */
 
+date_default_timezone_set('America/Sao_Paulo');
 
 $cwd = getcwd();
 chdir(__DIR__);

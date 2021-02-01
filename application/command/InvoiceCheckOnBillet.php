@@ -40,15 +40,18 @@ class InvoiceCheckOnBillet extends BaseCommand
         // $second = Carbon::create($dateTime->format('Y'), $dateTime->format('m'), $dateTime->format('d'), 0, 0);
         // $first = Carbon::create($dateTime->format('Y'), $dateTime->format('m'), $dateTime->format('d'), 0, 20);
 
+    
+
         $this->CI->load->model(['eloquent/Billet_eloquent', 'eloquent/Invoice_eloquent']);
 
         $items = \Billet_eloquent::whereIn('status', [\Billet_eloquent::PAID_PENDING, \Billet_eloquent::PAID])
             ->whereNotNull('bank_bullet_id')
             ->with(['feeItems', 'student'])
-            ->whereBetween('created_at', [$dateTime->format('Y-m-01'),  Carbon::now()->addMonth(12)->endOfMonth(0)->format('Y-m-d')])
+            ->whereBetween('created_at', [$dateTime->format('Y-m-01 00:00:00'),  Carbon::now()->addMonth(12)->endOfMonth(0)->format('Y-m-d 23:59:59')])
             // ->groupBy('bank_bullet_id')
             ->get();
         // dump([Carbon::now()->format('Y-m-01'),  Carbon::now()->endOfMonth()->format('Y-m-d')]);
+        
 
         $data = $items->groupBy('bank_bullet_id');
         $ids = [];
@@ -72,9 +75,8 @@ class InvoiceCheckOnBillet extends BaseCommand
 
 
 
-        // dump($ids,  $billetsOnInvoice);
-
-
+        //  dump($ids,  $billetsOnInvoice);
+         
         $i = 0;
         foreach ($data as $listOfData) {
 
@@ -118,8 +120,7 @@ class InvoiceCheckOnBillet extends BaseCommand
                 'status' => \Invoice_eloquent::PENDING_CREATE
             ];
                
-            // dump($invoice);
-
+            
             \Invoice_eloquent::updateOrCreate(
                 ['bullet_id' => $order->first()->bullet_id],
                 $invoice
