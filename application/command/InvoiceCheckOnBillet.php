@@ -45,7 +45,7 @@ class InvoiceCheckOnBillet extends BaseCommand
         $items = \Billet_eloquent::whereIn('status', [\Billet_eloquent::PAID_PENDING, \Billet_eloquent::PAID])
             ->whereNotNull('bank_bullet_id')
             ->with(['feeItems', 'student'])
-            ->whereBetween('created_at', [$dateTime->format('Y-m-01'),  Carbon::now()->endOfMonth(12)->format('Y-m-d')])
+            ->whereBetween('created_at', [$dateTime->format('Y-m-01'),  Carbon::now()->addMonth(12)->endOfMonth(0)->format('Y-m-d')])
             // ->groupBy('bank_bullet_id')
             ->get();
         // dump([Carbon::now()->format('Y-m-01'),  Carbon::now()->endOfMonth()->format('Y-m-d')]);
