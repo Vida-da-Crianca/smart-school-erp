@@ -196,7 +196,7 @@ $language_name = $language["short_code"];
                                         <th align="left" class="text text-left"><?php $this->lang->line('due_date'); ?></th>
                                         <th align="left" class="text text-left"><?php echo $this->lang->line('status'); ?></th>
                                         <th class="text text-right"><?php echo $this->lang->line('amount') ?> <span><?php echo "(" . $currency_symbol . ")"; ?></span></th>
-                                        <th class="text text-left"><?php echo $this->lang->line('payment_id'); ?></th>
+                                        <!-- <th class="text text-left"><?php echo $this->lang->line('payment_id'); ?></th> -->
                                         <th class="text text-left"><?php echo $this->lang->line('mode'); ?></th>
                                         <th class="text text-left"><?php echo $this->lang->line('date'); ?></th>
                                         <th class="text text-right"><?php echo $this->lang->line('discount'); ?> <span><?php echo "(" . $currency_symbol . ")"; ?></span></th>
@@ -222,17 +222,19 @@ $language_name = $language["short_code"];
                                             $fee_paid = 0;
                                             $fee_discount = 0;
                                             $fee_fine = 0;
+                                            $feetype_balance = -1;
+                                            $description = $fee_value->name . " (" . $fee_value->type . ")";
 
-                                            if ($fee_value->billet->count() > 0) {
-                                                $fee_discount = $fee_value->billet->first()->body_json->fee_discount;
-                                            }
+                                            // if ($fee_value->billet->count() > 0) {
+                                            //     $fee_discount = $fee_value->billet->first()->body_json->fee_discount;
+                                            // }
                                             if ($fee_value->deposite) {
                                                 $fee_deposits = json_decode(($fee_value->deposite->amount_detail));
 
                                                 foreach ($fee_deposits as $fee_deposits_key => $fee_deposits_value) {
-                                                    $fee_paid = $fee_paid + $fee_deposits_value->amount;
-                                                    $fee_discount = $fee_discount + $fee_deposits_value->amount_discount;
-                                                    $fee_fine = $fee_fine + $fee_deposits_value->amount_fine;
+                                                    $fee_paid = $fee_paid + ($fee_deposits_value->amount - $fee_deposits_value->amount_discount) + $fee_deposits_value->amount_fine ;
+                                                    $fee_discount =  $fee_deposits_value->amount_discount;
+                                                    $fee_fine =  $fee_deposits_value->amount_fine;
                                                 }
                                             }
 
@@ -242,10 +244,10 @@ $language_name = $language["short_code"];
                                             $total_fine_amount = $total_fine_amount + $fee_fine;
                                             $feetype_balance = number_format($fee_value->amount, 2) - number_format(($fee_paid + $fee_discount), 2);
                                             $total_balance_amount = $total_balance_amount + $feetype_balance;
-                                            $description = $fee_value->name . " (" . $fee_value->type . ")";
+                                            // $description = $fee_value->name . " (" . $fee_value->type . ")";
 
                                             // dump([$fee_value->title, $fee_paid, $fee_discount, $fee_value->amount,  $fee_paid + $fee_discount, $feetype_balance]);
-
+                                         
                                     ?>
                                             <?php
                                             if ($feetype_balance > 0 && strtotime($fee_value->due_date) < strtotime(date('Y-m-d'))) {
@@ -289,7 +291,7 @@ $language_name = $language["short_code"];
                                                     if ($feetype_balance == 0) {
                                                     ?><span class="label label-success"><?php echo $this->lang->line('paid'); ?>
                                                         </span>
-                                                    <?php } else if (!empty($fee_value->amount_detail)) { ?>
+                                                    <?php } else if (!empty($fee_value->deposite)) { ?>
                                                         <span class="label label-warning">
                                                             <?php echo $this->lang->line('partial'); ?></span>
                                                     <?php

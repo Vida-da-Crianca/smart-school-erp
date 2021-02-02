@@ -42,14 +42,14 @@ class PaidBillet extends BaseCommand
             $totalBillet =  $row->sum('price');
 
             $b = $this->CI->bank_payment_inter->find($billet->bank_bullet_id);
-            
-            // if( $billet->id != 74) continue;
+
+            // if ($billet->id != 74) continue;
 
             // dump([$row->count(), $billet->id, $row->sum('price')]);
-            
+
             // continue;
             // $b->situacao = 'PAGO';
-            // $b->valorNominal =  $totalBillet + 20.00;
+            // $b->valorNominal =  $totalBillet - 100.00;
             $item =  $billet->feeItems()->first();
             $dateTimeExplode = explode(' ', $b->dataHoraSituacao);
 
@@ -57,44 +57,61 @@ class PaidBillet extends BaseCommand
 
 
             // continue;
-
+            
             if ($b->situacao == 'PAGO') {
                 $billet->update([
                     'status' => \Billet_eloquent::PAID,
                     'received_at' => $dateStatus->format('Y-m-d H:i:s'),
                 ]);
                 $body = $billet->body_json;
-                $deposite = new \Student_deposite_eloquent;
-                $discount = ($totalBillet - $b->valorNominal);
-                $fine = $b->valorNominal - $totalBillet;
-                $depositeArray =  [
-                    'fee_groups_feetype_id' => $item->feetype_id,
-                    'student_fees_master_id' => $billet->user_id,
-                    'student_fees_id' => $item->id,
-                    'created_at' => date('Y-m-d H:i:s'),
-                    'amount_detail' => json_encode(['1' => [
-
-                        'amount' => $totalBillet,
-                        'date' => date('Y-m-d'),
-                        'description' => 'Collected By: Sistema automatico',
-                        'amount_discount' => $discount > 0 ? $discount : 0,
-                        'amount_fine' => $fine >  0 ? $fine : 0,
-                        'payment_mode' => 'Billet',
-                        'received_by' => 'Banco Inter',
-                        'inv_no' => 1,
-                    ]])
-                ];
-
                 
-                $deposite->fill($depositeArray);
-                $deposite->save();
-                \Invoice_eloquent::where([
-                    'user_id' => $billet->user_id,
-                    'bullet_id' => $billet->id
-                ])->update([
-                    'student_fees_deposite_id' => $deposite->id,
-                    'student_fees_deposite_id' => $deposite->id,
-                ]);
+                $hasDiscount = $b->valorNominal - $totalBillet;
+                $discount =  $hasDiscount > 0 ? 0 : abs(($b->valorNominal / $totalBillet) - 1)  ;
+                $fine = $hasDiscount > 0  ? ( ($b->valorNominal - $totalBillet) / $totalBillet)  : 0  ;
+                // dump( $b->valorNominal);
+                // dump($fine);
+                // dump($discount);
+               
+               
+                $final =  0;
+                foreach ($row as $billetRow) {
+                    $deposite = new \Student_deposite_eloquent;
+                    $item =  $billetRow->feeItems()->first();
+                    $price = $item->amount;
+                    $ifine =  $fine >  0 ? $price * $fine : 0;
+                    $idiscount = $discount >  0 ? $price * $discount : 0;
+                    
+                    $final += ($price + $ifine) - $idiscount;
+                    
+                    $depositeArray =  [
+                        'fee_groups_feetype_id' => $item->feetype_id,
+                        'student_fees_master_id' => $billet->user_id,
+                        'student_fees_id' => $item->id,
+                        'created_at' => date('Y-m-d H:i:s'),
+                        'amount_detail' => json_encode(['1' => [
+
+                            'amount' => $price,
+                            'date' => date('Y-m-d'),
+                            'description' => 'Collected By: Sistema automatico',
+                            'amount_discount' => $idiscount,
+                            'amount_fine' => $ifine,
+                            'payment_mode' => 'Billet',
+                            'received_by' => 'Banco Inter',
+                            'inv_no' => 1,
+                        ]])
+                    ];
+                   
+                    // dump($depositeArray);
+                    $deposite->fill($depositeArray);
+                    $deposite->save();
+                //    ; dump($deposite->id);
+                    // \Invoice_eloquent::where('bank_bullet_id','=' , $billetRow->id )->update([
+                    //     'student_fees_deposite_id' => $billetRow->id,
+                    //     // 'student_fees_deposite_id' => $deposite->id,
+                    // ]);
+
+                }
+                // dump($final); 
             }
         }
 
