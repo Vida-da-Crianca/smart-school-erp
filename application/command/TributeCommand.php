@@ -59,7 +59,7 @@ class TributeCommand extends BaseCommand
 
         $dateTime->modify('-1 month');
         $now = $dateTime->format('Y-m-d');
-        $dateTime->modify('-12 month');
+        $dateTime->modify('-11 month');
         $total = \Invoice_resume_eloquent::whereBetween('due_date', [$dateTime->format('Y-m-01'), $now])
             ->sum('total');
         $tribute = null;
