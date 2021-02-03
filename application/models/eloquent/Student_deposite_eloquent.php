@@ -43,9 +43,26 @@ class Student_deposite_eloquent extends  Eloquent {
         return (object) json_decode($this->amount_detail, true)[1];
     }
 
+    // public function invoice(){
+    //     get_instance()->load->model('eloquent/Invoice_eloquent');
+    //     return $this->belongsTo('Invoice_eloquent','id', 'student_fees_deposite_id');
+    // }
+
+
     public function invoice(){
+        // get_instance()->load->model('eloquent/Student_fee_item_eloquent');
         get_instance()->load->model('eloquent/Invoice_eloquent');
-        return $this->belongsTo('Invoice_eloquent','id', 'student_fees_deposite_id');
+        return $this->belongsToMany(
+            'Invoice_eloquent',
+            'invoice_deposite',
+            'deposite_id',
+            'invoice_id',
+           
+           
+        );
     }
+
+
+
 
 }

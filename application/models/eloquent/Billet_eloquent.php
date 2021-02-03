@@ -62,6 +62,16 @@ class Billet_eloquent extends  Eloquent {
            
         );
     }
+
+    
+    public function invoices(){
+        get_instance()->load->model('eloquent/Invoice_eloquent');
+        return $this->hasMany(
+            'Invoice_eloquent',
+            'id',
+            'bullet_id'
+        );
+    }
     
 
     public function getBodyJsonAttribute(){

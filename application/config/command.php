@@ -6,6 +6,7 @@ use Application\Command\AppImport;
 use Application\Command\BilletOld;
 use Application\Command\CategoryExpenseMigration;
 use Application\Command\CleanDirectoryTemp;
+use Application\Command\DepositePaidBillet;
 use Application\Command\ExpenseMigration;
 use Application\Command\InvoiceCheckOnBillet;
 use Application\Command\MailerTester;
@@ -34,4 +35,5 @@ return [
     'order_discount' => OrderDiscount::class,
     'invoice_check_billet' => InvoiceCheckOnBillet::class,
     'billet_old' => BilletOld::class,
+    'deposite_billet' => DepositePaidBillet::class
 ];

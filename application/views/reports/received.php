@@ -150,7 +150,7 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                         1  => 'Com Nota',
                                         2  => 'Sem nota'
                                     ];
-                                    print(form_dropdown('invoioce_filter', $options_invoice_filter, $invoioce_filter, 'class="form-control" '));
+                                    print(form_dropdown('invoice_filter', $options_invoice_filter, $invoice_filter, 'class="form-control" '));
                                     ?>
                                     <!-- <select class="form-control" name="class_id">
 
@@ -183,7 +183,7 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                 $this->customlib->get_postmessage();
                                 ?>
                             </div>
-                            <table id="deposite_table" class="table table-striped table-bordered table-hover">
+                            <table id="deposite_table" class="table table-striped table-bordered table-hover display">
                                 <thead>
                                     <tr>
                                         <th><?php echo $this->lang->line('report_guardian_name'); ?></th>
@@ -207,12 +207,8 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                     $sum_discount = 0;
                                     $sum_fine = 0;
                                     $sum_total = 0;
-                                    if (empty($incomeList)) {
-                                    ?>
-
-                                        <?php
-                                    } else {
-                                        foreach ($incomeList as $item) {
+                                    if (!empty($incomeList)) :
+                                        foreach ($incomeList as $item) :
                                             $detail = $item->detail;
                                             $sum_amount += $item->feeItem->amount;
                                             $sum_discount += $detail->amount_discount;
@@ -221,25 +217,32 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                             $row_total = ($item->feeItem->amount - $detail->amount_discount) + $detail->amount_fine;
 
                                             // dump(isset($item->student->guardian_name) ? $item->student->guardian_name : $item->id);
-                                        ?>
+                                    ?>
 
                                             <tr>
 
                                                 <td align="left">
                                                     <?php
 
-                                                    printf('%s / %s', $item->student->guardian_name ?? $item->student->guardian_name, $item->student->fullname ?? $item->student->fullname);
+                                                    printf('%s / %s', $item->input->guardian_name ?? $item->input->guardian_name, isset($item->input->fullname)  ? $item->input->fullname : null);
                                                     ?>
                                                 </td>
                                                 <td>
-                                                    <?php print($item->invoice ?  $item->invoice->invoice_number : 'S/N'); ?>
+                                                    <?php
+
+                                                    // dump($item->invoice->first()->toArray());
+                                                    print($item->invoice->count() > 0 ?  $item->invoice->first()->invoice_number : 'S/N');
+
+                                                    ?>
                                                 </td>
 
                                                 <td>
-                                                    <?php print(isset($item->invoice->billet) ?  $item->invoice->billet->bank_bullet_id : 'S/N'); ?>
+                                                    <?php
+                                                    print($item->invoice->count() > 0  ?  $item->invoice->first()->billet->bank_bullet_id : 'S/N');
+                                                    ?>
                                                 </td>
 
-                                                <td>
+                                                <td style="width: 80px;">
                                                     <?php printf('%s %s', $currency_symbol, number_format($item->feeItem->amount, 2, ',', '.')); ?>
                                                 </td>
 
@@ -257,40 +260,30 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                                 <td>
                                                     <?php printf('%s %s', $currency_symbol, number_format($detail->amount_fine, 2, ',', '.')); ?>
                                                 </td>
-                                                <td>
-                                                    <?php printf('<strong class="%s">%s %s</strong>', $row_total < 0 ? 'amount_negative' : '', $currency_symbol,  number_format($row_total, 2, ',', '.')); ?>
+                                                <td style="width: 90px;">
+                                                    <small data-total="<?= $row_total ?>"> <?php printf('<strong class="%s">%s %s</strong>', $row_total < 0 ? 'amount_negative' : '', $currency_symbol,  number_format($row_total, 2, ',', '.')); ?></small>
                                                 </td>
 
                                             </tr>
-                                        <?php
-                                            $count++;
-                                        }
-                                        ?>
-
                                     <?php
-                                    }
+                                            $count++;
+                                        endforeach;
+                                    endif;
                                     ?>
                                 </tbody>
                                 <tfoot>
                                     <tr>
-                                        <td colspan="9"></td>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                        <th><strong>Totais</strong></th>
+                                        <th>R$ 0,00</th>
                                     </tr>
-                                    <tr class="box box-solid total-bg">
-                                        <td colspan="4" align="left"></td>
-                                        <td class="text-right"><?php echo $this->lang->line('grand_total'); ?></td>
-                                        <td class="text">
-                                            <?php echo ($currency_symbol . number_format($sum_amount, 2, ',', '.')); ?>
-                                        </td>
-                                        <td class="text">
-                                            <?php printf('%s %s', $currency_symbol, number_format($sum_discount, 2, ',', '.')); ?>
-                                        </td>
-                                        <td class="text">
-                                            <?php printf('%s %s', $currency_symbol, number_format($sum_fine, 2, ',', '.')); ?>
-                                        </td>
-                                        <td class="text text-right">
-                                            <?php printf('<span class="%s"> %s %s</span>', $sum_total < 0 ? 'amount_negative' : '',  $currency_symbol, number_format($sum_total, 2, ',', '.')); ?>
-                                        </td>
-                                    </tr>
+
                                 </tfoot>
                             </table>
                         </div>
@@ -380,38 +373,48 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                 var api = this.api(),
                     data;
 
-                console.log(data)
 
                 // Remove the formatting to get integer data for summation
-                // var intVal = function(i) {
-                //     return typeof i === 'string' ?
-                //         i.replace(/[\$,]/g, '') * 1 :
-                //         typeof i === 'number' ?
-                //         i : 0;
-                // };
+                var intVal = function(i) {
+                    return typeof i === 'string' ?
+                        i.replace(/[R\$,]/g, '') * 1 :
+                        typeof i === 'number' ?
+                        i : 0;
+                };
 
+                var sum = 0;
+                api
+                    .column(8)
+                    .data().map((a) => {
+                        sum += $(a).data('total')
+                    })
+                // console.log()
                 // // Total over all pages
-                // total = api
-                //     .column(4)
-                //     .data()
-                //     .reduce(function(a, b) {
-                //         return intVal(a) + intVal(b);
-                //     }, 0);
+                //     total = api
+                //         .column(8)
+                //         .data()
+                //         .reduce(function(a, b) {
+                //             console.log(a)
+                //             return intVal(a) + intVal(b);
+                //         }, 0);
+                // // console.log(total)
+                //     // // Total over this page
+                pageTotal = 0;
+                api
+                    .column(8, {
+                        page: 'current'
+                    })
+                    .data()
+                    .reduce(function(a, b) {
+                        return $(a).data('total') + $(b).data('total');
+                    }, 0);
 
-                // // Total over this page
-                // pageTotal = api
-                //     .column(4, {
-                //         page: 'current'
-                //     })
-                //     .data()
-                //     .reduce(function(a, b) {
-                //         return intVal(a) + intVal(b);
-                //     }, 0);
 
-                // // Update footer
-                // $(api.column(4).footer()).html(
-                //     '$' + pageTotal + ' ( $' + total + ' total)'
-                // );
+                //     // Update footer
+
+                $(api.column(8).footer()).html(
+                    `${accounting.formatMoney(sum, "R$ ", 2, ",", ".")}`
+                );
             }
         });
 

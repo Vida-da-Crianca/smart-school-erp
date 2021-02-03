@@ -1094,8 +1094,8 @@ class Report extends Admin_Controller
         $data['date_type'] = $this->customlib->date_type();
         $data['date_typeid'] = '';
         $data['class_id'] = $this->input->post('class_id');
-        $data['invoioce_filter'] = $this->input->post('invoioce_filter');
-        $this->load->model(['eloquent/Student_deposite_eloquent', 'eloquent/Student_classe']);
+        $data['invoice_filter'] = $this->input->post('invoice_filter');
+        $this->load->model(['eloquent/Student_deposite_eloquent', 'eloquent/Student_classe', 'eloquent/Student_session_eloquent']);
 
         $options = Student_classe::all()->pluck('class', 'id')->toArray();
 
@@ -1117,27 +1117,50 @@ class Report extends Admin_Controller
         $deposite = new Student_deposite_eloquent;
 
         if ($this->input->post('search_type') != '') {
-
             $opt = $deposite->whereBetween('student_fees_deposite.created_at', [sprintf('%s 00:00:00', $start_date), sprintf('%s 23:59:59', $end_date)])
-                ->with(['student.session', 'invoice.billet', 'feeItem']);
-            if ($this->input->post('class_id') != '')
+               
+                ->with(['student.session', 'invoice.billet', 'feeItem.session.student']);
+
+            if ($this->input->post('class_id') != '') {
                 $opt->join('students', 'students.id', '=', 'student_fees_deposite.student_fees_master_id')
                     ->join('student_session', 'students.id', '=', 'student_session.student_id')
                     ->join('student_fee_items', 'student_fee_items.id', '=', 'student_fees_deposite.student_fees_id')
-                    ->where('student_session.class_id', $this->input->post('class_id'))
+                    ->where('student_session.section_id', $this->input->post('class_id'))
                     ->select('student_fees_deposite.*');
+            }
 
-            $incomeList = $opt->orderBy('student_fees_deposite.created_at','ASC')->get()->filter(function ($row) {
-                $filter_invoice = $this->input->post('invoioce_filter');
-                if ($filter_invoice == 1 && $row->invoice)  return $row;
-                if ($filter_invoice == 2 && !$row->invoice)  return $row;
-                if (!$filter_invoice)  return $row;
+
+            $incomeList = $opt->orderBy('student_fees_deposite.created_at', 'ASC')->get()
+
+                ->filter(function ($row) {
+                    $filter_invoice = $this->input->post('invoice_filter');
+                    
+                    if ($filter_invoice == 1 && $row->invoice->count() > 0) {
+                        return $row;
+                    }
+                    if ($filter_invoice == 2 && $row->invoice->count() == 0) {
+                        return $row;
+                    }
+                    
+                    
+                    if (!$filter_invoice) {
+                        return $row;
+                    }
+
+                    
+                });
+
+            $data['incomeList'] = $incomeList->map(function ($row) {
+                $row->input =  $row->student;
+                if (!$row->student)
+                    $row->input = $row->feeItem->session->student;
+                return $row;
             });
-        }
+        } 
+         
 
-        // dump( $incomeList->toArray());
 
-        $data['incomeList'] = $incomeList;
+
         $this->load->view('layout/header', $data);
         $this->load->view('reports/received', $data);
         $this->load->view('layout/footer', $data);

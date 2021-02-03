@@ -55,6 +55,8 @@ class Student_fee_item_eloquent extends  Eloquent
         return $this->hasOne('Student_deposite_eloquent', 'student_fees_id',  'id');
     }
 
+    
+
 
     public function billet(){
         get_instance()->load->model('eloquent/Billet_eloquent');
