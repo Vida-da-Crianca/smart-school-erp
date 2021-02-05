@@ -1,4 +1,6 @@
 <script src="<?php echo base_url(); ?>backend/dist/js/moment.min.js"></script>
+
+
 <footer class="main-footer">
     &copy; <?php echo date('Y'); ?>
     <?php echo $this->customlib->getAppName(); ?>
@@ -26,6 +28,7 @@ $language_name = $language["short_code"];
 <script src="<?php echo base_url(); ?>backend/plugins/timepicker/bootstrap-timepicker.min.js"></script>
 <script src="<?php echo base_url(); ?>backend/plugins/slimScroll/jquery.slimscroll.min.js"></script>
 <script src="<?php echo base_url(); ?>backend/dist/js/jquery.mCustomScrollbar.concat.min.js"></script>
+<script src="<?php echo base_url(); ?>backend/js/notify.min.js"></script>
 <script type="text/javascript">
     $('body').tooltip({
         selector: '[data-toggle]',

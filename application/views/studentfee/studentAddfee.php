@@ -9,7 +9,8 @@ $language_name = $language["short_code"];
         <div class="col-md-12">
             <section class="content-header">
                 <h1>
-                    <i class="fa fa-money"></i> <?php echo $this->lang->line('fees_collection'); ?><small><?php echo $this->lang->line('student_fee'); ?></small></h1>
+                    <i class="fa fa-money"></i> <?php echo $this->lang->line('fees_collection'); ?><small><?php echo $this->lang->line('student_fee'); ?></small>
+                </h1>
             </section>
 
         </div>
@@ -232,7 +233,7 @@ $language_name = $language["short_code"];
                                                 $fee_deposits = json_decode(($fee_value->deposite->amount_detail));
 
                                                 foreach ($fee_deposits as $fee_deposits_key => $fee_deposits_value) {
-                                                    $fee_paid = $fee_paid + ($fee_deposits_value->amount - $fee_deposits_value->amount_discount) + $fee_deposits_value->amount_fine ;
+                                                    $fee_paid = $fee_paid + ($fee_deposits_value->amount - $fee_deposits_value->amount_discount) + $fee_deposits_value->amount_fine;
                                                     $fee_discount =  $fee_deposits_value->amount_discount;
                                                     $fee_fine =  $fee_deposits_value->amount_fine;
                                                 }
@@ -247,7 +248,7 @@ $language_name = $language["short_code"];
                                             // $description = $fee_value->name . " (" . $fee_value->type . ")";
 
                                             // dump([$fee_value->title, $fee_paid, $fee_discount, $fee_value->amount,  $fee_paid + $fee_discount, $feetype_balance]);
-                                         
+
                                     ?>
                                             <?php
                                             if ($feetype_balance > 0 && strtotime($fee_value->due_date) < strtotime(date('Y-m-d'))) {
@@ -609,7 +610,8 @@ $language_name = $language["short_code"];
                                         <div class="">
                                             <input type="text" class="form-control" id="amount_discount" value="0">
 
-                                            <span class="text-danger" id="amount_error"></span></div>
+                                            <span class="text-danger" id="amount_error"></span>
+                                        </div>
                                     </div>
                                     <div class="col-md-2 col-sm-2 ltextright">
 
@@ -819,9 +821,25 @@ $language_name = $language["short_code"];
 
 
 
+<div id="loadingModal" class="modal fade" style="z-index: 10000;">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-loader-body" style="
+                display: flex;
+                width: 100%;
+                margin: 0 15px;
+                justify-content: center;
+                align-items: center;
+                padding: 20px;
+             " data-loading="<i class='fa fa-spinner fa-spin '></i>  Aguarde estamos processando..."></div>
+        </div>
+
+    </div>
+</div>
+
 
 <div id="listBilletModal" class="modal fade">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-lg">
         <form method="POST" id="billet_fee_group">
             <div class="modal-content">
                 <div class="modal-header">
@@ -1083,6 +1101,11 @@ $language_name = $language["short_code"];
             keyboard: false,
             show: false
         });
+
+        function modalLoader() {
+            return $('#loadingModal')
+
+        }
 
         $('#confirm-delete').on('show.bs.modal', function(e) {
             $('.invoice_no', this).text("");
@@ -1411,19 +1434,19 @@ $language_name = $language["short_code"];
 <script type="text/javascript">
     $(document).ready(function() {
         accounting.settings = {
-                currency: {
-                    symbol : "R$ ",   // default currency symbol is '$'
-                    format: "%s%v", // controls output: %s = symbol, %v = value/number (can be object: see below)
-                    decimal : ",",  // decimal point separator
-                    thousand: ".",  // thousands separator
-                    precision : 2   // decimal places
-                },
-                number: {
-                    precision : 0,  // default precision on numbers is 0
-                    thousand: ",",
-                    decimal : "."
-                }
+            currency: {
+                symbol: "R$ ", // default currency symbol is '$'
+                format: "%s%v", // controls output: %s = symbol, %v = value/number (can be object: see below)
+                decimal: ",", // decimal point separator
+                thousand: ".", // thousands separator
+                precision: 2 // decimal places
+            },
+            number: {
+                precision: 0, // default precision on numbers is 0
+                thousand: ",",
+                decimal: "."
             }
+        }
 
 
 
@@ -1515,13 +1538,29 @@ $language_name = $language["short_code"];
             return getDaysExceptions().indexOf(moment().format('YYYY-MM-DD')) >= 0 || [6, 7].indexOf(Number(moment().format('E'))) >= 0
         }
 
+        function sortArray(
+            data,
+            key,
+            sort
+        ) {
+            return data.sort((a, b) => {
+
+                const keyA = a[key];
+                const keyB = b[key];
+                let comparison = 0;
+                if (keyA > keyB) comparison = sort ? 1 : -1;
+                if (keyA < keyB) comparison = sort ? -1 : 1;
+                return comparison;
+            });
+        }
+
         $(document).on('click', '.billetSelected', function() {
             var $this = $(this);
             var array_to_collect_fees = [],
                 listOfItemSelected = [];
 
 
-            var hasPaymentOld = [];
+            // var hasPaymentOld = [];
             // if( isNotDayUtil() ) {
             //     return alert('Essa operação só pode ser realizada em dias úteis.');
             // }
@@ -1529,6 +1568,8 @@ $language_name = $language["short_code"];
                 feeSessionGroupId,
                 feeMasterId;
 
+            var listOfBilletsGenerated = []
+            var listOfBilletOld = []
 
             $.each($("input[name='fee_checkbox']:checked"), function() {
                 var fee_session_group_id = $(this).data('fee_session_group_id');
@@ -1555,18 +1596,48 @@ $language_name = $language["short_code"];
                 item["fee_line_2"] = $(this).data('fee_line_2');
                 item["fee_date_payment"] = $(this).data('fee_date_payment');
                 item["fee_date_payment_old"] = $(this).data('fee_date_payment');
+
+
                 item["fee_fine"] = $(this).data('fee_fine');
+                var existBillet = $(this).data('fee_is_pdf');
+                if (existBillet !== 0) {
+                    listOfBilletsGenerated.push(item["fee_title"]);
+                }
+
 
 
                 var date = moment(item["fee_date_payment"]);
+                item["fee_date_payment_unix"] = date.unix()
                 var hasDateOld = moment().day(1).isBefore(date.format('YYYY-MM-DD'));
 
-                if (!hasDateOld) hasPaymentOld.push(fee_groups_feetype_id)
+                item['fee_billet_old'] = hasDateOld;
+
+                if (!hasDateOld) listOfBilletOld.push(fee_groups_feetype_id)
                 array_to_collect_fees.push(item);
 
             });
+            // console.log(listOfBilletsGenerated)
 
-            if (array_to_collect_fees.length == 0) return alert("Nenhum item foi selecionado");
+            if (listOfBilletsGenerated.length > 0) {
+
+                $.notify({
+                    // options
+                    title: '<b>Já existe boleto(s) criado(s) para o(s) lançamento</b><br/>',
+                    message: ` ${listOfBilletsGenerated.join('<br/>')}`
+                }, {
+                    // settings
+                    type: 'danger'
+                });
+                return;
+            }
+
+            if (array_to_collect_fees.length == 0) return $.notify({
+                // options
+                message: `É necessário selecionar o minimo de 1 item`
+            }, {
+                // settings
+                type: 'info'
+            });
             var html = `
                             <div class="row">
                             <div class="form-group">
@@ -1612,6 +1683,8 @@ $language_name = $language["short_code"];
                                      <table class="table table-bordered">
                                        <thead>
                                           <tr> 
+                                          <th>Código</th>
+                                          <th>Vencimento</th>
                                             <th>Descricao</th>
                                             <th>Valor</th>
                                             <th>Desconto</th>
@@ -1625,50 +1698,12 @@ $language_name = $language["short_code"];
 
                         `;
 
-
-            if (hasPaymentOld.length > 0) {
+            // console.log(listOfBilletOld)
+            if (listOfBilletOld.length > 0) {
                 $("#listBilletModal .modal-body").html(html);
                 setTimeout(function() {
                     array_to_collect_fees = buildListItemsWithDiscount(array_to_collect_fees);
                 }, 200)
-
-
-                // $.ajax({
-                //     type: "post",
-                //     url: '<?php echo site_url("studentfee/geBalanceFee") ?>',
-                //     dataType: 'JSON',
-                //     data: {
-                //         'fee_groups_feetype_id': feeGroupsFeetypeId,
-                //         'student_fees_master_id': $('[data-student_fees_master_id]').data('student_fees_master_id'),
-                //         'student_session_id': <?php echo $student['student_session_id'] ?>
-                //     },
-
-                //     success: function(data) {
-
-                //         if (data.status === "success") {
-                //             fee_amount = data.balance;
-
-                //             $('#amount').val(data.balance);
-                //             $('#amount_fine').val(data.remain_amount_fine);
-
-                //             var discount_group_dropdown;
-                //             $.each(data.discount_not_applied, function(i, obj) {
-                //                 discount_group_dropdown += "<option value=" + obj.student_fees_discount_id + " data-disamount=" + obj.amount + ">" + obj.code + "</option>";
-                //             });
-                //             $('#billet_discount_group').prop('disabled', false).append(discount_group_dropdown);
-
-                //             $('#billet_discount_group').change(function() {
-                //                 var discount = $(this).find('option:selected').data('disamount')
-
-                //                 array_to_collect_fees = buildListItemsWithDiscount(array_to_collect_fees, discount);
-                //             })
-
-
-                //         }
-                //     }
-                // })
-                
-
                 var $modal = $("#listBilletModal .modal-footer");
 
                 $("#listBilletModal .modal-body").html(html);
@@ -1707,7 +1742,7 @@ $language_name = $language["short_code"];
                     loading = true;
                     array_to_collect_fees.map(row => {
 
-                        if (hasPaymentOld.indexOf(row.fee_groups_feetype_id) >= 0) {
+                        if (listOfBilletOld.indexOf(row.fee_groups_feetype_id) >= 0) {
                             let datePay = ($('input[name="fee_date_payment_new"]').val().split(/\-|\//gi).reverse().join('-'));
                             row.fee_date_payment = datePay
                         }
@@ -1738,9 +1773,9 @@ $language_name = $language["short_code"];
         // console.log(getDaysExceptions());
         function getDiscount(amount) {
             var discount_option = $('[name="discount_option"]:checked').val()
-            var discount_value = Math.floor( String($('[name="discount_value"]').val()).replace('.','').replace(',','.').replace('%',''))
+            var discount_value = Math.floor(String($('[name="discount_value"]').val()).replace('.', '').replace(',', '.').replace('%', ''))
             if (discount_option == 1) {
-                return (discount_value / 100 ) * amount
+                return (discount_value / 100) * amount
             }
             return discount_value
         }
@@ -1748,11 +1783,13 @@ $language_name = $language["short_code"];
         function buildListItemsWithDiscount(items) {
             var collect_fees = [],
                 listOfItemSelected = [];
-            items.forEach(function(item) {
+            sortArray(items, 'fee_date_payment_unix', true).forEach(function(item) {
                 item["fee_discount"] = getDiscount(item["fee_amount"]);
                 collect_fees.push(item)
                 listOfItemSelected.push(`
-                               <tr>
+                               <tr class="${item['fee_billet_old'] === false ? 'text-danger': ''  }">
+                                  <td>${item["fee_master_id"]}</td>
+                                  <td>${moment(item["fee_date_payment"]).format('DD/MM/YYYY')}</td>
                                   <td>${item["fee_title"]}</td>
                                   <td  data-value="${item["fee_amount"]}" >${accounting.formatMoney(item["fee_amount"])}</td>
                                   <td data-value="${item["fee_discount"]}">${accounting.formatMoney(item["fee_discount"])}</td>
@@ -1768,6 +1805,13 @@ $language_name = $language["short_code"];
         }
 
         function createAllBillets(array_to_collect_fees, $this) {
+            var $LoaderModalBody = $('#loadingModal .modal-loader-body');
+            $LoaderModalBody.html($LoaderModalBody.data('loading'));
+            var $LoaderModal = $('#loadingModal').modal({
+                backdrop: 'static',
+                keyboard: false,
+                show: true
+            })
             $.ajax({
                 type: 'POST',
                 url: base_url + "studentfee/generateBillet",
@@ -1781,13 +1825,19 @@ $language_name = $language["short_code"];
                 },
                 success: function(data) {
 
-                    alert('Os boletos foram enviados para serem gerados com sucesso ')
+                    $LoaderModalBody.html('Os boletos foram enviados para serem gerados com sucesso ')
                     window.location.reload();
 
                 },
                 error: function(xhr) { // if error occured
-                    alert("Error occured.please try again");
-
+                    $.notify({
+                        // options
+                        message: `Tivemos um problema na conexão com o servidor, por favor recarregue essa página e tente novamente`
+                    }, {
+                        // settings
+                        type: 'danger'
+                    });
+                    $LoaderModal.modal('hide')
                 },
                 complete: function() {
                     $this.button('reset');
