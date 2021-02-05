@@ -38,18 +38,14 @@ class BilletOld extends BaseCommand
         $this->CI->load->library('bank_payment_inter');
         $this->CI->load->model(['eloquent/Billet_eloquent', 'eloquent/Invoice_eloquent']);
 
-        // if( !getUtilDay(Carbon::now()->format('Y-m-d'))) {
-        //        echo 'Day until';
-        //     return;
-        // }
         if( getenv('ENVIRONMENT') != 'development' && !isValidDay()) {
             return;
-        }
-       
+        }       
         if( getenv('ENVIRONMENT') != 'development' && Carbon::now()->format('H:i') != $this->hour_notification) return;
 
-        $billets = \Billet_eloquent::isOld()->with(['feeItems', 'student'])->get();
+        $billets = \Billet_eloquent::isOld()->with(['feeItems', 'student'])->limit(1)->get();
         foreach ($billets as $billet) {
+            // dump($billet->toArray());
             $this->handleSendMail($billet);
         }
 

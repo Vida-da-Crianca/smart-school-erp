@@ -83,6 +83,6 @@ class Billet_eloquent extends  Eloquent {
     public function scopeIsOld($query)
     {
         return $query->where('status', self::PAID_PENDING)
-             ->where('due_date','<=', Carbon::now()->subDay(3));
+             ->where('due_date','<=', Carbon::now()->subDay(2));
     }
 }
