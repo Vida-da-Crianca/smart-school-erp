@@ -1102,10 +1102,7 @@ $language_name = $language["short_code"];
             show: false
         });
 
-        function modalLoader() {
-            return $('#loadingModal')
-
-        }
+      
 
         $('#confirm-delete').on('show.bs.modal', function(e) {
             $('.invoice_no', this).text("");
@@ -1605,19 +1602,23 @@ $language_name = $language["short_code"];
                 }
 
 
-
                 var date = moment(item["fee_date_payment"]);
                 item["fee_date_payment_unix"] = date.unix()
-                var hasDateOld = moment().day(1).isBefore(date.format('YYYY-MM-DD'));
+
+                // console.log(date.format('YYYY-MM-DD' ), moment().format('YYYY-MM-DD' ))
+
+                // console.log(moment().diff(date, 'days'))
+                var hasDateOld = moment().diff(date, 'days') > 0;
 
                 item['fee_billet_old'] = hasDateOld;
 
-                if (!hasDateOld) listOfBilletOld.push(fee_groups_feetype_id)
+                if (hasDateOld) listOfBilletOld.push(fee_groups_feetype_id)
                 array_to_collect_fees.push(item);
 
             });
             // console.log(listOfBilletsGenerated)
-
+            // console.log(listOfBilletOld)
+            // return;
             if (listOfBilletsGenerated.length > 0) {
 
                 $.notify({
@@ -1787,7 +1788,7 @@ $language_name = $language["short_code"];
                 item["fee_discount"] = getDiscount(item["fee_amount"]);
                 collect_fees.push(item)
                 listOfItemSelected.push(`
-                               <tr class="${item['fee_billet_old'] === false ? 'text-danger': ''  }">
+                               <tr class="${item['fee_billet_old'] ===  true ? 'text-danger': ''  }">
                                   <td>${item["fee_master_id"]}</td>
                                   <td>${moment(item["fee_date_payment"]).format('DD/MM/YYYY')}</td>
                                   <td>${item["fee_title"]}</td>
