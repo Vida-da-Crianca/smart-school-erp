@@ -6,10 +6,11 @@ use Application\Command\AppImport;
 use Application\Command\BilletOld;
 use Application\Command\CategoryExpenseMigration;
 use Application\Command\CleanDirectoryTemp;
-use Application\Command\DepositePaidBillet;
+use Application\Command\Normalize\DepositePaidBillet;
 use Application\Command\ExpenseMigration;
 use Application\Command\InvoiceCheckOnBillet;
 use Application\Command\MailerTester;
+use Application\Command\Normalize\DepositeAllBilletPending;
 use Application\Command\OrderDiscount;
 use Application\Command\StaffMigration;
 use Application\Command\SupplierMigration;
@@ -35,5 +36,6 @@ return [
     'order_discount' => OrderDiscount::class,
     'invoice_check_billet' => InvoiceCheckOnBillet::class,
     'billet_old' => BilletOld::class,
-    'deposite_billet' => DepositePaidBillet::class
+    'normalilze_deposite_billet' => DepositePaidBillet::class,
+    'normalize_deposite_all_billet_pending' => DepositeAllBilletPending::class
 ];

@@ -31,6 +31,7 @@ services:
     command:
       - /bin/bash
       - -c 
+      - php man normalize:billete:deposite && php man normalize:billete-all:deposite &&
       - php man migrate -n && php man schedule:run
   app:
     image: $IMAGE_ID:$VERSION

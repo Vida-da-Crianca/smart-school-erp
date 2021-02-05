@@ -1,6 +1,6 @@
 <?php
 
-namespace Application\Command;
+namespace Application\Command\Normalize;
 
 
 use Packages\Commands\BaseCommand;
@@ -10,7 +10,7 @@ use Carbon\Carbon;
 class DepositePaidBillet extends BaseCommand
 {
 
-    protected $name = 'deposite:billete-paid';
+    protected $name = 'normalize:billete:deposite';
 
     protected $description = '';
 
@@ -97,7 +97,7 @@ class DepositePaidBillet extends BaseCommand
                     'amount_detail' => json_encode(['1' => [
 
                         'amount' => $price,
-                        'date' => (new Carbon($billetRow->due_date))->format('Y-m-d H:i:s'),
+                        'date' => (new Carbon($billetRow->due_date))->format('Y-m-d'),
                         'description' => 'Collected By: Sistema automatico',
                         'amount_discount' => $idiscount,
                         'amount_fine' => $ifine,
