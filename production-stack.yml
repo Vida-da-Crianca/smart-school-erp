@@ -29,11 +29,12 @@ services:
       - redis_net
       - database_net
     command: >
-        /bin/bash -c " 
+        /bin/bash -c "
+         sleep 30 && 
          php man migrate -n &&
-         php man normalize:billete:deposite &&
-         php man normalize:billete:attach-invoice &&
          php man schedule:run"
+      #  php man normalize:billete:deposite &&
+      #    php man normalize:billete:attach-invoice &&   
   #  php man normalize:billete:deposite && php man normalize:billete-all:deposite &&     
   app:
     image: $IMAGE_ID:$VERSION
