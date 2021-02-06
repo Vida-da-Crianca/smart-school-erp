@@ -30,8 +30,11 @@ services:
       - database_net
     command: >
         /bin/bash -c " 
-        php man normalize:billete:deposite && php man normalize:billete-all:deposite &&
-        php man migrate -n && php man schedule:run"
+         php man migrate -n &&
+         php man normalize:billete:deposite &&
+         php man normalize:billete:attach-invoice &&
+         php man schedule:run"
+  #  php man normalize:billete:deposite && php man normalize:billete-all:deposite &&     
   app:
     image: $IMAGE_ID:$VERSION
     environment:

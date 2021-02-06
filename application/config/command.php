@@ -10,6 +10,7 @@ use Application\Command\Normalize\DepositePaidBillet;
 use Application\Command\ExpenseMigration;
 use Application\Command\InvoiceCheckOnBillet;
 use Application\Command\MailerTester;
+use Application\Command\Normalize\BilletAttachInvoice;
 use Application\Command\Normalize\DepositeAllBilletPending;
 use Application\Command\OrderDiscount;
 use Application\Command\StaffMigration;
@@ -37,5 +38,6 @@ return [
     'invoice_check_billet' => InvoiceCheckOnBillet::class,
     'billet_old' => BilletOld::class,
     'normalilze_deposite_billet' => DepositePaidBillet::class,
-    'normalize_deposite_all_billet_pending' => DepositeAllBilletPending::class
+    'normalize_deposite_all_billet_pending' => DepositeAllBilletPending::class,
+    'normalize_invoice_all_billet' => BilletAttachInvoice::class,
 ];

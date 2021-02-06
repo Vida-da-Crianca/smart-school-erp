@@ -3,6 +3,12 @@
 
 defined('BASEPATH') or exit('No direct script access allowed');
 
+
+/**
+ * 
+ * FIXME:
+ *  deprecated column bullet_id in future release
+ */
 class Migration_Create_invoice extends CI_Migration
 {
 

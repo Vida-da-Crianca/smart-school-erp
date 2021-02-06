@@ -44,16 +44,6 @@ class DepositePaidBillet extends BaseCommand
             ::where('amount_detail', 'like', '%Billet%')
             ->delete();
 
-        // // dump($deposites->toArray());
-
-        // return;
-
-
-        // dump($billets->pluck('bank_bullet_id'));
-
-        // return;
-
-
         foreach ($billets->groupBy('bank_bullet_id') as $row) {
             $billet =  $row->first();
             $totalBillet =  $row->sum('price');
@@ -68,10 +58,10 @@ class DepositePaidBillet extends BaseCommand
 
             $dateStatus = new \DateTime(implode('-', array_reverse(explode('/', $dateTimeExplode[0]))));
 
-            $billet->update([
-                'status' => \Billet_eloquent::PAID,
-                'received_at' => $dateStatus->format('Y-m-d H:i:s'),
-            ]);
+            // $billet->update([
+            //     'status' => \Billet_eloquent::PAID,
+            //     'received_at' => $dateStatus->format('Y-m-d H:i:s'),
+            // ]);
             $body = $billet->body_json;
 
             $hasDiscount = $b->valorNominal - $totalBillet;
@@ -81,6 +71,7 @@ class DepositePaidBillet extends BaseCommand
             $final =  0;
             $i = 0;
             foreach ($row as $billetRow) {
+                // dump($billetRow->id);
                 $deposite = new \Student_deposite_eloquent;
                 $item = $billetRow->feeItems->first();
                 $price = $item->amount;
@@ -95,7 +86,6 @@ class DepositePaidBillet extends BaseCommand
                     'student_fees_id' => $item->id,
                     'created_at' => (new Carbon($billetRow->due_date))->format('Y-m-d H:i:s'),
                     'amount_detail' => json_encode(['1' => [
-
                         'amount' => $price,
                         'date' => (new Carbon($billetRow->due_date))->format('Y-m-d'),
                         'description' => 'Collected By: Sistema automatico',
@@ -113,7 +103,6 @@ class DepositePaidBillet extends BaseCommand
             }
             // dump($final); 
         }
-        // }
 
 
 
@@ -126,25 +115,34 @@ class DepositePaidBillet extends BaseCommand
         //     dump($row->pluck('id')->toArray(), $invoice->id);
         // }
 
-        \Student_deposite_eloquent::with(['feeItem.billet'])->get()->each(function ($deposite) {
+        \Student_deposite_eloquent::with(['feeItem.billet.invoices'])->get()->each(function ($deposite) {
             if (!$deposite->feeItem->billet) {
                 return;
-
-                //$invoice =  \Invoice_eloquent::whereIn('bullet_id', [$deposite->pluck('id')->toArray()])->first();
             }
 
             $billet = $deposite->feeItem->billet->pluck('id');
+
             if ($billet->count()  == 0) return;
-            $b =  $deposite->feeItem->billet->pluck('id')->toArray();
 
-            $invoice =  \Invoice_eloquent::withTrashed()->whereIn('bullet_id', $b)
-            ->where('status', 'VALIDA')
-            ->first();
-
-            if (!$invoice->id) return;
-
+            // $groupBy =  $deposite->feeItem->billet->groupBy('bank_bullet_id')->toArray();
+            if (!($deposite->feeItem->billet->first()->invoices)) return;
+            $invoice = $deposite->feeItem->billet->first()->invoices->first();
+            // dump($invoice->toArray());
             $deposite->invoice()->detach($invoice->id);
             $deposite->invoice()->attach($invoice->id);
+
+            // foreach()
+            // $invoice =  \Invoice_eloquent::withTrashed()->whereIn('bullet_id', $b)
+            // ->where('status', 'VALIDA')
+            // ->first();
+
+            // dump($invoice->invoice_number, $b);
+            return;
+
+            // if (!$invoice->id) return;
+
+            // $deposite->invoice()->detach($invoice->id);
+            // $deposite->invoice()->attach($invoice->id);
         });
         // try {
         //     echo "\nBaixando boleto\n";

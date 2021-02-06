@@ -101,8 +101,8 @@ class DepositeAllBilletPending extends BaseCommand
                     ];
 
                     // dump ( $depositeArray  );
-                    $deposite->fill($depositeArray);
-                    $deposite->save();
+                    // $deposite->fill($depositeArray);
+                    // $deposite->save();
                 }
             }
             // dump($final); 

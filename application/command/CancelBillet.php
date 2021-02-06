@@ -52,8 +52,6 @@ class CancelBillet extends BaseCommand
             $this->CI->bank_payment_inter->cancel(
                 ['number' => $row->bank_bullet_id, 'motive' => $row->status],
                 function ($status) use ($row) {
-
-                    //    dump($row->bank_bullet_id);
                     if ($status->success) {
                         \Billet_eloquent::onlyTrashed()
                             ->where('bank_bullet_id', $row->bank_bullet_id)
