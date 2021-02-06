@@ -1135,7 +1135,7 @@ class Report extends Admin_Controller
                 ->filter(function ($row) {
                     $filter_invoice = $this->input->post('invoice_filter');
                     
-                    if ($filter_invoice == 1 && $row->invoice->count() > 0) {
+                    if ($filter_invoice == 1 && $row->invoice->count() > 0  && $row->invoice->first()->invoice_number !=  null) {
                         return $row;
                     }
                     if ($filter_invoice == 2 && $row->invoice->count() == 0) {

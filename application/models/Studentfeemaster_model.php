@@ -712,11 +712,12 @@ class Studentfeemaster_model extends MY_Model
     {
         $CI = get_instance();
 
-        $CI->load->model(['eloquent/Invoice_eloquent', 'student_model']);
+        $CI->load->model(['eloquent/Invoice_eloquent', 'student_model', 'eloquent/Student_deposite_eloquent']);
 
-
-
-        Invoice_eloquent::updateOrCreate([
+       $deposite = Student_deposite_eloquent::where('id', '=',$student_fees_deposite_id )->first();
+       
+    //    die($deposite);
+        $invoice = Invoice_eloquent::updateOrCreate([
             'user_id' => $CI->input->post('user_id'),
             'student_fees_deposite_id' => $student_fees_deposite_id,
         ], [
@@ -725,6 +726,11 @@ class Studentfeemaster_model extends MY_Model
             'student_fees_deposite_id' => $student_fees_deposite_id,
             'due_date' => date('Y-m-d')
         ]);
+        $this->db->delete('invoice_deposite', ['deposite_id' => $student_fees_deposite_id, 'invoice_id' =>  $invoice->id]);
+        $this->db->insert('invoice_deposite', ['deposite_id' => $student_fees_deposite_id, 'invoice_id' =>  $invoice->id]);
+
+
+
     }
 
     public function findOnlineObjectById($array, $st_date, $ed_date)

@@ -231,14 +231,14 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                                     <?php
 
                                                     // dump($item->invoice->first()->toArray());
-                                                    print($item->invoice->count() > 0 ?  $item->invoice->first()->invoice_number : 'S/N');
+                                                    print($item->invoice->count() > 0 ?  (!$item->invoice->first()->invoice_number ? 'Processando nota...' : $item->invoice->first()->invoice_number) : 'S/N');
 
                                                     ?>
                                                 </td>
 
                                                 <td>
                                                     <?php
-                                                    print($item->invoice->count() > 0  ?  $item->invoice->first()->billet->bank_bullet_id : 'S/N');
+                                                    print($item->invoice->count() > 0  && isset($item->invoice->first()->billet->bank_bullet_id) ?  $item->invoice->first()->billet->bank_bullet_id : 'S/N');
                                                     ?>
                                                 </td>
 
