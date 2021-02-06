@@ -271,7 +271,7 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                 </li>
 
                                 <li class="pull-right">
-                                    <a style="cursor: pointer;" onclick="disable_student('<?php echo $student["id"] ?>')" class="text-red" data-toggle="tooltip" data-placement="bottom" title="<?php echo "Disable"; ?>">
+                                    <a style="cursor: pointer;" onclick="disable_student('<?php echo $student['id']; ?>')" class="text-red" data-toggle="tooltip" data-placement="bottom" title="<?php echo "Disable"; ?>">
                                         <i class="fa fa-thumbs-o-down"></i><?php //echo "Disable Student";        
                                                                             ?>
                                     </a>
@@ -703,8 +703,8 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
 
                                         <thead>
                                             <tr>
+                                            <th align="left"><?php echo $this->lang->line('fees_item_code'); ?></th>
                                                 <th><?php echo $this->lang->line('fees_group'); ?></th>
-                                                <th><?php echo $this->lang->line('fees_code'); ?></th>
                                                 <th class="text text-left"><?php echo $this->lang->line('due_date'); ?></th>
                                                 <th class="text text-left"><?php echo $this->lang->line('status'); ?></th>
                                                 <th class="text text-right"><?php echo $this->lang->line('amount'); ?> <span><?php echo "(" . $currency_symbol . ")"; ?></span></th>
@@ -737,8 +737,8 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                                     $alot_fee_discount = 0;
 
 
-                                                    if (!empty($fee_value->amount_detail)) {
-                                                        $fee_deposits = json_decode(($fee_value->amount_detail));
+                                                    if ($fee_value->deposite) {
+                                                        $fee_deposits = json_decode(($fee_value->deposite->amount_detail));
 
                                                         foreach ($fee_deposits as $fee_deposits_key => $fee_deposits_value) {
                                                             $fee_paid = $fee_paid + $fee_deposits_value->amount;
@@ -764,12 +764,18 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                                         <?php
                                                     }
                                                         ?>
-
+                                                        <td align="left">
+                                                            <?php
+                                                            echo $fee_value->id;
+                                                            if ($fee_value->billet->count() > 0) {
+                                                                echo '<br/><small class="text-success">' . $fee_value->billet->first()->bank_bullet_id . '</small>';
+                                                            }
+                                                            ?>
+                                                        </td>
 
                                                         <td><?php
-                                                            echo $fee_value->name;
+                                                            echo $fee_value->title;
                                                             ?></td>
-                                                        <td><?php echo $fee_value->code; ?></td>
                                                         <td class="text text-left">
 
                                                             <?php
@@ -786,10 +792,10 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                                             ?><span class="label label-success"><?php echo $this->lang->line('paid'); ?></span><?php
                                                                                                                                             } else if (!empty($fee_value->amount_detail)) {
                                                                                                                                                 ?><span class="label label-warning"><?php echo $this->lang->line('partial'); ?></span><?php
-                                                                                                                                                                                                                                        } else {
-                                                                                                                                                                                                                                            ?><span class="label label-danger"><?php echo $this->lang->line('unpaid'); ?></span><?php
-                                                                                                                                                                                                                                        }
-                                                                                                                                                                                                                                            ?>
+                                                                                                                                                                                                                                    } else {
+                                                                                                                                                                                                                                        ?><span class="label label-danger"><?php echo $this->lang->line('unpaid'); ?></span><?php
+                                                                                                                                                                                                                                                                                                                        }
+                                                                                                                                                                                                                                                                                                                            ?>
 
                                                         </td>
                                                         <td class="text text-right"><?php echo $fee_value->amount; ?></td>
@@ -977,11 +983,11 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                         </div>
                         <div class="tab-pane" id="documents_contract">
                             <div class="row  documents_contract_container">
-                                 <?php foreach($documents as $item): ?>
-                                <a target="_blank" class="action_main" href="<?=site_url(sprintf('/admin/documents/preview/%s/%s', $item->id, $user_id ))?>" data-id="<?=$item->id?>">
-                                    <i class="fa fa-print"></i>&nbsp;<?=$item->title?>
-                                 </a>
-                                
+                                <?php foreach ($documents as $item) : ?>
+                                    <a target="_blank" class="action_main" href="<?= site_url(sprintf('/admin/documents/preview/%s/%s', $item->id, $user_id)) ?>" data-id="<?= $item->id ?>">
+                                        <i class="fa fa-print"></i>&nbsp;<?= $item->title ?>
+                                    </a>
+
                                 <?php endforeach; ?>
                             </div>
                             <div>&nbsp;</div>
@@ -1787,8 +1793,8 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
 
     });
     $(document).ready(function(e) {
-       
-       
+
+
 
         $("#form1").on('submit', (function(e) {
 
@@ -1822,6 +1828,6 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
             });
 
         }));
-       
+
     });
 </script>

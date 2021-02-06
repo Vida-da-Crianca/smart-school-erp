@@ -150,6 +150,7 @@ class Student extends Admin_Controller
         if (!$this->rbac->hasPrivilege('student', 'can_view')) {
             access_denied();
         }
+        $this->load->model(['eloquent/Student_eloquent', 'eloquent/Student_fee_item_eloquent']);
 
         $data['title']         = 'Student Details';
         $student               = $this->student_model->get($id);
@@ -169,6 +170,15 @@ class Student extends Admin_Controller
         $student_due_fee              = $this->studentfeemaster_model->getStudentFees($student['student_session_id']);
         $student_discount_fee         = $this->feediscount_model->getStudentFeesDiscount($student['student_session_id']);
         $data['student_discount_fee'] = $student_discount_fee;
+
+
+        foreach ($student_due_fee as $row) {
+            $row->fees = Student_fee_item_eloquent::where('student_session_id', $row->student_session_id)
+                // ->whereYear('due_date', $due_date)
+                ->with(['deposite', 'billet'])
+                ->orderBy('due_date','ASC')
+                ->get();
+        }
         $data['student_due_fee']      = $student_due_fee;
         $siblings                     = $this->student_model->getMySiblings($student['parent_id'], $student['id']);
 
