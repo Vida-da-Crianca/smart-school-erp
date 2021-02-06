@@ -16,7 +16,8 @@
         "mikehaertl/phpwkhtmltopdf": "^2.4",
         "symfony/lock": "^5.2",
         "amphp/amp": "^2.5",
-        "amphp/process": "^1.1"
+        "amphp/process": "^1.1",
+        "tecnickcom/tcpdf": "^6.3"
         
     },
     "require-dev": {

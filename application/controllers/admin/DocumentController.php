@@ -157,7 +157,7 @@ class DocumentController extends Admin_Controller
         $parser = new Parser();
         $page =  $parser->parse_string($document->body, Student_eloquent::where('id', $user_id)->first()->toArray());
          $page = str_replace('figure','div',$page);
-        $page = preg_replace('/(<img\b[^>])/i', '$1 style="max-width:100% !important;" ', $page);
+        $page = preg_replace('/(<img\b[^>])/i', '$1 style="max-width:150px; !important;" ', $page);
         // $page = strip_tags($page, '<p><a><table><th><tbody><tr><td><thead><tfoot><img><strong><br><h1><h2><h3><h4><h5><h6><p><i><em><span>');
         $page = $this->load->view('parser/pdf', ['body' => $page], true);
         // die($page);
@@ -165,7 +165,7 @@ class DocumentController extends Admin_Controller
         // die($page);
         // $page = strip_tags($page, '<p><a><table><th><tbody><tr><td><thead><tfoot><img><strong><br><h1><h2><h3><h4><h5><h6><p><i><em><span>');
 
-      
+        
         $html2pdf = new Html2Pdf('P', 'A4', 'pt', true, 'UTF-8', 10);
         $html2pdf->writeHTML($page);
         $html2pdf->output();
