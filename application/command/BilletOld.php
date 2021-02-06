@@ -45,7 +45,7 @@ class BilletOld extends BaseCommand
 
         $billets = \Billet_eloquent::isOld()->with(['feeItems', 'student'])->limit(1)->get();
         foreach ($billets as $billet) {
-            // dump($billet->toArray());
+            
             $this->handleSendMail($billet);
         }
 

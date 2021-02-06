@@ -200,5 +200,5 @@ function isValidDay()
 {
   $date = Carbon::now()->format('Y-m-d');
   $dateW = Carbon::now()->endOfMonth();
-  return !in_array($date, getUtilDay($date, Carbon::now()->diffInDays($dateW)));
+  return in_array($date, getUtilDay($date, Carbon::now()->diffInDays($dateW)));
 }
