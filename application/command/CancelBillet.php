@@ -40,8 +40,6 @@ class CancelBillet extends BaseCommand
         }
 
 
-        dump('Ok.....');
-        return ;
         $billets = \Billet_eloquent::onlyTrashed()->where('is_active', 1)->get()->groupBy('bank_bullet_id');
 
 
