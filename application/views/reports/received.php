@@ -183,7 +183,7 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                 $this->customlib->get_postmessage();
                                 ?>
                             </div>
-                            <table id="deposite_table" class="table table-striped table-bordered table-hover display">
+                            <table id="deposite_table" class="table table-striped table-bordered table-hover display" data-page-length="<?= count($incomeList); ?>" style="max-width: 100%;">
                                 <thead>
                                     <tr>
                                         <th><?php echo $this->lang->line('report_guardian_name'); ?></th>
@@ -195,8 +195,6 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                         <th><?php echo $this->lang->line('report_fee_discount'); ?></th>
                                         <th><?php echo $this->lang->line('report_fee_fine'); ?></th>
                                         <th><?php echo $this->lang->line('report_fee_total'); ?></th>
-
-                                        <!-- <th class="text text-right"><?php echo $this->lang->line('amount'); ?> <span><?php echo "(" . $currency_symbol . ")"; ?></span></th> -->
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -220,7 +218,6 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                     ?>
 
                                             <tr>
-
                                                 <td align="left">
                                                     <?php
 
@@ -229,13 +226,9 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                                 </td>
                                                 <td>
                                                     <?php
-
-                                                    // dump($item->invoice->first()->toArray());
                                                     print($item->invoice->count() > 0 ?  (!$item->invoice->first()->invoice_number ? 'Processando nota...' : $item->invoice->first()->invoice_number) : 'S/N');
-
                                                     ?>
                                                 </td>
-
                                                 <td>
                                                     <?php
                                                     print($item->invoice->count() > 0  && isset($item->invoice->first()->billet->bank_bullet_id) ?  $item->invoice->first()->billet->bank_bullet_id : 'S/N');
@@ -243,7 +236,7 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                                 </td>
 
                                                 <td style="width: 80px;">
-                                                    <?php printf('%s %s', $currency_symbol, number_format($item->feeItem->amount, 2, ',', '.')); ?>
+                                                    <span data-value="<?= $item->feeItem->amount ?>"><?php printf('%s %s', $currency_symbol, number_format($item->feeItem->amount, 2, ',', '.')); ?></span>
                                                 </td>
 
                                                 <td>
@@ -255,11 +248,15 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                                 </td>
 
                                                 <td>
-                                                    <?php printf('%s %s', $currency_symbol, number_format($detail->amount_discount, 2, ',', '.')); ?>
+                                                    <span data-value="<?= $detail->amount_discount ?>"> <?php printf('%s %s', $currency_symbol, number_format($detail->amount_discount, 2, ',', '.')); ?></span>
+
                                                 </td>
                                                 <td>
-                                                    <?php printf('%s %s', $currency_symbol, number_format($detail->amount_fine, 2, ',', '.')); ?>
+                                                    <span data-value="<?= $detail->amount_fine ?>">
+                                                        <?php printf('%s %s', $currency_symbol, number_format($detail->amount_fine, 2, ',', '.')); ?>
                                                 </td>
+                                                </span>
+
                                                 <td style="width: 90px;">
                                                     <small data-total="<?= $row_total ?>"> <?php printf('<strong class="%s">%s %s</strong>', $row_total < 0 ? 'amount_negative' : '', $currency_symbol,  number_format($row_total, 2, ',', '.')); ?></small>
                                                 </td>
@@ -270,9 +267,21 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                         endforeach;
                                     endif;
                                     ?>
+
                                 </tbody>
                                 <tfoot>
-                                    <tr>
+                                    <!-- <tr>
+                                        <th><?php echo $this->lang->line('report_guardian_name'); ?></th>
+                                        <th><?php echo $this->lang->line('report_invoice_no'); ?></th>
+                                        <th><?php echo $this->lang->line('report_billet_no'); ?></th>
+                                        <th><?php echo $this->lang->line('report_amount'); ?></th>
+                                        <th><?php echo $this->lang->line('report_type_payment'); ?></th>
+                                        <th><?php echo $this->lang->line('report_fee_due_date'); ?></th>
+                                        <th><?php echo $this->lang->line('report_fee_discount'); ?></th>
+                                        <th><?php echo $this->lang->line('report_fee_fine'); ?></th>
+                                        <th><?php echo $this->lang->line('report_fee_total'); ?></th>
+                                    </tr> -->
+                                    <!-- <tr>
                                         <th></th>
                                         <th></th>
                                         <th></th>
@@ -282,11 +291,12 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                         <th></th>
                                         <th><strong>Totais</strong></th>
                                         <th>R$ 0,00</th>
-                                    </tr>
+                                    </tr> -->
 
                                 </tfoot>
                             </table>
                         </div>
+
                     </div>
                 </div>
             </div>
@@ -295,9 +305,17 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
 </section>
 </div>
 <!-- <script src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script> -->
+<link rel="stylesheet" href="//cdn.datatables.net/1.10.23/css/jquery.dataTables.min.css" />
+<script src="https://cdn.datatables.net/1.10.23/js/jquery.dataTables.min.js"></script>
 <script>
     $(document).ready(function($) {
-        $('#deposite_table').DataTable({
+        var $table = $('#deposite_table').DataTable({
+            // language: {
+            //     url: 'https://cdn.datatables.net/plug-ins/1.10.22/i18n/Portuguese-Brasil.json'
+            // },
+            ordering: false,
+            // paging: false,
+            // scrollY: 600,
             dom: "Bfrtip",
             buttons: [
 
@@ -369,54 +387,102 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                     postfixButtons: ['colvisRestore']
                 },
             ],
-            // "footerCallback": function(row, data, start, end, display) {
-            //     var api = this.api(),
-            //         data;
+            footerCallback: function(row, data, start, end, display) {
+                var api = this.api(),
+                    data;
 
 
-            //     // Remove the formatting to get integer data for summation
-            //     var intVal = function(i) {
-            //         return typeof i === 'string' ?
-            //             i.replace(/[R\$,]/g, '') * 1 :
-            //             typeof i === 'number' ?
-            //             i : 0;
-            //     };
+                // Remove the formatting to get integer data for summation
+                var intVal = function(i) {
+                    return typeof i === 'string' ?
+                        i.replace(/[R\$,]/g, '') * 1 :
+                        typeof i === 'number' ?
+                        i : 0;
+                };
 
-            //     var sum = 0;
-            //     api
-            //         .column(8)
-            //         .data().map((a) => {
-            //             sum += $(a).data('total')
-            //         })
-            //     // console.log()
-            //     // // Total over all pages
-            //     //     total = api
-            //     //         .column(8)
-            //     //         .data()
-            //     //         .reduce(function(a, b) {
-            //     //             console.log(a)
-            //     //             return intVal(a) + intVal(b);
-            //     //         }, 0);
-            //     // // console.log(total)
-            //     //     // // Total over this page
-            //     pageTotal = 0;
-            //     api
-            //         .column(8, {
-            //             page: 'current'
-            //         })
-            //         .data()
-            //         .reduce(function(a, b) {
-            //             return $(a).data('total') + $(b).data('total');
-            //         }, 0);
+                var sum = 0,
+                    totalForReceived = 0,
+                    totalDiscount = 0,
+                    totalFine = 0;
+                api
+                    .column(8, {
+                        page: 'current'
+                    })
+                    .data().map((a) => {
+                        sum += $(a).data('total')
+                    })
+                api
+                    .column(3, {
+                        page: 'current'
+                    })
+                    .data().map((a) => {
+                        // console.log($(a).data('value'))
+                        totalForReceived += Number($(a).data('value'))
+                    })
+                    api
+                    .column(7, {
+                        page: 'current'
+                    })
+                    .data().map((a) => {
+                        // console.log($(a).data('value'))
+                        totalFine += Number($(a).data('value'))
+                    })   
+
+                    api
+                    .column(6, {
+                        page: 'current'
+                    })
+                    .data().map((a) => {
+                        // console.log($(a).data('value'))
+                        totalDiscount += Number($(a).data('value'))
+                    })
+
+                // pageTotal = 0;
+                // api
+                //     .column(8, {
+                //         page: 'current'
+                //     })
+                //     .data()
+                //     .reduce(function(a, b) {
+                //         return $(a).data('total') + $(b).data('total');
+                //     }, 0);
 
 
-            //     //     // Update footer
+                //     // Update footer
 
-            //     $(api.column(8).footer()).html(
-            //         `${accounting.formatMoney(sum, "R$ ", 2, ",", ".")}`
-            //     );
-            // }
+                // $(api.column(8).footer()).html(
+                //     `${accounting.formatMoney(sum, "R$ ", 2, ",", ".")}`
+                // );
+                // $('.dataTables_wrapper table > foot').show()
+                // console.log('..old..')
+                var markupHTML = `<div class="row" id="row_total">
+                        <div class="col-xs-12">
+                            <div class="table-responsive" style="width:100%;">
+                                <table width="100%" class="table table-striped table-bordered table-hover display dataTable">
+                                    <tbody>
+                                        <tr class="odd">
+                                            <th colspan="2" style="width: 39%;">Total</th>
+                                            <th style="width: 90px; text-align: left;">${accounting.formatMoney(totalForReceived, "R$ ", 2, ",", ".")}</th>
+                                            <th colspan="1" style="width: 21.5%;"> &nbsp; </th>
+                                            <th style="width: 80px;">${accounting.formatMoney(totalDiscount, "R$ ", 2, ",", ".")}</th>
+                                            <th style="width: 80px;">${accounting.formatMoney(totalFine, "R$ ", 2, ",", ".")}</th>
+                                            <th style="width: 90px;">${accounting.formatMoney(sum, "R$ ", 2, ",", ".")}</th>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>`
+                $('.dataTables_wrapper #row_total').detach()
+                $(markupHTML).insertAfter('.dataTables_wrapper table#deposite_table')
+
+            }
         });
+
+        // $table.on('draw', function() {
+        //     console.log('..old..')
+
+        // })
 
     })
     // $('#deposite_table').DataTable();
