@@ -369,53 +369,53 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                     postfixButtons: ['colvisRestore']
                 },
             ],
-            "footerCallback": function(row, data, start, end, display) {
-                var api = this.api(),
-                    data;
+            // "footerCallback": function(row, data, start, end, display) {
+            //     var api = this.api(),
+            //         data;
 
 
-                // Remove the formatting to get integer data for summation
-                var intVal = function(i) {
-                    return typeof i === 'string' ?
-                        i.replace(/[R\$,]/g, '') * 1 :
-                        typeof i === 'number' ?
-                        i : 0;
-                };
+            //     // Remove the formatting to get integer data for summation
+            //     var intVal = function(i) {
+            //         return typeof i === 'string' ?
+            //             i.replace(/[R\$,]/g, '') * 1 :
+            //             typeof i === 'number' ?
+            //             i : 0;
+            //     };
 
-                var sum = 0;
-                api
-                    .column(8)
-                    .data().map((a) => {
-                        sum += $(a).data('total')
-                    })
-                // console.log()
-                // // Total over all pages
-                //     total = api
-                //         .column(8)
-                //         .data()
-                //         .reduce(function(a, b) {
-                //             console.log(a)
-                //             return intVal(a) + intVal(b);
-                //         }, 0);
-                // // console.log(total)
-                //     // // Total over this page
-                pageTotal = 0;
-                api
-                    .column(8, {
-                        page: 'current'
-                    })
-                    .data()
-                    .reduce(function(a, b) {
-                        return $(a).data('total') + $(b).data('total');
-                    }, 0);
+            //     var sum = 0;
+            //     api
+            //         .column(8)
+            //         .data().map((a) => {
+            //             sum += $(a).data('total')
+            //         })
+            //     // console.log()
+            //     // // Total over all pages
+            //     //     total = api
+            //     //         .column(8)
+            //     //         .data()
+            //     //         .reduce(function(a, b) {
+            //     //             console.log(a)
+            //     //             return intVal(a) + intVal(b);
+            //     //         }, 0);
+            //     // // console.log(total)
+            //     //     // // Total over this page
+            //     pageTotal = 0;
+            //     api
+            //         .column(8, {
+            //             page: 'current'
+            //         })
+            //         .data()
+            //         .reduce(function(a, b) {
+            //             return $(a).data('total') + $(b).data('total');
+            //         }, 0);
 
 
-                //     // Update footer
+            //     //     // Update footer
 
-                $(api.column(8).footer()).html(
-                    `${accounting.formatMoney(sum, "R$ ", 2, ",", ".")}`
-                );
-            }
+            //     $(api.column(8).footer()).html(
+            //         `${accounting.formatMoney(sum, "R$ ", 2, ",", ".")}`
+            //     );
+            // }
         });
 
     })

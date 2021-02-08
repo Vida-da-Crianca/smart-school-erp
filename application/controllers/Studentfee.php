@@ -906,8 +906,8 @@ class Studentfee extends Admin_Controller
     public function listBillet()
     {
         $this->load->library('bank_payment_inter');
-        $this->bank_payment_inter->cancel(['number' => '00635734066', 'motive' => 'ACERTOS'] , function(){});
-        $data = $this->bank_payment_inter->find('00635734066');
+        // $this->bank_payment_inter->cancel(['number' => '00635734066', 'motive' => 'ACERTOS'] , function(){});
+        $data = $this->bank_payment_inter->find('00639157132');
 
         return new JsonResponse(compact('data'));
     }

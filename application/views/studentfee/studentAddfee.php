@@ -234,8 +234,8 @@ $language_name = $language["short_code"];
 
                                                 foreach ($fee_deposits as $fee_deposits_key => $fee_deposits_value) {
                                                     $fee_paid = $fee_paid + ($fee_deposits_value->amount - $fee_deposits_value->amount_discount) + $fee_deposits_value->amount_fine;
-                                                    $fee_discount =  $fee_deposits_value->amount_discount;
-                                                    $fee_fine =  $fee_deposits_value->amount_fine;
+                                                    $fee_discount +=  $fee_deposits_value->amount_discount;
+                                                    $fee_fine +=  $fee_deposits_value->amount_fine;
                                                 }
                                             }
 
@@ -243,7 +243,7 @@ $language_name = $language["short_code"];
                                             $total_discount_amount = $total_discount_amount + $fee_discount;
                                             $total_deposite_amount = $total_deposite_amount + $fee_paid;
                                             $total_fine_amount = $total_fine_amount + $fee_fine;
-                                            $feetype_balance = number_format($fee_value->amount, 2) - number_format(($fee_paid + $fee_discount), 2);
+                                            $feetype_balance = number_format($fee_value->amount, 2) - number_format(($fee_paid + $fee_discount), 2) + $fee_fine;
                                             $total_balance_amount = $total_balance_amount + $feetype_balance;
                                             // $description = $fee_value->name . " (" . $fee_value->type . ")";
 
@@ -288,7 +288,7 @@ $language_name = $language["short_code"];
                                                 </td>
                                                 <td align="left" class="text text-left width85">
                                                     <?php
-
+                                                   
                                                     if ($feetype_balance == 0) {
                                                     ?><span class="label label-success"><?php echo $this->lang->line('paid'); ?>
                                                         </span>

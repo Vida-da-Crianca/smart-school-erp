@@ -12,7 +12,7 @@ class DepositePaidBillet extends BaseCommand
 
     protected $name = 'normalize:billete:deposite';
 
-    protected $description = '';
+    protected $description = 'Normaliza all deposites the billets paid';
 
     protected $CI;
 
@@ -44,6 +44,8 @@ class DepositePaidBillet extends BaseCommand
             ::where('amount_detail', 'like', '%Billet%')
             ->delete();
 
+            // return;
+
         foreach ($billets->groupBy('bank_bullet_id') as $row) {
             $billet =  $row->first();
             $totalBillet =  $row->sum('price');
@@ -64,9 +66,10 @@ class DepositePaidBillet extends BaseCommand
             // ]);
             $body = $billet->body_json;
 
-            $hasDiscount = $b->valorNominal - $totalBillet;
-            $discount =  $hasDiscount > 0 ? 0 : abs(($b->valorNominal / $totalBillet) - 1);
-            $fine = $hasDiscount > 0  ? (($b->valorNominal - $totalBillet) / $totalBillet)  : 0;
+            $totalReceivced = $b->valorTotalRecebimento;
+            $hasDiscount = $totalReceivced - $totalBillet;
+            $discount =  $hasDiscount > 0 ? 0 : abs(($totalReceivced / $totalBillet) - 1)  ;
+            $fine = $hasDiscount > 0  ? ( ($totalReceivced - $totalBillet) / $totalBillet)  : 0  ;
 
             $final =  0;
             $i = 0;
@@ -84,10 +87,10 @@ class DepositePaidBillet extends BaseCommand
                     'fee_groups_feetype_id' => $item->feetype_id,
                     'student_fees_master_id' => $billet->user_id,
                     'student_fees_id' => $item->id,
-                    'created_at' => (new Carbon($billetRow->due_date))->format('Y-m-d H:i:s'),
+                    'created_at' => $dateStatus->format('Y-m-d H:i:s'),
                     'amount_detail' => json_encode(['1' => [
                         'amount' => $price,
-                        'date' => (new Carbon($billetRow->due_date))->format('Y-m-d'),
+                        'date' => $dateStatus->format('Y-m-d'),
                         'description' => 'Collected By: Sistema automatico',
                         'amount_discount' => $idiscount,
                         'amount_fine' => $ifine,

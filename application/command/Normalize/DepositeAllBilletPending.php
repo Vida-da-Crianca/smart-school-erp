@@ -35,15 +35,12 @@ class DepositeAllBilletPending extends BaseCommand
         $this->CI->load->library('bank_payment_inter');
         $this->CI->load->model(['eloquent/Billet_eloquent',  'eloquent/Invoice_eloquent', 'eloquent/Student_deposite_eloquent']);
 
-        $billets = \Billet_eloquent::with(['feeItems'])->where('status', \Billet_eloquent::PAID_PENDING)
+        $billets = \Billet_eloquent::with(['feeItems'])->whereIn('status', [ \Billet_eloquent::PAID])
             ->orderBy('due_date', 'ASC')
             // ->whereBetween('due_date', ['2021-01-01', '2021-01-31'])
             ->get();
 
-        // \Student_deposite_eloquent
-        //     ::where('amount_detail', 'like', '%Billet%')
-        //     ->delete();
-
+        
 
 
 
@@ -58,19 +55,20 @@ class DepositeAllBilletPending extends BaseCommand
             $item =  $billet->feeItems()->first();
             $itemsId = $billet->feeItems()->pluck('id')->toArray();
             $dateTimeExplode = explode(' ', $b->dataHoraSituacao);
-
+            if($billet->bank_bullet_id !== '00639157132') continue;
             $dateStatus = new \DateTime(implode('-', array_reverse(explode('/', $dateTimeExplode[0]))));
             if ($b->situacao == 'PAGO') {
-                $billet->update([
-                    'status' => \Billet_eloquent::PAID,
-                    'received_at' => $dateStatus->format('Y-m-d H:i:s'),
-                ]);
+                // $billet->update([
+                //     'status' => \Billet_eloquent::PAID,
+                //     'received_at' => $dateStatus->format('Y-m-d H:i:s'),
+                // ]);
                 $body = $billet->body_json;
-
-                $hasDiscount = $b->valorNominal - $totalBillet;
-                $discount =  $hasDiscount > 0 ? 0 : abs(($b->valorNominal / $totalBillet) - 1);
-                $fine = $hasDiscount > 0  ? (($b->valorNominal - $totalBillet) / $totalBillet)  : 0;
-
+                
+                $totalReceivced = $b->valorTotalRecebimento;
+                $hasDiscount = $totalReceivced - $totalBillet;
+                $discount =  $hasDiscount > 0 ? 0 : abs(($totalReceivced / $totalBillet) - 1)  ;
+                $fine = $hasDiscount > 0  ? ( ($totalReceivced - $totalBillet) / $totalBillet)  : 0  ;
+                
                 $final =  0;
                 $i = 0;
                 foreach ($row as $billetRow) {
@@ -100,7 +98,7 @@ class DepositeAllBilletPending extends BaseCommand
                         ]])
                     ];
 
-                    // dump ( $depositeArray  );
+                    dump ( $depositeArray  );
                     // $deposite->fill($depositeArray);
                     // $deposite->save();
                 }
