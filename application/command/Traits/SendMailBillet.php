@@ -56,7 +56,7 @@ trait SendMailBillet
 
 
         $content = $this->CI->load->view('mailer/billet.tpl.php', $options,  TRUE);
-        $status = $this->CI->mailer->send_mail( getenv('ENVIRONMENT') == 'development' ?  'contato@carlosocarvalho.com.br' : $billet->studend->guardian_email, 'Envio de boletos', $content /**/);
+        $status = $this->CI->mailer->send_mail( getenv('ENVIRONMENT') == 'development' ?  'contato@carlosocarvalho.com.br' : $billet->student->guardian_email, 'Envio de boletos', $content /**/);
 
         $callable(['status' => $status, 'data' =>  $options]);
     }
