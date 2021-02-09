@@ -37,7 +37,9 @@ class BilletOld extends BaseCommand
 
         $this->CI->load->library('bank_payment_inter');
         $this->CI->load->model(['eloquent/Billet_eloquent', 'eloquent/Invoice_eloquent']);
+       
 
+     
         if (getenv('ENVIRONMENT') != 'development' && !isValidDay()) {
             return;
         }

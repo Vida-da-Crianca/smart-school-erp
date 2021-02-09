@@ -150,8 +150,8 @@ function getListaDiasFeriado($ano = null)
     mktime(0, 0, 0, 12, 25, $ano), // Natal
     //
     // Feriados variaveis
-    mktime(0, 0, 0, $mesPacoa, $diaPascoa - 48, $anoPascoa), // 2º feria Carnaval
-    mktime(0, 0, 0, $mesPacoa, $diaPascoa - 47, $anoPascoa), // 3º feria Carnaval 
+    // mktime(0, 0, 0, $mesPacoa, $diaPascoa - 48, $anoPascoa), // 2º feria Carnaval
+    // mktime(0, 0, 0, $mesPacoa, $diaPascoa - 47, $anoPascoa), // 3º feria Carnaval 
     mktime(0, 0, 0, $mesPacoa, $diaPascoa - 2, $anoPascoa),  // 6º feira Santa  
     mktime(0, 0, 0, $mesPacoa, $diaPascoa, $anoPascoa),      // Pascoa
     mktime(0, 0, 0, $mesPacoa, $diaPascoa + 60, $anoPascoa), // Corpus Christ
@@ -180,12 +180,13 @@ function isFeriado($data)
 
 function getUtilDay($aPartirDe, $quantidadeDeDias = 30)
 {
-  $dateTime = new \DateTime($aPartirDe);
+ 
   $listaDiasUteis = [];
   $contador = 0;
   // dump($quantidadeDeDias );
   while ($contador < $quantidadeDeDias) {
-    $dateTime->modify('+1 day'); // adiciona um dia pulando finais de semana
+    $dateTime = new \DateTime($aPartirDe);
+    $dateTime->modify('+'.$contador.' day'); // adiciona um dia pulando finais de semana
     $data = $dateTime->format('Y-m-d');
     if (!in_array($data, getListaDiasFeriado())) {
       $listaDiasUteis[] = $data;
@@ -200,5 +201,6 @@ function isValidDay()
 {
   $date = Carbon::now()->format('Y-m-d');
   $dateW = Carbon::now()->endOfMonth();
+  // dump($date);
   return in_array($date, getUtilDay($date, Carbon::now()->diffInDays($dateW)));
 }
