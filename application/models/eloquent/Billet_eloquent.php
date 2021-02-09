@@ -80,6 +80,7 @@ class Billet_eloquent extends  Eloquent {
             'invoice_billet',
             'billet_id',
             'invoice_id',
+            'sended_mail_at'
         );
     }
 
