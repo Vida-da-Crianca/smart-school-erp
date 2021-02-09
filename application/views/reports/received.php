@@ -267,7 +267,16 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                         endforeach;
                                     endif;
                                     ?>
-
+                                   <!-- <tr class="row-total odd" style="font-weight: 600;">
+                                     <td colspan="3">Total</td>
+                                     
+                                     
+                                     <td>R$ 0,00</td>
+                                     <td colspan="2"> &nbsp; </td>
+                                     <td>R$ 0,00 </td>
+                                     <td>R$ 0,00</td>
+                                     <td class="row-">R$ 0,00</td>
+                                   </tr> -->
                                 </tbody>
                                 <tfoot>
                                     <!-- <tr>
@@ -314,7 +323,8 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
             //     url: 'https://cdn.datatables.net/plug-ins/1.10.22/i18n/Portuguese-Brasil.json'
             // },
             ordering: false,
-            // paging: false,
+            paging: false,
+            info: false,
             // scrollY: 600,
             dom: "Bfrtip",
             buttons: [
@@ -408,31 +418,47 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                     .column(8, {
                         page: 'current'
                     })
-                    .data().map((a) => {
+                    .data()
+                    .filter((a,k)=> {
+                        return  k < end
+                    })
+                    .map((a) => {
                         sum += $(a).data('total')
                     })
                 api
                     .column(3, {
                         page: 'current'
                     })
-                    .data().map((a) => {
+                    .data()
+                    .filter((a,k)=> {
+                        return  k < end
+                    })
+                    .map((a) => {
                         // console.log($(a).data('value'))
                         totalForReceived += Number($(a).data('value'))
                     })
-                    api
+                api
                     .column(7, {
                         page: 'current'
                     })
-                    .data().map((a) => {
+                    .data()
+                    .filter((a,k)=> {
+                        return  k < end
+                    })
+                    .map((a) => {
                         // console.log($(a).data('value'))
                         totalFine += Number($(a).data('value'))
-                    })   
+                    })
 
-                    api
+                api
                     .column(6, {
                         page: 'current'
                     })
-                    .data().map((a) => {
+                    .data()
+                    .filter((a,k)=> {
+                        return  k < end
+                    })
+                    .map((a) => {
                         // console.log($(a).data('value'))
                         totalDiscount += Number($(a).data('value'))
                     })
@@ -455,26 +481,26 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                 // );
                 // $('.dataTables_wrapper table > foot').show()
                 // console.log('..old..')
-                var markupHTML = `<div class="row" id="row_total">
-                        <div class="col-xs-12">
-                            <div class="table-responsive" style="width:100%;">
-                                <table width="100%" class="table table-striped table-bordered table-hover display dataTable">
-                                    <tbody>
-                                        <tr class="odd">
-                                            <th colspan="2" style="width: 39%;">Total</th>
-                                            <th style="width: 90px; text-align: left;">${accounting.formatMoney(totalForReceived, "R$ ", 2, ",", ".")}</th>
-                                            <th colspan="1" style="width: 21.5%;"> &nbsp; </th>
-                                            <th style="width: 80px;">${accounting.formatMoney(totalDiscount, "R$ ", 2, ",", ".")}</th>
-                                            <th style="width: 80px;">${accounting.formatMoney(totalFine, "R$ ", 2, ",", ".")}</th>
-                                            <th style="width: 90px;">${accounting.formatMoney(sum, "R$ ", 2, ",", ".")}</th>
+                var markupHTML = `
+                        
+                             
+                                        <tr id="row_total" class="odd" role="row">
+                                            <td colspan="3" >Total</td>
+                                            <td style="text-align: left;">${accounting.formatMoney(totalForReceived, "R$ ", 2, ",", ".")}</td>
+                                            <td colspan="1" style="width: 21.5%;"> &nbsp; </td>
+                                            <td style="width: 80px;">${accounting.formatMoney(totalDiscount, "R$ ", 2, ",", ".")}</td>
+                                            <td style="width: 80px;">${accounting.formatMoney(totalFine, "R$ ", 2, ",", ".")}</td>
+                                            <td style="width: 90px;">${accounting.formatMoney(sum, "R$ ", 2, ",", ".")}</td>
                                         </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>`
-                $('.dataTables_wrapper #row_total').detach()
-                $(markupHTML).insertAfter('.dataTables_wrapper table#deposite_table')
+                                
+                           `
+                // $('.dataTables_wrapper').removeClass('no-footer')
+                // $('.dataTables_wrapper table#deposite_table').removeClass('no-footer')
+                // console.log('foot...', end)
+                // $('.row-total td').get(-1).html(accounting.formatMoney(sum, "R$ ", 2, ",", "."))
+                // $('.dataTables_wrapper #row_total').detach()
+                // $('.dataTables_wrapper table#deposite_table tbody').append(markupHTML);
+                // $(markupHTML).insertAfter('.dataTables_wrapper table#deposite_table')
 
             }
         });

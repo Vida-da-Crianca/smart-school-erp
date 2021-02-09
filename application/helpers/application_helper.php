@@ -58,6 +58,19 @@ if (!function_exists('discord_schedule_log')) {
   }
 }
 
+if (!function_exists('discord_billet_old')) {
+
+  function discord_billet_old($message, $title = 'Cobrança recorrente')
+  {
+    if (!getenv('DISCORD_BILLET_OLD_HOOK')) return;
+    (new DiscordMsg(
+      sprintf('**%s** %s``` %s ```', $title, PHP_EOL, $message), // message
+      getenv('DISCORD_BILLET_OLD_HOOK'),
+      ''
+    ))->send();
+  }
+}
+
 
 
 if (!function_exists('only_numeric')) {

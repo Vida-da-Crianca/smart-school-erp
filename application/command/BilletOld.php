@@ -54,9 +54,17 @@ class BilletOld extends BaseCommand
             ->with(['feeItems', 'student'])->get();
         // dump($billets->count());
         foreach ($billets as $billet) {
-            $this->handleSendMail($billet);
-            $billet->sended_mail_at = Carbon::now()->format('Y-m-d H:i:s');
-            $billet->save();
+            if(!$billet->student) continue;
+            
+            $this->handleSendMail($billet, function($mail) use($billet){
+
+              if( !$mail['status']) return;
+
+               \discord_billet_old(json_encode($mail['data'], JSON_PRETTY_PRINT));
+               $billet->sended_mail_at = Carbon::now()->format('Y-m-d H:i:s');
+               $billet->save();
+            });
+           
         }
 
         return 0;

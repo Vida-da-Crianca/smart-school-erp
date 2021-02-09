@@ -5,6 +5,8 @@ namespace Application\Command\Traits;
 use Illuminate\Database\Eloquent\Collection;
 
 use Carbon\Carbon;
+use Closure;
+
 // use Illuminate\Database\Eloquent\Collection;
 // use Illuminate\Support\Collection;
 
@@ -13,7 +15,7 @@ trait SendMailBillet
 
 
 
-    public function handleSendMail($billet)
+    public function handleSendMail($billet, Closure  $callable = null)
     {    $this->CI->load->library(['bank_payment_inter', 'mailer']);
         $body =  $billet->body_json;
         $first = $billet->feeItems()->first();
@@ -21,7 +23,7 @@ trait SendMailBillet
         $options = [
             'name' => $billet->student->guardian_name,
             'email' => getenv('ENVIRONMENT') == 'development' ?  'contato@carlosocarvalho.com.br' : $billet->student->guardian_email,
-            'id' => $billet->number,
+            'id' => $billet->bank_bullet_id,
             'link' => site_url('billet/live/' . $billet->bank_bullet_id),
             'code' => null,
             'file' => '',
@@ -54,6 +56,8 @@ trait SendMailBillet
 
 
         $content = $this->CI->load->view('mailer/billet.tpl.php', $options,  TRUE);
-        $this->CI->mailer->send_mail( getenv('ENVIRONMENT') == 'development' ?  'contato@carlosocarvalho.com.br' : $billet->studend->guardian_email, 'Envio de boletos', $content /**/);
+        $status = $this->CI->mailer->send_mail( getenv('ENVIRONMENT') == 'development' ?  'contato@carlosocarvalho.com.br' : $billet->studend->guardian_email, 'Envio de boletos', $content /**/);
+
+        $callable(['status' => $status, 'data' =>  $options]);
     }
 }

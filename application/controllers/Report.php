@@ -1114,6 +1114,7 @@ class Report extends Admin_Controller
 
         $data['label'] = date($this->customlib->getSchoolDateFormat(), strtotime($start_date)) . " " . $this->lang->line('to') . " " . date($this->customlib->getSchoolDateFormat(), strtotime($end_date));
         $incomeList = [];
+        $data['incomeList']  =  $incomeList;
         $deposite = new Student_deposite_eloquent;
 
         if ($this->input->post('search_type') != '') {
