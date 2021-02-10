@@ -183,7 +183,7 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                 $this->customlib->get_postmessage();
                                 ?>
                             </div>
-                            <table id="deposite_table" class="table table-striped table-bordered table-hover display" data-page-length="<?= count($incomeList); ?>" style="max-width: 100%;">
+                            <table id="deposite_table" class="dataTable display" role="grid" data-page-length="<?= count($incomeList); ?>" style="max-width: 100%;">
                                 <thead>
                                     <tr>
                                         <th><?php echo $this->lang->line('report_guardian_name'); ?></th>
@@ -267,40 +267,17 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                         endforeach;
                                     endif;
                                     ?>
-                                   <!-- <tr class="row-total odd" style="font-weight: 600;">
-                                     <td colspan="3">Total</td>
-                                     
-                                     
-                                     <td>R$ 0,00</td>
-                                     <td colspan="2"> &nbsp; </td>
-                                     <td>R$ 0,00 </td>
-                                     <td>R$ 0,00</td>
-                                     <td class="row-">R$ 0,00</td>
-                                   </tr> -->
+
                                 </tbody>
-                                <tfoot>
-                                    <!-- <tr>
-                                        <th><?php echo $this->lang->line('report_guardian_name'); ?></th>
-                                        <th><?php echo $this->lang->line('report_invoice_no'); ?></th>
-                                        <th><?php echo $this->lang->line('report_billet_no'); ?></th>
-                                        <th><?php echo $this->lang->line('report_amount'); ?></th>
-                                        <th><?php echo $this->lang->line('report_type_payment'); ?></th>
-                                        <th><?php echo $this->lang->line('report_fee_due_date'); ?></th>
-                                        <th><?php echo $this->lang->line('report_fee_discount'); ?></th>
-                                        <th><?php echo $this->lang->line('report_fee_fine'); ?></th>
-                                        <th><?php echo $this->lang->line('report_fee_total'); ?></th>
-                                    </tr> -->
-                                    <!-- <tr>
-                                        <th></th>
-                                        <th></th>
-                                        <th></th>
-                                        <th></th>
-                                        <th></th>
-                                        <th></th>
-                                        <th></th>
-                                        <th><strong>Totais</strong></th>
+                                <tfoot style="font-size: 1.2rem;">
+                                    <tr>
+                                        <th colspan="3">Total</th>
                                         <th>R$ 0,00</th>
-                                    </tr> -->
+                                        <th colspan="2">&nbsp;</th>
+                                        <th>R$ 0,00</th>
+                                        <th>R$ 0,00</th>
+                                        <th>R$ 0,00</th>
+                                    </tr>
 
                                 </tfoot>
                             </table>
@@ -314,19 +291,20 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
 </section>
 </div>
 <!-- <script src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script> -->
+<!-- <script src="https://code.jquery.com/jquery-3.5.1.js"></script> -->
 <link rel="stylesheet" href="//cdn.datatables.net/1.10.23/css/jquery.dataTables.min.css" />
 <script src="https://cdn.datatables.net/1.10.23/js/jquery.dataTables.min.js"></script>
+
+</style>
 <script>
     $(document).ready(function($) {
+
+
         var $table = $('#deposite_table').DataTable({
-            // language: {
-            //     url: 'https://cdn.datatables.net/plug-ins/1.10.22/i18n/Portuguese-Brasil.json'
-            // },
             ordering: false,
             paging: false,
             info: false,
-            // scrollY: 600,
-            dom: "Bfrtip",
+            dom: 'fBrtip<"clear">',
             buttons: [
 
                 {
@@ -334,6 +312,7 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                     text: '<i class="fa fa-files-o"></i>',
                     titleAttr: 'Copy',
                     title: $('.download_label').html(),
+                    footer: true,
                     exportOptions: {
                         columns: ':visible'
                     }
@@ -343,7 +322,7 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                     extend: 'excelHtml5',
                     text: '<i class="fa fa-file-excel-o"></i>',
                     titleAttr: 'Excel',
-
+                    footer: true,
                     title: $('.download_label').html(),
                     exportOptions: {
                         columns: ':visible'
@@ -354,6 +333,7 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                     extend: 'csvHtml5',
                     text: '<i class="fa fa-file-text-o"></i>',
                     titleAttr: 'CSV',
+                    footer: true,
                     title: $('.download_label').html(),
                     exportOptions: {
                         columns: ':visible'
@@ -362,28 +342,21 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
 
                 {
                     extend: 'pdfHtml5',
+                    footer: true,
                     text: '<i class="fa fa-file-pdf-o"></i>',
                     titleAttr: 'PDF',
                     title: $('.download_label').html(),
                     exportOptions: {
-                        columns: ':visible'
+                        //  columns: ':all'
 
                     }
                 },
-
                 {
                     extend: 'print',
                     text: '<i class="fa fa-print"></i>',
                     titleAttr: 'Print',
+                    footer: true,
                     title: $('.download_label').html(),
-                    customize: function(win) {
-                        $(win.document.body)
-                            .css('font-size', '10pt');
-
-                        $(win.document.body).find('table')
-                            .addClass('compact')
-                            .css('font-size', 'inherit');
-                    },
                     exportOptions: {
                         columns: ':visible'
                     }
@@ -393,6 +366,7 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                     extend: 'colvis',
                     text: '<i class="fa fa-columns"></i>',
                     titleAttr: 'Columns',
+                    footer: true,
                     title: $('.download_label').html(),
                     postfixButtons: ['colvisRestore']
                 },
@@ -419,8 +393,8 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                         page: 'current'
                     })
                     .data()
-                    .filter((a,k)=> {
-                        return  k < end
+                    .filter((a, k) => {
+                        return k < end
                     })
                     .map((a) => {
                         sum += $(a).data('total')
@@ -430,8 +404,8 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                         page: 'current'
                     })
                     .data()
-                    .filter((a,k)=> {
-                        return  k < end
+                    .filter((a, k) => {
+                        return k < end
                     })
                     .map((a) => {
                         // console.log($(a).data('value'))
@@ -442,8 +416,8 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                         page: 'current'
                     })
                     .data()
-                    .filter((a,k)=> {
-                        return  k < end
+                    .filter((a, k) => {
+                        return k < end
                     })
                     .map((a) => {
                         // console.log($(a).data('value'))
@@ -455,63 +429,27 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                         page: 'current'
                     })
                     .data()
-                    .filter((a,k)=> {
-                        return  k < end
+                    .filter((a, k) => {
+                        return k < end
                     })
                     .map((a) => {
                         // console.log($(a).data('value'))
                         totalDiscount += Number($(a).data('value'))
                     })
 
-                // pageTotal = 0;
-                // api
-                //     .column(8, {
-                //         page: 'current'
-                //     })
-                //     .data()
-                //     .reduce(function(a, b) {
-                //         return $(a).data('total') + $(b).data('total');
-                //     }, 0);
+                $('.dataTables_wrapper table > tfoot').show()
+                $(api.column(3).footer()).html(accounting.formatMoney(totalForReceived, "", 2, ".", ","))
+                $(api.column(6).footer()).html(accounting.formatMoney(totalDiscount, "", 2, ".", ","))
+                $(api.column(7).footer()).html(accounting.formatMoney(totalFine, "", 2, ".", ","))
+                $(api.column(8).footer()).html(accounting.formatMoney(sum, "", 2, ".", ","))
 
-
-                //     // Update footer
-
-                // $(api.column(8).footer()).html(
-                //     `${accounting.formatMoney(sum, "R$ ", 2, ",", ".")}`
-                // );
-                // $('.dataTables_wrapper table > foot').show()
-                // console.log('..old..')
-                var markupHTML = `
-                        
-                             
-                                        <tr id="row_total" class="odd" role="row">
-                                            <td colspan="3" >Total</td>
-                                            <td style="text-align: left;">${accounting.formatMoney(totalForReceived, "R$ ", 2, ",", ".")}</td>
-                                            <td colspan="1" style="width: 21.5%;"> &nbsp; </td>
-                                            <td style="width: 80px;">${accounting.formatMoney(totalDiscount, "R$ ", 2, ",", ".")}</td>
-                                            <td style="width: 80px;">${accounting.formatMoney(totalFine, "R$ ", 2, ",", ".")}</td>
-                                            <td style="width: 90px;">${accounting.formatMoney(sum, "R$ ", 2, ",", ".")}</td>
-                                        </tr>
-                                
-                           `
-                // $('.dataTables_wrapper').removeClass('no-footer')
-                // $('.dataTables_wrapper table#deposite_table').removeClass('no-footer')
-                // console.log('foot...', end)
-                // $('.row-total td').get(-1).html(accounting.formatMoney(sum, "R$ ", 2, ",", "."))
-                // $('.dataTables_wrapper #row_total').detach()
-                // $('.dataTables_wrapper table#deposite_table tbody').append(markupHTML);
-                // $(markupHTML).insertAfter('.dataTables_wrapper table#deposite_table')
 
             }
         });
 
-        // $table.on('draw', function() {
-        //     console.log('..old..')
-
-        // })
 
     })
-    // $('#deposite_table').DataTable();
+
     <?php
     if ($search_type == 'period') {
     ?>
