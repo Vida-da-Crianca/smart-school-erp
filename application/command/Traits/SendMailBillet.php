@@ -53,9 +53,10 @@ trait SendMailBillet
             ];
         });
         $options['items'] = $items;
+        $options['body_text'] =  $this->CI->lang->line('notification_billet_old_text_header');
        
         // dump($options);
-        $content = $this->CI->load->view('mailer/billet.tpl.php', $options,  TRUE);
+        $content = $this->CI->load->view('mailer/billet-old-notification.tpl.php', $options,  TRUE);
         $status = $this->CI->mailer->send_mail( 
             getenv('ENVIRONMENT') == 'development' ?  'contato@carlosocarvalho.com.br' : $billet->student->guardian_email, 
             $this->CI->lang->line('notification_billet_old'), $content /**/);
