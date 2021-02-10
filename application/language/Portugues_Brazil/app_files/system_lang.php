@@ -1522,5 +1522,5 @@ $lang['document_generate_create'] = 'Cadastrar';
 $lang['document_frm_create'] = 'Novo Documento';
 $lang['document_frm_update'] = 'Editar Documento';
 $lang['documents_contract'] = 'Contratos e Recibos';
-$lang['notification_billet_old'] = 'Boleto vencido';
+$lang['notification_billet_old'] = 'Aviso débitos pendentes';
 $lang['notification_billet_old_text_header'] = 'Sr. {guardian_name}, <br /> Seguem o(s) boleto(s) com vencimento em {date_month} de {date_year}';
