@@ -1522,3 +1522,4 @@ $lang['document_generate_create'] = 'Cadastrar';
 $lang['document_frm_create'] = 'Novo Documento';
 $lang['document_frm_update'] = 'Editar Documento';
 $lang['documents_contract'] = 'Contratos e Recibos';
+$lang['notification_billet_old'] = 'Boleto vencido';
