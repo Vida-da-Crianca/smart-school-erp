@@ -348,7 +348,7 @@
                         <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%">
                             <tr>
                                 <td class="logo" style="text-align: center;">
-                                    <img src="<?php echo base_url('uploads/logo-email.png') ?>" alt="Logo ESCOLA DE EDUCACAO INFANTIL E ENSIN" style="width: 200px; max-width: 250px; height: auto; margin: auto; display: block;">
+                                    <img src="https://eeividadecrianca.s3.us-east-2.amazonaws.com/images/logo-email.png" alt="Logo ESCOLA DE EDUCACAO INFANTIL E ENSIN" style="width: 200px; max-width: 250px; height: auto; margin: auto; display: block;">
                                     <h2>ESCOLA DE EDUCACAO INFANTIL E ENSIN</h2>
                                 </td>
                             </tr>
@@ -427,6 +427,26 @@
                                                 <tr>
                                                     <td>
                                                         <a href="<?php echo $link; ?>"> Link para visualizar o boleto aqui </a>
+                                                    </td>
+
+                                                </tr>
+
+                                            </tbody>
+                                        </table>
+                                    </div>
+
+
+                                    <div style="padding: 16px 25px; ">
+
+                                        <table id="customers">
+
+                                            <tbody>
+
+                                                <tr>
+                                                    <td>
+                                                        Atenção, se você realizou a pagamento dos itens informado nesse e-mail, favor desconsiderar essa mensagem. </br/>
+                                                        Essa mensagem será enviada automaticamente pelo nosso sistema enquanto o pagamento não for detectado. <br/>
+
                                                     </td>
 
                                                 </tr>
