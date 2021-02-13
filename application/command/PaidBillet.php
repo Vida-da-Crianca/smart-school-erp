@@ -2,6 +2,7 @@
 
 namespace Application\Command;
 
+use Billet_eloquent;
 use Carbon\Carbon;
 use Packages\Commands\BaseCommand;
 use Illuminate\Database\Capsule\Manager as DB;
@@ -55,6 +56,7 @@ class PaidBillet extends BaseCommand
 
             // continue;
             // $b->situacao = 'PAGO';
+            // dump($b->situacao);
             // $b->valorNominal =  $totalBillet - 100.00;
             $item =  $billet->feeItems()->first();
             $dateTimeExplode = explode(' ', $b->dataHoraSituacao);
@@ -65,7 +67,8 @@ class PaidBillet extends BaseCommand
             // continue;
 
             if ($b->situacao == 'PAGO') {
-                $billet->update([
+                \Billet_eloquent::where('bank_bullet_id', $billet->bank_bullet_id)
+                 ->update([
                     'status' => \Billet_eloquent::PAID,
                     'received_at' => $dateStatus->format('Y-m-d H:i:s'),
                 ]);
