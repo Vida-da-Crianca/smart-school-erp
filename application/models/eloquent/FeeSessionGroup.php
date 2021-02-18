@@ -3,10 +3,10 @@
 
 use \Illuminate\Database\Eloquent\Model as Eloquent;
 
-class Fee_group_eloquent extends  Eloquent
+class FeeSessionGroup extends  Eloquent
 {
 
-    protected $table = 'fee_groups';
+    protected $table = 'fee_session_groups';
 
 
 
@@ -14,9 +14,8 @@ class Fee_group_eloquent extends  Eloquent
 
     // protected $connection = 'mysql';
     protected $fillable = [
-        'name' ,
-        'is_system'  ,
-        'description',
+        'fee_groups_id' ,
+        'session_id'  ,
         'is_active',
         'created_at',
       

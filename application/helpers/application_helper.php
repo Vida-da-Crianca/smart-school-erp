@@ -193,13 +193,13 @@ function isFeriado($data)
 
 function getUtilDay($aPartirDe, $quantidadeDeDias = 30)
 {
- 
+
   $listaDiasUteis = [];
   $contador = 0;
   // dump($quantidadeDeDias );
   while ($contador < $quantidadeDeDias) {
     $dateTime = new \DateTime($aPartirDe);
-    $dateTime->modify('+'.$contador.' day'); // adiciona um dia pulando finais de semana
+    $dateTime->modify('+' . $contador . ' day'); // adiciona um dia pulando finais de semana
     $data = $dateTime->format('Y-m-d');
     if (!in_array($data, getListaDiasFeriado())) {
       $listaDiasUteis[] = $data;
@@ -216,4 +216,17 @@ function isValidDay()
   $dateW = Carbon::now()->endOfMonth();
   // dump($date);
   return in_array($date, getUtilDay($date, Carbon::now()->diffInDays($dateW)));
+}
+
+
+if (!function_exists('extractArgument')) {
+
+  function extractArgument($key, &$data)
+  {
+     $value = $data[$key] ?? $data[$key];
+     
+     unset($data[$key]);
+     
+     return $value;
+  }
 }

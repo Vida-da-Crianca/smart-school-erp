@@ -16,7 +16,8 @@ class Student_session_eloquent extends  Eloquent
        'student_id',
        'class_id',
        'section_id',
-       'is_alumni'
+       'is_alumni',
+       'fees_discount'
     ];
 
 

@@ -22,6 +22,7 @@ trait  BuildSyncLancamentoMigration
             'user_id' => $user->user_id,
             'class_id' => $user->classe_id,
             'student_session_id' => $user->session_id,
+            'fee_session_group_id' => $user->fee_session_group_id
         ];
     }
 
@@ -29,12 +30,17 @@ trait  BuildSyncLancamentoMigration
     function syncFeeItems($data)
     {
 
-        $fee = new \Student_fee_item_eloquent;
-        $fee->forceFill($data);
-        $fee->save();
-
-       
-
+        $fee = \Student_fee_item_eloquent::updateOrCreate(
+            [
+                'title'    => $data['title'],
+                'feetype_id'      => $data['feetype_id'],
+                'due_date'    => $data['due_date'  ],
+                'class_id'    => $data['class_id'],
+                'student_session_id' => $data['student_session_id'],
+                'user_id' => $data['user_id']
+            ], 
+            $data 
+        );
         return $fee->id;
     }
 }

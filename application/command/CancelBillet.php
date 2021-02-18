@@ -33,9 +33,9 @@ class CancelBillet extends BaseCommand
     {
 
         $this->CI->load->library('bank_payment_inter');
-        $this->CI->load->model(['eloquent/Billet_eloquent','eloquent/Invoice_eloquent']);
-        
-        if( !isValidDay()) {
+        $this->CI->load->model(['eloquent/Billet_eloquent', 'eloquent/Invoice_eloquent']);
+
+        if (!isValidDay()) {
             return;
         }
 
@@ -62,9 +62,9 @@ class CancelBillet extends BaseCommand
                             ]);
                     }
                     \Invoice_eloquent::where('bullet_id', $row->bank_bullet_id)
-                    ->update(['status' => \Invoice_eloquent::PENDING_DELETE ]);
+                        ->update(['status' => \Invoice_eloquent::PENDING_DELETE]);
 
-                    discord_log(sprintf('%s', json_encode($status, JSON_PRETTY_PRINT)), 'Cancelamento de Boleto');
+                    discord_log(sprintf('%s', json_encode(array_merge(['bolelo' => $row->bank_bullet_id ], (array) $status), JSON_PRETTY_PRINT)), 'Cancelamento de Boleto');
                 }
             );
         }

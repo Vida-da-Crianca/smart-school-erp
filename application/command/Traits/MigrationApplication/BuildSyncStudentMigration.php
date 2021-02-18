@@ -25,6 +25,7 @@ trait BuildSyncStudentMigration
             "admission_no" => $data->aluno->rm, //RM
             "roll_no" => $data->aluno->ra,
             "class_id" => $data->options->classe_id,
+            "class_name" => $data->options->class,
             "section_id" => $data->options->section_id,
             "firstname" => $firstName,
             "lastname" => $lastName,
@@ -76,13 +77,41 @@ trait BuildSyncStudentMigration
 
     function syncStudent($data)
     {
-        $class_id = $data['class_id'];
-        $section_id = $data['section_id'];
+        $class_id = extractArgument('class_id', $data);
+        $section_id = extractArgument('section_id', $data);
+        $name =  extractArgument('class_name', $data);
+        extractArgument('measure_date', $data);
 
-        // $exceptions = ['class_id', 'section_id'];
-        unset($data['class_id']);
-        unset($data['section_id']);
-        unset($data['measure_date']);
+
+
+        $feeGroup = \Fee_group_eloquent::updateOrCreate(
+            [
+                'name'        => $name,
+                'description' => $name,
+
+            ],
+            [
+                'name'    => $name,
+                'description'      => $name,
+                'created_at' => date('Y-m-d H:i:s')
+            ]
+        );
+
+        $feeSessionGroup = \FeeSessionGroup::updateOrCreate(
+            [
+                'fee_groups_id'        =>  $feeGroup->id,
+                'session_id' => $this->current_session,
+
+            ],
+            [
+                'fee_groups_id'        =>  $feeGroup->id,
+                'session_id' => $this->current_session,
+                'created_at' => date('Y-m-d H:i:s')
+            ]
+        );
+
+       
+
         $insert_id = $this->CI->student_model->add(
             $data,
             [
@@ -102,48 +131,59 @@ trait BuildSyncStudentMigration
             'fees_discount' => 0,
         );
         // $this->CI->student_model->add_student_session($data_new);
-        $sessionStudent = new \Student_session_eloquent;
-        $sessionStudent->forceFill($data_new);
 
-        $sessionStudent->save();
+        $sessionStudent = \Student_session_eloquent::updateOrCreate(
+            [
+                'student_id'    => $insert_id,
+                'class_id'      => $class_id,
+                'section_id'    => $section_id,
+                'session_id'    => $this->current_session,
+            ],
+            $data_new
+        );
+
 
         $sessionMaster = [
             'student_session_id' => $sessionStudent->id,
-            'fee_session_group_id' => 2,
+            'fee_session_group_id' => $feeSessionGroup->id,
         ];
         \Student_fee_master_eloquent::updateOrCreate(
             $sessionMaster,
             $sessionMaster
         );
 
-        $user_password = $this->CI->role->get_random_password($chars_min = 6, $chars_max = 6, $use_upper_case = false, $include_numbers = true, $include_special_chars = false);
+        $hasUser = \User::where('username', $this->student_login_prefix . $insert_id)
+            ->where('user_id', $insert_id)->count();
 
+        if ($hasUser == 0) {
+            $user_password = $this->CI->role->get_random_password($chars_min = 6, $chars_max = 6, $use_upper_case = false, $include_numbers = true, $include_special_chars = false);
+            $data_student_login = array(
+                'username' => $this->student_login_prefix . $insert_id,
+                'password' => $user_password,
+                'user_id'  => $insert_id,
+                'role'     => 'student',
+                'childs' => 0
+            );
 
-        $data_student_login = array(
-            'username' => $this->student_login_prefix . $insert_id,
-            'password' => $user_password,
-            'user_id'  => $insert_id,
-            'role'     => 'student',
-            'childs' => 0
-        );
+            $this->CI->user_model->add($data_student_login);
 
-        $this->CI->user_model->add($data_student_login);
+            $parent_password   = $this->CI->role->get_random_password($chars_min = 6, $chars_max = 6, $use_upper_case = false, $include_numbers = true, $include_special_chars = false);
+            $temp              = $insert_id;
+            $data_parent_login = array(
+                'username' => $this->CI->parent_login_prefix . $insert_id,
+                'password' => $parent_password,
+                'user_id'  => 0,
+                'role'     => 'parent',
+                'childs'   => $temp,
+            );
+            $ins_parent_id  = $this->CI->user_model->add($data_parent_login);
+            $update_student = array(
+                'id'        => $insert_id,
+                'parent_id' => $ins_parent_id,
+            );
+            $this->CI->student_model->add($update_student);
+        }
 
-        $parent_password   = $this->CI->role->get_random_password($chars_min = 6, $chars_max = 6, $use_upper_case = false, $include_numbers = true, $include_special_chars = false);
-        $temp              = $insert_id;
-        $data_parent_login = array(
-            'username' => $this->CI->parent_login_prefix . $insert_id,
-            'password' => $parent_password,
-            'user_id'  => 0,
-            'role'     => 'parent',
-            'childs'   => $temp,
-        );
-        $ins_parent_id  = $this->CI->user_model->add($data_parent_login);
-        $update_student = array(
-            'id'        => $insert_id,
-            'parent_id' => $ins_parent_id,
-        );
-        $this->CI->student_model->add($update_student);
 
 
         return  ['id' => $insert_id, 'session_id' => $sessionStudent->id,];
@@ -151,13 +191,12 @@ trait BuildSyncStudentMigration
 
     public function syncStudentCustomFields($id)
     {
-
     }
 
     public function buildCustomFields($data)
     {
-        
-        
+
+
         $options =  [
             [
                 "belong_table_id" => $data->id,
@@ -187,8 +226,8 @@ trait BuildSyncStudentMigration
                 "belong_table_id" => $data->id,
                 "custom_field_id" => 7,
                 "field_value" =>  [
-                   0 => '', 
-                   1 => 'A pé e sozinho',
+                    0 => '',
+                    1 => 'A pé e sozinho',
                     2 => 'De ônibus e sozinho',
                     3 => 'Alguém vem sempre trazê-lo',
                     4 => 'Transporte escolar'
@@ -201,8 +240,8 @@ trait BuildSyncStudentMigration
                 "field_value" => "Não",
             ]
         ];
-        
-        
-         $this->CI->customfield_model->updateRecord($options, $data->id, 'students');
+
+
+        $this->CI->customfield_model->updateRecord($options, $data->id, 'students');
     }
 }
