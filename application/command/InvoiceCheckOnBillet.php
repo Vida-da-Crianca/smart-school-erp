@@ -74,6 +74,7 @@ class InvoiceCheckOnBillet extends BaseCommand
                     'due_date' => $billet->due_date,
                     'price' => $first->amount - $body->fee_discount,
                     'description' => sprintf(
+                        
                         '%s - %s - R$ %s ',
                         $billet->student->full_name,
                         $first->title,
@@ -88,7 +89,7 @@ class InvoiceCheckOnBillet extends BaseCommand
                 'bullet_id' => $order->first()->bullet_id,
                 'user_id' => $order->first()->user_id,
                 'price' => $order->sum('price'),
-                'description' => $order->implode('description', PHP_EOL),
+                'description' => sprintf('Boleto - Nº %s %s%s', $listOfData->first()->bank_bullet_id, PHP_EOL, $order->implode('description', PHP_EOL)),
                 'status' => \Invoice_eloquent::PENDING_CREATE
             ];
                
