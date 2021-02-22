@@ -49,6 +49,7 @@ class InvoiceCheckOnBillet extends BaseCommand
             ->with(['feeItems', 'student','invoices'])
             ->whereBetween('created_at', [$dateTime->format('Y-m-01 00:00:00'),  Carbon::now()->addMonth(12)->endOfMonth(0)->format('Y-m-d 23:59:59')])
             // ->groupBy('bank_bullet_id')
+            
             ->get();
         // dump([Carbon::now()->format('Y-m-01'),  Carbon::now()->endOfMonth()->format('Y-m-d')]);
         
@@ -63,6 +64,8 @@ class InvoiceCheckOnBillet extends BaseCommand
             $order = collect([]);
         
             $billetId = $listOfData->first()->id;
+           
+            
 
             $listOfData->each(function ($billet) use (&$order, $billetId) {
                 $body =  $billet->body_json;

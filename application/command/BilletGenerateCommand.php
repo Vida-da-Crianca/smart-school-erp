@@ -41,7 +41,7 @@ class BilletGenerateCommand extends BaseCommand
         $this->CI->load->library(['bank_payment_inter', 'mailer']);
         $this->CI->load->model(['eloquent/Billet_eloquent', 'eloquent/Email_setting_eloquent', 'eloquent/Invoice_eloquent']);
 
-     
+
         DB::beginTransaction();
 
         try {
@@ -163,7 +163,7 @@ class BilletGenerateCommand extends BaseCommand
                 'bank_bullet_id' => $options->billet->number,
             ]);
 
-        
+
 
         DB::commit();
         discord_log(sprintf('%s', json_encode($options, JSON_PRETTY_PRINT)), 'Novo Boleto');
@@ -182,7 +182,7 @@ class BilletGenerateCommand extends BaseCommand
 
         $data = (object) [
             'name' => $student->guardian_name,
-            'email' => getenv('ENVIRONMENT') == 'development' ?  'contato@carlosocarvalho.com.br': $student->guardian_email,
+            'email' => getenv('ENVIRONMENT') == 'development' ?  'contato@carlosocarvalho.com.br' : $student->guardian_email,
             'id' => $options->billet->number,
             'link' => site_url('billet/live/' . $options->billet->number),
             'code' => $options->billet->barcode,
@@ -222,7 +222,7 @@ class BilletGenerateCommand extends BaseCommand
 
     public function push($payment, \Closure $callback)
     {
-    //    $callback(['success']);    
-       $this->CI->bank_payment_inter->create($payment, $callback);
+        //    $callback(['success']);    
+        $this->CI->bank_payment_inter->create($payment, $callback);
     }
 }
