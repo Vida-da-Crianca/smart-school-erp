@@ -16,6 +16,8 @@
     $this->load->view('layout/theme');
     ?>
 
+    <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.css" rel="stylesheet">
+
     <link rel="stylesheet" href="<?php echo base_url(); ?>backend/dist/css/font-awesome.min.css">
     <link rel="stylesheet" href="<?php echo base_url(); ?>backend/dist/css/ionicons.min.css">
     <link rel="stylesheet" href="<?php echo base_url(); ?>backend/plugins/iCheck/flat/blue.css">

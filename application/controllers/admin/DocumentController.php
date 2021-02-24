@@ -5,6 +5,8 @@ use Application\Support\Parser;
 use Respect\Validation\Rules\Json;
 use Spipu\Html2Pdf\Html2Pdf;
 use mikehaertl\wkhtmlto\Pdf;
+use Illuminate\Support\Str;
+use WGenial\NumeroPorExtenso\NumeroPorExtenso;
 
 if (!defined('BASEPATH')) {
     exit('No direct script access allowed');
@@ -155,8 +157,40 @@ class DocumentController extends Admin_Controller
         $document =   Document::where('id', $id)->first();
 
         $parser = new Parser();
-        $page =  $parser->parse_string($document->body, Student_eloquent::where('id', $user_id)->first()->toArray());
-         $page = str_replace('figure','div',$page);
+        // dump($this->sch_setting_detail);
+        $student =  Student_eloquent::where('id', $user_id)->with(['session' => function ($q) {
+            return $q->with(['section', 'class_item'])->where('session_id', $this->sch_setting_detail->session_id);
+        }])->first();
+        $data = [
+            'aluno_nome' => $student->fullname,
+            // 'class' => $student->session->class_item,
+            'aluno_turma' => sprintf(
+                '%s - %s',
+                $student->session->class_item->class ?? $student->session->class_item->class,
+                $student->session->section->section ??  $student->session->section->section
+            ),
+            'aluno_email' => $student->email,
+            'guardiao_nome' => $student->guardian_name,
+            'guardiao_email' => $student->guardian_email,
+            'guardiao_endereco' => sprintf(
+                '%s, %s - %s %s-%s',
+                $student->guardian_address,
+                $student->guardian_address_number,
+                $student->guardian_district,
+                $student->guardian_city,
+                $student->guardian_state,
+            ),
+            'guardiao_documento' => $student->guardian_document,
+            'guardiao_ocupacao' => $student->guardian_ocupation,
+
+        ];
+
+        $data = array_merge($data, $this->getVarsTypes($student));
+     
+        // ($this->getVarsTypes($student));
+        // exit;
+        $page =  $parser->parse_string(str_replace(['{{', '}}'], ['{', '}'], $document->body), $data);
+        $page = str_replace('figure', 'div', $page);
         $page = preg_replace('/(<img\b[^>])/i', '$1 style="max-width:150px; !important;" ', $page);
         // $page = strip_tags($page, '<p><a><table><th><tbody><tr><td><thead><tfoot><img><strong><br><h1><h2><h3><h4><h5><h6><p><i><em><span>');
         $page = $this->load->view('parser/pdf', ['body' => $page], true);
@@ -165,12 +199,12 @@ class DocumentController extends Admin_Controller
         // die($page);
         // $page = strip_tags($page, '<p><a><table><th><tbody><tr><td><thead><tfoot><img><strong><br><h1><h2><h3><h4><h5><h6><p><i><em><span>');
 
-        
+
         $html2pdf = new Html2Pdf('P', 'A4', 'pt', true, 'UTF-8', 10);
         $html2pdf->writeHTML($page);
         $html2pdf->output();
 
-       
+
         // $pdf = new Pdf();
         // $pdf->addPage($page);
         // if (!$pdf->send('report.pdf')) {
@@ -179,5 +213,38 @@ class DocumentController extends Admin_Controller
         // }
         // // echo $pdf->toString();wkhtmltopdf --version
         die();
+    }
+
+
+    private function getVarsTypes($student): array
+    {
+        if (!$student->session) return [];
+        $extenso = new NumeroPorExtenso;
+        $this->load->model(['eloquent/Student_fee_item_eloquent']);
+        //filter(function($row) use($student) {return $student->session->id == $row->student_session_id;})->
+        $fees = Student_fee_item_eloquent::with(['fee_type'])->where('student_session_id', $student->session->id)->get()->groupBy('feetype_id');
+        // dump($student->session->toArray());
+
+        $options = [];
+        // dump($fees->toArray());
+
+        foreach ($fees as $listOfFees) {
+
+            foreach ($listOfFees as $item) {
+                preg_match_all('!\d+!', $item->title, $matches);
+                // dump($matches);
+                $options[sprintf('%s_@%s_valor', Str::slug($item->fee_type->type, '_'), current($matches)[0])] = number_format($item->amount, 2, ',', '.');
+                $options[sprintf('%s_@%s_valor_extenso', Str::slug($item->fee_type->type, '_'), current($matches)[0])] = $extenso->converter($item->amount);
+                $options[sprintf('%s_@%s_descricao', Str::slug($item->fee_type->type, '_'), current($matches)[0])] = $item->title;
+                $options[sprintf('%s_@%s_data', Str::slug($item->fee_type->type, '_'), current($matches)[0])] = (new \DateTime($item->due_date))->format('d/m/Y');
+                $options[sprintf('%s_@%s_vencimento_dia', Str::slug($item->fee_type->type, '_'), current($matches)[0])] = (new \DateTime($item->due_date))->format('d');
+                $options[sprintf('%s_@%s_vencimento_mes', Str::slug($item->fee_type->type, '_'), current($matches)[0])] = (new \DateTime($item->due_date))->format('m');
+                $options[sprintf('%s_@%s_vencimento_anp', Str::slug($item->fee_type->type, '_'), current($matches)[0])] = (new \DateTime($item->due_date))->format('Y');
+            }
+        }
+
+        // dump($options);
+
+        return $options;
     }
 }

@@ -60,7 +60,8 @@
                         <div class="col-md-10 col-md-offset-1 text-right">
                             <div class="form-group text-right pr-2">
                                 <strong>Variavéis para uso no Documento</strong><br />
-                                <code><?= getEditorVariables() ?></code>
+                                <code>Use <b>{{</b> para o preenchimento das variaveis</code>
+                                <!-- <code><?= implode(' | ',   array_map(function($str){  return sprintf('{%s}', $str);}, getEditorVariables() ) )?></code> -->
                             </div>
                         </div>
                     </div>
@@ -157,144 +158,171 @@
     .main-content-editor .image figcaption {
         display: none !important;
     }
+
+    .note-modal .note-group-image-url {
+
+        display: none;
+
+    }
+
+    .note-modal .note-form-label {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background: #222;
+        color: #ddd;
+        border-radius: 3px;
+        padding: 10px 20px;
+    }
+
+    .note-modal .modal-footer {
+        display: none;
+    }
 </style>
 <!-- <script src="https://cdn.ckeditor.com/ckeditor5/24.0.0/classic/ckeditor.js"></script> -->
-<script src="/backend/ckeditor5/build/ckeditor.js"></script>
-<script src="/backend/ckeditor5/sample/styles.css"></script>
+<!-- <script src="/backend/ckeditor5/build/ckeditor.js"></script>
+<script src="/backend/ckeditor5/sample/styles.css"></script> -->
+<!-- include summernote css/js -->
 
+<script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.js"></script>
 <script>
     $(document).ready(function() {
 
-        class Adapter {
-            /**
-             * Creates a new adapter instance.
-             *
-             * @param {module:upload/filerepository~FileLoader} loader
-             */
-            constructor(loader) {
-                /**
-                 * `FileLoader` instance to use during the upload.
-                 *
-                 * @member {module:upload/filerepository~FileLoader} #loader
-                 */
-                this.loader = loader;
+        // class Adapter {
+        //     /**
+        //      * Creates a new adapter instance.
+        //      *
+        //      * @param {module:upload/filerepository~FileLoader} loader
+        //      */
+        //     constructor(loader) {
+        //         /**
+        //          * `FileLoader` instance to use during the upload.
+        //          *
+        //          * @member {module:upload/filerepository~FileLoader} #loader
+        //          */
+        //         this.loader = loader;
+        //     }
+
+        //     /**
+        //      * Starts the upload process.
+        //      *
+        //      * @see module:upload/filerepository~UploadAdapter#upload
+        //      * @returns {Promise}
+        //      */
+        //     upload() {
+        //         return new Promise((resolve, reject) => {
+        //             const reader = this.reader = new window.FileReader();
+
+        //             reader.addEventListener('load', () => {
+        //                 resolve({
+        //                     default: reader.result
+        //                 });
+        //             });
+
+        //             reader.addEventListener('error', err => {
+        //                 reject(err);
+        //             });
+
+        //             reader.addEventListener('abort', () => {
+        //                 reject();
+        //             });
+
+        //             this.loader.file.then(file => {
+        //                 reader.readAsDataURL(file);
+        //             });
+        //         });
+        //     }
+
+        //     /**
+        //      * Aborts the upload process.
+        //      *
+        //      * @see module:upload/filerepository~UploadAdapter#abort
+        //      * @returns {Promise}
+        //      */
+        //     abort() {
+        //         this.reader.abort();
+        //     }
+        // }
+
+        // function MyCustomUploadAdapterPlugin(editor) {
+        //     editor.plugins.get('FileRepository').createUploadAdapter = (loader) => {
+        //         // Configure the URL to the upload script in your back-end here!
+        //         return new Adapter(loader);
+        //     };
+        // }
+
+
+
+
+
+        var options = [
+            ['style', ['style']],
+            ['font', ['bold', 'underline', 'clear']],
+            ['fontname', ['fontname']],
+            ['color', ['color']],
+            ['para', ['ul', 'ol', 'paragraph']],
+            ['table', ['table']],
+            ['insert', ['link', 'picture']],
+            ['view', ['fullscreen']],
+        ]
+        var $summernote = $('.editor').summernote({
+            toolbar: options,
+            height: 300,
+            hint: {
+                mentions: [<?=sprintf("'%s'",implode("','" , getEditorVariables()))?>],
+                match: /\B\{\{(\w*)$/,
+                search: function(keyword, callback) {
+                    callback($.grep(this.mentions, function(item) {
+                        return item.indexOf(keyword) == 0;
+                    }));
+                },
+                content: function(item) {
+                    return `{{${item}}}`;
+                }
+            },
+            popover: {
+                image: [
+                    ['image', ['resizeFull', 'resizeHalf', 'resizeQuarter', 'resizeNone']],
+                    ['float', ['floatLeft', 'floatRight', 'floatNone']],
+                    ['remove', ['removeMedia']]
+                ],
+            },
+            callbacks: {
+                onImageUpload: async (files) => {
+                    return new Promise(async (resolve) => {
+                        const img = await convertBase64(files[0])
+                        $img = $('<img>').attr({
+                            src: img,
+                            width: 150
+                        })
+                        $summernote.summernote('insertNode', $img[0]);
+                        // console.log(await fileToBase64(files[0]))
+                        // $summernote.summernote('insertImage', img);
+
+                        resolve();
+                    })
+
+                }
             }
+        });
 
-            /**
-             * Starts the upload process.
-             *
-             * @see module:upload/filerepository~UploadAdapter#upload
-             * @returns {Promise}
-             */
-            upload() {
-                return new Promise((resolve, reject) => {
-                    const reader = this.reader = new window.FileReader();
 
-                    reader.addEventListener('load', () => {
-                        resolve({
-                            default: reader.result
-                        });
-                    });
+        async function convertBase64(file) {
+            return new Promise(async (resolve) => {
+                const reader = new FileReader();
+                reader.onloadend = () => {
+                    const base64String = reader.result;
+                    // .replace("data:", "")
+                    // .replace(/^.+,/, "");
+                    resolve(base64String);
+                };
+                reader.readAsDataURL(file);
+            })
 
-                    reader.addEventListener('error', err => {
-                        reject(err);
-                    });
-
-                    reader.addEventListener('abort', () => {
-                        reject();
-                    });
-
-                    this.loader.file.then(file => {
-                        reader.readAsDataURL(file);
-                    });
-                });
-            }
-
-            /**
-             * Aborts the upload process.
-             *
-             * @see module:upload/filerepository~UploadAdapter#abort
-             * @returns {Promise}
-             */
-            abort() {
-                this.reader.abort();
-            }
         }
-
-        function MyCustomUploadAdapterPlugin(editor) {
-            editor.plugins.get('FileRepository').createUploadAdapter = (loader) => {
-                // Configure the URL to the upload script in your back-end here!
-                return new Adapter(loader);
-            };
-        }
-
-
-        // var toolbarOptions = [
-        //     ['bold', 'italic', 'underline', 'strike'], // toggled buttons
-        //     ['blockquote'],
-
-        //     [{
-        //         'header': 1
-        //     }, {
-        //         'header': 2
-        //     }], // custom button values
-        //     [{
-        //         'list': 'ordered'
-        //     }, {
-        //         'list': 'bullet'
-        //     }],
-        //     [{
-        //         'script': 'sub'
-        //     }, {
-        //         'script': 'super'
-        //     }], // superscript/subscript
-        //     [{
-        //         'indent': '-1'
-        //     }, {
-        //         'indent': '+1'
-        //     }], // outdent/indent
-        //     [{
-        //         'direction': 'rtl'
-        //     }], // text direction
-
-        //     [{
-        //         'size': ['small', false, 'large', 'huge']
-        //     }], // custom dropdown
-        //     [{
-        //         'header': [1, 2, 3, 4, 5, 6, false]
-        //     }],
-
-        //     [{
-        //         'color': []
-        //     }, {
-        //         'background': []
-        //     }], // dropdown with defaults from theme
-        //     [{
-        //         'font': []
-        //     }],
-        //     [{
-        //         'align': []
-        //     }],
-
-        //     ['clean'] // remove formatting button
-        // ];
-
-
-        // var container = document.querySelector('#document_body');
-
-
-        // var editor = new Quill(container, {
-        //     placeholder: 'Digite os dados ',
-        //     theme: 'snow',
-        //     modules: {
-        //         toolbar: toolbarOptions
-        //     },
-        // });
-
-        // new FroalaEditor('#document_body')
-
         $('form').on('submit', function(e) {
             e.preventDefault();
+
             var url = $(this).attr('action')
             $('.loading-container').html('Aguarde...')
             $.ajax({
@@ -302,7 +330,7 @@
                 method: 'post',
                 dataType: 'json',
                 data: {
-                    body: window.editor.getData(),
+                    body: $summernote.summernote('code'),
                     title: $('input[name="title"]').val()
                 },
                 success: function() {
@@ -332,109 +360,108 @@
 
 
         })
+        // DecoupledDocumentEditor
+        //     .create(document.querySelector('.editor'), {
+        //         // extraPlugins: [MyCustomUploadAdapterPlugin],
 
-        DecoupledDocumentEditor
-            .create(document.querySelector('.editor'), {
-                // extraPlugins: [MyCustomUploadAdapterPlugin],
+        //         toolbar: {
+        //             items: [
+        //                 'heading',
+        //                 '|',
+        //                 'fontSize',
+        //                 'fontFamily',
+        //                 '|',
+        //                 'bold',
+        //                 'italic',
+        //                 'underline',
+        //                 'strikethrough',
+        //                 'highlight',
+        //                 '|',
+        //                 'alignment',
+        //                 '|',
+        //                 'numberedList',
+        //                 'bulletedList',
+        //                 '|',
+        //                 'indent',
+        //                 'outdent',
+        //                 '|',
+        //                 'todoList',
+        //                 'link',
+        //                 'blockQuote',
+        //                 'imageUpload',
+        //                 'insertTable',
+        //                 // 'mediaEmbed',
+        //                 '|',
+        //                 'undo',
+        //                 'redo',
+        //                 // 'imageResize:50',
+        //                 // 'imageResize:75',
+        //                 // 'imageResize:original',
+        //                 'imageTextAlternative',
+        //                 'imageStyle:alignLeft',
+        //                 'imageStyle:alignCenter',
+        //                 'imageStyle:alignRight',
+        //                 'imageStyle:full',
+        //                 'imageStyle:side',
+        //             ]
+        //         },
+        //         image: {
+        //             resizeUnit: 'px',
+        //             styles: [
+        //                 'alignLeft', 'alignCenter', 'alignRight'
+        //             ],
+        //         },
+        //         pagination: {
+        //             // A4
+        //             pageWidth: '21cm',
+        //             pageHeight: '29.7cm',
 
-                toolbar: {
-                    items: [
-                        'heading',
-                        '|',
-                        'fontSize',
-                        'fontFamily',
-                        '|',
-                        'bold',
-                        'italic',
-                        'underline',
-                        'strikethrough',
-                        'highlight',
-                        '|',
-                        'alignment',
-                        '|',
-                        'numberedList',
-                        'bulletedList',
-                        '|',
-                        'indent',
-                        'outdent',
-                        '|',
-                        'todoList',
-                        'link',
-                        'blockQuote',
-                        'imageUpload',
-                        'insertTable',
-                        // 'mediaEmbed',
-                        '|',
-                        'undo',
-                        'redo',
-                        // 'imageResize:50',
-                        // 'imageResize:75',
-                        // 'imageResize:original',
-                        'imageTextAlternative',
-                        'imageStyle:alignLeft',
-                        'imageStyle:alignCenter',
-                        'imageStyle:alignRight',
-                        'imageStyle:full',
-                        'imageStyle:side',
-                    ]
-                },
-                image: {
-                    resizeUnit: 'px',
-                    styles: [
-                        'alignLeft', 'alignCenter', 'alignRight'
-                    ],
-                },
-                pagination: {
-                    // A4
-                    pageWidth: '21cm',
-                    pageHeight: '29.7cm',
+        //             pageMargins: {
+        //                 top: '3mm',
+        //                 bottom: '3mm',
+        //                 right: '3mm',
+        //                 left: '3mm'
+        //             }
+        //         },
+        //         language: 'pt-br',
+        //         // image: {
+        //         //     toolbar: [
+        //         //         'imageTextAlternative',
+        //         //         'imageStyle:full',
+        //         //         'imageStyle:side'
+        //         //     ]
+        //         // },
+        //         table: {
+        //             contentToolbar: [
+        //                 'tableColumn',
+        //                 'tableRow',
+        //                 'mergeTableCells',
 
-                    pageMargins: {
-                        top: '3mm',
-                        bottom: '3mm',
-                        right: '3mm',
-                        left: '3mm'
-                    }
-                },
-                language: 'pt-br',
-                // image: {
-                //     toolbar: [
-                //         'imageTextAlternative',
-                //         'imageStyle:full',
-                //         'imageStyle:side'
-                //     ]
-                // },
-                table: {
-                    contentToolbar: [
-                        'tableColumn',
-                        'tableRow',
-                        'mergeTableCells',
+        //                 'tableProperties', 'tableCellProperties'
+        //             ]
+        //         },
+        //         // licenseKey: '',
 
-                        'tableProperties', 'tableCellProperties'
-                    ]
-                },
-                // licenseKey: '',
+        //     })
+        //     .then(editor => {
+        //         window.editor = editor;
 
-            })
-            .then(editor => {
-                window.editor = editor;
+        //         const toolbarContainer = document.querySelector('.main-content-editor__toolbar');
+        //         toolbarContainer.appendChild(editor.ui.view.toolbar.element);
 
-                const toolbarContainer = document.querySelector('.main-content-editor__toolbar');
-                toolbarContainer.appendChild(editor.ui.view.toolbar.element);
+        //         window.editor = editor;
 
-                window.editor = editor;
+        //         editor.execute('tableWidth', {
+        //             value: '100%'
+        //         });
 
-                editor.execute('tableWidth', {
-                    value: '100%'
-                });
-
-            })
-            .catch(error => {
-                console.error('Oops, something went wrong!');
-                // console.error('Please, report the following error on https://github.com/ckeditor/ckeditor5/issues with the build id and the error stack trace:');
-                console.warn('Build id: 5v0h87dz5yp4-ucn1dsls94e0');
-                console.error(error);
-            });
+        //     })
+        //     .catch(error => {
+        //         console.error('Oops, something went wrong!');
+        //         // console.error('Please, report the following error on https://github.com/ckeditor/ckeditor5/issues with the build id and the error stack trace:');
+        //         console.warn('Build id: 5v0h87dz5yp4-ucn1dsls94e0');
+        //         console.error(error);
+        //     });
 
 
 

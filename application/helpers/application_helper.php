@@ -2,6 +2,9 @@
 
 use AG\DiscordMsg;
 use Carbon\Carbon;
+use Illuminate\Support\Collection;
+use Illuminate\Support\Str;
+
 
 if (!function_exists('search_key_in')) {
 
@@ -108,34 +111,89 @@ function get_month(\DateTime $date)
 }
 
 
+function getParseDocumentVariables(): Collection
+{
+  $CI = get_instance();
+  $CI->load->model(['eloquent/Student_eloquent', 'eloquent/Fee_type_eloquent', 'Feesessiongroup_model']);
+
+  $items =  collect([]);
+  $types = $CI->Feesessiongroup_model->getFeesByGroup();
+  foreach ($types as $row) {
+
+    foreach ($row->feetypes as $item) {
+      $items->push((object) ['id' => $item->feetype_id, 'type' => $item->type]);
+    }
+  }
+
+  return $items->unique();
+
+  
+}
 function getEditorVariables()
 {
 
   $CI = get_instance();
-  $CI->load->model('eloquent/Student_eloquent');
+  $CI->load->model(['eloquent/Student_eloquent', 'eloquent/Fee_type_eloquent', 'Feesessiongroup_model']);
 
 
-  $options =  (new Student_eloquent)->getTableColumns();
+  // $options =  (new Student_eloquent)->getTableColumns();
+  $data = Fee_type_eloquent::all();
+
+  //  dump();
+
+  $options = [];
+  $items =  collect([]);
+  $types = $CI->Feesessiongroup_model->getFeesByGroup();
+  foreach ($types as $row) {
+
+    foreach ($row->feetypes as $item) {
+      $items->push((object) ['id' => $item->feetype_id, 'type' => $item->type]);
+    }
+  }
+
+  $distincts = $items->unique();
+
+  foreach ($distincts as $row) {
+    // $options[] = Str::slug($row->type, '_');
+    // $options[] = sprintf('primeira_%s', Str::slug($row->type, '_'));
+    // $options[] = sprintf('atual_%s', Str::slug($row->type, '_'));
+    $options[] = sprintf('%s_@n_valor', Str::slug($row->type, '_'));
+    $options[] = sprintf('%s_@n_valor_extenso', Str::slug($row->type, '_'));
+    $options[] = sprintf('%s_@n_data', Str::slug($row->type, '_'));
+    $options[] = sprintf('%s_@n_descricao', Str::slug($row->type, '_'));
+    $options[] = sprintf('%s_@n_vencimento_dia', Str::slug($row->type, '_'));
+    $options[] = sprintf('%s_@n_vencimento_mes', Str::slug($row->type, '_'));
+    $options[] = sprintf('%s_@n_vencimento_ano', Str::slug($row->type, '_'));
+  }
   $only = [
-    'email', 'guardian_name', 'state', 'city', 'firstname', 'lastname', 'guardian_occupation', "guardian_address",
-    "guardian_address_number",
-    "guardian_email",
-    "guardian_document",
-    "guardian_state",
-    "guardian_city",
-    "guardian_district",
-    "guardian_postal_code",
-    "guardian_postal_phone"
+    'aluno_nome',
+    'aluno_turma',
+    'aluno_email',
+    'guardiao_nome',
+    'guardiao_email',
+    'guardiao_endereco',
+    'guardiao_documento',
+    'guardiao_ocupacao',
+
+    // 'email', 'guardian_name', 'state', 'city', 'firstname', 'lastname', 'guardian_occupation', "guardian_address",
+    // "guardian_address_number",
+    // "guardian_email",
+    // "guardian_document",
+    // "guardian_state",
+    // "guardian_city",
+    // "guardian_district",
+    // "guardian_postal_code",
+    // "guardian_postal_phone"
 
   ];
 
-  $options = array_filter($options, function ($v) use ($only) {
-    return in_array($v, $only);
-  });
 
-  return implode(' | ', array_map(function ($v) {
-    return sprintf('{%s}', $v);
-  }, $options));
+
+  // $options = array_filter($options, function ($v) use ($only) {
+  //   return in_array($v, $only);
+  // });
+
+  return  array_merge($only, $options); // implode(' | ',   array_map(function($str){  return sprintf('{%s}', $str);}, array_merge($only, $options)) );
 }
 
 
@@ -223,10 +281,10 @@ if (!function_exists('extractArgument')) {
 
   function extractArgument($key, &$data)
   {
-     $value = $data[$key] ?? $data[$key];
-     
-     unset($data[$key]);
-     
-     return $value;
+    $value = $data[$key] ?? $data[$key];
+
+    unset($data[$key]);
+
+    return $value;
   }
 }

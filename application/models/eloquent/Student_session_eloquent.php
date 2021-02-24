@@ -28,4 +28,15 @@ class Student_session_eloquent extends  Eloquent
         get_instance()->load->model('eloquent/Student_eloquent');
         return $this->belongsTo('Student_eloquent', 'student_id', 'id');
     }
+
+
+    public function section() {
+        get_instance()->load->model('eloquent/Section');
+        return $this->belongsTo('Section', 'section_id', 'id');
+    }
+
+    public function class_item() {
+        get_instance()->load->model('eloquent/Student_classe');
+        return $this->belongsTo('Student_classe', 'class_id', 'id');
+    }
 }
