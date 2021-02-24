@@ -58,9 +58,10 @@
                             </div>
                         </div>
                         <div class="col-md-10 col-md-offset-1 text-right">
-                            <div class="form-group text-right pr-2">
-                                <strong>Variavéis para uso no Documento</strong><br />
-                                <code>Use <b>{{</b> para o preenchimento das variaveis</code>
+                            <div class="form-group text-left pr-2">
+                                <strong>Ajuda com as variavéis para uso no Documento</strong><br /><br />
+                                <pre class="text-danger">Use <b>{{</b> para o preenchimento das variaveis <br/>Para criar valores dinamicos nas taxas faça a substituição <b>n</b> pelo número. <br/><br/><strong>Ex: </strong><br/>{{parcela_escolar_@n_valor}} => {{parcela_escolar_@<b>1</b>_valor}}
+                                </pre>
                                 <!-- <code><?= implode(' | ',   array_map(function($str){  return sprintf('{%s}', $str);}, getEditorVariables() ) )?></code> -->
                             </div>
                         </div>
@@ -267,7 +268,7 @@
         ]
         var $summernote = $('.editor').summernote({
             toolbar: options,
-            height: 300,
+            height: 500,
             hint: {
                 mentions: [<?=sprintf("'%s'",implode("','" , getEditorVariables()))?>],
                 match: /\B\{\{(\w*)$/,
