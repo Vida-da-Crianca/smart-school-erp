@@ -703,7 +703,7 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
 
                                         <thead>
                                             <tr>
-                                            <th align="left"><?php echo $this->lang->line('fees_item_code'); ?></th>
+                                                <th align="left"><?php echo $this->lang->line('fees_item_code'); ?></th>
                                                 <th><?php echo $this->lang->line('fees_group'); ?></th>
                                                 <th class="text text-left"><?php echo $this->lang->line('due_date'); ?></th>
                                                 <th class="text text-left"><?php echo $this->lang->line('status'); ?></th>
@@ -798,7 +798,7 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                                                                                                                                                                                                                                                                                                             ?>
 
                                                         </td>
-                                                        <td class="text text-right"><?php echo $fee_value->amount; ?></td>
+                                                        <td class="text text-right"><?php echo number_format($fee_value->amount, 2,',', '.'); ?></td>
 
                                                         <td class="text text-left"></td>
                                                         <td class="text text-left"></td>
@@ -806,19 +806,19 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
 
 
                                                         <td class="text text-right"><?php
-                                                                                    echo (number_format($fee_discount, 2, '.', ''));
+                                                                                    echo (number_format($fee_discount, 2, ',', '.,'));
                                                                                     ?></td>
                                                         <td class="text text-right"><?php
-                                                                                    echo (number_format($fee_fine, 2, '.', ''));
+                                                                                    echo (number_format($fee_fine, 2, ',', '.,'));
                                                                                     ?></td>
                                                         <td class="text text-right"><?php
-                                                                                    echo (number_format($fee_paid, 2, '.', ''));
+                                                                                    echo (number_format($fee_paid, 2, ',', '.'));
                                                                                     ?></td>
                                                         <td class="text text-right"><?php
                                                                                     $display_none = "ss-none";
                                                                                     if ($feetype_balance > 0) {
                                                                                         $display_none = "";
-                                                                                        echo (number_format($feetype_balance, 2, '.', ''));
+                                                                                        echo (number_format($feetype_balance, 2, ',', '.,'));
                                                                                     }
                                                                                     ?>
 
@@ -867,9 +867,9 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
 
                                                                         <?php echo date($this->customlib->getSchoolDateFormat(), $this->customlib->dateyyyymmddTodateformat($fee_deposits_value->date)); ?>
                                                                     </td>
-                                                                    <td class="text text-right"><?php echo (number_format($fee_deposits_value->amount_discount, 2, '.', '')); ?></td>
-                                                                    <td class="text text-right"><?php echo (number_format($fee_deposits_value->amount_fine, 2, '.', '')); ?></td>
-                                                                    <td class="text text-right"><?php echo (number_format($fee_deposits_value->amount, 2, '.', '')); ?></td>
+                                                                    <td class="text text-right"><?php echo (number_format($fee_deposits_value->amount_discount, 2, ',', '.')); ?></td>
+                                                                    <td class="text text-right"><?php echo (number_format($fee_deposits_value->amount_fine, 2, ',', '.')); ?></td>
+                                                                    <td class="text text-right"><?php echo (number_format($fee_deposits_value->amount, 2, ',', '.')); ?></td>
 
 
                                                                     <td></td>
@@ -951,7 +951,7 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                                     <td></td>
                                                     <td class="text text-right"><?php echo $this->lang->line('grand_total'); ?></td>
                                                     <td class="text text-right"><?php
-                                                                                echo ($currency_symbol . number_format($total_amount, 2, '.', ''));
+                                                                                echo ($currency_symbol . number_format($total_amount, 2, ',', '.'));
                                                                                 ?></td>
                                                     <td></td>
                                                     <td></td>
@@ -959,17 +959,17 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
 
 
                                                     <td class="text text-right"><?php
-                                                                                echo ($currency_symbol . number_format($total_discount_amount + $alot_fee_discount, 2, '.', ''));
+                                                                                echo ($currency_symbol . number_format($total_discount_amount + $alot_fee_discount, 2, ',', '.'));
                                                                                 ?></td>
                                                     <td class="text text-right"><?php
-                                                                                echo ($currency_symbol . number_format($total_fine_amount, 2, '.', ''));
+                                                                                echo ($currency_symbol . number_format($total_fine_amount, 2, ',', '.'));
                                                                                 ?></td>
                                                     <td class="text text-right"><?php
-                                                                                echo ($currency_symbol . number_format($total_deposite_amount, 2, '.', ''));
+                                                                                echo ($currency_symbol . number_format($total_deposite_amount, 2, ',', '.'));
                                                                                 ?></td>
 
                                                     <td class="text text-right"><?php
-                                                                                echo ($currency_symbol . number_format($total_balance_amount - $alot_fee_discount, 2, '.', ''));
+                                                                                echo ($currency_symbol . number_format($total_balance_amount - $alot_fee_discount, 2, ',', '.'));
                                                                                 ?></td>
 
                                                 </tr>
