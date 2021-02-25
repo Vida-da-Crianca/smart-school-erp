@@ -62,7 +62,9 @@
                                 <strong>Ajuda com as variavéis para uso no Documento</strong><br /><br />
                                 <pre class="text-danger">Use <b>{{</b> para o preenchimento das variaveis <br/>Para criar valores dinamicos nas taxas faça a substituição <b>n</b> pelo número. <br/><br/><strong>Ex: </strong><br/>{{parcela_escolar_@n_valor}} => {{parcela_escolar_@<b>1</b>_valor}}
                                 </pre>
-                                <!-- <code><?= implode(' | ',   array_map(function($str){  return sprintf('{%s}', $str);}, getEditorVariables() ) )?></code> -->
+                                <!-- <code><?= implode(' | ',   array_map(function ($str) {
+                                                return sprintf('{%s}', $str);
+                                            }, getEditorVariables())) ?></code> -->
                             </div>
                         </div>
                     </div>
@@ -101,7 +103,7 @@
         border-radius: var(--ck-border-radius);
 
         /* Set vertical boundaries for the document editor. */
-        max-height: 700px;
+        /* max-height: 700px; */
 
         /* This element is a flex container for easier rendering. */
         display: flex;
@@ -186,6 +188,7 @@
 <!-- include summernote css/js -->
 
 <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.js"></script>
+<script src="/backend/js/summernote-pagebreak.js"></script>
 <script>
     $(document).ready(function() {
 
@@ -252,25 +255,56 @@
         //     };
         // }
 
+        function CleanPastedHTML(input) {
+            // 1. remove line breaks / Mso classes
+            var stringStripper = /(\n|\r| class=(")?Mso[a-zA-Z]+(")?)/g;
+            var output = input.replace(stringStripper, ' ');
+            // 2. strip Word generated HTML comments
+            var commentSripper = new RegExp('<!--(.*?)-->', 'g');
+            var output = output.replace(commentSripper, '');
+            var tagStripper = new RegExp('<(/)*(meta|link|span|\\?xml:|st1:|o:|font)(.*?)>', 'gi');
+            // 3. remove tags leave content if any
+            output = output.replace(tagStripper, '');
+            // 4. Remove everything in between and including tags '<style(.)style(.)>'
+            var badTags = ['style', 'script', 'applet', 'embed', 'noframes', 'noscript'];
 
+            for (var i = 0; i < badTags.length; i++) {
+                tagStripper = new RegExp('<' + badTags[i] + '.*?' + badTags[i] + '(.*?)>', 'gi');
+                output = output.replace(tagStripper, '');
+            }
+            // 5. remove attributes ' style="..."'
+            var badAttributes = ['style', 'start'];
+            for (var i = 0; i < badAttributes.length; i++) {
+                var attributeStripper = new RegExp(' ' + badAttributes[i] + '="(.*?)"', 'gi');
+                output = output.replace(attributeStripper, '');
+            }
+            return output;
+        }
 
 
 
         var options = [
             ['style', ['style']],
             ['font', ['bold', 'underline', 'clear']],
-            ['fontname', ['fontname']],
-            ['color', ['color']],
+            // ['fontname', ['fontname']],
+            ['fontsize', ['fontsize']],
+            ['pagebreak', ['pagebreak']],
             ['para', ['ul', 'ol', 'paragraph']],
             ['table', ['table']],
             ['insert', ['link', 'picture']],
-            ['view', ['fullscreen']],
+            ['view', ['fullscreen', 'codeview']],
         ]
         var $summernote = $('.editor').summernote({
             toolbar: options,
-            height: 500,
+            height: '218mm',
+            disableDragAndDrop: true,
+            fontSize: 12,
+            fontSizeUnit: 'pt',
+            lineHeights: ['0.2', '0.3', '0.4', '0.5', '0.6', '0.8', '1.0', '1.2', '1.4', '1.5', '2.0', '3.0'],
+            // codeviewFilter: false,
+            // codeviewIframeFilter: true,
             hint: {
-                mentions: [<?=sprintf("'%s'",implode("','" , getEditorVariables()))?>],
+                mentions: [<?= sprintf("'%s'", implode("','", getEditorVariables())) ?>],
                 match: /\B\{\{(\w*)$/,
                 search: function(keyword, callback) {
                     callback($.grep(this.mentions, function(item) {
@@ -289,6 +323,15 @@
                 ],
             },
             callbacks: {
+                onPaste: function(e) {
+                    var bufferText = ((e.originalEvent || e).clipboardData || window.clipboardData).getData('Text');
+                    e.preventDefault();
+                    setTimeout(function() {
+                        document.execCommand('insertText', false, bufferText);
+                    }, 10);
+
+
+                },
                 onImageUpload: async (files) => {
                     return new Promise(async (resolve) => {
                         const img = await convertBase64(files[0])
@@ -296,7 +339,9 @@
                             src: img,
                             width: 150
                         })
-                        $summernote.summernote('insertNode', $img[0]);
+                        setTimeout(function() {
+                            $summernote.summernote('insertNode', $img[0]);
+                        }, 10);
                         // console.log(await fileToBase64(files[0]))
                         // $summernote.summernote('insertImage', img);
 

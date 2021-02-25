@@ -18,7 +18,8 @@
         "amphp/amp": "^2.5",
         "amphp/process": "^1.1",
         "tecnickcom/tcpdf": "^6.3",
-        "wgenial/numeroporextenso": "^3.0"
+        "wgenial/numeroporextenso": "^3.0",
+        "dompdf/dompdf": "^1.0"
         
     },
     "require-dev": {
