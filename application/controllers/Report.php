@@ -1098,8 +1098,9 @@ class Report extends Admin_Controller
         $this->load->model(['eloquent/Student_deposite_eloquent', 'eloquent/Student_classe', 'eloquent/Student_session_eloquent']);
 
         $options = Student_classe::all()->pluck('class', 'id')->toArray();
+      
 
-        $data['options_classe'] = array_merge([null => 'Todos'], $options);
+        $data['options_classe'] = array_replace([null => 'Todos'], $options);
 
         if (isset($_POST['search_type']) && $_POST['search_type'] != '') {
             $dates = $this->customlib->get_betweendate($_POST['search_type']);
@@ -1118,47 +1119,67 @@ class Report extends Admin_Controller
         $deposite = new Student_deposite_eloquent;
 
         if ($this->input->post('search_type') != '') {
-            $opt = $deposite->whereBetween('student_fees_deposite.created_at', [sprintf('%s 00:00:00', $start_date), sprintf('%s 23:59:59', $end_date)])
-               
-                ->with(['student.session', 'invoice.billet', 'feeItem.session.student']);
+            $opt = $deposite
+                ->whereBetween('student_fees_deposite.created_at', [sprintf('%s 00:00:00', $start_date), sprintf('%s 23:59:59', $end_date)])
+                ->with(['student.session' => function ($q) {
+                    return $q->where('session_id', $this->sch_setting_detail->session_id);
+                }, 'invoice.billet', 'feeItem.session' =>
+                function ($q) {
+                    return $q->with(['student'])->where('session_id', $this->sch_setting_detail->session_id);
+                }]);
 
-            if ($this->input->post('class_id') != '') {
-                $opt->join('students', 'students.id', '=', 'student_fees_deposite.student_fees_master_id')
-                    ->join('student_session', 'students.id', '=', 'student_session.student_id')
-                    ->join('student_fee_items', 'student_fee_items.id', '=', 'student_fees_deposite.student_fees_id')
-                    ->where('student_session.section_id', $this->input->post('class_id'))
-                    ->select('student_fees_deposite.*');
-            }
+            // if ($this->input->post('class_id') != '') {
+            // dump($this->input->post('class_id'), $this->sch_setting_detail->session_id);
+            // ->join('students', 'students.id', '=', 'student_fees_deposite.student_fees_master_id')
+            //     ->join('student_session', 'students.id', '=', 'student_session.student_id')
+            //     ->join('student_fee_items', 'student_fee_items.id', '=', 'student_fees_deposite.student_fees_id')
+            //     ->where('student_session.class_id', $this->input->post('class_id'))
+            //     ->where('student_session.session_id', $this->sch_setting_detail->session_id)
+            // $opt->select('student_fees_deposite.*');
+            // }
+            $items =  $opt->orderBy('student_fees_deposite.created_at', 'ASC')->get();
 
 
-            $incomeList = $opt->orderBy('student_fees_deposite.created_at', 'ASC')->get()
+            if ($this->input->post('invoice_filter')) {
 
-                ->filter(function ($row) {
+                $items = $items->filter(function ($row) {
                     $filter_invoice = $this->input->post('invoice_filter');
-                    
                     if ($filter_invoice == 1 && $row->invoice->count() > 0  && $row->invoice->first()->invoice_number !=  null) {
                         return $row;
                     }
                     if ($filter_invoice == 2 && $row->invoice->count() == 0) {
                         return $row;
                     }
-                    
-                    
                     if (!$filter_invoice) {
                         return $row;
                     }
-
-                    
                 });
+            }
 
-            $data['incomeList'] = $incomeList->map(function ($row) {
-                $row->input =  $row->student;
-                if (!$row->student)
-                    $row->input = $row->feeItem->session->student;
+            $items = $items->map(function ($row) {
+                
+                $row->input =  $row->feeItem->session->student;
                 return $row;
             });
-        } 
-         
+            // dump($items->toArray());
+
+            if ($this->input->post('class_id') != '') {
+                $items = $items->filter(function ($item) {
+
+                    if (!$item->input) return false;
+                    if ($this->input->post('class_id') == 0) return true;
+                    return $item->feeItem->session->class_id ==  $this->input->post('class_id');
+                });
+            }
+
+            // dump($items->toArray());
+
+            // exit();
+
+
+            $data['incomeList'] = $items;
+        }
+
 
 
 
