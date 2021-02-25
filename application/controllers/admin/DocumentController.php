@@ -182,7 +182,7 @@ class DocumentController extends Admin_Controller
             'guardiao_logradouro_cidade' =>  utf8_decode($student->guardian_city),
             'guardiao_logradouro_estado' =>  $student->guardian_state,
             'guardiao_logradouro_cep' =>   mask($student->guardian_postal_code, '#####-###'),
-            'guardiao_documento' => $student->guardian_document,
+            'guardiao_documento' =>  mask($student->guardian_document,'###.###.###-##'),
             'guardiao_ocupacao' => $student->guardian_ocupation,
 
         ];
@@ -251,7 +251,7 @@ class DocumentController extends Admin_Controller
 
         foreach ($fees as $listOfFees) {
 
-            // $options[sprintf('%s_quantidade', Str::slug($listOfFees->first()->fee_type->type, '_'))] = $listOfFees->count();
+            $options[sprintf('%s_quantidade', Str::slug($listOfFees->first()->fee_type->type, '_'))] = $listOfFees->count();
             foreach ($listOfFees as $item) {
                 preg_match_all('!\d+!', $item->title, $matches);
                 // dump($matches);
