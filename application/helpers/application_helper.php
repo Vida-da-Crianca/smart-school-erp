@@ -126,8 +126,6 @@ function getParseDocumentVariables(): Collection
   }
 
   return $items->unique();
-
-  
 }
 function getEditorVariables()
 {
@@ -171,7 +169,12 @@ function getEditorVariables()
     'aluno_email',
     'guardiao_nome',
     'guardiao_email',
-    'guardiao_endereco',
+    'guardiao_logradouro',
+    'guardiao_logradouro_numero',
+    'guardiao_logradouro_cidade',
+    'guardiao_logradouro_bairro',
+    'guardiao_logradouro_estado',
+    'guardiao_logradouro_cep',
     'guardiao_documento',
     'guardiao_ocupacao',
 
@@ -287,4 +290,24 @@ if (!function_exists('extractArgument')) {
 
     return $value;
   }
+}
+
+
+function mask($val, $mask)
+{
+  $maskared = '';
+  $k = 0;
+  for ($i = 0; $i <= strlen($mask) - 1; ++$i) {
+    if ($mask[$i] == '#') {
+      if (isset($val[$k])) {
+        $maskared .= $val[$k++];
+      }
+    } else {
+      if (isset($mask[$i])) {
+        $maskared .= $mask[$i];
+      }
+    }
+  }
+
+  return $maskared;
 }
