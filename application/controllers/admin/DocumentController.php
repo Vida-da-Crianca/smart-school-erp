@@ -165,6 +165,8 @@ class DocumentController extends Admin_Controller
         $student =  Student_eloquent::where('id', $user_id)->with(['session' => function ($q) {
             return $q->with(['section', 'class_item'])->where('session_id', $this->sch_setting_detail->session_id);
         }])->first();
+
+        $now = new \DateTime();
         $data = [
             'aluno_nome' => $student->fullname,
             // 'class' => $student->session->class_item,
@@ -184,6 +186,10 @@ class DocumentController extends Admin_Controller
             'guardiao_logradouro_cep' =>   mask($student->guardian_postal_code, '#####-###'),
             'guardiao_documento' =>  mask($student->guardian_document,'###.###.###-##'),
             'guardiao_ocupacao' => $student->guardian_ocupation,
+            'mes_atual_extenso' => get_month($now),
+            'mes_atual_numero' => $now->format('m'),
+            'dia_atual' => $now->format('d'),
+            'ano_atual' => $now->format('Y'),
 
         ];
 

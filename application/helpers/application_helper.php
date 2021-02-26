@@ -178,6 +178,10 @@ function getEditorVariables()
     'guardiao_logradouro_cep',
     'guardiao_documento',
     'guardiao_ocupacao',
+    'mes_atual_extenso',
+    'mes_atual_numero',
+    'dia_atual',
+    'ano_atual'
 
     // 'email', 'guardian_name', 'state', 'city', 'firstname', 'lastname', 'guardian_occupation', "guardian_address",
     // "guardian_address_number",
