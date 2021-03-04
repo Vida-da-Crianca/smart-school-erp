@@ -72,7 +72,7 @@ class Invoice_eloquent extends  Eloquent
                     ->orWhereNull('invoice_number');
             })
             ->where('price', '>', '0')
-            ->where('bullet_id' ,'>', 0)
+            // ->where('bullet_id' ,'>', 0)
             ->orderBy('id','desc');
     }
 

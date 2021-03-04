@@ -56,7 +56,8 @@ class InvoiceCommand extends BaseCommand
 
         // return dump($options);
 
-
+ 
+        
         $provider = new Provider(new Barretos($options));
 
         $invoices = \Invoice_eloquent::with(['student', 'billet',  'feeStudentDeposite.feeGroupType.feeGroup', 'feeStudentDeposite.feeItem'])
@@ -81,7 +82,7 @@ class InvoiceCommand extends BaseCommand
 
             if( $item->latest_try_at !=  null){
                 $timed = Carbon::create($item->latest_try_at);
-                if(!in_array($timed->diffInMinutes(), $trys))
+                if(getenv('ENVIRONMENT')  !== 'development' && !in_array($timed->diffInMinutes(), $trys))
                   continue;
             }
             
@@ -143,7 +144,7 @@ class InvoiceCommand extends BaseCommand
                 if ($response->RetornoNota->Resultado == 0) {
                     
                     discord_exception(
-                        sprintf('%s', json_encode( array_merge((array)$response, ['ERP_ID' =>  $item->id ]), JSON_PRETTY_PRINT)),
+                        sprintf('%s', json_encode( array_merge((array)$response, ['numero_controle' =>  $item->id , 'nota' => $service->getBody()  ]) , JSON_PRETTY_PRINT)),
                         'Falha ao criar nota'
                     );
                 }

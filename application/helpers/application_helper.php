@@ -28,11 +28,13 @@ if (!function_exists('discord_log')) {
 
   function discord_log($message, $title = 'Logs')
   { 
-    $env =  sprintf('DISCORD_LOG_%s', strtoupper(getenv('ENVIRONMENT')));
+    $env =  sprintf('DISCORD_LOGS_%s', strtoupper(getenv('ENVIRONMENT')));
     if(!$env) return;
+
+    dump($env);
     (new DiscordMsg(
       sprintf('**%s** %s``` %s ```', $title, PHP_EOL, $message), // message
-      $env,
+      getenv($env),
       ''
     ))->send();
   }
@@ -46,7 +48,7 @@ if (!function_exists('discord_exception')) {
     if(!$env) return; 
     (new DiscordMsg(
       sprintf('**%s** %s``` %s ```', $title, PHP_EOL, $message), // message
-      $env,
+      getenv($env),
       ''
     ))->send();
   }
@@ -61,7 +63,7 @@ if (!function_exists('discord_schedule_log')) {
    
     (new DiscordMsg(
       sprintf('**%s** %s``` %s ```', $title, PHP_EOL, $message), // message
-      $env,
+      getenv($env),
       ''
     ))->send();
   }
@@ -76,7 +78,7 @@ if (!function_exists('discord_billet_old')) {
    
     (new DiscordMsg(
       sprintf('**%s** %s``` %s ```', $title, PHP_EOL, $message), // message
-      $env,
+      getenv($env),
       ''
     ))->send();
   }
