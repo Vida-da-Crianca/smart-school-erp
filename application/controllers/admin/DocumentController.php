@@ -1,6 +1,7 @@
 <?php
 
 use Application\Core\JsonResponse;
+use Application\Support\NumberExtensil;
 use Application\Support\Parser;
 use Respect\Validation\Rules\Json;
 use Spipu\Html2Pdf\Html2Pdf;
@@ -161,7 +162,7 @@ class DocumentController extends Admin_Controller
         $document =   Document::where('id', $id)->first();
 
         $parser = new Parser();
-        // dump($this->sch_setting_detail);
+ 
         $student =  Student_eloquent::where('id', $user_id)->with(['session' => function ($q) {
             return $q->with(['section', 'class_item'])->where('session_id', $this->sch_setting_detail->session_id);
         }])->first();
@@ -194,19 +195,10 @@ class DocumentController extends Admin_Controller
         ];
 
         $data = array_merge($data, $this->getVarsTypes($student));
-
-        // ($this->getVarsTypes($student));
-        // exit;
         $page =  $parser->parse_string(str_replace(['{{', '}}'], ['{', '}'], $document->body), $data);
         $page = str_replace('figure', 'div', $page);
-        // $page = preg_replace('/(<img\b[^>])/i', '$1 style="max-width:150px; !important;" ', $page);
-        // $page = preg_replace('/font-family.+?;/', '', $page);
-        // $page = strip_tags($page, '<p><a><table><th><tbody><tr><td><thead><tfoot><img><strong><br><h1><h2><h3><h4><h5><h6><p><i><em><span>');
+    
         $page = $this->load->view('parser/pdf', ['body' => $page], true);
-        // die($page);
-        // return;
-        // die($page);
-        // $page = strip_tags($page, '<p><a><table><th><tbody><tr><td><thead><tfoot><img><strong><br><h1><h2><h3><h4><h5><h6><p><i><em><span>');
         try {
 
             $html2pdf = new Html2Pdf('P', 'A4', 'pt', true, 'UTF-8', [7,7,7,8]);
@@ -220,25 +212,6 @@ class DocumentController extends Admin_Controller
             $formatter = new ExceptionFormatter($e);
             echo $formatter->getHtmlMessage();
         }
-
-        // try {
-        //     $pdf =  new Dompdf();;
-        //     $options = $pdf->getOptions();
-        //     $options->setIsHtml5ParserEnabled(true);
-        //     $pdf->loadHtml($page);
-        //     $pdf->setPaper('A4', 'landscape');
-
-
-
-        //     $pdf->render();
-        // } catch (\Exception $e) {
-
-        //     dump($e->getMessage());
-        // }
-
-
-
-        // die();
     }
 
 
@@ -256,8 +229,9 @@ class DocumentController extends Admin_Controller
         // dump($fees->toArray());
 
         foreach ($fees as $listOfFees) {
-
-            $options[sprintf('%s_quantidade', Str::slug($listOfFees->first()->fee_type->type, '_'))] = $listOfFees->count();
+            $qty = $listOfFees->count();
+            $options[sprintf('%s_quantidade', Str::slug($listOfFees->first()->fee_type->type, '_'))] = $qty;
+            $options[sprintf('%s_quantidade_extenso', Str::slug($listOfFees->first()->fee_type->type, '_'))] = NumberExtensil::converte($qty, false);
             foreach ($listOfFees as $item) {
                 preg_match_all('!\d+!', $item->title, $matches);
                 // dump($matches);

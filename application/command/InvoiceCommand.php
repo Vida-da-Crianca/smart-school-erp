@@ -143,7 +143,7 @@ class InvoiceCommand extends BaseCommand
                 if ($response->RetornoNota->Resultado == 0) {
                     
                     discord_exception(
-                        sprintf('%s', json_encode($response, JSON_PRETTY_PRINT)),
+                        sprintf('%s', json_encode( array_merge((array)$response, ['ERP_ID' =>  $item->id ]), JSON_PRETTY_PRINT)),
                         'Falha ao criar nota'
                     );
                 }
