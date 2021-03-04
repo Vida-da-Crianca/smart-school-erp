@@ -186,7 +186,7 @@ class Student extends Admin_Controller
 
         $this->load->model('eloquent/Document');
 
-        $data['documents'] =  Document::all();
+        $data['documents'] =  Document::orderBy('title','asc')->get();
         $data['student_doc']    = $student_doc;
         $data['student_doc_id'] = $id;
         $category_list          = $this->category_model->get();
