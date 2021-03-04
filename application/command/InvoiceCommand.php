@@ -136,10 +136,12 @@ class InvoiceCommand extends BaseCommand
                     $item->update(['invoice_number' => $response->RetornoNota->Nota, 
                     'status' => Invoice_eloquent::VALID,
                     'body' => json_encode($response->RetornoNota)]);
+                    
                     discord_log(sprintf('%s', json_encode($response->RetornoNota, JSON_PRETTY_PRINT)) , 'Nova Nota Fiscal');
 
                 }
                 if ($response->RetornoNota->Resultado == 0) {
+                    
                     discord_exception(
                         sprintf('%s', json_encode($response, JSON_PRETTY_PRINT)),
                         'Falha ao criar nota'
@@ -147,7 +149,7 @@ class InvoiceCommand extends BaseCommand
                 }
                 
 
-                // dump($response);
+                dump($response);
 
            
             } catch (\Exception $e) {

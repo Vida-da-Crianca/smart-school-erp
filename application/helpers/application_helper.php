@@ -27,10 +27,12 @@ if (!function_exists('search_key_in')) {
 if (!function_exists('discord_log')) {
 
   function discord_log($message, $title = 'Logs')
-  {
+  { 
+    $env =  sprintf('DISCORD_LOG_%s', strtoupper(getenv('ENVIRONMENT')));
+    if(!$env) return;
     (new DiscordMsg(
       sprintf('**%s** %s``` %s ```', $title, PHP_EOL, $message), // message
-      getenv('DISCORD_HOOK'),
+      $env,
       ''
     ))->send();
   }
@@ -39,10 +41,12 @@ if (!function_exists('discord_log')) {
 if (!function_exists('discord_exception')) {
 
   function discord_exception($message, $title = 'Exception')
-  {
+  { 
+    $env =  sprintf('DISCORD_EXCEPTIONS_%s', strtoupper(getenv('ENVIRONMENT')));
+    if(!$env) return; 
     (new DiscordMsg(
       sprintf('**%s** %s``` %s ```', $title, PHP_EOL, $message), // message
-      getenv('DISCORD_EXCEPTIONS'),
+      $env,
       ''
     ))->send();
   }
@@ -51,11 +55,13 @@ if (!function_exists('discord_exception')) {
 if (!function_exists('discord_schedule_log')) {
 
   function discord_schedule_log($message, $title = 'Shedule Logs')
-  {
-    if (!getenv('DISCORD_SCHEDULE_HOOK')) return;
+  { 
+    $env =  sprintf('DISCORD_EXCEPTIONS_%s', strtoupper(getenv('ENVIRONMENT')));
+    if(!$env) return; 
+   
     (new DiscordMsg(
       sprintf('**%s** %s``` %s ```', $title, PHP_EOL, $message), // message
-      getenv('DISCORD_SCHEDULE_HOOK'),
+      $env,
       ''
     ))->send();
   }
@@ -65,10 +71,12 @@ if (!function_exists('discord_billet_old')) {
 
   function discord_billet_old($message, $title = 'Cobrança recorrente')
   {
-    if (!getenv('DISCORD_BILLET_OLD_HOOK')) return;
+    $env =  sprintf('DISCORD_BILLET_OLD_%s', strtoupper(getenv('ENVIRONMENT')));
+    if(!$env) return; 
+   
     (new DiscordMsg(
       sprintf('**%s** %s``` %s ```', $title, PHP_EOL, $message), // message
-      getenv('DISCORD_BILLET_OLD_HOOK'),
+      $env,
       ''
     ))->send();
   }
