@@ -109,7 +109,15 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                         <div class="box-body row">
 
                             <?php echo $this->customlib->getCSRF(); ?>
-
+                            <div class="col-sm-6 col-md-3">
+                                <div class="form-group">
+                                    <label><?php echo $this->lang->line('session') ; ?></label>
+                                    <?php
+                                    print(form_dropdown('option_session_id', $options_session, $option_session_id, 'class="form-control" '));
+                                    ?>
+                                    <span class="text-danger"><?php echo form_error('search_type'); ?></span>
+                                </div>
+                            </div>
                             <div class="col-sm-6 col-md-3">
                                 <div class="form-group">
                                     <label><?php echo $this->lang->line('search') . " " . $this->lang->line('type'); ?></label>
@@ -128,20 +136,16 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                     <span class="text-danger"><?php echo form_error('search_type'); ?></span>
                                 </div>
                             </div>
-                            <div class="col-sm-6 col-md-4">
+                            <div class="col-sm-6 col-md-3">
                                 <div class="form-group">
                                     <label><?php echo $this->lang->line('search') . " " . $this->lang->line('class'); ?></label>
                                     <?php
                                     print(form_dropdown('class_id', $options_classe, $class_id, 'class="form-control" '));
                                     ?>
-                                    <!-- <select class="form-control" name="class_id">
-
-                                        
-                                    </select> -->
                                     <span class="text-danger"><?php echo form_error('class_id'); ?></span>
                                 </div>
                             </div>
-                            <div class="col-sm-6 col-md-4">
+                            <div class="col-sm-6 col-md-3">
                                 <div class="form-group">
                                     <label><?php echo $this->lang->line('search') . " " . $this->lang->line('invoice_or_no'); ?></label>
                                     <?php

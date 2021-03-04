@@ -1094,11 +1094,19 @@ class Report extends Admin_Controller
         $data['date_type'] = $this->customlib->date_type();
         $data['date_typeid'] = '';
         $data['class_id'] = $this->input->post('class_id');
+        $option_session_id =  $this->input->post('option_session_id') ?   $this->input->post('option_session_id') : $this->sch_setting_detail->session_id;
+        $data['option_session_id'] = $option_session_id;
+
         $data['invoice_filter'] = $this->input->post('invoice_filter');
-        $this->load->model(['eloquent/Student_deposite_eloquent', 'eloquent/Student_classe', 'eloquent/Student_session_eloquent']);
+        $this->load->model([
+            'eloquent/Student_deposite_eloquent', 'eloquent/Student_classe', 'eloquent/Student_session_eloquent',
+            'eloquent/SessionYear'
+        ]);
 
         $options = Student_classe::all()->pluck('class', 'id')->toArray();
-      
+
+        $data['options_session'] = SessionYear::all()->pluck('session', 'id')->toArray();
+
 
         $data['options_classe'] = array_replace([null => 'Todos'], $options);
 
@@ -1121,25 +1129,15 @@ class Report extends Admin_Controller
         if ($this->input->post('search_type') != '') {
             $opt = $deposite
                 ->whereBetween('student_fees_deposite.created_at', [sprintf('%s 00:00:00', $start_date), sprintf('%s 23:59:59', $end_date)])
-                ->with(['student.session' => function ($q) {
-                    return $q->where('session_id', $this->sch_setting_detail->session_id);
+                ->with(['student.session' => function ($q) use ($option_session_id) {
+                    return $q->where('session_id', $option_session_id);
                 }, 'invoice.billet', 'feeItem.session' =>
-                function ($q) {
-                    return $q->with(['student'])->where('session_id', $this->sch_setting_detail->session_id);
+                function ($q) use ($option_session_id) {
+                    return $q->with(['student'])->where('session_id', $option_session_id);
                 }]);
 
-            // if ($this->input->post('class_id') != '') {
-            // dump($this->input->post('class_id'), $this->sch_setting_detail->session_id);
-            // ->join('students', 'students.id', '=', 'student_fees_deposite.student_fees_master_id')
-            //     ->join('student_session', 'students.id', '=', 'student_session.student_id')
-            //     ->join('student_fee_items', 'student_fee_items.id', '=', 'student_fees_deposite.student_fees_id')
-            //     ->where('student_session.class_id', $this->input->post('class_id'))
-            //     ->where('student_session.session_id', $this->sch_setting_detail->session_id)
-            // $opt->select('student_fees_deposite.*');
-            // }
             $items =  $opt->orderBy('student_fees_deposite.created_at', 'ASC')->get();
-
-
+            
             if ($this->input->post('invoice_filter')) {
 
                 $items = $items->filter(function ($row) {
@@ -1157,7 +1155,7 @@ class Report extends Admin_Controller
             }
 
             $items = $items->map(function ($row) {
-                
+
                 $row->input =  $row->feeItem->session->student;
                 return $row;
             });
