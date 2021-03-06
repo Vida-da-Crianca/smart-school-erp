@@ -30,8 +30,6 @@ if (!function_exists('discord_log')) {
   { 
     $env =  sprintf('DISCORD_LOGS_%s', strtoupper(getenv('ENVIRONMENT')));
     if(!$env) return;
-
-    dump($env);
     (new DiscordMsg(
       sprintf('**%s** %s``` %s ```', $title, PHP_EOL, $message), // message
       getenv($env),

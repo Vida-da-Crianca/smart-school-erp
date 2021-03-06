@@ -51,7 +51,7 @@ class TributeCommand extends BaseCommand
             'eloquent/Invoice_eloquent', 'eloquent/Invoice_setting_eloquent',
             'eloquent/Invoice_resume_eloquent'
         ]);
-        if (!$isValid  && \Invoice_resume_eloquent::where('due_date', Carbon::now()->sub('1','month')->format('Y-m-01'))->count() > 0) return;
+        if (getenv('ENVIRONMENT') !== 'development' && !$isValid  && \Invoice_resume_eloquent::where('due_date', Carbon::now()->sub('1','month')->format('Y-m-01'))->count() > 0) return;
 
         $this->buildTotalOldMonth();
         $settings = \Invoice_setting_eloquent::get()->pluck('value', 'key');

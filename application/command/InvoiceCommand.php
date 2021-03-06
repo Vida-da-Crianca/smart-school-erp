@@ -70,6 +70,7 @@ class InvoiceCommand extends BaseCommand
           
         $options = $settings->toArray();
         $aliquota = str_replace([',','%'], ['.',''],$options['iss']);
+        $simple_rate = str_replace([',','%'], ['.',''],$options['simple_rate']);
         $first = Carbon::now();
         $trys = [10, 15, 20, 25, 30];
 
@@ -94,11 +95,12 @@ class InvoiceCommand extends BaseCommand
             $al = number_format($calc,2,',', '.');
             
            
-            
+            $descptionNF = $item->description != null ?  $item->description : sprintf('%s %s %s', $item->student->full_name, PHP_EOL, $item->_description);
+            $tributteCalculate = number_format( (($simple_rate/100) * $item->price), 2, ',', '.');
             $data  = [
                 'valor' => str_replace('.',',',$item->price),
                 'base'  => str_replace('.',',',$item->price),
-                'descricaoNF' => $item->description != null ?  $item->description : sprintf('%s %s %s', $item->student->full_name, PHP_EOL, $item->_description),
+                'descricaoNF' => sprintf('%s%sValor aprox. dos tributos (Lei nº 12.741/2012):  R$ %s - Aliq: %s', $descptionNF, PHP_EOL , $tributteCalculate, $options['simple_rate']) ,
                 'tomador_tipo' => 2,
                 'tomador_cnpj' => $item->student->guardian_document, //cnoj da empresa
                 'tomador_email' =>  getenv('ENVIRONMENT') == 'development' ?  getenv('MAIL_NOTA') : $item->student->guardian_email,
@@ -110,10 +112,10 @@ class InvoiceCommand extends BaseCommand
                 'tomador_cod_cidade' => getCodeCity($item->student->guardian_city),
                 'rps_num' => '',
                 'id_sis_legado' => '',
-                'iss' => $options['iss'],
+                // 'iss' => $options['iss'],
                 'aliquota_simples' => $aliquota,
                 // 'aliquota_atividade'=> $options['aliquota_atividade'],
-                // 'retencao_iss' => '2.80%',
+                'retencao_iss' =>   ($aliquota / 100 ) * $item->price ,
                 'rps_serie' => $options['serie'],
                 'serie' =>  $options['serie']
             ];
@@ -133,12 +135,13 @@ class InvoiceCommand extends BaseCommand
                 // dump($service->getBody());
 
                 if ($response->RetornoNota->Resultado > 0) {
+                    
                     unset($item->_description);
                     $item->update(['invoice_number' => $response->RetornoNota->Nota, 
                     'status' => Invoice_eloquent::VALID,
                     'body' => json_encode($response->RetornoNota)]);
                     
-                    discord_log(sprintf('%s', json_encode($response->RetornoNota, JSON_PRETTY_PRINT)) , 'Nova Nota Fiscal');
+                    discord_log(sprintf('%s', json_encode( array_merge((array) $response->RetornoNota, ['numero_controle' =>  $item->id , 'nota' => $service->getBody()  ]) , JSON_PRETTY_PRINT)) , 'Nova Nota Fiscal');
 
                 }
                 if ($response->RetornoNota->Resultado == 0) {
@@ -150,7 +153,7 @@ class InvoiceCommand extends BaseCommand
                 }
                 
 
-                dump($response);
+                // dump($service->getBody());
 
            
             } catch (\Exception $e) {
