@@ -57,6 +57,40 @@
                                 </button>
                             </div>
                         </div>
+                        <div class="col-md-10 col-md-offset-1 mb-4 mt-4">
+                            <div>
+
+                                <!-- Nav tabs -->
+                                <ul class="nav nav-tabs" role="tablist">
+                                    <li role="presentation" class="active"><a href="#student" aria-controls="student" role="tab" data-toggle="tab">Variaveis do Aluno</a></li>
+                                    <li role="presentation"><a href="#guardian" aria-controls="guardian" role="tab" data-toggle="tab">Variaveis do Responsavel</a></li>
+                                    <li role="presentation"><a href="#finance" aria-controls="finance" role="tab" data-toggle="tab">Variaveis do Financeiro</a></li>
+                                   
+                                </ul>
+
+                                <!-- Tab panes -->
+                                <div class="tab-content p-2">
+                                    <div role="tabpanel" class="tab-pane active" id="student">
+                                     <ul class="list-group">
+                                       <?=sprintf('%s', implode('', array_map( function($row){ return sprintf('<li class="list-group-item">{{%s}}</li>', $row);}, get_student_var_document()) ))?>
+                                      </ul>
+                                    </div>
+                                    <div role="tabpanel" class="tab-pane" id="guardian">
+                                    <ul class="list-group">
+                                       <?=sprintf('%s', implode('', array_map( function($row){ return sprintf('<li class="list-group-item">{{%s}}</li>', $row);}, get_guardian_var_document()) ))?>
+                                      </ul>
+                                    </div>
+                                    <div role="tabpanel" class="tab-pane" id="finance">
+                                    <ul class="list-group">
+                                       <?=sprintf('%s', implode('', array_map( function($row){ return sprintf('<li class="list-group-item">{{%s}}</li>', $row);}, get_finance_var_document()) ))?>
+                                      </ul>
+                                    </div>
+                                    
+                                </div>
+
+                            </div>
+
+                        </div>
                         <div class="col-md-10 col-md-offset-1 text-right">
                             <div class="form-group text-left pr-2">
                                 <strong>Ajuda com as variavéis para uso no Documento</strong><br /><br />
@@ -182,78 +216,14 @@
         display: none;
     }
 </style>
-<!-- <script src="https://cdn.ckeditor.com/ckeditor5/24.0.0/classic/ckeditor.js"></script> -->
-<!-- <script src="/backend/ckeditor5/build/ckeditor.js"></script>
-<script src="/backend/ckeditor5/sample/styles.css"></script> -->
-<!-- include summernote css/js -->
+
 
 <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.js"></script>
 <script src="/backend/js/summernote-pagebreak.js"></script>
 <script>
     $(document).ready(function() {
 
-        // class Adapter {
-        //     /**
-        //      * Creates a new adapter instance.
-        //      *
-        //      * @param {module:upload/filerepository~FileLoader} loader
-        //      */
-        //     constructor(loader) {
-        //         /**
-        //          * `FileLoader` instance to use during the upload.
-        //          *
-        //          * @member {module:upload/filerepository~FileLoader} #loader
-        //          */
-        //         this.loader = loader;
-        //     }
 
-        //     /**
-        //      * Starts the upload process.
-        //      *
-        //      * @see module:upload/filerepository~UploadAdapter#upload
-        //      * @returns {Promise}
-        //      */
-        //     upload() {
-        //         return new Promise((resolve, reject) => {
-        //             const reader = this.reader = new window.FileReader();
-
-        //             reader.addEventListener('load', () => {
-        //                 resolve({
-        //                     default: reader.result
-        //                 });
-        //             });
-
-        //             reader.addEventListener('error', err => {
-        //                 reject(err);
-        //             });
-
-        //             reader.addEventListener('abort', () => {
-        //                 reject();
-        //             });
-
-        //             this.loader.file.then(file => {
-        //                 reader.readAsDataURL(file);
-        //             });
-        //         });
-        //     }
-
-        //     /**
-        //      * Aborts the upload process.
-        //      *
-        //      * @see module:upload/filerepository~UploadAdapter#abort
-        //      * @returns {Promise}
-        //      */
-        //     abort() {
-        //         this.reader.abort();
-        //     }
-        // }
-
-        // function MyCustomUploadAdapterPlugin(editor) {
-        //     editor.plugins.get('FileRepository').createUploadAdapter = (loader) => {
-        //         // Configure the URL to the upload script in your back-end here!
-        //         return new Adapter(loader);
-        //     };
-        // }
 
         function CleanPastedHTML(input) {
             // 1. remove line breaks / Mso classes

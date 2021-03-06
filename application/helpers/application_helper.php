@@ -27,9 +27,9 @@ if (!function_exists('search_key_in')) {
 if (!function_exists('discord_log')) {
 
   function discord_log($message, $title = 'Logs')
-  { 
+  {
     $env =  sprintf('DISCORD_LOGS_%s', strtoupper(getenv('ENVIRONMENT')));
-    if(!$env) return;
+    if (!$env) return;
     (new DiscordMsg(
       sprintf('**%s** %s``` %s ```', $title, PHP_EOL, $message), // message
       getenv($env),
@@ -41,9 +41,9 @@ if (!function_exists('discord_log')) {
 if (!function_exists('discord_exception')) {
 
   function discord_exception($message, $title = 'Exception')
-  { 
+  {
     $env =  sprintf('DISCORD_EXCEPTIONS_%s', strtoupper(getenv('ENVIRONMENT')));
-    if(!$env) return; 
+    if (!$env) return;
     (new DiscordMsg(
       sprintf('**%s** %s``` %s ```', $title, PHP_EOL, $message), // message
       getenv($env),
@@ -55,10 +55,10 @@ if (!function_exists('discord_exception')) {
 if (!function_exists('discord_schedule_log')) {
 
   function discord_schedule_log($message, $title = 'Shedule Logs')
-  { 
+  {
     $env =  sprintf('DISCORD_EXCEPTIONS_%s', strtoupper(getenv('ENVIRONMENT')));
-    if(!$env) return; 
-   
+    if (!$env) return;
+
     (new DiscordMsg(
       sprintf('**%s** %s``` %s ```', $title, PHP_EOL, $message), // message
       getenv($env),
@@ -72,8 +72,8 @@ if (!function_exists('discord_billet_old')) {
   function discord_billet_old($message, $title = 'Cobrança recorrente')
   {
     $env =  sprintf('DISCORD_BILLET_OLD_%s', strtoupper(getenv('ENVIRONMENT')));
-    if(!$env) return; 
-   
+    if (!$env) return;
+
     (new DiscordMsg(
       sprintf('**%s** %s``` %s ```', $title, PHP_EOL, $message), // message
       getenv($env),
@@ -138,15 +138,86 @@ function getParseDocumentVariables(): Collection
 function getEditorVariables()
 {
 
+  // $CI = get_instance();
+  // $CI->load->model(['eloquent/Student_eloquent', 'eloquent/Fee_type_eloquent', 'Feesessiongroup_model']);
+
+
+  // // $options =  (new Student_eloquent)->getTableColumns();
+  // $data = Fee_type_eloquent::all();
+
+  // //  dump();
+
+  // $options = [];
+  // $items =  collect([]);
+  // $types = $CI->Feesessiongroup_model->getFeesByGroup();
+  // foreach ($types as $row) {
+
+  //   foreach ($row->feetypes as $item) {
+  //     $items->push((object) ['id' => $item->feetype_id, 'type' => $item->type]);
+  //   }
+  // }
+
+  // $distincts = $items->unique();
+
+  // foreach ($distincts as $row) {
+  //   // $options[] = Str::slug($row->type, '_');
+  //   // $options[] = sprintf('primeira_%s', Str::slug($row->type, '_'));
+  //   // $options[] = sprintf('atual_%s', Str::slug($row->type, '_'));
+  //   $options[] = sprintf('%s_@n_valor', Str::slug($row->type, '_'));
+  //   $options[] = sprintf('%s_quantidade', Str::slug($row->type, '_'));
+  //   $options[] = sprintf('%s_quantidade_extenso', Str::slug($row->type, '_'));
+  //   $options[] = sprintf('%s_@n_valor_extenso', Str::slug($row->type, '_'));
+  //   $options[] = sprintf('%s_@n_data', Str::slug($row->type, '_'));
+  //   $options[] = sprintf('%s_@n_descricao', Str::slug($row->type, '_'));
+  //   $options[] = sprintf('%s_@n_vencimento_dia', Str::slug($row->type, '_'));
+  //   $options[] = sprintf('%s_@n_vencimento_mes', Str::slug($row->type, '_'));
+  //   $options[] = sprintf('%s_@n_vencimento_ano', Str::slug($row->type, '_'));
+  // }
+  // $only = [
+  //   'aluno_nome',
+  //   'aluno_turma',
+  //   'aluno_email',
+  //   'guardiao_nome',
+  //   'guardiao_email',
+  //   'guardiao_logradouro',
+  //   'guardiao_logradouro_numero',
+  //   'guardiao_logradouro_cidade',
+  //   'guardiao_logradouro_bairro',
+  //   'guardiao_logradouro_estado',
+  //   'guardiao_logradouro_cep',
+  //   'guardiao_documento',
+  //   'guardiao_ocupacao',
+  //   'mes_atual_extenso',
+  //   'mes_atual_numero',
+  //   'dia_atual',
+  //   'ano_atual'
+
+  //   // 'email', 'guardian_name', 'state', 'city', 'firstname', 'lastname', 'guardian_occupation', "guardian_address",
+  //   // "guardian_address_number",
+  //   // "guardian_email",
+  //   // "guardian_document",
+  //   // "guardian_state",
+  //   // "guardian_city",
+  //   // "guardian_district",
+  //   // "guardian_postal_code",
+  //   // "guardian_postal_phone"
+
+  // ];
+
+
+
+  // $options = array_filter($options, function ($v) use ($only) {
+  //   return in_array($v, $only);
+  // });
+
+  return  array_merge(get_student_var_document(), get_guardian_var_document() , get_finance_var_document() ); // implode(' | ',   array_map(function($str){  return sprintf('{%s}', $str);}, array_merge($only, $options)) );
+}
+
+function get_finance_var_document(): array
+{
+  
   $CI = get_instance();
   $CI->load->model(['eloquent/Student_eloquent', 'eloquent/Fee_type_eloquent', 'Feesessiongroup_model']);
-
-
-  // $options =  (new Student_eloquent)->getTableColumns();
-  $data = Fee_type_eloquent::all();
-
-  //  dump();
-
   $options = [];
   $items =  collect([]);
   $types = $CI->Feesessiongroup_model->getFeesByGroup();
@@ -173,10 +244,25 @@ function getEditorVariables()
     $options[] = sprintf('%s_@n_vencimento_mes', Str::slug($row->type, '_'));
     $options[] = sprintf('%s_@n_vencimento_ano', Str::slug($row->type, '_'));
   }
-  $only = [
+
+  return $options;
+}
+
+
+function get_student_var_document(): array
+{
+
+  return [
     'aluno_nome',
     'aluno_turma',
     'aluno_email',
+  ];
+}
+
+function get_guardian_var_document(): array
+{
+
+  return [
     'guardiao_nome',
     'guardiao_email',
     'guardiao_logradouro',
@@ -203,14 +289,6 @@ function getEditorVariables()
     // "guardian_postal_phone"
 
   ];
-
-
-
-  // $options = array_filter($options, function ($v) use ($only) {
-  //   return in_array($v, $only);
-  // });
-
-  return  array_merge($only, $options); // implode(' | ',   array_map(function($str){  return sprintf('{%s}', $str);}, array_merge($only, $options)) );
 }
 
 
