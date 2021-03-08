@@ -81,8 +81,8 @@
                                       </ul>
                                     </div>
                                     <div role="tabpanel" class="tab-pane" id="finance">
-                                    <ul class="list-group">
-                                       <?=sprintf('%s', implode('', array_map( function($row){ return sprintf('<li class="list-group-item">{{%s}}</li>', $row);}, get_finance_var_document()) ))?>
+                                    <ul class="list-group" style="list-style: none; word-wrap: break-word; ">
+                                       <?=sprintf('%s', implode('', array_map( function($row){ return sprintf('<li class="col-md-3 col-xs-6" style="margin-bottom: 5px;"><span class="list-group-item"> {{%s}}</span></li>', $row);}, get_finance_var_document()) ))?>
                                       </ul>
                                     </div>
                                     

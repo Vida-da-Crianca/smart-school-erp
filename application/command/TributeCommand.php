@@ -63,6 +63,11 @@ class TributeCommand extends BaseCommand
         $total = \Invoice_resume_eloquent::whereBetween('due_date', [$dateTime->format('Y-m-01'), $now])
             ->sum('total');
         $tribute = null;
+
+        
+        dump($total);
+        return;
+
         foreach ($data as $row) {
             if ($total >= $row->rba_min   &&  $total <=  $row->rba_max) {
                 $tribute = $row;
