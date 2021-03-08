@@ -91,6 +91,8 @@ class Student extends Admin_Controller
         $userdata                = $this->customlib->getUserData();
         $carray                  = array();
 
+
+
         if (!empty($data["classlist"])) {
             foreach ($data["classlist"] as $ckey => $cvalue) {
 
@@ -100,29 +102,37 @@ class Student extends Admin_Controller
 
         $category             = $this->category_model->get();
         $data['categorylist'] = $category;
+
+        $data['listOfClassId'] = $this->input->post('class_id_option') ? $this->input->post('class_id_option') : [];
+        $data['class_id_option'] = $this->input->post('class_id_option') ? $this->input->post('class_id_option') : [];
+      
         if ($this->input->server('REQUEST_METHOD') == "GET") {
             $this->load->view('layout/header', $data);
             $this->load->view('student/studentReport', $data);
             $this->load->view('layout/footer', $data);
         } else {
-            $this->form_validation->set_rules('class_id', $this->lang->line('class'), 'trim|required|xss_clean');
+            $this->form_validation->set_rules('class_id_option[]', $this->lang->line('class'), 'trim|required|xss_clean');
+
+            
             if ($this->form_validation->run() == false) {
+            
                 $this->load->view('layout/header', $data);
                 $this->load->view('student/studentReport', $data);
                 $this->load->view('layout/footer', $data);
             } else {
-                $class       = $this->input->post('class_id');
+                $class       = $this->input->post('class_id_option') ? $this->input->post('class_id_option') : [];
                 $section     = $this->input->post('section_id');
                 $category_id = $this->input->post('category_id');
                 $gender      = $this->input->post('gender');
                 $rte         = $this->input->post('rte');
                 $search      = $this->input->post('search');
                 if (isset($search)) {
+                  
                     if ($search == 'search_filter') {
                         $resultlist         = $this->student_model->searchByClassSectionCategoryGenderRte($class, $section, $category_id, $gender, $rte);
                         $data['resultlist'] = $resultlist;
                     }
-                    $data['class_id']    = $class;
+                    $data['class_id_option']    = $class;
                     $data['section_id']  = $section;
                     $data['category_id'] = $category_id;
                     $data['gender']      = $gender;
@@ -176,7 +186,7 @@ class Student extends Admin_Controller
             $row->fees = Student_fee_item_eloquent::where('student_session_id', $row->student_session_id)
                 // ->whereYear('due_date', $due_date)
                 ->with(['deposite', 'billet'])
-                ->orderBy('due_date','ASC')
+                ->orderBy('due_date', 'ASC')
                 ->get();
         }
         $data['student_due_fee']      = $student_due_fee;
@@ -186,7 +196,7 @@ class Student extends Admin_Controller
 
         $this->load->model('eloquent/Document');
 
-        $data['documents'] =  Document::orderBy('title','asc')->get();
+        $data['documents'] =  Document::orderBy('title', 'asc')->get();
         $data['student_doc']    = $student_doc;
         $data['student_doc_id'] = $id;
         $category_list          = $this->category_model->get();

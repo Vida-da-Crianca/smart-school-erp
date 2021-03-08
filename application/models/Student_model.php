@@ -464,8 +464,9 @@ class Student_model extends MY_Model {
         $this->db->join('categories', 'students.category_id = categories.id', 'left');
         $this->db->where('student_session.session_id', $this->current_session);
         $this->db->where('students.is_active', 'yes');
-        if ($class_id != null) {
-            $this->db->where('student_session.class_id', $class_id);
+        
+        if (count($class_id) > 0) {
+            $this->db->where_in('student_session.class_id', $class_id);
         }
         if ($section_id != null) {
             $this->db->where('student_session.section_id', $section_id);
