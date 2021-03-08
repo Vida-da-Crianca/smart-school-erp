@@ -74,7 +74,7 @@ class InvoiceCheckOnBillet extends BaseCommand
                 $order->push((object) [
                     'bullet_id' => $billetId,
                     'user_id' => $billet->student->id,
-                    'due_date' => $billet->due_date,
+                    'due_date' => Carbon::now()->format('Y-m-d'),
                     'price' => $first->amount - $body->fee_discount,
                     'description' => sprintf(
                         

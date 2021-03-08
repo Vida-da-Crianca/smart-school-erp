@@ -220,7 +220,7 @@ function get_finance_var_document(): array
   $CI->load->model(['eloquent/Student_eloquent', 'eloquent/Fee_type_eloquent', 'Feesessiongroup_model']);
   $options = [];
   $items =  collect([]);
-  $types =  Fee_type_eloquent::all(); //$CI->Feesessiongroup_model->getFeesByGroup();
+  $types =  Fee_type_eloquent::orderBy('type','asc')->get(); //$CI->Feesessiongroup_model->getFeesByGroup();
   foreach ($types as $item) {
 
     // foreach ($row->feetypes as $item) {

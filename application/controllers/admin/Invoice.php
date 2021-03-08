@@ -41,7 +41,7 @@ class Invoice extends Admin_Controller {
        
         
 
-        $data['list'] = \Invoice_eloquent::with(['student'])->valid()->get();
+        $data['list'] = \Invoice_eloquent::with(['student'])->valid()->orderBy('due_date','asc')->orderBy('invoice_number','asc')->get();
 
         
 

@@ -35,10 +35,11 @@
                                                         <?php
                                                         foreach ($classlist as $class) {
                                                         ?>
-                                                            <li>
-                                                                <a href="#" class="small" data-value="<?php echo $class['id'] ?>" tabIndex="-1">
+                                                            <li class="ui-checkbox">
+                                                                <label class="small control control-checkbox" data-value="<?php echo $class['id'] ?>">
                                                                     <input type="checkbox" data-value="<?php echo $class['id'] ?>" data-label="<?php echo $class['class'] ?>" <?php if (in_array($class['id'], $class_id_option)) echo "checked" ?> name="class_id_option[]" value="<?php echo $class['id']; ?>" />&nbsp;<?php echo $class['class'] ?>
-                                                                </a>
+                                                                    <div class="control_indicator"></div>
+                                                                </label>
                                                             </li>
 
                                                         <?php
@@ -147,10 +148,10 @@
                                                 <th><?php echo $this->lang->line('admission_no'); ?></th>
 
                                                 <th><?php echo $this->lang->line('student_name'); ?></th>
-                                              
-                                              
-                                                    <th><?php echo $this->lang->line('guardian_name'); ?></th>
-                                                
+
+
+                                                <th><?php echo $this->lang->line('guardian_name'); ?></th>
+
                                                 <th><?php echo $this->lang->line('date_of_birth'); ?></th>
                                                 <th><?php echo $this->lang->line('gender'); ?></th>
                                                 <?php if ($sch_setting->category) {  ?>
@@ -183,10 +184,10 @@
                                                         <td>
                                                             <a href="<?php echo base_url(); ?>student/view/<?php echo $student['id']; ?>"><?php echo $student['firstname'] . " " . $student['lastname']; ?></a>
                                                         </td>
-                                                        
-                                                        
-                                                            <td><?php echo $student['guardian_name']; ?></td>
-                                                        
+
+
+                                                        <td><?php echo $student['guardian_name']; ?></td>
+
                                                         <td><?php echo date($this->customlib->getSchoolDateFormat(), $this->customlib->dateyyyymmddTodateformat($student['dob'])); ?></td>
                                                         <td><?php echo $student['gender']; ?></td>
                                                         <?php if ($sch_setting->category) {  ?>
@@ -239,6 +240,143 @@
             border-radius: 0 !important;
             background: transparent !important;
         }
+
+        .ui-checkbox {
+            padding: 10px 5px;
+            font-size: 12px;
+        }
+
+        .control {
+            font-family: arial;
+            display: block;
+            position: relative;
+            padding-left: 25px;
+            margin-bottom: 3px;
+            padding-top: 1px;
+            cursor: pointer;
+            font-size: 13px;
+        }
+
+        .control input {
+            position: absolute;
+            z-index: -1;
+            opacity: 0;
+        }
+
+        .control_indicator {
+            position: absolute;
+            top: 1px;
+            left: 0;
+            height: 18px;
+            width: 19px;
+            background: #e6e6e6;
+            border: 0px solid #000000;
+            border-radius: 0px;
+        }
+
+        .control:hover input~.control_indicator,
+        .control input:focus~.control_indicator {
+            background: #cccccc;
+        }
+
+        .control input:checked~.control_indicator {
+            background: #2a6a7b;
+        }
+
+        .control:hover input:not([disabled]):checked~.control_indicator,
+        .control input:checked:focus~.control_indicator {
+            background: '#0e6647d';
+        }
+
+        .control input:disabled~.control_indicator {
+            background: #e6e6e6;
+            opacity: 0.6;
+            pointer-events: none;
+        }
+
+        .control_indicator:after {
+            box-sizing: unset;
+            content: '';
+            position: absolute;
+            display: none;
+        }
+
+        .control input:checked~.control_indicator:after {
+            display: block;
+        }
+
+        .control-checkbox .control_indicator:after {
+            left: 7px;
+            top: 3px;
+            width: 3px;
+            height: 8px;
+            border: solid #ffffff;
+            border-width: 0 2px 2px 0;
+            transform: rotate(45deg);
+        }
+
+        .control-checkbox input:disabled~.control_indicator:after {
+            border-color: #7b7b7b;
+        }
+
+        .control-checkbox .control_indicator::before {
+            content: '';
+            display: block;
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 4.5rem;
+            height: 4.5rem;
+            margin-left: -1.3rem;
+            margin-top: -1.3rem;
+            background: #2aa1c0;
+            border-radius: 3rem;
+            opacity: 0.6;
+            z-index: 99999;
+            transform: scale(0);
+        }
+
+        @keyframes s-ripple {
+            0% {
+                transform: scale(0);
+            }
+
+            20% {
+                transform: scale(1);
+            }
+
+            100% {
+                opacity: 0;
+                transform: scale(1);
+            }
+        }
+
+        @keyframes s-ripple-dup {
+            0% {
+                transform: scale(0);
+            }
+
+            30% {
+                transform: scale(1);
+            }
+
+            60% {
+                transform: scale(1);
+            }
+
+            100% {
+                opacity: 0;
+                transform: scale(1);
+            }
+        }
+
+        .control-checkbox input+.control_indicator::before {
+            animation: s-ripple 250ms ease-out;
+        }
+
+        .control-checkbox input:checked+.control_indicator::before {
+            animation-name: s-ripple-dup;
+        }
     </style>
 
     <script type="text/javascript">
@@ -246,7 +384,7 @@
             if (class_id != "" && section_id != "") {
                 $('#section_id').html("<option >Carregando...</option>");
                 var base_url = '<?php echo base_url() ?>';
-                
+
                 $.ajax({
                     type: "GET",
                     url: base_url + "sections/getByClass",
@@ -311,10 +449,10 @@
 
                 if (checkedOptions.length > 0) {
                     label = checkedOptions.slice(0, 2).join(', ');
-                    if (checkedOptions.length > 2){
+                    if (checkedOptions.length > 2) {
                         label = `${label} ...`
                     }
-                 
+
                     getSectionByClass(checkedIdOptions);
                 }
 
@@ -325,17 +463,41 @@
 
 
             function initializeObserveDropdown() {
-                $('.dropdown-menu a').off('click.classID').on('click.classID', function(event) {
+                $('.control').off('click.classID').on('click.classID', function(event) {
                     var $element = $(this).find('input');
                     var checked = $element.prop('checked');
                     $element.prop('checked', !checked);
-                    $(event.target).blur();
+                    // $(event.target).blur();
                     setTimeout(function() {
                         dropdownLabel();
                     }, 50)
-             
+                    // event.preventDefault();
                     return false;
                 });
+
+                // $('.dropdown-menu .ui-checkbox input[type=checkbox]').off('click').on('click', function(event) {
+                //     var $element = $(this);
+                //     var checked = $element.prop('checked');
+                //     $element.prop('checked', !checked);
+                //     $(event.target).blur();
+                //     setTimeout(function() {
+                //         dropdownLabel();
+                //     }, 50)
+
+                //     return false;
+                // });
+
+                // $('.dropdown-menu a input[type=checkbox]').off('click.checkboxID').on('click.checkboxID', function(event) {
+                //     var $element = $(this);
+                //     var checked = $element.prop('checked');
+                //     $element.prop('checked', !checked);
+                //     $(event.target).blur();
+                //     setTimeout(function() {
+                //         dropdownLabel();
+                //     }, 50)
+
+                //     return false;
+                // });
             }
 
         });
