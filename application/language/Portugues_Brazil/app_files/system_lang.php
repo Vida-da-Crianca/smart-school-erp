@@ -1474,6 +1474,7 @@ $lang['invoice_general_settings'] = 'Notas fiscais definições';
 $lang['invoice_school_name'] = 'Razão Social';
 $lang['invoice_document'] = 'CNPJ';
 $lang['invoice_ccm'] = 'Inscr. Municipal';
+$lang['invoice_iss'] = 'ISS';
 $lang['invoice_password'] = 'Senha';   
 $lang['invoice_crc'] = 'CRC Contador';
 $lang['invoice_crc_state'] = 'UF CRC';

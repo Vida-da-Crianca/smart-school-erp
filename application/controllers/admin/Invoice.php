@@ -3,13 +3,16 @@
 if (!defined('BASEPATH'))
     exit('No direct script access allowed');
 
-class Invoice extends Admin_Controller {
+class Invoice extends Admin_Controller
+{
 
-    function __construct() {
+    function __construct()
+    {
         parent::__construct();
     }
 
-    function index() {
+    function index()
+    {
         if (!$this->rbac->hasPrivilege('fees_type', 'can_view')) {
             access_denied();
         }
@@ -26,31 +29,32 @@ class Invoice extends Admin_Controller {
         // );
         // $this->form_validation->set_rules('name', $this->lang->line('name'), 'required');
         // if ($this->form_validation->run() == FALSE) { 
-             
-        
-            $this->load->model('eloquent/Invoice_eloquent');
+
+
+        $this->load->model('eloquent/Invoice_eloquent');
         // }
-            // $data = array(
-            //     'type' => $this->input->post('name'),
-            //     'code' => $this->input->post('code'),
-            //     'description' => $this->input->post('description'),
-            // );
-            // $this->feetype_model->add($data);
-            // $this->session->set_flashdata('msg', '<div class="alert alert-success text-left">'.$this->lang->line('success_message').'</div>');
-            // redirect('admin/feetype/index');
-       
-        
+        // $data = array(
+        //     'type' => $this->input->post('name'),
+        //     'code' => $this->input->post('code'),
+        //     'description' => $this->input->post('description'),
+        // );
+        // $this->feetype_model->add($data);
+        // $this->session->set_flashdata('msg', '<div class="alert alert-success text-left">'.$this->lang->line('success_message').'</div>');
+        // redirect('admin/feetype/index');
 
-        $data['list'] = \Invoice_eloquent::with(['student'])->valid()->orderBy('due_date','asc')->orderBy('invoice_number','asc')->get();
 
-        
+
+        $data['list'] = \Invoice_eloquent::with(['student'])->valid()->orderBy('due_date', 'asc')->orderBy('invoice_number', 'asc')->get();
+
+
 
         $this->load->view('layout/header', $data);
         $this->load->view('admin/invoice/list/index', $data);
         $this->load->view('layout/footer', $data);
     }
 
-    function delete($id) {
+    function delete($id)
+    {
         if (!$this->rbac->hasPrivilege('fees_type', 'can_delete')) {
             access_denied();
         }
@@ -59,7 +63,8 @@ class Invoice extends Admin_Controller {
         redirect('admin/feetype/index');
     }
 
-    function edit($id) {
+    function edit($id)
+    {
         if (!$this->rbac->hasPrivilege('fees_type', 'can_edit')) {
             access_denied();
         }
@@ -71,10 +76,12 @@ class Invoice extends Admin_Controller {
         $feegroup_result = $this->feetype_model->get();
         $data['feetypeList'] = $feegroup_result;
         $this->form_validation->set_rules(
-                'name', $this->lang->line('name'), array(
-            'required',
-            array('check_exists', array($this->feetype_model, 'check_exists'))
-                )
+            'name',
+            $this->lang->line('name'),
+            array(
+                'required',
+                array('check_exists', array($this->feetype_model, 'check_exists'))
+            )
         );
         $this->form_validation->set_rules('code', $this->lang->line('code'), 'required');
         if ($this->form_validation->run() == FALSE) {
@@ -89,9 +96,8 @@ class Invoice extends Admin_Controller {
                 'description' => $this->input->post('description'),
             );
             $this->feetype_model->add($data);
-            $this->session->set_flashdata('msg', '<div class="alert alert-success text-left">'.$this->lang->line('update_message').'</div>');
+            $this->session->set_flashdata('msg', '<div class="alert alert-success text-left">' . $this->lang->line('update_message') . '</div>');
             redirect('admin/feetype/index');
         }
     }
-
 }
