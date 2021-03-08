@@ -37,7 +37,7 @@
                                                         ?>
                                                             <li>
                                                                 <a href="#" class="small" data-value="<?php echo $class['id'] ?>" tabIndex="-1">
-                                                                    <input type="checkbox" data-label="<?php echo $class['class'] ?>" <?php if (in_array($class['id'], $class_id_option)) echo "checked" ?> name="class_id_option[]" value="<?php echo $class['id']; ?>" />&nbsp;<?php echo $class['class'] ?>
+                                                                    <input type="checkbox" data-value="<?php echo $class['id'] ?>" data-label="<?php echo $class['class'] ?>" <?php if (in_array($class['id'], $class_id_option)) echo "checked" ?> name="class_id_option[]" value="<?php echo $class['id']; ?>" />&nbsp;<?php echo $class['class'] ?>
                                                                 </a>
                                                             </li>
 
@@ -244,9 +244,9 @@
     <script type="text/javascript">
         function getSectionByClass(class_id, section_id) {
             if (class_id != "" && section_id != "") {
-                $('#section_id').html("");
+                $('#section_id').html("<option >Carregando...</option>");
                 var base_url = '<?php echo base_url() ?>';
-                var div_data = '<option value=""><?php echo $this->lang->line('select'); ?></option>';
+                
                 $.ajax({
                     type: "GET",
                     url: base_url + "sections/getByClass",
@@ -255,14 +255,15 @@
                     },
                     dataType: "json",
                     success: function(data) {
+                        var itemOptions = ['<option value=""><?php echo $this->lang->line('select'); ?></option>'];
                         $.each(data, function(i, obj) {
                             var sel = "";
                             if (section_id == obj.section_id) {
                                 sel = "selected";
                             }
-                            div_data += "<option value=" + obj.section_id + " " + sel + ">" + obj.section + "</option>";
+                            itemOptions.push("<option value=" + obj.section_id + " " + sel + ">" + obj.section + "</option>");
                         });
-                        $('#section_id').append(div_data);
+                        $('#section_id').html(itemOptions.join('\n'));
                     }
                 });
             }
@@ -310,8 +311,10 @@
 
                 if (checkedOptions.length > 0) {
                     label = checkedOptions.slice(0, 2).join(', ');
-                    if (checkedOptions.length > 2)
+                    if (checkedOptions.length > 2){
                         label = `${label} ...`
+                    }
+                 
                     getSectionByClass(checkedIdOptions);
                 }
 
@@ -323,33 +326,14 @@
 
             function initializeObserveDropdown() {
                 $('.dropdown-menu a').off('click.classID').on('click.classID', function(event) {
-
-
                     var $element = $(this).find('input');
                     var checked = $element.prop('checked');
-
                     $element.prop('checked', !checked);
-
-                    // var $target = $(event.currentTarget),
-                    //     val = $target.attr('data-value'),
-                    //     $inp = $target.find('input'),
-                    //     idx;
-
-                    // if ((idx = options.indexOf(val)) > -1) {
-                    //     options.splice(idx, 1);
-                    //     setTimeout(function() {
-                    //         $inp.prop('checked', false)
-                    //     }, 10);
-                    // } else {
-                    //     options.push(val);
-                    //     setTimeout(function() {
-                    //         $inp.prop('checked', true)
-                    //     }, 10);
-                    // }
-
                     $(event.target).blur();
-                    dropdownLabel();
-                    // console.log(options);
+                    setTimeout(function() {
+                        dropdownLabel();
+                    }, 50)
+             
                     return false;
                 });
             }

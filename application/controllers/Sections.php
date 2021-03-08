@@ -58,12 +58,10 @@ class Sections extends Admin_Controller {
     function getByClass() {
             $class_id = $this->input->get('class_id');
         
-            $data = $this->section_model->getClassBySection($class_id);
+            $data = collect($this->section_model->getClassBySection($class_id))->unique('section_id');
         
 
-        
-        
-        echo json_encode($data);
+        echo json_encode($data->all());
     }
 
    
