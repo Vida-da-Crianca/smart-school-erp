@@ -245,7 +245,7 @@ class Studentfeemaster_model extends MY_Model
         INNER JOIN fee_session_groups on student_fees_master.fee_session_group_id=fee_session_groups.id 
         INNER JOIN fee_groups on fee_groups.id=fee_session_groups.fee_groups_id 
         
-        WHERE `student_session_id` = " . $student_session_id . " ORDER BY `student_fees_master`.`id`";
+        WHERE `student_session_id` = " . $student_session_id . " ORDER BY `student_fees_master`.`id` LIMIT 1";
         $query = $this->db->query($sql);
         $result = $query->result();
         // if (!empty($result)) {

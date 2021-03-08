@@ -435,7 +435,7 @@ class Studentfee extends Admin_Controller
         }
         $data['optionsYear'] = $years;
         $data['current_year'] = $due_date;
-
+      
         foreach ($student_due_fee as $row) {
             $row->fees = Student_fee_item_eloquent::where('student_session_id', $row->student_session_id)
                 // ->whereYear('due_date', $due_date)
