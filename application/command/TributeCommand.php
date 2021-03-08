@@ -65,8 +65,7 @@ class TributeCommand extends BaseCommand
         $tribute = null;
 
         
-        dump($total);
-        return;
+        
 
         foreach ($data as $row) {
             if ($total >= $row->rba_min   &&  $total <=  $row->rba_max) {
@@ -75,7 +74,8 @@ class TributeCommand extends BaseCommand
             }
         }
         $calcA = ((($total * ($tribute->aliquota_nominal / 100)) - $tribute->valor_reduzido) / $total) * 100;
-        $calcB =  $calcA * ($tribute->icms / 100);
+        $calcB =  $calcA * ($tribute->iss / 100);
+        $iss = $calcB < 2 ? 2.01 : ($calcB > 5 ? 5 :  $calcB);   
 
         \Invoice_setting_eloquent::updateOrCreate([
             'key' => 'simple_rate',
@@ -88,7 +88,7 @@ class TributeCommand extends BaseCommand
         \Invoice_setting_eloquent::updateOrCreate([
             'key' => 'iss',
         ], [
-            'value' => str_replace('.', ',', number_format($calcB, 2)) . "%",
+            'value' => str_replace('.', ',', number_format($iss, 2)) . "%",
             'key' => 'iss',
 
         ]);
@@ -100,7 +100,7 @@ class TributeCommand extends BaseCommand
                     'total' => $total,
                     'hora' =>Carbon::now()->format('d/m/Y H:i:s'),
                     'aliquota' =>
-                    str_replace('.', ',', number_format($calcA, 2)) . "%", 'iss' => str_replace('.', ',', number_format($calcB, 2)) . "%",
+                    str_replace('.', ',', number_format($calcA, 2)) . "%", 'iss' => str_replace('.', ',', number_format($iss, 2)) . "%",
                     'meses' => \Invoice_resume_eloquent::whereBetween('due_date', [$dateTime->format('Y-m-01'), $now])->get()
 
 
