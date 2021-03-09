@@ -20,15 +20,15 @@
                         <div class="box-tools pull-right">
                         </div><!-- /.box-tools -->
                     </div><!-- /.box-header -->
-                    <div class="box-body"  style="max-width:100% !important;">
+                    <div class="box-body" style="max-width:100% !important;">
                         <!-- <div class="download_label"><?php echo $this->lang->line('invoice_type_list'); ?></div> -->
                         <div class="table-responsive">
-                            <table id="invoice_table" class="dataTable display" role="grid" >
+                            <table id="invoice_table" class="dataTable display" role="grid">
                                 <thead>
                                     <tr>
                                         <th style="width: 100px; padding-left: 0px;">
-                                        <?php echo $this->lang->line('invoice_number'); ?> / <br/>
-                                          <small><?php echo $this->lang->line('billet'); ?></small>
+                                            <?php echo $this->lang->line('invoice_number'); ?> / <br />
+                                            <small><?php echo $this->lang->line('billet'); ?></small>
                                         </th>
                                         <th><?php echo $this->lang->line('invoice_student'); ?></th>
                                         <th><?php echo $this->lang->line('invoice_guardian'); ?></th>
@@ -36,7 +36,7 @@
                                         <th><?php echo $this->lang->line('invoice_date'); ?></th>
                                         <th><?php echo $this->lang->line('invoice'); ?></th>
                                         <th><?php echo $this->lang->line('invoice_price'); ?></th>
-                                        
+
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -46,10 +46,10 @@
                                         <tr>
                                             <td align="left">
                                                 <a href="#" data-toggle="popover" class="detail_popover"><?php echo $item->invoice_number; ?></a>
-                                              
-                                                <?php if($item->billet->count() > 0): ?>
-                                                   <small class="text-success " style="display:block;"><?php echo $item->billet->first()->bank_bullet_id; ?><small>
-                                                <?php endif; ?>
+
+                                                <?php if ($item->billet->count() > 0) : ?>
+                                                    <small class="text-success " style="display:block;"><?php echo $item->billet->first()->bank_bullet_id; ?><small>
+                                                        <?php endif; ?>
                                             </td>
                                             <td>
                                                 <?php echo $item->student->full_name; ?>
@@ -73,7 +73,7 @@
                                             <td>
                                                 <?php echo number_format($item->price, 2, ',', '.'); ?>
                                             </td>
-                                           
+
                                         </tr>
                                     <?php
                                     }
@@ -106,11 +106,16 @@
 <link rel="stylesheet" href="//cdn.datatables.net/1.10.23/css/jquery.dataTables.min.css" />
 <!-- <script src="https://cdn.datatables.net/1.10.23/js/jquery.dataTables.min.js"></script> -->
 
-
+<style>
+    .dataTables_wrapper,
+    .dataTables_filter {
+        text-align: right;
+        float: left !important;
+    }
+</style>
 <script type="text/javascript">
     $(document).ready(function() {
         var date_format = '<?php echo $result = strtr($this->customlib->getSchoolDateFormat(), ['d' => 'dd', 'm' => 'mm', 'Y' => 'yyyy',]) ?>';
-
         $('#date').datepicker({
             //  format: "dd-mm-yyyy",
             format: date_format,
