@@ -145,11 +145,12 @@
                                             <tr>
                                                 <th><?php echo $this->lang->line('section'); ?></th>
 
-                                                <th><?php echo $this->lang->line('admission_no'); ?></th>
-
+                                               
+                                                <th><?php echo $this->lang->line('class'); ?></th>
                                                 <th><?php echo $this->lang->line('student_name'); ?></th>
 
-                                                <th><?php echo $this->lang->line('class'); ?></th>
+                                               
+                                                <th><?php echo $this->lang->line('admission_no'); ?></th>
                                                 <th><?php echo $this->lang->line('guardian_name'); ?></th>
 
                                                 <th><?php echo $this->lang->line('date_of_birth'); ?></th>
@@ -179,13 +180,14 @@
                                                     <tr>
                                                         <td><?php echo $student['section']; ?></td>
 
-                                                        <td><?php echo $student['admission_no']; ?></td>
+                                                        <td><?php echo $student['class']; ?></td>
 
                                                         <td>
                                                             <a href="<?php echo base_url(); ?>student/view/<?php echo $student['id']; ?>"><?php echo $student['firstname'] . " " . $student['lastname']; ?></a>
                                                         </td>
 
-                                                        <td><?php echo $student['class']; ?></td>
+                                                        
+                                                        <td><?php echo $student['admission_no']; ?></td>
                                                         <td><?php echo $student['guardian_name']; ?></td>
 
                                                         <td><?php echo date($this->customlib->getSchoolDateFormat(), $this->customlib->dateyyyymmddTodateformat($student['dob'])); ?></td>
