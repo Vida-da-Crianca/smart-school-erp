@@ -91,9 +91,11 @@ class Billet_eloquent extends  Eloquent {
 
 
     public function scopeIsOld($query)
-    {
+    {    get_instance()->load->model('eloquent/FeeReminder');
+
+        $reminder = (new FeeReminder)->isBankAfter()->first();
         return $query->where('status', self::PAID_PENDING)
              ->whereNotNull('bank_bullet_id')
-             ->where('due_date','<=', Carbon::now()->subDay(3));
+             ->where('due_date','<=', Carbon::now()->subDay( $reminder->day ));
     }
 }

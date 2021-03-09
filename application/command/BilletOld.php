@@ -36,9 +36,14 @@ class BilletOld extends BaseCommand
     {
 
         $this->CI->load->library('bank_payment_inter');
-        $this->CI->load->model(['eloquent/Billet_eloquent', 'eloquent/Invoice_eloquent']);
+        $this->CI->load->model(['eloquent/Billet_eloquent', 'eloquent/Invoice_eloquent','eloquent/FeeReminder']);
         $timeStart = Carbon::create(date('Y'), date('m'), date('d'), 8, 0);
         $timeEnd = Carbon::create(date('Y'), date('m'), date('d'), 21, 0);
+
+        if(\FeeReminder::isBankAfter()->isActive()->count() == 0) {
+            
+            return;
+        }  
 
 
         if (getenv('ENVIRONMENT') != 'development' && (!isValidDay() || !Carbon::now()->betweenIncluded($timeStart, $timeEnd))) {

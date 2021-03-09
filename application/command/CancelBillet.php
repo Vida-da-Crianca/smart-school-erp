@@ -68,6 +68,8 @@ class CancelBillet extends BaseCommand
                     //     ->update(['status' => \Invoice_eloquent::PENDING_DELETE]);
 
                     discord_log(sprintf('%s', json_encode(array_merge(['bolelo' => $row->bank_bullet_id ], (array) $status), JSON_PRETTY_PRINT)), 'Cancelamento de Boleto');
+
+                    
                 }
             );
         }

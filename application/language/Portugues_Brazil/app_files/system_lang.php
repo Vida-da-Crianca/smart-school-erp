@@ -1525,3 +1525,5 @@ $lang['document_frm_update'] = 'Editar Documento';
 $lang['documents_contract'] = 'Contratos e Recibos';
 $lang['notification_billet_old'] = 'Aviso débitos pendentes';
 $lang['notification_billet_old_text_header'] = 'Sr. {guardian_name}, <br /> Segue(m) o(s) boleto(s) que consta (m) em aberto (s)';
+
+$lang['after_bank'] = 'Banco Depois <small class="text-danger">(Dias úteis)</small>';
