@@ -149,7 +149,7 @@
 
                                                 <th><?php echo $this->lang->line('student_name'); ?></th>
 
-
+                                                <th><?php echo $this->lang->line('class'); ?></th>
                                                 <th><?php echo $this->lang->line('guardian_name'); ?></th>
 
                                                 <th><?php echo $this->lang->line('date_of_birth'); ?></th>
@@ -185,7 +185,7 @@
                                                             <a href="<?php echo base_url(); ?>student/view/<?php echo $student['id']; ?>"><?php echo $student['firstname'] . " " . $student['lastname']; ?></a>
                                                         </td>
 
-
+                                                        <td><?php echo $student['class']; ?></td>
                                                         <td><?php echo $student['guardian_name']; ?></td>
 
                                                         <td><?php echo date($this->customlib->getSchoolDateFormat(), $this->customlib->dateyyyymmddTodateformat($student['dob'])); ?></td>
@@ -382,6 +382,7 @@
     <script type="text/javascript">
         function getSectionByClass(class_id, section_id) {
             if (class_id != "" && section_id != "") {
+                $('button.checkbox-toggle').prop('disabled', true);
                 $('#section_id').html("<option >Carregando...</option>");
                 var base_url = '<?php echo base_url() ?>';
 
@@ -402,6 +403,9 @@
                             itemOptions.push("<option value=" + obj.section_id + " " + sel + ">" + obj.section + "</option>");
                         });
                         $('#section_id').html(itemOptions.join('\n'));
+                    },
+                    complete: function(){
+                        $('button.checkbox-toggle').prop('disabled', false);
                     }
                 });
             }
@@ -450,7 +454,7 @@
                 if (checkedOptions.length > 0) {
                     label = checkedOptions.slice(0, 2).join(', ');
                     if (checkedOptions.length > 2) {
-                        label = `${label} ...`
+                        label = `${label} <b> (+${checkedOptions.length - 2})</b>`
                     }
 
                     getSectionByClass(checkedIdOptions);

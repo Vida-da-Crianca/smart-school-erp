@@ -126,6 +126,7 @@ class Student extends Admin_Controller
                 $gender      = $this->input->post('gender');
                 $rte         = $this->input->post('rte');
                 $search      = $this->input->post('search');
+               
                 if (isset($search)) {
                   
                     if ($search == 'search_filter') {
