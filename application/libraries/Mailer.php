@@ -18,6 +18,8 @@ class Mailer
 
     protected $isDebug = 0;
 
+    protected $errors = null;
+
     public function __construct()
     {
         $this->CI = &get_instance();
@@ -90,8 +92,13 @@ class Mailer
         if ($mail->send()) {
             return true;
         } else {
+            $mail->error;
             return false;
         }
     }
+
+
+
+   
 
 }

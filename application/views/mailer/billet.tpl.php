@@ -380,15 +380,18 @@
 												</tr>
 											</thead>
 											<tbody>
-												<?php foreach ($items as $item) : ?>
-													<tr>
-														<td><?php echo $item->name; ?></td>
-														<td><?php echo $item->billet; ?></td>
-														<td><?php echo $item->description; ?></td>
-														<td><?php echo $item->due_date->format('d/m/Y'); ?></td>
-														<td><?php echo number_format($item->price, 2, ',', '.'); ?></td>
-													</tr>
-												<?php endforeach;  ?>
+												<?php
+												if (count($items)) :
+													foreach ($items as $item) : ?>
+														<tr>
+															<td><?php echo $item->name; ?></td>
+															<td><?php echo $item->billet; ?></td>
+															<td><?php echo $item->description; ?></td>
+															<td><?php echo $item->due_date->format('d/m/Y'); ?></td>
+															<td><?php echo number_format($item->price, 2, ',', '.'); ?></td>
+														</tr>
+												<?php endforeach;
+												endif;  ?>
 											</tbody>
 										</table>
 									</div>

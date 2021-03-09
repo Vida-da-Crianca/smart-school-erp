@@ -77,8 +77,18 @@ class BilletGenerateCommand extends BaseCommand
 
     protected function sendMail($options)
     {
-        $content = $this->CI->load->view('mailer/billet.tpl.php', $options,  TRUE);
-        $this->CI->mailer->send_mail($options->email, 'Envio de boletos', $content /**/);
+        try {
+            $content = $this->CI->load->view('mailer/billet.tpl.php', $options,  TRUE);
+            $this->CI->mailer->send_mail($options->email, 'Envio de boletos', $content /**/);
+            discord_log(
+                sprintf('Email do boleto enviado %s %s', PHP_EOL, $options->email )
+            );
+            
+        } catch (\Exception $e) {
+            discord_exception(
+                sprintf('Falha no e-mail %s %s', PHP_EOL, $e->getMessage)
+            );
+        }
     }
 
 
@@ -130,8 +140,6 @@ class BilletGenerateCommand extends BaseCommand
                             'deleted_at' => date('Y-m-d H:i:s'),
                             'is_active' => 0
                         ]);
-
-
                     DB::commit();
                 }
 
@@ -162,9 +170,6 @@ class BilletGenerateCommand extends BaseCommand
                 'custom_number' => $billet->custom_number,
                 'bank_bullet_id' => $options->billet->number,
             ]);
-
-
-
         DB::commit();
         discord_log(sprintf('%s', json_encode($options, JSON_PRETTY_PRINT)), 'Novo Boleto');
         // \Invoice_eloquent::create([
