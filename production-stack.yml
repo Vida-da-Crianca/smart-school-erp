@@ -19,9 +19,9 @@ services:
       - DB_USER=root
       - CI_SESSION=VIDA_DE_CRIANCA_SESSION
       - BANK_INTER_PDF_FILES=temp/
-      - DISCORD_BILLET_OLD_HOOK=https://discord.com/api/webhooks/808789168150151230/siL4CqXkw2YVRplbFgJKFKYXP_-wASxQQrCeZkw_OptBmlWsQj4dWMknOaxNIpGmc01q
-      - DISCORD_EXCEPTIONS=https://discord.com/api/webhooks/783155960201347072/TN1yr1WndAI9Ug9vuDxb_qUQOnERJ8qs_XmzUOwYLUM35pRDdE5CJl3qfxxSjezIEZQh
-      - DISCORD_HOOK=https://discord.com/api/webhooks/783101033672605698/d61CeThzLZcUHI_N7NBcIM1qTEF6HLgNw7gO8CAqhKVmuy_6BEHAMUW1nbEYOgev6Nyu
+      - DISCORD_EXCEPTIONS_PRODUCTION=https://discord.com/api/webhooks/783155960201347072/TN1yr1WndAI9Ug9vuDxb_qUQOnERJ8qs_XmzUOwYLUM35pRDdE5CJl3qfxxSjezIEZQh
+      - DISCORD_LOGS_PRODUCTION=https://discord.com/api/webhooks/783101033672605698/d61CeThzLZcUHI_N7NBcIM1qTEF6HLgNw7gO8CAqhKVmuy_6BEHAMUW1nbEYOgev6Nyu
+      - DISCORD_BILLET_OLD_PRODUCTION=https://discord.com/api/webhooks/808789168150151230/siL4CqXkw2YVRplbFgJKFKYXP_-wASxQQrCeZkw_OptBmlWsQj4dWMknOaxNIpGmc01q
       - BASE_URL=https://eeividadecrianca.com.br
       - LICENSE_APP=63AH2N-XTFFLP-952QAM-UTBUai9NL0Q5R2lLeE4xbXZBMGVMVnEwMlpvTTU0QmNFcml6emVLNkk0MD0=
     tty: true
