@@ -56,52 +56,53 @@ class InvoiceCommand extends BaseCommand
 
         // return dump($options);
 
- 
-        
+
+
         $provider = new Provider(new Barretos($options));
 
         $invoices = \Invoice_eloquent::with(['student', 'billet',  'feeStudentDeposite.feeGroupType.feeGroup', 'feeStudentDeposite.feeItem'])
-        ->forGenerate()
-        ->orderBy('id','desc')
-        // ->limit(1)
-        ->get();
+            ->forGenerate()
+            ->orderBy('id', 'desc')
+            // ->limit(1)
+            ->get();
 
         if ($invoices->count() == 0) return $this->success('Not exists invoices for create');
-          
+
         $options = $settings->toArray();
-        $aliquota = str_replace([',','%'], ['.',''],$options['iss']);
-        $simple_rate = str_replace([',','%'], ['.',''],$options['simple_rate']);
+        $aliquota = str_replace([',', '%'], ['.', ''], $options['iss']);
+        $simple_rate = str_replace([',', '%'], ['.', ''], $options['simple_rate']);
         $first = Carbon::now();
         $trys = [10, 15, 20, 25, 30];
 
         // dump($invoices->filter(function($row){ return $row->bullet_id == 66 ;})->toArray());
         // return;
         foreach ($invoices as $item) {
-            
+
             $timed = Carbon::create($item->latest_try_at);
-            
 
-            if( $item->latest_try_at !=  null){
+
+            if ($item->latest_try_at !=  null) {
                 $timed = Carbon::create($item->latest_try_at);
-                if(getenv('ENVIRONMENT')  !== 'development' && !in_array($timed->diffInMinutes(), $trys))
-                  continue;
+                if (getenv('ENVIRONMENT')  !== 'development' && !in_array($timed->diffInMinutes(), $trys))
+                    continue;
             }
-            
 
-            
-             
+
+
+
             $this->buildInvoiceDescription($item);
             $calc = ($aliquota / 100) * $item->price;
-            $al = number_format($calc,2,',', '.');
-            
-           
+            $al = number_format($calc, 2, ',', '.');
+
+
             $descptionNF = $item->description != null ?  $item->description : sprintf('%s %s %s', $item->student->full_name, PHP_EOL, $item->_description);
-            $tributteCalculate = number_format( (($simple_rate/100) * $item->price), 2, ',', '.');
+            $tributteCalculate = number_format((($simple_rate / 100) * $item->price), 2, ',', '.');
             $data  = [
-                'valor' => str_replace('.',',',$item->price),
-                'base'  => str_replace('.',',',$item->price),
-                'descricaoNF' => sprintf('%s%sValor aprox. dos tributos (Lei nº 12.741/2012):  R$ %s - Aliq: %s', $descptionNF, PHP_EOL , $tributteCalculate, $options['simple_rate']) ,
+                'valor' => str_replace('.', ',', $item->price),
+                'base'  => str_replace('.', ',', $item->price),
+                'descricaoNF' =>   $descptionNF, //sprintf('%s%sValor aprox. dos tributos (Lei nº 12.741/2012):  R$ %s - Aliq: %s', $descptionNF, PHP_EOL , $tributteCalculate, $options['simple_rate']) ,
                 'tomador_tipo' => 2,
+                'valor_aprox_tributos' => $tributteCalculate,
                 'tomador_cnpj' => $item->student->guardian_document, //cnoj da empresa
                 'tomador_email' =>  getenv('ENVIRONMENT') == 'development' ?  getenv('MAIL_NOTA') : $item->student->guardian_email,
                 'tomador_razao' => $item->student->guardian_name,
@@ -115,7 +116,7 @@ class InvoiceCommand extends BaseCommand
                 // 'iss' => $options['iss'],
                 'aliquota_simples' => $aliquota,
                 // 'aliquota_atividade'=> $options['aliquota_atividade'],
-                'retencao_iss' =>   ($aliquota / 100 ) * $item->price ,
+                'retencao_iss' => ($aliquota / 100) * $item->price,
                 'rps_serie' => $options['serie'],
                 'serie' =>  $options['serie']
             ];
@@ -124,7 +125,7 @@ class InvoiceCommand extends BaseCommand
             // dump($data);
             // continue;
             \Invoice_eloquent::where('id', $item->id)->update(['latest_try_at' => Carbon::now()]);
-            
+
             $service  =  new SigissService($provider);
             try {
 
@@ -135,27 +136,28 @@ class InvoiceCommand extends BaseCommand
                 // dump($service->getBody());
 
                 if ($response->RetornoNota->Resultado > 0) {
-                    
-                    unset($item->_description);
-                    $item->update(['invoice_number' => $response->RetornoNota->Nota, 
-                    'status' => Invoice_eloquent::VALID,
-                    'body' => json_encode($response->RetornoNota)]);
-                    
-                    discord_log(sprintf('%s', json_encode( array_merge((array) $response->RetornoNota, ['numero_controle' =>  $item->id , 'nota' => $service->getBody()  ]) , JSON_PRETTY_PRINT)) , 'Nova Nota Fiscal');
 
+                    unset($item->_description);
+                    $item->update([
+                        'invoice_number' => $response->RetornoNota->Nota,
+                        'status' => Invoice_eloquent::VALID,
+                        'body' => json_encode($response->RetornoNota)
+                    ]);
+
+                    discord_log(sprintf('%s', json_encode(array_merge((array) $response->RetornoNota, ['numero_controle' =>  $item->id, 'nota' => $service->getBody()]), JSON_PRETTY_PRINT)), 'Nova Nota Fiscal');
                 }
                 if ($response->RetornoNota->Resultado == 0) {
-                    
+
                     discord_exception(
-                        sprintf('%s', json_encode( array_merge((array)$response, ['numero_controle' =>  $item->id , 'nota' => $service->getBody()  ]) , JSON_PRETTY_PRINT)),
+                        sprintf('%s', json_encode(array_merge((array)$response, ['numero_controle' =>  $item->id, 'nota' => $service->getBody()]), JSON_PRETTY_PRINT)),
                         'Falha ao criar nota'
                     );
                 }
-                
+
 
                 // dump($service->getBody());
 
-           
+
             } catch (\Exception $e) {
 
                 $response = $service->getClientSoap()->__getLastResponse();
@@ -169,29 +171,28 @@ class InvoiceCommand extends BaseCommand
         return 0;
     }
 
-    
+
 
 
     public function buildInvoiceDescription(&$item)
     {
         $item->_description  = 'S/N';
-        if (!$item->billet && !$item->description ) {
+        if (!$item->billet && !$item->description) {
             $item->_description = $item->feeStudentDeposite->feeItem->title;
             return;
         }
-        
-        if( $item->description != null) return;
+
+        if ($item->description != null) return;
         $billet = $item->billet()->with('feeItems')->first();
         $collectionDescriptions = [];
         $item->price = $billet->price;
-        if($item->description !=  null){
-              
+        if ($item->description !=  null) {
         }
-        
+
         foreach ($billet->feeItems as $row) {
             $collectionDescriptions[] = sprintf('%s - R$ %s', $row->title, number_format($row->amount, 2, ',', '.'));
         }
-        $collectionDescriptions[] = sprintf('Boleto %s/%s ', $billet->custom_number,  $billet->bank_bullet_id );
+        $collectionDescriptions[] = sprintf('Boleto %s/%s ', $billet->custom_number,  $billet->bank_bullet_id);
 
         $item->_description =  sprintf('%s', implode(PHP_EOL, $collectionDescriptions));
     }

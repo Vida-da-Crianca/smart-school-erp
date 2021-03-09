@@ -50,10 +50,7 @@ class Invoice_eloquent extends  Eloquent
         get_instance()->load->model('eloquent/Student_deposite_eloquent');
         return $this->belongsTo('Student_deposite_eloquent', 'student_fees_deposite_id', 'id');
     }
-    public function billet(){
-        get_instance()->load->model('eloquent/Billet_eloquent');
-        return $this->belongsTo('Billet_eloquent', 'bullet_id', 'id');
-    }
+
 
    
 
@@ -80,5 +77,20 @@ class Invoice_eloquent extends  Eloquent
     {
         return $query->where('status', self::PENDING_DELETE)
             ->where('price', '>', '0');
+    }
+
+
+    public function billet(){
+        // get_instance()->load->model('eloquent/Student_fee_item_eloquent');
+        get_instance()->load->model('eloquent/Billet_eloquent');
+        
+        return $this->belongsToMany(
+            'Billet_eloquent',
+            'invoice_billet',
+            'invoice_id',
+            'billet_id',
+            'id'
+            
+        );
     }
 }

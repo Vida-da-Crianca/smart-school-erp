@@ -20,13 +20,16 @@
                         <div class="box-tools pull-right">
                         </div><!-- /.box-tools -->
                     </div><!-- /.box-header -->
-                    <div class="box-body">
+                    <div class="box-body"  style="max-width:100% !important;">
                         <!-- <div class="download_label"><?php echo $this->lang->line('invoice_type_list'); ?></div> -->
-                        <div class="mailbox-messages table-responsive">
-                            <table id="invoice_table" class="dataTable display" role="grid" style="width:100%">
+                        <div class="table-responsive">
+                            <table id="invoice_table" class="dataTable display" role="grid" >
                                 <thead>
                                     <tr>
-                                        <th><?php echo $this->lang->line('invoice_number'); ?></th>
+                                        <th style="width: 100px; padding-left: 0px;">
+                                        <?php echo $this->lang->line('invoice_number'); ?> / <br/>
+                                          <small><?php echo $this->lang->line('billet'); ?></small>
+                                        </th>
                                         <th><?php echo $this->lang->line('invoice_student'); ?></th>
                                         <th><?php echo $this->lang->line('invoice_guardian'); ?></th>
                                         <th><?php echo $this->lang->line('invoice_email'); ?></th>
@@ -43,6 +46,10 @@
                                         <tr>
                                             <td align="left">
                                                 <a href="#" data-toggle="popover" class="detail_popover"><?php echo $item->invoice_number; ?></a>
+                                              
+                                                <?php if($item->billet->count() > 0): ?>
+                                                   <small class="text-success " style="display:block;"><?php echo $item->billet->first()->bank_bullet_id; ?><small>
+                                                <?php endif; ?>
                                             </td>
                                             <td>
                                                 <?php echo $item->student->full_name; ?>
@@ -128,7 +135,7 @@
             ordering: false,
             paging: false,
             info: false,
-            filter: false,
+            filter: true,
             // dom: 'fBrtip<"clear">',
             // buttons: [
 
