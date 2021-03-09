@@ -4,6 +4,7 @@
 namespace Application\Command;
 
 use Application\Command\Traits\ExceptionsFailInvoice;
+use Application\Support\ComputeTributeService;
 use CarlosOCarvalho\Sigiss\Drivers\Barretos;
 use CarlosOCarvalho\Sigiss\Provider;
 use CarlosOCarvalho\Sigiss\SigissService;
@@ -90,6 +91,8 @@ class InvoiceCancelCommand extends BaseCommand
                 $item->deleted_at = date('Y-m-d H:i:s');
                 $item->save();
                 discord_log(sprintf('%s', json_encode($response->DescricaoErros, JSON_PRETTY_PRINT)) , 'Cancelamento de Nota Fiscal');
+                 
+                (new ComputeTributeService)->handle();
                
             } catch (\Exception $e) {
                 discord_exception(
