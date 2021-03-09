@@ -41,7 +41,8 @@ class DocumentController extends Admin_Controller
 
         $this->load->model('eloquent/Document');
 
-        $data['documents'] =  Document::all();
+        $data['documents'] =  Document::orderBy('title', 'asc')->get();
+        
         $this->load->view('layout/header', $data);
         $this->load->view('admin/document/document_list', $data);
         $this->load->view('layout/footer', $data);

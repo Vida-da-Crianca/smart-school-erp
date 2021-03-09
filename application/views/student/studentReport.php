@@ -242,8 +242,8 @@
         }
 
         .ui-checkbox {
-            padding: 10px 5px;
-            font-size: 12px;
+            padding: 0px 5px;
+            
         }
 
         .control {
@@ -267,8 +267,8 @@
             position: absolute;
             top: 1px;
             left: 0;
-            height: 18px;
-            width: 19px;
+            height: 15px;
+            width: 15px;
             background: #e6e6e6;
             border: 0px solid #000000;
             border-radius: 0px;
@@ -306,8 +306,8 @@
         }
 
         .control-checkbox .control_indicator:after {
-            left: 7px;
-            top: 3px;
+            left: 5px;
+            top: 2px;
             width: 3px;
             height: 8px;
             border: solid #ffffff;
@@ -376,6 +376,11 @@
 
         .control-checkbox input:checked+.control_indicator::before {
             animation-name: s-ripple-dup;
+        }
+
+        .dropdown-menu{
+
+            overflow-y: auto;
         }
     </style>
 
