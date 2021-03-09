@@ -798,7 +798,7 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                                                                                                                                                                                                                                                                                                             ?>
 
                                                         </td>
-                                                        <td class="text text-right"><?php echo number_format($fee_value->amount, 2,',', '.'); ?></td>
+                                                        <td class="text text-right"><?php echo number_format($fee_value->amount, 2, ',', '.'); ?></td>
 
                                                         <td class="text text-left"></td>
                                                         <td class="text text-left"></td>
@@ -982,12 +982,16 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
 
                         </div>
                         <div class="tab-pane" id="documents_contract">
-                            <div class="row  documents_contract_container">
+                            <div class="card_list_documents">
                                 <?php foreach ($documents as $item) : ?>
-                                    <a target="_blank" class="action_main" href="<?= site_url(sprintf('/admin/documents/preview/%s/%s', $item->id, $user_id)) ?>" data-id="<?= $item->id ?>">
-                                        <i class="fa fa-print"></i>&nbsp;<?= $item->title ?>
-                                    </a>
+                                    <div class="card_document_item">
+                                        <a target="_blank" class="card_document_action" href="<?= site_url(sprintf('/admin/documents/preview/%s/%s', $item->id, $user_id)) ?>" data-id="<?= $item->id ?>">
+                                             
+                                            <i class="fa fa-print"></i>
+                                            <span> <?= $item->title ?></span>
 
+                                        </a>
+                                    </div>
                                 <?php endforeach; ?>
                             </div>
                             <div>&nbsp;</div>

@@ -299,7 +299,7 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
 <link rel="stylesheet" href="//cdn.datatables.net/1.10.23/css/jquery.dataTables.min.css" />
 <script src="https://cdn.datatables.net/1.10.23/js/jquery.dataTables.min.js"></script>
 
-</style>
+
 <script>
     $(document).ready(function($) {
 

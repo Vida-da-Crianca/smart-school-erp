@@ -20,6 +20,7 @@ class Invoice extends Admin_Controller
         // $this->session->set_userdata('sub_menu', 'feetype/index');
         $data['title'] = 'Add Feetype';
         $data['title_list'] = 'Recent Invoices';
+        $data['unloadDataTableJquery'] = 'https://cdn.datatables.net/1.10.23/js/jquery.dataTables.js';
 
         // $this->form_validation->set_rules(
         //         'code', $this->lang->line('code'), array(
@@ -44,10 +45,8 @@ class Invoice extends Admin_Controller
 
 
 
-        $data['list'] = \Invoice_eloquent::with(['student'])->valid()->orderBy('due_date', 'asc')->orderBy('invoice_number', 'asc')->get();
-
-
-
+        $data['list'] = \Invoice_eloquent::with(['student'])->valid()->orderBy('due_date','asc')->orderBy('invoice_number','asc')->get();
+       
         $this->load->view('layout/header', $data);
         $this->load->view('admin/invoice/list/index', $data);
         $this->load->view('layout/footer', $data);
@@ -84,9 +83,11 @@ class Invoice extends Admin_Controller
             )
         );
         $this->form_validation->set_rules('code', $this->lang->line('code'), 'required');
+       
         if ($this->form_validation->run() == FALSE) {
             $this->load->view('layout/header', $data);
             $this->load->view('admin/feetype/feetypeEdit', $data);
+
             $this->load->view('layout/footer', $data);
         } else {
             $data = array(

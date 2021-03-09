@@ -29,6 +29,7 @@ $language_name = $language["short_code"];
 <script src="<?php echo base_url(); ?>backend/plugins/slimScroll/jquery.slimscroll.min.js"></script>
 <script src="<?php echo base_url(); ?>backend/dist/js/jquery.mCustomScrollbar.concat.min.js"></script>
 <script src="<?php echo base_url(); ?>backend/js/notify.min.js"></script>
+
 <script type="text/javascript">
     $('body').tooltip({
         selector: '[data-toggle]',
@@ -101,7 +102,15 @@ if ($language_name != 'en') {
 <!--file dropify-->
 <script src="<?php echo base_url(); ?>backend/dist/js/dropify.min.js"></script>
 <!-- <script src="<?php echo base_url(); ?>backend/dist/datatables/js/moment.min.js"></script> -->
-<script type="text/javascript" src="<?php echo base_url(); ?>backend/dist/datatables/js/jquery.dataTables.min.js"></script>
+
+<?php 
+
+if (!isset($unloadDataTableJquery)) : ?>
+    <script type="text/javascript" src="<?php echo base_url(); ?>backend/dist/datatables/js/jquery.dataTables.min.js"></script>
+<?php endif; ?>
+<?php if (isset($unloadDataTableJquery)) : ?>
+    <script type="text/javascript" src="<?=$unloadDataTableJquery?>"></script>
+<?php endif; ?>
 <script type="text/javascript" src="<?php echo base_url(); ?>backend/dist/datatables/js/dataTables.buttons.min.js"></script>
 <script type="text/javascript" src="<?php echo base_url(); ?>backend/dist/datatables/js/jszip.min.js"></script>
 <script type="text/javascript" src="<?php echo base_url(); ?>backend/dist/datatables/js/pdfmake.min.js"></script>

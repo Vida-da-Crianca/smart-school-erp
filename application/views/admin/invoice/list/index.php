@@ -4,7 +4,8 @@
 
     <section class="content-header">
         <h1>
-            <i class="fa fa-money"></i> <?php echo $this->lang->line('invoice_collection'); ?></h1>
+            <i class="fa fa-money"></i> <?php echo $this->lang->line('invoice_collection'); ?>
+        </h1>
     </section>
 
     <!-- Main content -->
@@ -22,17 +23,17 @@
                     <div class="box-body">
                         <!-- <div class="download_label"><?php echo $this->lang->line('invoice_type_list'); ?></div> -->
                         <div class="mailbox-messages table-responsive">
-                            <table class="table table-striped table-bordered table-hover example">
+                            <table id="invoice_table" class="dataTable display" role="grid" style="width:100%">
                                 <thead>
                                     <tr>
-                                        <th><?php echo $this->lang->line('invoice_number'); ?>
-                                        </th>
+                                        <th><?php echo $this->lang->line('invoice_number'); ?></th>
                                         <th><?php echo $this->lang->line('invoice_student'); ?></th>
                                         <th><?php echo $this->lang->line('invoice_guardian'); ?></th>
                                         <th><?php echo $this->lang->line('invoice_email'); ?></th>
                                         <th><?php echo $this->lang->line('invoice_date'); ?></th>
+                                        <th><?php echo $this->lang->line('invoice'); ?></th>
                                         <th><?php echo $this->lang->line('invoice_price'); ?></th>
-                                        <th class="text-right"><?php echo $this->lang->line('action'); ?></th>
+                                        
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -40,53 +41,32 @@
                                     foreach ($list as $item) {
                                     ?>
                                         <tr>
-                                            <td class="mailbox-name">
+                                            <td align="left">
                                                 <a href="#" data-toggle="popover" class="detail_popover"><?php echo $item->invoice_number; ?></a>
-                                                
                                             </td>
-                                            <td class="mailbox-name">
-                                              <?php echo $item->student->full_name; ?> 
+                                            <td>
+                                                <?php echo $item->student->full_name; ?>
                                             </td>
-                                            <td class="mailbox-name">
-                                              <?php echo $item->student->guardian_name; ?> 
+                                            <td>
+                                                <?php echo $item->student->guardian_name; ?>
                                             </td>
-                                            <td class="mailbox-name">
-                                              <?php echo $item->student->guardian_email; ?> 
+                                            <td>
+                                                <?php echo $item->student->guardian_email; ?>
                                             </td>
-                                            <td class="mailbox-name">
-                                              <?php echo (new \DateTime($item->created_at))->format('d/m/Y'); ?> 
+                                            <td>
+                                                <?php echo (new \DateTime($item->due_date))->format('d/m/Y'); ?>
                                             </td>
-                                            <td class="mailbox-name">
-                                             <a 
-                                             target="_blank"
-                                             href="<?php
-                                                 $bodyJson = json_decode($item->body);
-                                                 echo $bodyJson->LinkImpressao;
-                                             ?>"> Ver Nota</a>  
-                                        
-                                            </td>
-                                            
-                                            <td class="mailbox-name">
-                                              <?php echo number_format($item->price,2,',','.'); ?> 
-                                            </td>
-                                            
+                                            <td>
+                                                <a target="_blank" href="<?php
+                                                                            $bodyJson = json_decode($item->body);
+                                                                            echo $bodyJson->LinkImpressao;
+                                                                            ?>"> Ver Nota</a>
 
-                                            <td class="mailbox-date pull-right">
-                                                <?php
-                                                if ($this->rbac->hasPrivilege('invoice_type', 'can_edit')) {
-                                                ?>
-                                                    <!-- <a data-placement="left" href="<?php echo base_url(); ?>admin/feetype/edit/<?php echo $item['id'] ?>" class="btn btn-default btn-xs" data-toggle="tooltip" title="<?php echo $this->lang->line('edit'); ?>">
-                                                        <i class="fa fa-pencil"></i>
-                                                    </a> -->
-                                                <?php } ?>
-                                                <?php
-                                                if ($this->rbac->hasPrivilege('invoice_type', 'can_delete')) {
-                                                ?>
-                                                    <!-- <a data-placement="left" href="<?php echo base_url(); ?>admin/feetype/delete/<?php echo $item['id'] ?>" class="btn btn-default btn-xs" data-toggle="tooltip" title="<?php echo $this->lang->line('delete'); ?>" onclick="return confirm('<?php echo $this->lang->line('delete_confirm') ?>');">
-                                                        <i class="fa fa-remove"></i>
-                                                    </a> -->
-                                                <?php } ?>
                                             </td>
+                                            <td>
+                                                <?php echo number_format($item->price, 2, ',', '.'); ?>
+                                            </td>
+                                           
                                         </tr>
                                     <?php
                                     }
@@ -116,6 +96,9 @@
         </div> <!-- /.row -->
     </section><!-- /.content -->
 </div><!-- /.content-wrapper -->
+<link rel="stylesheet" href="//cdn.datatables.net/1.10.23/css/jquery.dataTables.min.css" />
+<!-- <script src="https://cdn.datatables.net/1.10.23/js/jquery.dataTables.min.js"></script> -->
+
 
 <script type="text/javascript">
     $(document).ready(function() {
@@ -131,10 +114,6 @@
             $("#form1")[0].reset();
         });
 
-    });
-</script>
-<script>
-    $(document).ready(function() {
         $('.detail_popover').popover({
             placement: 'right',
             trigger: 'hover',
@@ -143,6 +122,154 @@
             content: function() {
                 return $(this).closest('td').find('.fee_detail_popover').html();
             }
+        });
+
+        var $table = $('#invoice_table').DataTable({
+            ordering: false,
+            paging: false,
+            info: false,
+            filter: false,
+            // dom: 'fBrtip<"clear">',
+            // buttons: [
+
+            //     {
+            //         extend: 'copyHtml5',
+            //         text: '<i class="fa fa-files-o"></i>',
+            //         titleAttr: 'Copy',
+            //         title: $('.download_label').html(),
+            //         footer: true,
+            //         exportOptions: {
+            //             columns: ':visible'
+            //         }
+            //     },
+
+            //     {
+            //         extend: 'excelHtml5',
+            //         text: '<i class="fa fa-file-excel-o"></i>',
+            //         titleAttr: 'Excel',
+            //         footer: true,
+            //         title: $('.download_label').html(),
+            //         exportOptions: {
+            //             columns: ':visible'
+            //         }
+            //     },
+
+            //     {
+            //         extend: 'csvHtml5',
+            //         text: '<i class="fa fa-file-text-o"></i>',
+            //         titleAttr: 'CSV',
+            //         footer: true,
+            //         title: $('.download_label').html(),
+            //         exportOptions: {
+            //             columns: ':visible'
+            //         }
+            //     },
+
+            //     {
+            //         extend: 'pdfHtml5',
+            //         footer: true,
+            //         text: '<i class="fa fa-file-pdf-o"></i>',
+            //         titleAttr: 'PDF',
+            //         title: $('.download_label').html(),
+            //         exportOptions: {
+            //             //  columns: ':all'
+
+            //         }
+            //     },
+            //     {
+            //         extend: 'print',
+            //         text: '<i class="fa fa-print"></i>',
+            //         titleAttr: 'Print',
+            //         footer: true,
+            //         title: $('.download_label').html(),
+            //         exportOptions: {
+            //             columns: ':visible'
+            //         }
+            //     },
+
+            //     {
+            //         extend: 'colvis',
+            //         text: '<i class="fa fa-columns"></i>',
+            //         titleAttr: 'Columns',
+            //         footer: true,
+            //         title: $('.download_label').html(),
+            //         postfixButtons: ['colvisRestore']
+            //     },
+            // ],
+            // footerCallback: function(row, data, start, end, display) {
+            //     var api = this.api(),
+            //         data;
+
+
+            //     // Remove the formatting to get integer data for summation
+            //     var intVal = function(i) {
+            //         return typeof i === 'string' ?
+            //             i.replace(/[R\$,]/g, '') * 1 :
+            //             typeof i === 'number' ?
+            //             i : 0;
+            //     };
+
+            //     var sum = 0,
+            //         totalForReceived = 0,
+            //         totalDiscount = 0,
+            //         totalFine = 0;
+            //     api
+            //         .column(8, {
+            //             page: 'current'
+            //         })
+            //         .data()
+            //         .filter((a, k) => {
+            //             return k < end
+            //         })
+            //         .map((a) => {
+            //             sum += $(a).data('total')
+            //         })
+            //     api
+            //         .column(3, {
+            //             page: 'current'
+            //         })
+            //         .data()
+            //         .filter((a, k) => {
+            //             return k < end
+            //         })
+            //         .map((a) => {
+            //             // console.log($(a).data('value'))
+            //             totalForReceived += Number($(a).data('value'))
+            //         })
+            //     api
+            //         .column(7, {
+            //             page: 'current'
+            //         })
+            //         .data()
+            //         .filter((a, k) => {
+            //             return k < end
+            //         })
+            //         .map((a) => {
+            //             // console.log($(a).data('value'))
+            //             totalFine += Number($(a).data('value'))
+            //         })
+
+            //     api
+            //         .column(6, {
+            //             page: 'current'
+            //         })
+            //         .data()
+            //         .filter((a, k) => {
+            //             return k < end
+            //         })
+            //         .map((a) => {
+            //             // console.log($(a).data('value'))
+            //             totalDiscount += Number($(a).data('value'))
+            //         })
+
+            //     $('.dataTables_wrapper table > tfoot').show()
+            //     $(api.column(3).footer()).html(accounting.formatMoney(totalForReceived, "", 2, ".", ","))
+            //     $(api.column(6).footer()).html(accounting.formatMoney(totalDiscount, "", 2, ".", ","))
+            //     $(api.column(7).footer()).html(accounting.formatMoney(totalFine, "", 2, ".", ","))
+            //     $(api.column(8).footer()).html(accounting.formatMoney(sum, "", 2, ".", ","))
+
+
+            // }
         });
     });
 </script>

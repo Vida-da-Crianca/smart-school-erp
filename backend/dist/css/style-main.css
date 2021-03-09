@@ -3917,7 +3917,7 @@ input[type=checkbox], input[type=radio] {
 /*.bootstrap-select.btn-group .dropdown-menu li>a {padding-left: 30px !important;}*/
 
 
-.documents_contract_container{
+/* .documents_contract_container{
 
     display: flex;
     align-items: center;
@@ -3938,4 +3938,6 @@ input[type=checkbox], input[type=radio] {
     border: 1px solid #ddd;
     border-radius: 2px;
     
-}
+} */
+
+

@@ -1,14 +1,54 @@
-.box_dashboard{
-	display: block;
-    font-size: 15px;
-    margin-top: 38px;
-    white-space: nowrap;
-    margin-left: 19px;
-    overflow: hidden;
-    text-overflow: ellipsis;
+.box_dashboard {
+  display: block;
+  font-size: 15px;
+  margin-top: 38px;
+  white-space: nowrap;
+  margin-left: 19px;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-
 .ui-autocomplete-loading {
-    background: url('../../images/loading-ui.gif') no-repeat right center;
+  background: url("../../images/loading-ui.gif") no-repeat right center;
+}
+
+.card_list_documents {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: start;
+  width: 100%;
+}
+
+.card_document_item {
+  flex: 0 1 115px;
+
+ 
+  padding: 5px;
+  display: flex;
+}
+
+.card_document_action span{
+    display:flex;
+    text-align:center;
+}
+.card_document_action {
+  border-radius: 3px;
+  justify-content:center;
+  align-items:center;
+  width: 100%;
+  background: #f9f9f9;
+  border: 1px solid #ddd;
+  flex-direction: column;
+  display: flex;
+  flex: 1;
+  color: #333;
+  height: 120px;
+  font-size: .8rem;
+  line-height:.9rem;
+  text-transform: uppercase;
+  padding-left: 10px;
+  padding-right: 10px;
+}
+.card_document_action i{
+    font-size:2rem;
 }
