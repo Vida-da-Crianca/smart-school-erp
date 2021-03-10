@@ -241,8 +241,11 @@ class DocumentController extends Admin_Controller
                 $options[sprintf('%s_@%s_descricao', Str::slug($item->fee_type->type, '_'), current($matches)[0])] = $item->title;
                 $options[sprintf('%s_@%s_data', Str::slug($item->fee_type->type, '_'), current($matches)[0])] = (new \DateTime($item->due_date))->format('d/m/Y');
                 $options[sprintf('%s_@%s_vencimento_dia', Str::slug($item->fee_type->type, '_'), current($matches)[0])] = (new \DateTime($item->due_date))->format('d');
+                $options[sprintf('%s_@%s_vencimento_dia_extenso', Str::slug($item->fee_type->type, '_'), current($matches)[0])] = NumberExtensil::converte( (new \DateTime($item->due_date))->format('d'), false);
                 $options[sprintf('%s_@%s_vencimento_mes', Str::slug($item->fee_type->type, '_'), current($matches)[0])] = (new \DateTime($item->due_date))->format('m');
                 $options[sprintf('%s_@%s_vencimento_anp', Str::slug($item->fee_type->type, '_'), current($matches)[0])] = (new \DateTime($item->due_date))->format('Y');
+
+                
             }
         }
 

@@ -234,12 +234,14 @@ function get_finance_var_document(): array
     // $options[] = Str::slug($row->type, '_');
     // $options[] = sprintf('primeira_%s', Str::slug($row->type, '_'));
     // $options[] = sprintf('atual_%s', Str::slug($row->type, '_'));
+    
     $options[] = sprintf('%s_@n_valor', Str::slug($row->type, '_'));
     $options[] = sprintf('%s_quantidade', Str::slug($row->type, '_'));
     $options[] = sprintf('%s_quantidade_extenso', Str::slug($row->type, '_'));
     $options[] = sprintf('%s_@n_valor_extenso', Str::slug($row->type, '_'));
     $options[] = sprintf('%s_@n_data', Str::slug($row->type, '_'));
     $options[] = sprintf('%s_@n_descricao', Str::slug($row->type, '_'));
+    $options[] = sprintf('%s_@n_vencimento_dia_extenso', Str::slug($row->type, '_'));
     $options[] = sprintf('%s_@n_vencimento_dia', Str::slug($row->type, '_'));
     $options[] = sprintf('%s_@n_vencimento_mes', Str::slug($row->type, '_'));
     $options[] = sprintf('%s_@n_vencimento_ano', Str::slug($row->type, '_'));

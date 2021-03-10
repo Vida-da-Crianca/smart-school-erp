@@ -150,7 +150,7 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                                                     foreach ($feegroup->feetypes as $feetype_key => $feetype_value) :
                                                                            
                                                                     ?>
-                                                                        <tr class="mailbox-name">
+                                                                        <tr>
                                                                             <td>
                                                                            
                                                                                 <input type="hidden" name="feetype[]" value="<?php echo $feetype_value->feetype_id;  ?>" />
@@ -170,8 +170,8 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                                                                 </div>
 
                                                                             </td>
-                                                                            <td style="width: 60px;">
-                                                                                <input class="form-control" name="number_multiply_payment[]" id="number_multiply_payment<?php echo $i; ?>" value="0" />
+                                                                            <td style="width: 90px;">
+                                                                                <input class="form-control" name="number_multiply_payment[]" id="number_multiply_payment_<?php echo $i; ?>" value="0" />
                                                                             </td>
                                                                         </tr>
                                                                 <?php
@@ -300,6 +300,8 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
 
         });
 
+        $('input[name="date_payment[]"]').mask('00/00/0000');
+
         var $form = $('#assign_form')
         jQuery.validator.addMethod("allRequired", function(value, elem) {
             // Use the name to get all the inputs and verify them
@@ -314,13 +316,10 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
             rules: {
                 'number_multiply_payment[]': {
                     number: true,
-                    'allRequired': true,
-
+                    allRequired: true,
                 },
                 'date_payment[]': {
-
-                    'allRequired': true,
-
+                    allRequired: true,
                 }
             },
             messages: {
