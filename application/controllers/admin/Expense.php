@@ -34,11 +34,14 @@ class Expense extends Admin_Controller {
         if ($this->form_validation->run() == FALSE) {
             
         } else {
+
+           
+            
             $data = array(
                 'exp_head_id' => $this->input->post('exp_head_id'),
                 'name' => $this->input->post('name'),
                 'date' => date('Y-m-d', $this->customlib->datetostrtotime($this->input->post('date'))),
-                'amount' => $this->input->post('amount'),
+                'amount' => double_to_base($this->input->post('amount') ),
                 'invoice_no' => $this->input->post('invoice_no'),
                 'note' => $this->input->post('description'),
                 'owner_id' => $this->input->post('owner_id'),
@@ -47,6 +50,7 @@ class Expense extends Admin_Controller {
               
             );
 
+          
             $insert_id = $this->expense_model->add($data);
 
             if (isset($_FILES["documents"]) && !empty($_FILES['documents']['name'])) {

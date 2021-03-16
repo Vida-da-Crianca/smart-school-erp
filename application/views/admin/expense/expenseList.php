@@ -236,6 +236,7 @@
     </section><!-- /.content -->
 </div><!-- /.content-wrapper -->
 <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+<script src="/backend/js/jquery.maskMoney.min.js"></script>
 <script type="text/javascript">
     $(document).ready(function() {
 
@@ -248,6 +249,8 @@
 </script>
 <script>
     $(document).ready(function() {
+
+        $('input[name="amount"]').maskMoney({prefix:'R$ ', thousands:'.', decimal:',', affixesStay: true});
         $('.detail_popover').popover({
             placement: 'right',
             trigger: 'hover',

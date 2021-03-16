@@ -261,6 +261,13 @@ function get_student_var_document(): array
   ];
 }
 
+
+function double_to_base($val){
+  // $str = preg_replace('#(R\$|\s)+#', '', $val);
+  $v = (str_replace(',','.', str_replace(['.','R$'],['',''], $val)));
+  return trim($v);  
+}
+
 function get_guardian_var_document(): array
 {
 
