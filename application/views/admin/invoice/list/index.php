@@ -141,73 +141,73 @@
             paging: false,
             info: false,
             filter: true,
-            // dom: 'fBrtip<"clear">',
-            // buttons: [
+            dom: 'fBrtip<"clear">',
+            buttons: [
 
-            //     {
-            //         extend: 'copyHtml5',
-            //         text: '<i class="fa fa-files-o"></i>',
-            //         titleAttr: 'Copy',
-            //         title: $('.download_label').html(),
-            //         footer: true,
-            //         exportOptions: {
-            //             columns: ':visible'
-            //         }
-            //     },
+                {
+                    extend: 'copyHtml5',
+                    text: '<i class="fa fa-files-o"></i>',
+                    titleAttr: 'Copy',
+                    title: $('.download_label').html(),
+                    footer: true,
+                    exportOptions: {
+                        columns: ':visible'
+                    }
+                },
 
-            //     {
-            //         extend: 'excelHtml5',
-            //         text: '<i class="fa fa-file-excel-o"></i>',
-            //         titleAttr: 'Excel',
-            //         footer: true,
-            //         title: $('.download_label').html(),
-            //         exportOptions: {
-            //             columns: ':visible'
-            //         }
-            //     },
+                {
+                    extend: 'excelHtml5',
+                    text: '<i class="fa fa-file-excel-o"></i>',
+                    titleAttr: 'Excel',
+                    footer: true,
+                    title: $('.download_label').html(),
+                    exportOptions: {
+                        columns: ':visible'
+                    }
+                },
 
-            //     {
-            //         extend: 'csvHtml5',
-            //         text: '<i class="fa fa-file-text-o"></i>',
-            //         titleAttr: 'CSV',
-            //         footer: true,
-            //         title: $('.download_label').html(),
-            //         exportOptions: {
-            //             columns: ':visible'
-            //         }
-            //     },
+                {
+                    extend: 'csvHtml5',
+                    text: '<i class="fa fa-file-text-o"></i>',
+                    titleAttr: 'CSV',
+                    footer: true,
+                    title: $('.download_label').html(),
+                    exportOptions: {
+                        columns: ':visible'
+                    }
+                },
 
-            //     {
-            //         extend: 'pdfHtml5',
-            //         footer: true,
-            //         text: '<i class="fa fa-file-pdf-o"></i>',
-            //         titleAttr: 'PDF',
-            //         title: $('.download_label').html(),
-            //         exportOptions: {
-            //             //  columns: ':all'
+                {
+                    extend: 'pdfHtml5',
+                    footer: true,
+                    text: '<i class="fa fa-file-pdf-o"></i>',
+                    titleAttr: 'PDF',
+                    title: $('.download_label').html(),
+                    exportOptions: {
+                        //  columns: ':all'
 
-            //         }
-            //     },
-            //     {
-            //         extend: 'print',
-            //         text: '<i class="fa fa-print"></i>',
-            //         titleAttr: 'Print',
-            //         footer: true,
-            //         title: $('.download_label').html(),
-            //         exportOptions: {
-            //             columns: ':visible'
-            //         }
-            //     },
+                    }
+                },
+                {
+                    extend: 'print',
+                    text: '<i class="fa fa-print"></i>',
+                    titleAttr: 'Print',
+                    footer: true,
+                    title: $('.download_label').html(),
+                    exportOptions: {
+                        columns: ':visible'
+                    }
+                },
 
-            //     {
-            //         extend: 'colvis',
-            //         text: '<i class="fa fa-columns"></i>',
-            //         titleAttr: 'Columns',
-            //         footer: true,
-            //         title: $('.download_label').html(),
-            //         postfixButtons: ['colvisRestore']
-            //     },
-            // ],
+                {
+                    extend: 'colvis',
+                    text: '<i class="fa fa-columns"></i>',
+                    titleAttr: 'Columns',
+                    footer: true,
+                    title: $('.download_label').html(),
+                    postfixButtons: ['colvisRestore']
+                },
+            ],
             // footerCallback: function(row, data, start, end, display) {
             //     var api = this.api(),
             //         data;
