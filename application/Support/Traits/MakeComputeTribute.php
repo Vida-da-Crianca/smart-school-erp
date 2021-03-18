@@ -23,7 +23,7 @@ trait MakeComputeTribute
         
         $calcA = ((($total * ($tribute->aliquota_nominal / 100)) - $tribute->valor_reduzido) / $total) * 100;
         $calcB =  $calcA * ($tribute->iss / 100);
-        $iss = $calcB < 2 ? 2.01 : ($calcB > 5 ? 5 :  $calcB);
+        $iss = $calcB < 2 ? 2 : ($calcB > 5 ? 5 :  $calcB);
 
 
         return (object) [
