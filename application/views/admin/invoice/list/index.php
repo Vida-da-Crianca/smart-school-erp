@@ -23,16 +23,16 @@
                     <div class="box-body" style="max-width:100% !important;">
                         <!-- <div class="download_label"><?php echo $this->lang->line('invoice_type_list'); ?></div> -->
                         <div class="table-responsive">
-                            <table id="invoice_table" class="dataTable display" role="grid">
+                            <table id="invoice_table" class="dataTable display" role="grid" style="width: 100%;">
                                 <thead>
                                     <tr>
-                                        <th style="width: 100px; padding-left: 0px;">
+                                        <th>
                                             <?php echo $this->lang->line('invoice_number'); ?> / <br />
                                             <small><?php echo $this->lang->line('billet'); ?></small>
                                         </th>
                                         <th><?php echo $this->lang->line('invoice_student'); ?></th>
                                         <th><?php echo $this->lang->line('invoice_guardian'); ?></th>
-                                        <th><?php echo $this->lang->line('invoice_email'); ?></th>
+                                        <th><?php echo $this->lang->line('invoice_document'); ?></th>
                                         <th><?php echo $this->lang->line('invoice_date'); ?></th>
                                         <th><?php echo $this->lang->line('invoice'); ?></th>
                                         <th><?php echo $this->lang->line('invoice_price'); ?></th>
@@ -41,6 +41,7 @@
                                 </thead>
                                 <tbody>
                                     <?php
+                                    $total = 0;
                                     foreach ($list as $item) {
                                     ?>
                                         <tr>
@@ -58,7 +59,7 @@
                                                 <?php echo $item->student->guardian_name; ?>
                                             </td>
                                             <td>
-                                                <?php echo $item->student->guardian_email; ?>
+                                                <?php echo $item->student->guardian_document; ?>
                                             </td>
                                             <td>
                                                 <?php echo (new \DateTime($item->due_date))->format('d/m/Y'); ?>
@@ -70,8 +71,8 @@
                                                                             ?>"> Ver Nota</a>
 
                                             </td>
-                                            <td>
-                                                <?php echo number_format($item->price, 2, ',', '.'); ?>
+                                            <td data-total="<?=$item->price;?>">
+                                                <?php echo number_format($item->price, 2, ',', '.');  $total += $item->price; ?>
                                             </td>
 
                                         </tr>
@@ -80,6 +81,13 @@
                                     ?>
 
                                 </tbody>
+                                <tfoot>
+                                    <tr>
+                                      <th colspan="6">Total</th>
+                                     
+                                      <th><?=number_format($total, 2, ',', '.');?></th>
+                                    </tr>
+                                </tfoot>
                             </table><!-- /.table -->
 
 
@@ -111,6 +119,15 @@
     .dataTables_filter {
         text-align: right;
         float: left !important;
+    }
+
+    .dataTables_wrapper {
+        position: relative;
+        clear: both;
+        *zoom: 1;
+        zoom: 1;
+        width: 100%;
+        text-align: left;
     }
 </style>
 <script type="text/javascript">
@@ -208,80 +225,41 @@
                     postfixButtons: ['colvisRestore']
                 },
             ],
-            // footerCallback: function(row, data, start, end, display) {
-            //     var api = this.api(),
-            //         data;
+            footerCallback: function(row, data, start, end, display) {
+                var api = this.api(),
+                    data;
 
 
-            //     // Remove the formatting to get integer data for summation
-            //     var intVal = function(i) {
-            //         return typeof i === 'string' ?
-            //             i.replace(/[R\$,]/g, '') * 1 :
-            //             typeof i === 'number' ?
-            //             i : 0;
-            //     };
+                // Remove the formatting to get integer data for summation
+                var intVal = function(i) {
+                    return typeof i === 'string' ?
+                        i.replace(/[R\$,]/g, '') * 1 :
+                        typeof i === 'number' ?
+                        i : 0;
+                };
 
-            //     var sum = 0,
-            //         totalForReceived = 0,
-            //         totalDiscount = 0,
-            //         totalFine = 0;
-            //     api
-            //         .column(8, {
-            //             page: 'current'
-            //         })
-            //         .data()
-            //         .filter((a, k) => {
-            //             return k < end
-            //         })
-            //         .map((a) => {
-            //             sum += $(a).data('total')
-            //         })
-            //     api
-            //         .column(3, {
-            //             page: 'current'
-            //         })
-            //         .data()
-            //         .filter((a, k) => {
-            //             return k < end
-            //         })
-            //         .map((a) => {
-            //             // console.log($(a).data('value'))
-            //             totalForReceived += Number($(a).data('value'))
-            //         })
-            //     api
-            //         .column(7, {
-            //             page: 'current'
-            //         })
-            //         .data()
-            //         .filter((a, k) => {
-            //             return k < end
-            //         })
-            //         .map((a) => {
-            //             // console.log($(a).data('value'))
-            //             totalFine += Number($(a).data('value'))
-            //         })
-
-            //     api
-            //         .column(6, {
-            //             page: 'current'
-            //         })
-            //         .data()
-            //         .filter((a, k) => {
-            //             return k < end
-            //         })
-            //         .map((a) => {
-            //             // console.log($(a).data('value'))
-            //             totalDiscount += Number($(a).data('value'))
-            //         })
-
-            //     $('.dataTables_wrapper table > tfoot').show()
-            //     $(api.column(3).footer()).html(accounting.formatMoney(totalForReceived, "", 2, ".", ","))
-            //     $(api.column(6).footer()).html(accounting.formatMoney(totalDiscount, "", 2, ".", ","))
-            //     $(api.column(7).footer()).html(accounting.formatMoney(totalFine, "", 2, ".", ","))
-            //     $(api.column(8).footer()).html(accounting.formatMoney(sum, "", 2, ".", ","))
+                var sum = 0;
+                  
+                api
+                    .column(6, {
+                        page: 'current'
+                    })
+                    .data()
+                    .filter((a, k) => {
+                        return k < end
+                    })
+                    .map((a) => {
+                        sum += $(a).data('total')
+                    })
 
 
-            // }
+                $('.dataTables_wrapper table > tfoot').show()
+                // console.log(sum)
+
+                // $(api.column(6).footer()).html(accounting.formatMoney(sum, "", 2, ".", ","))
+
+
+            }
         });
     });
 </script>
