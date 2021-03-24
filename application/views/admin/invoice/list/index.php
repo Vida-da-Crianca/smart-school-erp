@@ -32,7 +32,7 @@
                                         </th>
                                         <th><?php echo $this->lang->line('invoice_student'); ?></th>
                                         <th><?php echo $this->lang->line('invoice_guardian'); ?></th>
-                                        <th><?php echo $this->lang->line('invoice_document'); ?></th>
+                                        <th><?php echo $this->lang->line('guardian_document'); ?></th>
                                         <th><?php echo $this->lang->line('invoice_date'); ?></th>
                                         <th><?php echo $this->lang->line('invoice'); ?></th>
                                         <th><?php echo $this->lang->line('invoice_price'); ?></th>
@@ -71,8 +71,12 @@
                                                                             ?>"> Ver Nota</a>
 
                                             </td>
-                                            <td data-total="<?=$item->price;?>">
-                                                <?php echo number_format($item->price, 2, ',', '.');  $total += $item->price; ?>
+                                            <td>
+                                                <span data-total="<?= $item->price; ?>">
+                                                    <?php echo number_format($item->price, 2, ',', '.');
+                                                    $total += $item->price; ?>
+                                                </span>
+
                                             </td>
 
                                         </tr>
@@ -83,9 +87,9 @@
                                 </tbody>
                                 <tfoot>
                                     <tr>
-                                      <th colspan="6">Total</th>
-                                     
-                                      <th><?=number_format($total, 2, ',', '.');?></th>
+                                        <th colspan="6">Total</th>
+
+                                        <th><?= number_format($total, 2, ',', '.'); ?></th>
                                     </tr>
                                 </tfoot>
                             </table><!-- /.table -->
@@ -112,7 +116,7 @@
     </section><!-- /.content -->
 </div><!-- /.content-wrapper -->
 <link rel="stylesheet" href="//cdn.datatables.net/1.10.23/css/jquery.dataTables.min.css" />
-<!-- <script src="https://cdn.datatables.net/1.10.23/js/jquery.dataTables.min.js"></script> -->
+<script src="https://cdn.datatables.net/1.10.23/js/jquery.dataTables.min.js"></script>
 
 <style>
     .dataTables_wrapper,
@@ -239,7 +243,8 @@
                 };
 
                 var sum = 0;
-                  
+               
+
                 api
                     .column(6, {
                         page: 'current'
@@ -249,14 +254,15 @@
                         return k < end
                     })
                     .map((a) => {
+                     
                         sum += $(a).data('total')
                     })
 
 
                 $('.dataTables_wrapper table > tfoot').show()
-                // console.log(sum)
+              
 
-                // $(api.column(6).footer()).html(accounting.formatMoney(sum, "", 2, ".", ","))
+                $(api.column(6).footer()).html(accounting.formatMoney(sum, "", 2, ".", ","))
 
 
             }
