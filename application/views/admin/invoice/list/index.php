@@ -59,7 +59,7 @@
                                                 <?php echo $item->student->guardian_name; ?>
                                             </td>
                                             <td>
-                                                <?php echo $item->student->guardian_document; ?>
+                                                <?php echo   mask($item->student->guardian_document,'###.###.###-##'); ?>
                                             </td>
                                             <td>
                                                 <?php echo (new \DateTime($item->due_date))->format('d/m/Y'); ?>
