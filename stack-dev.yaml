@@ -1,11 +1,16 @@
 version: "3.7"
 services:
   redis:
-    image: redis:latest
+    image: redis:6.0.9
     networks:
-      - erp_net  
+      - erp_net
+  memcahed:
+    image: memcached:1.6-alpine
+    networks:
+      - erp_net
+
   db:
-    image: mysql:latest
+    image: mysql:8
     environment:
       MYSQL_DATABASE: erp
       MYSQL_PASSWORD: erp
@@ -14,8 +19,8 @@ services:
     command: 
       [
         '--default_authentication_plugin=mysql_native_password',
-        '--character-set-server=utf8mb4',
-        '--collation-server=utf8mb4_unicode_ci'
+        # '--character-set-server=utf8mb4',
+        # '--collation-server=utf8mb4_unicode_ci'
         
       ]
     volumes:
@@ -28,25 +33,47 @@ services:
       -
         source: mysql.conf
         target: /etc/mysql/conf.d/group.cnf
+  # jobs:
+  #   image: webdevops/php-nginx:7.4
+  #   working_dir: /app/
+  #   depends_on:
+  #     - db
+  #     - redis
+  #   environment:
+  #     - VERSION_erp=1.0.2
+  #     - PHP_DATE_TIMEZONE=America/Sao_Paulo
+  #     - LICENSE_APP=63AH2N-XTFFLP-952QAM-UTBUai9NL0Q5R2lLeE4xbXZBMGVMVnEwMlpvTTU0QmNFcml6emVLNkk0MD0=
+  #   volumes:
+  #    - ./:/app/
+  #   tty: true
+  #   networks:
+  #     - proxy
+  #     - erp_net 
+  #   command: [
+  #     "/app/schedule-run.sh"
+  #   ] 
+  #   configs:
+  #     - 
+  #       source: openssl.cnf
+  #       target: /etc/ssl/openssl.cnf
   app:
-    image: webdevops/php-nginx:5.6
+    image: webdevops/php-nginx:7.4
+    working_dir: /app/
+    depends_on:
+      - db
+      - redis
     environment:
       - VERSION_erp=1.0.2
       - PHP_DATE_TIMEZONE=America/Sao_Paulo
       - LICENSE_APP=63AH2N-XTFFLP-952QAM-UTBUai9NL0Q5R2lLeE4xbXZBMGVMVnEwMlpvTTU0QmNFcml6emVLNkk0MD0=
+      - BASE_URL=http://erp.dev.in/
+      - ENVIRONMENT=development
     volumes:
      - ./:/app/
-    # configs:
-    #   - 
-    #     source: erp_conf
-    #     target: /opt/docker/etc/httpd/conf.d/erp.conf
-    #   -
-    #     source: php.ini
-    #     target: /opt/docker/etc/php/php.ini
-    #   -
-    #     source: periodico.conf
-    #     target: /opt/docker/etc/supervisor.d/erp.conf   
-
+    configs:
+      - 
+        source: openssl.cnf
+        target: /etc/ssl/openssl.cnf
     deploy:
       labels:
         traefik.http.services.erp.loadbalancer.server.port: "80"
@@ -71,9 +98,10 @@ networks:
 configs:
    mysql.conf:
      file: './mysql.conf'
-   
-#   php.ini:
-#     file: './docker/php.ini'
-#   periodico.conf:
-#     file: './docker/supervisor.conf'  
+   openssl.cnf:
+     file: ./openssl.cnf
+  #  cron:
+  #    file: ./docker/cron.sh
+  #  supervisor.conf:
+  #    file: ./docker/supervisor.conf 
 

@@ -1,0 +1,50 @@
+[
+    {
+        "rba_min": 0,
+        "rba_max": 180000.00,
+        "aliquota_nominal": 6,
+        "valor_reduzido": 0,
+        "irpj": 4,
+        "csll": 3.50,
+        "cofins": 12.82,
+        "pis": 2.76,
+        "cpp": 33.50,
+        "iss": 33.50
+    },
+    {
+        "rba_min": 180000.01,
+        "rba_max": 360000.00,
+        "aliquota_nominal": 11.20,
+        "valor_reduzido": 9360,
+        "irpj": 5.50,
+        "csll": 3.50,
+        "cofins": 14.05,
+        "pis": 3.05,
+        "cpp": 43.40,
+        "iss": 32
+    },
+    {
+        "rba_min": 360000.01,
+        "rba_max": 720000.00,
+        "aliquota_nominal": 13.50,
+        "valor_reduzido": 17640.00,
+        "irpj": 5.50,
+        "csll": 3.50,
+        "cofins": 13.64,
+        "pis": 2.96,
+        "cpp": 43.40,
+        "iss": 32.5
+    },
+    {
+        "rba_min": 720000.01,
+        "rba_max": 1800000.00,
+        "aliquota_nominal": 16,
+        "valor_reduzido": 22500,
+        "irpj": 5.50,
+        "csll": 3.50,
+        "cofins": 12.74,
+        "pis": 2.76,
+        "cpp": 42,
+        "iss": 33.5
+    }
+]

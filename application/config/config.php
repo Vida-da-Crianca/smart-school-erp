@@ -78,7 +78,7 @@ $config['url_suffix'] = '';
   | than english.
   |
  */
-$config['language'] = 'english';
+$config['language'] = 'portuguese-brazilian';
 
 /*
   |--------------------------------------------------------------------------
@@ -160,7 +160,7 @@ $config['composer_autoload'] = FALSE;
   | DO NOT CHANGE THIS UNLESS YOU FULLY UNDERSTAND THE REPERCUSSIONS!!
   |
  */
-$config['permitted_uri_chars'] = 'a-z 0-9~%.:_\-@\=()';
+$config['permitted_uri_chars'] = 'a-z 0-9~%.:_\-@\=(),';
 
 /*
   |--------------------------------------------------------------------------
@@ -215,7 +215,7 @@ $config['directory_trigger'] = 'd';
   | your log files will fill up very fast.
   |
  */
-$config['log_threshold'] = 0;
+$config['log_threshold'] = 1;
 
 /*
   |--------------------------------------------------------------------------
@@ -370,9 +370,14 @@ $config['encryption_key'] = getenv('APP_KEY');
   |
  */
 $config['sess_driver'] = 'redis';
-$config['sess_cookie_name'] = 'ci_session';
+$config['sess_cookie_name'] = getenv('CI_SESSION');
 $config['sess_expiration'] = 7200;
 $config['sess_save_path'] =  'tcp://redis:6379'; //sys_get_temp_dir();
+// $config['sess_driver'] = 'database';
+// $config['sess_drivers'] = 'memcached';
+// $config['sess_save_path'] = 'memcached:11211';
+
+// $config['sess_save_path'] = 'ci_sessions';
 $config['sess_match_ip'] = FALSE;
 $config['sess_time_to_update'] = 300;
 $config['sess_regenerate_destroy'] = FALSE;
@@ -513,6 +518,6 @@ $config['rewrite_short_tags'] = FALSE;
   | Array:		array('10.0.1.200', '192.168.5.0/24')
  */
 $config['routine_session'] = 16;
-$config['routine_update'] = 1529539200;
+$config['routine_update'] = 1614826800;
 $config['proxy_ips'] = '';
 $config['installed'] = true;

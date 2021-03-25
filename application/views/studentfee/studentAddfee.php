@@ -3,15 +3,17 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
 $language = $this->customlib->getLanguage();
 $language_name = $language["short_code"];
 ?>
+<input type="hidden" value="<?php echo $student['id']; ?>" name="student_user_id" />
 <div class="content-wrapper">
     <div class="row">
         <div class="col-md-12">
             <section class="content-header">
                 <h1>
-                    <i class="fa fa-money"></i> <?php echo $this->lang->line('fees_collection'); ?><small><?php echo $this->lang->line('student_fee'); ?></small></h1>
+                    <i class="fa fa-money"></i> <?php echo $this->lang->line('fees_collection'); ?><small><?php echo $this->lang->line('student_fee'); ?></small>
+                </h1>
             </section>
 
-        </div> 
+        </div>
         <div>
             <a id="sidebarCollapse" class="studentsideopen"><i class="fa fa-navicon"></i></a>
             <aside class="studentsidebar">
@@ -21,34 +23,35 @@ $language_name = $language["short_code"];
                         <p class="classtap"><?php echo $student["class"]; ?> <a href="#" data-toggle="control-sidebar" class="studentsideclose"><i class="fa fa-times"></i></a></p>
                         <ul class="nav nav-justified studenttaps">
                             <?php foreach ($class_section as $skey => $svalue) {
-                                ?>
+                            ?>
                                 <li <?php
-                                if ($student["section_id"] == $svalue["section_id"]) {
-                                    echo "class='active'";
-                                }
-                                ?> ><a href="#section<?php echo $svalue["section_id"] ?>" data-toggle="tab"><?php print_r($svalue["section"]); ?></a></li>
-                                <?php } ?>
+                                    if ($student["section_id"] == $svalue["section_id"]) {
+                                        echo "class='active'";
+                                    }
+                                    ?>><a href="#section<?php echo $svalue["section_id"] ?>" data-toggle="tab"><?php print_r($svalue["section"]); ?></a></li>
+                            <?php } ?>
                         </ul>
                     </div>
                     <!-- Tab panes -->
                     <div class="tab-content">
                         <?php foreach ($class_section as $skey => $snvalue) {
-                            ?>
+                        ?>
                             <div class="tab-pane <?php
-                            if ($student["section_id"] == $snvalue["section_id"]) {
-                                echo "active";
-                            }
-                            ?>" id="section<?php echo $snvalue["section_id"]; ?>">
-                                 <?php
-                                 foreach ($studentlistbysection as $stkey => $stvalue) {
-                                     if ($stvalue['section_id'] == $snvalue["section_id"]) {
-                                         ?>
+                                                    if ($student["section_id"] == $snvalue["section_id"]) {
+                                                        echo "active";
+                                                    }
+                                                    ?>" id="section<?php echo $snvalue["section_id"]; ?>">
+                                <?php
+                                foreach ($studentlistbysection as $stkey => $stvalue) {
+                                    if ($stvalue['section_id'] == $snvalue["section_id"]) {
+                                ?>
                                         <div class="studentname">
                                             <a class="" href="<?php echo base_url() . "studentfee/addfee/" . $stvalue["id"] ?>">
                                                 <div class="icon"><img src="<?php echo base_url() . $stvalue["image"]; ?>" alt="User Image"></div>
-                                                <div class="student-tittle"><?php echo $stvalue["firstname"] . " " . $stvalue["lastname"]; ?></div></a>
+                                                <div class="student-tittle"><?php echo $stvalue["firstname"] . " " . $stvalue["lastname"]; ?></div>
+                                            </a>
                                         </div>
-                                        <?php
+                                <?php
                                     }
                                 }
                                 ?>
@@ -68,7 +71,8 @@ $language_name = $language["short_code"];
                     </div>
                 </div>
             </aside>
-        </div></div>
+        </div>
+    </div>
     <!-- /.control-sidebar -->
     <section class="content">
         <div class="row">
@@ -88,19 +92,20 @@ $language_name = $language["short_code"];
                             </div>
 
                         </div>
-                    </div><!--./box-header-->
+                    </div>
+                    <!--./box-header-->
                     <div class="box-body" style="padding-top:0;">
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="sfborder">
                                     <div class="col-md-2">
                                         <img width="115" height="115" class="round5" src="<?php
-                                        if (!empty($student['image'])) {
-                                            echo base_url() . $student['image'];
-                                        } else {
-                                            echo base_url() . "uploads/student_images/no_image.png";
-                                        }
-                                        ?>" alt="No Image">
+                                                                                            if (!empty($student['image'])) {
+                                                                                                echo base_url() . $student['image'];
+                                                                                            } else {
+                                                                                                echo base_url() . "uploads/student_images/no_image.png";
+                                                                                            }
+                                                                                            ?>" alt="No Image">
                                     </div>
 
                                     <div class="col-md-10">
@@ -138,11 +143,22 @@ $language_name = $language["short_code"];
                                                             }
                                                             ?>
                                                         </td>
-                                                        <?php if ($sch_setting->rte) { ?> 
+                                                        <?php if ($sch_setting->rte) { ?>
                                                             <th><?php echo $this->lang->line('rte'); ?></th>
                                                             <td><b class="text-danger"> <?php echo $student['rte']; ?> </b>
                                                             </td>
                                                         <?php } ?>
+                                                    </tr>
+                                                    <tr>
+                                                        <th>
+                                                            Ano
+                                                        </th>
+                                                        <td>
+                                                            <?php
+
+                                                            echo form_dropdown('year_fees', $optionsYear, [$current_year], 'class="form-control"');
+                                                            ?>
+                                                        </td>
                                                     </tr>
 
                                                 </tbody>
@@ -151,7 +167,8 @@ $language_name = $language["short_code"];
                                     </div>
 
 
-                                </div></div>
+                                </div>
+                            </div>
                             <div class="col-md-12">
                                 <div style="background: #dadada; height: 1px; width: 100%; clear: both; margin-bottom: 10px;"></div>
                             </div>
@@ -162,6 +179,9 @@ $language_name = $language["short_code"];
 
                                 <button type="button" class="btn btn-sm btn-warning collectSelected" id="load" data-loading-text="<i class='fa fa-spinner fa-spin '></i> Please Wait.."><i class="fa fa-money"></i> <?php echo $this->lang->line('collect') . " " . $this->lang->line('selected') ?></button>
 
+
+                                <button type="button" class="btn btn-sm btn-secondary billetSelected" id="load_billet" data-loading-text="<i class='fa fa-spinner fa-spin '></i> Processando.."><i class="fa fa-barcode"></i> <?php echo $this->lang->line('billet_new') . " " . $this->lang->line('selected') ?></button>
+                                <button type="button" class="btn btn-sm btn-danger billetCancelSelected" id="load_billet_cancel" data-loading-text="<i class='fa fa-spinner fa-spin '></i> Processando.."><i class="fa fa-ban"></i> <?php echo $this->lang->line('billet_cancel') . " " . $this->lang->line('selected') ?></button>
                                 <span class="pull-right"><?php echo $this->lang->line('date'); ?>: <?php echo date($this->customlib->getSchoolDateFormat()); ?></span>
                             </div>
                         </div>
@@ -170,16 +190,17 @@ $language_name = $language["short_code"];
                             <table class="table table-striped table-bordered table-hover example table-fixed-header">
                                 <thead class="header">
                                     <tr>
-                                        <th style="width: 10px"><input type="checkbox" id="select_all"/></th>
+                                        <th style="width: 10px"><input type="checkbox" id="select_all" /></th>
+                                        <th align="left"><?php echo $this->lang->line('fees_item_code'); ?></th>
                                         <th align="left"><?php echo $this->lang->line('fees_group'); ?></th>
-                                        <th align="left"><?php echo $this->lang->line('fees_code'); ?></th>
-                                        <th align="left" class="text text-left"><?php echo $this->lang->line('due_date'); ?></th>
+                                        <!-- <th align="left"><?php echo $this->lang->line('fees_code'); ?></th> -->
+                                        <th align="left" class="text text-left"><?php $this->lang->line('due_date'); ?></th>
                                         <th align="left" class="text text-left"><?php echo $this->lang->line('status'); ?></th>
                                         <th class="text text-right"><?php echo $this->lang->line('amount') ?> <span><?php echo "(" . $currency_symbol . ")"; ?></span></th>
-                                        <th class="text text-left"><?php echo $this->lang->line('payment_id'); ?></th>
+                                        <!-- <th class="text text-left"><?php echo $this->lang->line('payment_id'); ?></th> -->
                                         <th class="text text-left"><?php echo $this->lang->line('mode'); ?></th>
-                                        <th  class="text text-left"><?php echo $this->lang->line('date'); ?></th>
-                                        <th class="text text-right" ><?php echo $this->lang->line('discount'); ?> <span><?php echo "(" . $currency_symbol . ")"; ?></span></th>
+                                        <th class="text text-left"><?php echo $this->lang->line('date'); ?></th>
+                                        <th class="text text-right"><?php echo $this->lang->line('discount'); ?> <span><?php echo "(" . $currency_symbol . ")"; ?></span></th>
                                         <th class="text text-right"><?php echo $this->lang->line('fine'); ?> <span><?php echo "(" . $currency_symbol . ")"; ?></span></th>
                                         <th class="text text-right"><?php echo $this->lang->line('paid'); ?> <span><?php echo "(" . $currency_symbol . ")"; ?></span></th>
                                         <th class="text text-right"><?php echo $this->lang->line('balance'); ?> <span><?php echo "(" . $currency_symbol . ")"; ?></span></th>
@@ -202,44 +223,63 @@ $language_name = $language["short_code"];
                                             $fee_paid = 0;
                                             $fee_discount = 0;
                                             $fee_fine = 0;
+                                            $feetype_balance = -1;
+                                            $description = $fee_value->name . " (" . $fee_value->type . ")";
 
-                                            if (!empty($fee_value->amount_detail)) {
-                                                $fee_deposits = json_decode(($fee_value->amount_detail));
+                                            // if ($fee_value->billet->count() > 0) {
+                                            //     $fee_discount = $fee_value->billet->first()->body_json->fee_discount;
+                                            // }
+                                            if ($fee_value->deposite) {
+                                                $fee_deposits = json_decode(($fee_value->deposite->amount_detail));
 
                                                 foreach ($fee_deposits as $fee_deposits_key => $fee_deposits_value) {
-                                                    $fee_paid = $fee_paid + $fee_deposits_value->amount;
-                                                    $fee_discount = $fee_discount + $fee_deposits_value->amount_discount;
-                                                    $fee_fine = $fee_fine + $fee_deposits_value->amount_fine;
+                                                    $fee_paid = $fee_paid + ($fee_deposits_value->amount - $fee_deposits_value->amount_discount) + $fee_deposits_value->amount_fine;
+                                                    $fee_discount +=  $fee_deposits_value->amount_discount;
+                                                    $fee_fine +=  $fee_deposits_value->amount_fine;
                                                 }
                                             }
+
                                             $total_amount = $total_amount + $fee_value->amount;
                                             $total_discount_amount = $total_discount_amount + $fee_discount;
                                             $total_deposite_amount = $total_deposite_amount + $fee_paid;
                                             $total_fine_amount = $total_fine_amount + $fee_fine;
-                                            $feetype_balance = $fee_value->amount - ($fee_paid + $fee_discount);
+                                            $feetype_balance = number_format($fee_value->amount, 2) - number_format(($fee_paid + $fee_discount), 2) + $fee_fine;
                                             $total_balance_amount = $total_balance_amount + $feetype_balance;
-                                            ?>
+                                            // $description = $fee_value->name . " (" . $fee_value->type . ")";
+
+                                            // dump([$fee_value->title, $fee_paid, $fee_discount, $fee_value->amount,  $fee_paid + $fee_discount, $feetype_balance]);
+
+                                    ?>
                                             <?php
                                             if ($feetype_balance > 0 && strtotime($fee_value->due_date) < strtotime(date('Y-m-d'))) {
-                                                ?>
+                                            ?>
                                                 <tr class="danger font12">
-                                                    <?php
-                                                } else {
-                                                    ?>
-                                                <tr class="dark-gray">
-                                                    <?php
-                                                }
+                                                <?php
+                                            } else {
                                                 ?>
-                                                <td><input class="checkbox" type="checkbox" name="fee_checkbox" data-fee_master_id="<?php echo $fee_value->id ?>" data-fee_session_group_id="<?php echo $fee_value->fee_session_group_id ?>" data-fee_groups_feetype_id="<?php echo $fee_value->fee_groups_feetype_id ?>"></td>
+                                                <tr class="dark-gray">
+                                                <?php
+                                            }
+                                                ?>
+                                                <td>
+                                                    <input <?php echo  $fee_value->deposite ? 'disabled' : '' ?> class="checkbox" type="checkbox" name="fee_checkbox" data-fee_date_payment="<?php echo $fee_value->due_date; ?>" data-fee_fine="<?php echo $fee_fine; ?>" data-fee_is_pdf="<?php echo $fee_value->billet->count() > 0 ? $fee_value->billet->first()->id : 0; ?>" data-fee_title="<?php echo $fee_value->title; ?>" data-fee_amount="<?php echo $fee_value->amount; ?>" data-fee_discount="<?php echo  $fee_discount; ?>" data-fee_master_id="<?php echo $fee_value->id; ?>" data-fee_session_group_id="<?php echo $fee_value->fee_session_group_id; ?>" data-fee_groups_feetype_id="<?php echo $fee_value->feetype_id; ?>" data-fee_line_1="<?php echo $description; ?>" data-fee_line_2="<?php echo $fee_value->code; ?>">
+                                                </td>
+                                                <td align="left">
+                                                    <?php
+                                                    echo $fee_value->id;
+                                                    if ($fee_value->billet->count() > 0) {
+                                                        echo '<br/><small class="text-success">' . $fee_value->billet->first()->bank_bullet_id . '</small>';
+                                                    }
+                                                    ?>
+                                                </td>
                                                 <td align="left"><?php
-                                                    echo $fee_value->name . " (" . $fee_value->type . ")";
-                                                    ?></td>
-                                                <td align="left"><?php echo $fee_value->code; ?></td>
+                                                                    echo $fee_value->title;
+                                                                    ?></td>
+                                                <!-- <td align="left"><?php echo $fee_value->code; ?></td> -->
                                                 <td align="left" class="text text-left">
 
                                                     <?php
                                                     if ($fee_value->due_date == "0000-00-00") {
-                                                        
                                                     } else {
 
                                                         echo date($this->customlib->getSchoolDateFormat(), $this->customlib->dateyyyymmddTodateformat($fee_value->due_date));
@@ -248,231 +288,258 @@ $language_name = $language["short_code"];
                                                 </td>
                                                 <td align="left" class="text text-left width85">
                                                     <?php
+                                                   
                                                     if ($feetype_balance == 0) {
-                                                        ?><span class="label label-success"><?php echo $this->lang->line('paid'); ?></span><?php
-                                                    } else if (!empty($fee_value->amount_detail)) {
-                                                        ?><span class="label label-warning"><?php echo $this->lang->line('partial'); ?></span><?php
-                                                    } else {
-                                                        ?><span class="label label-danger"><?php echo $this->lang->line('unpaid'); ?></span><?php
-                                                        }
-                                                        ?>
-
-                                                </td>
-                                                <td class="text text-right"><?php echo $fee_value->amount; ?></td>
-
-                                                <td class="text text-left"></td>
-                                                <td class="text text-left"></td>
-                                                <td class="text text-left"></td>
-                                                <td class="text text-right"><?php
-                                                    echo (number_format($fee_discount, 2, '.', ''));
-                                                    ?></td>
-                                                <td class="text text-right"><?php
-                                                    echo (number_format($fee_fine, 2, '.', ''));
-                                                    ?></td>
-                                                <td class="text text-right"><?php
-                                                    echo (number_format($fee_paid, 2, '.', ''));
-                                                    ?></td>
-                                                <td class="text text-right"><?php
-                                                    $display_none = "ss-none";
-                                                    if ($feetype_balance > 0) {
-                                                        $display_none = "";
-
-                                                        echo (number_format($feetype_balance, 2, '.', ''));
-                                                    }
-                                                    ?>
-                                                </td>
-                                                <td>
-                                                    <div class="btn-group pull-right">
-                                                        <button type="button" data-student_session_id="<?php echo $fee->student_session_id; ?>" data-student_fees_master_id="<?php echo $fee->id; ?>" data-fee_groups_feetype_id="<?php echo $fee_value->fee_groups_feetype_id; ?>"
-                                                                data-group="<?php echo $fee_value->name; ?>"
-                                                                data-type="<?php echo $fee_value->code; ?>"
-                                                                class="btn btn-xs btn-default myCollectFeeBtn <?php echo $display_none; ?>"
-                                                                title="<?php echo $this->lang->line('add_fees'); ?>" data-toggle="modal" data-target="#myFeesModal"
-                                                                ><i class="fa fa-plus"></i></button>
-
-
-                                                        <button  class="btn btn-xs btn-default printInv" data-fee_master_id="<?php echo $fee_value->id ?>" data-fee_session_group_id="<?php echo $fee_value->fee_session_group_id ?>" data-fee_groups_feetype_id="<?php echo $fee_value->fee_groups_feetype_id ?>"
-                                                                 title="<?php echo $this->lang->line('print'); ?>"
-                                                                 ><i class="fa fa-print"></i> </button>
-                                                    </div>
-                                                </td>
-
-
-                                            </tr>
-
-                                            <?php
-                                            if (!empty($fee_value->amount_detail)) {
-
-                                                $fee_deposits = json_decode(($fee_value->amount_detail));
-
-                                                foreach ($fee_deposits as $fee_deposits_key => $fee_deposits_value) {
-                                                    ?>
-                                                    <tr class="white-td">
-                                                        <td align="left"></td>
-                                                        <td align="left"></td>
-                                                        <td align="left"></td>
-                                                        <td align="left"></td>
-                                                        <td align="left"></td>
-                                                        <td class="text-right"><img src="<?php echo base_url(); ?>backend/images/table-arrow.png" alt="" /></td>
-                                                        <td class="text text-left">
-
-
-                                                            <a href="#" data-toggle="popover" class="detail_popover" > <?php echo $fee_value->student_fees_deposite_id . "/" . $fee_deposits_value->inv_no; ?></a>
-                                                            <div class="fee_detail_popover" style="display: none">
-                                                                <?php
-                                                                if ($fee_deposits_value->description == "") {
-                                                                    ?>
-                                                                    <p class="text text-danger"><?php echo $this->lang->line('no_description'); ?></p>
-                                                                    <?php
-                                                                } else {
-                                                                    ?>
-                                                                    <p class="text text-info"><?php echo $fee_deposits_value->description; ?></p>
-                                                                    <?php
-                                                                }
-                                                                ?>
-                                                            </div>
-
-
-                                                        </td>
-                                                        <td class="text text-left"><?php echo $this->lang->line(strtolower($fee_deposits_value->payment_mode)); ?></td>
-                                                        <td class="text text-left">
-
-                                                            <?php echo date($this->customlib->getSchoolDateFormat(), $this->customlib->dateyyyymmddTodateformat($fee_deposits_value->date)); ?>
-                                                        </td>
-                                                        <td class="text text-right"><?php echo (number_format($fee_deposits_value->amount_discount, 2, '.', '')); ?></td>
-                                                        <td class="text text-right"><?php echo (number_format($fee_deposits_value->amount_fine, 2, '.', '')); ?></td>
-                                                        <td class="text text-right"><?php echo (number_format($fee_deposits_value->amount, 2, '.', '')); ?></td>
-                                                        <td></td>
-                                                        <td class="text text-right">
-                                                            <div class="btn-group pull-right">
-
-                                                                <?php if ($this->rbac->hasPrivilege('collect_fees', 'can_delete')) { ?>
-                                                                    <button class="btn btn-default btn-xs" data-invoiceno="<?php echo $fee_value->student_fees_deposite_id . "/" . $fee_deposits_value->inv_no; ?>" data-main_invoice="<?php echo $fee_value->student_fees_deposite_id ?>" data-sub_invoice="<?php echo $fee_deposits_value->inv_no ?>" data-toggle="modal" data-target="#confirm-delete" title="<?php echo $this->lang->line('revert'); ?>">
-                                                                        <i class="fa fa-undo"> </i>
-                                                                    </button>
-                                                                <?php } ?>
-                                                                <button  class="btn btn-xs btn-default printDoc" data-main_invoice="<?php echo $fee_value->student_fees_deposite_id ?>" data-sub_invoice="<?php echo $fee_deposits_value->inv_no ?>"  title="<?php echo $this->lang->line('print'); ?>"><i class="fa fa-print"></i> </button>
-                                                            </div>
-                                                        </td>
-                                                    </tr>
+                                                    ?><span class="label label-success"><?php echo $this->lang->line('paid'); ?>
+                                                        </span>
+                                                    <?php } else if (!empty($fee_value->deposite)) { ?>
+                                                        <span class="label label-warning">
+                                                            <?php echo $this->lang->line('partial'); ?></span>
                                                     <?php
-                                                }
-                                            }
-                                            ?>
-                                            <?php
-                                        }
-                                    }
-                                    ?>
-                                    <?php
-                                    if (!empty($student_discount_fee)) {
-
-                                        foreach ($student_discount_fee as $discount_key => $discount_value) {
-                                            ?>
-                                            <tr class="dark-light">
-                                                <td></td>
-                                                <td align="left"> <?php echo $this->lang->line('discount'); ?> </td>
-                                                <td align="left">
-                                                    <?php echo $discount_value['code']; ?>
-                                                </td>
-                                                <td align="left"></td>
-                                                <td align="left" class="text text-left">
-                                                    <?php
-                                                    if ($discount_value['status'] == "applied") {
-                                                        ?>
-                                                        <a href="#" data-toggle="popover" class="detail_popover" >
-
-                                                            <?php echo $this->lang->line('discount_of') . " " . $currency_symbol . $discount_value['amount'] . " " . $this->lang->line($discount_value['status']) . " : " . $discount_value['payment_id']; ?>
-
-                                                        </a>
-                                                        <div class="fee_detail_popover" style="display: none">
-                                                            <?php
-                                                            if ($discount_value['student_fees_discount_description'] == "") {
-                                                                ?>
-                                                                <p class="text text-danger"><?php echo $this->lang->line('no_description'); ?></p>
-                                                                <?php
-                                                            } else {
-                                                                ?>
-                                                                <p class="text text-danger"><?php echo $discount_value['student_fees_discount_description'] ?></p>
-                                                                <?php
+                                                    } else { ?>
+                                                        <span class="label label-danger">
+                                                            <?php echo $this->lang->line('unpaid'); ?>
+                                                        </span><?php
                                                             }
+                                                                ?>
+                                                </td>
+                                                <td class="text text-right"><?php echo $fee_value->amountReal; ?></td>
+
+                                                <td class="text text-left"></td>
+                                                <td class="text text-left"></td>
+                                                <td class="text text-left"></td>
+                                                <td class="text text-right"><?php
+                                                                            echo (number_format($fee_discount, 2, '.', ''));
+                                                                            ?></td>
+                                                <td class="text text-right"><?php
+                                                                            echo (number_format($fee_fine, 2, '.', ''));
+                                                                            ?></td>
+                                                <td class="text text-right"><?php
+                                                                            echo (number_format($fee_paid, 2, '.', ''));
+                                                                            ?></td>
+                                                <td class="text text-right"><?php
+                                                                            $display_none = "ss-none";
+                                                                            if ($feetype_balance > 0) {
+                                                                                $display_none = "";
+
+                                                                                echo (number_format($feetype_balance, 2, '.', ''));
+                                                                            }
+                                                                            ?>
+
+                                                </td>
+                                                <td style="width: 40px;">
+                                                    <div class="btn-group pull-right">
+                                                        <?php if ($fee_value->billet->count() > 0) :
+                                                            $hasBillet = $fee_value->billet->first();
+                                                            if ($hasBillet->bank_bullet_id == null) : ?>
+                                                                <button class="btn btn-xs btn-default" title="<?php echo $this->lang->line('billet_preview_waiting'); ?>"><i class="fa  fa-file-pdf-o text-default"></i> </button>
+                                                            <?php
+                                                            endif;
+
+                                                            if ($hasBillet->bank_bullet_id != null) : ?>
+                                                                <button class="btn btn-xs btn-default preview_billet" data-title="<?php echo $fee_value->title; ?>" data-billet_id="<?php echo $hasBillet->bank_bullet_id;  ?>" data-fee_billet_id="<?php echo $fee_value->id ?>" data-fee_session_group_id="<?php echo $fee_value->fee_session_group_id ?>" data-fee_groups_feetype_id="<?php echo $fee_value->feetype_id ?>" title="<?php echo $this->lang->line('billet_preview'); ?>"><i class="fa  fa-file-pdf-o text-danger"></i> </button>
+                                                            <?php
+
+                                                            endif;
                                                             ?>
 
-                                                        </div>
-                                                        <?php
-                                                    } else {
-                                                        echo '<p class="text text-danger">' . $this->lang->line('discount_of') . " " . $currency_symbol . $discount_value['amount'] . " " . $this->lang->line($discount_value['status']);
-                                                    }
-                                                    ?>
 
+                                                        <?php endif; ?>
+                                                        <?php if ($fee_value->billet->count() == 0) : ?>
+                                                            <button type="button" data-student_session_id="<?php echo $fee->student_session_id; ?>" data-student_fees_master_id="<?php echo $fee->id; ?>" data-fee_groups_feetype_id="<?php echo $fee_value->feetype_id; ?>" data-group="<?php echo $fee_value->name; ?>" data-type="<?php echo $fee_value->code; ?>" class="btn btn-xs btn-default myCollectFeeBtn <?php echo $display_none; ?>" title="<?php echo $this->lang->line('add_fees'); ?>" data-toggle="modal" data-target="#myFeesModal"><i class="fa fa-plus"></i></button>
+
+
+                                                            <button class="btn btn-xs btn-default printInv" data-fee_master_id="<?php echo $fee_value->id ?>" data-fee_session_group_id="<?php echo $fee_value->fee_session_group_id ?>" data-fee_groups_feetype_id="<?php echo $fee_value->feetype_id ?>" title="<?php echo $this->lang->line('print'); ?>"><i class="fa fa-print"></i> </button>
+                                                        <?php endif; ?>
+                                                    </div>
                                                 </td>
-                                                <td></td>
-                                                <td class="text text-left"></td>
-                                                <td class="text text-left"></td>
-                                                <td class="text text-left"></td>
-                                                <td  class="text text-right">
-                                                    <?php
-                                                    $alot_fee_discount = $alot_fee_discount;
-                                                    ?>
+                                                <td style="width:20px;">
+                                                    <?php if ($fee_value->billet->count() == 0  && !$fee_value->deposite) : ?>
+                                                        <button class="btn btn-xs btn-default delete-item" data-fee_item_id="<?php echo $fee_value->id ?>" title="<?php echo $this->lang->line('fee_item_delete'); ?>"><i class="fa fa-trash"></i> </button>
+                                                    <?php endif; ?>
                                                 </td>
-                                                <td></td>
-                                                <td></td>
-                                                <td></td>
-                                                <td>
-                                                    <div class="btn-group pull-right">
+
+
+                                                </tr>
+
+
+                                                <?php
+                                                if (($fee_value->deposite)) {
+
+                                                    $fee_deposits = json_decode(($fee_value->deposite->amount_detail));
+
+
+                                                    foreach ($fee_deposits as $fee_deposits_key => $fee_deposits_value) {
+                                                ?>
+                                                        <tr class="white-td">
+
+                                                            <td align="left"></td>
+                                                            <td align="left"></td>
+                                                            <td align="left"></td>
+                                                            <td align="left"></td>
+                                                            <td class="text-right"><img src="<?php echo base_url(); ?>backend/images/table-arrow.png" alt="" /></td>
+                                                            <td class="text text-left">
+
+
+                                                                <a href="#" data-toggle="popover" class="detail_popover"> <?php echo $fee_value->student_fees_deposite_id . "/" . $fee_deposits_value->inv_no; ?></a>
+                                                                <div class="fee_detail_popover" style="display: none">
+                                                                    <?php
+                                                                    if ($fee_deposits_value->description == "") {
+                                                                    ?>
+                                                                        <p class="text text-danger"><?php echo $this->lang->line('no_description'); ?></p>
+                                                                    <?php
+                                                                    } else {
+                                                                    ?>
+                                                                        <p class="text text-info"><?php echo $fee_deposits_value->description; ?></p>
+                                                                    <?php
+                                                                    }
+                                                                    ?>
+                                                                </div>
+
+
+                                                            </td>
+
+                                                            <td class="text text-left"><?php
+
+                                                                                        echo $this->lang->line(strtolower($fee_deposits_value->payment_mode)); ?></td>
+                                                            <td class="text text-left">
+
+                                                                <?php echo date($this->customlib->getSchoolDateFormat(), $this->customlib->dateyyyymmddTodateformat($fee_deposits_value->date)); ?>
+                                                            </td>
+                                                            <td class="text text-right"><?php echo (number_format($fee_deposits_value->amount_discount, 2, '.', '')); ?></td>
+                                                            <td class="text text-right"><?php echo (number_format($fee_deposits_value->amount_fine, 2, '.', '')); ?></td>
+                                                            <td class="text text-right"><?php echo (number_format($fee_deposits_value->amount, 2, '.', '')); ?></td>
+                                                            <td></td>
+                                                            <td class="text text-right">
+                                                                <div class="btn-group pull-right">
+
+                                                                    <?php if ($this->rbac->hasPrivilege('collect_fees', 'can_delete')) { ?>
+                                                                        <?php if ($fee_value->deposite && $fee_value->billet->count() == 0) : ?>
+                                                                            <button class="btn btn-default btn-xs" data-invoiceno="<?php echo $fee_value->id; ?>" data-main_invoice="<?php echo $fee_value->deposite->id ?>" data-toggle="modal" data-target="#confirm-delete" title="<?php echo $this->lang->line('revert'); ?>">
+                                                                                <i class="fa fa-undo"> </i>
+                                                                            </button>
+                                                                        <?php endif; ?>
+                                                                    <?php } ?>
+                                                                    <button class="btn btn-xs btn-default printDoc" data-main_invoice="<?php echo $fee_value->student_fees_deposite_id ?>" data-sub_invoice="<?php echo $fee_deposits_value->inv_no ?>" title="<?php echo $this->lang->line('print'); ?>"><i class="fa fa-print"></i> </button>
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                <?php
+                                                    }
+                                                }
+                                                ?>
+                                        <?php
+                                        }
+                                    }
+                                        ?>
+                                        <?php
+                                        if (!empty($student_discount_fee)) {
+
+                                            foreach ($student_discount_fee as $discount_key => $discount_value) {
+                                        ?>
+                                                <tr class="dark-light">
+                                                    <td></td>
+                                                    <td align="left"> <?php echo $this->lang->line('discount'); ?> </td>
+                                                    <td align="left">
+                                                        <?php echo $discount_value['code']; ?>
+                                                    </td>
+                                                    <td align="left"></td>
+                                                    <td align="left" class="text text-left">
                                                         <?php
                                                         if ($discount_value['status'] == "applied") {
-                                                            ?>
+                                                        ?>
+                                                            <a href="#" data-toggle="popover" class="detail_popover">
 
-                                                            <?php if ($this->rbac->hasPrivilege('collect_fees', 'can_delete')) { ?>
-                                                                <button class="btn btn-default btn-xs" data-discounttitle="<?php echo $discount_value['code']; ?>" data-discountid="<?php echo $discount_value['id']; ?>" data-toggle="modal" data-target="#confirm-discountdelete" title="<?php echo $this->lang->line('revert'); ?>">
-                                                                    <i class="fa fa-undo"> </i>
-                                                                </button>
+                                                                <?php echo $this->lang->line('discount_of') . " " . $currency_symbol . $discount_value['amount'] . " " . $this->lang->line($discount_value['status']) . " : " . $discount_value['payment_id']; ?>
+
+                                                            </a>
+                                                            <div class="fee_detail_popover" style="display: none">
                                                                 <?php
-                                                            }
+                                                                if ($discount_value['student_fees_discount_description'] == "") {
+                                                                ?>
+                                                                    <p class="text text-danger"><?php echo $this->lang->line('no_description'); ?></p>
+                                                                <?php
+                                                                } else {
+                                                                ?>
+                                                                    <p class="text text-danger"><?php echo $discount_value['student_fees_discount_description'] ?></p>
+                                                                <?php
+                                                                }
+                                                                ?>
+
+                                                            </div>
+                                                        <?php
+                                                        } else {
+                                                            echo '<p class="text text-danger">' . $this->lang->line('discount_of') . " " . $currency_symbol . $discount_value['amount'] . " " . $this->lang->line($discount_value['status']);
                                                         }
                                                         ?>
 
-                                                        <button type="button" data-modal_title="<?php echo $this->lang->line('discount') . " : " . $discount_value['code']; ?>" data-student_fees_discount_id="<?php echo $discount_value['id']; ?>"
-                                                                class="btn btn-xs btn-default applydiscount"
-                                                                title="<?php echo $this->lang->line('apply_discount'); ?>"
-                                                                ><i class="fa fa-check"></i>
-                                                        </button>
+                                                    </td>
+                                                    <td></td>
+                                                    <td class="text text-left"></td>
+                                                    <td class="text text-left"></td>
+                                                    <td class="text text-left"></td>
+                                                    <td class="text text-right">
+                                                        <?php
+                                                        $alot_fee_discount = $alot_fee_discount;
+                                                        ?>
+                                                    </td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td>
+                                                        <div class="btn-group pull-right">
+                                                            <?php
+                                                            if ($discount_value['status'] == "applied") {
+                                                            ?>
 
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                            <?php
+                                                                <?php if ($this->rbac->hasPrivilege('collect_fees', 'can_delete')) { ?>
+                                                                    <button class="btn btn-default btn-xs" data-discounttitle="<?php echo $discount_value['code']; ?>" data-discountid="<?php echo $discount_value['id']; ?>" data-toggle="modal" data-target="#confirm-discountdelete" title="<?php echo $this->lang->line('revert'); ?>">
+                                                                        <i class="fa fa-undo"> </i>
+                                                                    </button>
+                                                            <?php
+                                                                }
+                                                            }
+                                                            ?>
+
+                                                            <button type="button" data-modal_title="<?php echo $this->lang->line('discount') . " : " . $discount_value['code']; ?>" data-student_fees_discount_id="<?php echo $discount_value['id']; ?>" class="btn btn-xs btn-default applydiscount" title="<?php echo $this->lang->line('apply_discount'); ?>"><i class="fa fa-check"></i>
+                                                            </button>
+
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                        <?php
+                                            }
                                         }
-                                    }
-                                    ?>
+                                        ?>
 
 
-                                    <tr class="box box-solid total-bg">
-                                        <td align="left" ></td>
-                                        <td align="left" ></td>
-                                        <td align="left" ></td>
-                                        <td align="left" ></td>
-                                        <td align="left" class="text text-left" ><?php echo $this->lang->line('grand_total'); ?></td>
-                                        <td class="text text-right"><?php
-                                            echo ($currency_symbol . number_format($total_amount, 2, '.', ''));
-                                            ?></td>
-                                        <td class="text text-left"></td>
-                                        <td class="text text-left"></td>
-                                        <td class="text text-left"></td>
+                                        <tr class="box box-solid total-bg">
+                                            <td align="left"></td>
+                                            <td align="left"></td>
+                                            <td align="left"></td>
+                                            <td align="left"></td>
+                                            <td align="left" class="text text-left"><?php echo $this->lang->line('grand_total'); ?></td>
+                                            <td class="text text-right"><?php
+                                                                        echo ($currency_symbol . number_format($total_amount, 2, ',', '.'));
+                                                                        ?></td>
+                                            <td class="text text-left"></td>
+                                            <td class="text text-left"></td>
+                                            <td class="text text-left"></td>
 
-                                        <td class="text text-right"><?php
-                                            echo ($currency_symbol . number_format($total_discount_amount + $alot_fee_discount, 2, '.', ''));
-                                            ?></td>
-                                        <td class="text text-right"><?php
-                                            echo ($currency_symbol . number_format($total_fine_amount, 2, '.', ''));
-                                            ?></td>
-                                        <td class="text text-right"><?php
-                                            echo ($currency_symbol . number_format($total_deposite_amount, 2, '.', ''));
-                                            ?></td>
-                                        <td class="text text-right"><?php
-                                            echo ($currency_symbol . number_format($total_balance_amount - $alot_fee_discount, 2, '.', ''));
-                                            ?></td>  <td class="text text-right"></td>
-                                    </tr>
+                                            <td class="text text-right"><?php
+                                                                        echo sprintf('%s %s', $currency_symbol, number_format($total_discount_amount + $alot_fee_discount, 2, ',', '.'));
+                                                                        ?></td>
+                                            <td class="text text-right"><?php
+                                                                        echo sprintf('%s %s', $currency_symbol, number_format($total_fine_amount, 2, ',', '.'));
+                                                                        ?></td>
+                                            <td class="text text-right"><?php
+                                                                        echo sprintf('%s %s', $currency_symbol, number_format($total_deposite_amount, 2, ',', '.'));
+                                                                        ?></td>
+                                            <td class="text text-right"><?php
+                                                                        echo sprintf('%s %s', $currency_symbol, number_format($total_balance_amount - $alot_fee_discount, 2, ',', '.'));
+                                                                        ?></td>
+                                            <td class="text text-right"></td>
+                                        </tr>
                                 </tbody>
                             </table>
                         </div>
@@ -502,23 +569,23 @@ $language_name = $language["short_code"];
                 <div class="form-horizontal balanceformpopup">
                     <div class="box-body">
 
-                        <input  type="hidden" class="form-control" id="std_id" value="<?php echo $student["student_session_id"]; ?>" readonly="readonly"/>
-                        <input  type="hidden" class="form-control" id="parent_app_key" value="<?php echo $student['parent_app_key'] ?>" readonly="readonly"/>
-                        <input  type="hidden" class="form-control" id="guardian_phone" value="<?php echo $student['guardian_phone'] ?>" readonly="readonly"/>
-                        <input  type="hidden" class="form-control" id="guardian_email" value="<?php echo $student['guardian_email'] ?>" readonly="readonly"/>
-                        <input  type="hidden" class="form-control" id="student_fees_master_id" value="0" readonly="readonly"/>
-                        <input  type="hidden" class="form-control" id="fee_groups_feetype_id" value="0" readonly="readonly"/>
+                        <input type="hidden" class="form-control" id="std_id" value="<?php echo $student["student_session_id"]; ?>" readonly="readonly" />
+                        <input type="hidden" class="form-control" id="parent_app_key" value="<?php echo $student['parent_app_key'] ?>" readonly="readonly" />
+                        <input type="hidden" class="form-control" id="guardian_phone" value="<?php echo $student['guardian_phone'] ?>" readonly="readonly" />
+                        <input type="hidden" class="form-control" id="guardian_email" value="<?php echo $student['guardian_email'] ?>" readonly="readonly" />
+                        <input type="hidden" class="form-control" id="student_fees_master_id" value="0" readonly="readonly" />
+                        <input type="hidden" class="form-control" id="fee_groups_feetype_id" value="0" readonly="readonly" />
                         <div class="form-group">
                             <label for="inputEmail3" class="col-sm-3 control-label"><?php echo $this->lang->line('date'); ?></label>
                             <div class="col-sm-9">
-                                <input  id="date" name="admission_date" placeholder="" type="text" class="form-control date_fee"  value="<?php echo date($this->customlib->getSchoolDateFormat()); ?>" readonly="readonly"/>
+                                <input id="date" name="admission_date" placeholder="" type="text" class="form-control date_fee" value="<?php echo date($this->customlib->getSchoolDateFormat()); ?>" readonly="readonly" />
                             </div>
                         </div>
                         <div class="form-group">
                             <label for="inputPassword3" class="col-sm-3 control-label"><?php echo $this->lang->line('amount'); ?><small class="req"> *</small></label>
                             <div class="col-sm-9">
 
-                                <input type="text" autofocus="" class="form-control modal_amount" id="amount" value="0"  >
+                                <input type="text" autofocus="" class="form-control modal_amount" id="amount" value="0">
 
                                 <span class="text-danger" id="amount_error"></span>
                             </div>
@@ -538,12 +605,13 @@ $language_name = $language["short_code"];
                         <div class="form-group">
                             <label for="inputPassword3" class="col-sm-3 control-label"><?php echo $this->lang->line('discount'); ?><small class="req"> *</small></label>
                             <div class="col-sm-9">
-                                <div class="row">  
+                                <div class="row">
                                     <div class="col-md-5 col-sm-5">
                                         <div class="">
                                             <input type="text" class="form-control" id="amount_discount" value="0">
 
-                                            <span class="text-danger" id="amount_error"></span></div>
+                                            <span class="text-danger" id="amount_error"></span>
+                                        </div>
                                     </div>
                                     <div class="col-md-2 col-sm-2 ltextright">
 
@@ -556,8 +624,9 @@ $language_name = $language["short_code"];
                                             <span class="text-danger" id="amount_fine_error"></span>
                                         </div>
                                     </div>
-                                </div>  
-                            </div><!--./col-sm-9-->
+                                </div>
+                            </div>
+                            <!--./col-sm-9-->
                         </div>
 
 
@@ -584,6 +653,9 @@ $language_name = $language["short_code"];
                                 <label class="radio-inline">
                                     <input type="radio" name="payment_mode_fee" value="card"><?php echo $this->lang->line('card'); ?>
                                 </label>
+                                <label class="radio-inline">
+                                    <input type="radio" name="payment_mode_fee" value="manual"><?php echo $this->lang->line('manual_payment'); ?>
+                                </label>
                                 <span class="text-danger" id="payment_mode_error"></span>
                             </div>
                         </div>
@@ -604,7 +676,7 @@ $language_name = $language["short_code"];
                 <button type="button" class="btn cfees save_button" id="load" data-action="print" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> Processing"> <?php echo $currency_symbol; ?> <?php echo $this->lang->line('collect') . " & " . $this->lang->line('print') ?></button>
 
             </div>
-        </div> 
+        </div>
 
     </div>
 </div>
@@ -621,12 +693,12 @@ $language_name = $language["short_code"];
             <div class="modal-body pb0">
                 <div class="form-horizontal">
                     <div class="box-body">
-                        <input  type="hidden" class="form-control" id="student_fees_discount_id"  value=""/>
+                        <input type="hidden" class="form-control" id="student_fees_discount_id" value="" />
                         <div class="form-group">
                             <label for="inputPassword3" class="col-sm-3 control-label"><?php echo $this->lang->line('payment_id'); ?> <small class="req">*</small></label>
                             <div class="col-sm-9">
 
-                                <input type="text" class="form-control" id="discount_payment_id" >
+                                <input type="text" class="form-control" id="discount_payment_id">
 
                                 <span class="text-danger" id="discount_payment_id_error"></span>
                             </div>
@@ -666,7 +738,7 @@ $language_name = $language["short_code"];
                 <p>Are you sure want to revert <b class="discount_title"></b> discount, this action is irreversible.</p>
                 <p>Do you want to proceed?</p>
                 <p class="debug-url"></p>
-                <input type="hidden" name="discount_id"  id="discount_id" value="">
+                <input type="hidden" name="discount_id" id="discount_id" value="">
 
             </div>
 
@@ -693,8 +765,8 @@ $language_name = $language["short_code"];
                 <p>Are you sure want to delete <b class="invoice_no"></b> invoice, this action is irreversible.</p>
                 <p>Do you want to proceed?</p>
                 <p class="debug-url"></p>
-                <input type="hidden" name="main_invoice"  id="main_invoice" value="">
-                <input type="hidden" name="sub_invoice" id="sub_invoice"  value="">
+                <input type="hidden" name="main_invoice" id="main_invoice" value="">
+                <input type="hidden" name="sub_invoice" id="sub_invoice" value="">
             </div>
 
             <div class="modal-footer">
@@ -730,6 +802,7 @@ $language_name = $language["short_code"];
 <div id="listCollectionModal" class="modal fade">
     <div class="modal-dialog">
         <form action="<?php echo site_url('studentfee/addfeegrp'); ?>" method="POST" id="collect_fee_group">
+            <input type="hidden" value="<?php echo $student['id']; ?>" name="user_id" />
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
@@ -748,9 +821,68 @@ $language_name = $language["short_code"];
 
 
 
+<div id="loadingModal" class="modal fade" style="z-index: 10000;">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-loader-body" style="
+                display: flex;
+                width: 100%;
+                margin: 0 15px;
+                justify-content: center;
+                align-items: center;
+                padding: 20px;
+             " data-loading="<i class='fa fa-spinner fa-spin '></i>  Aguarde estamos processando..."></div>
+        </div>
+
+    </div>
+</div>
+
+
+<div id="listBilletModal" class="modal fade">
+    <div class="modal-dialog modal-lg">
+        <form method="POST" id="billet_fee_group">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title"><?php echo $this->lang->line('billet_generate'); ?></h4>
+                </div>
+                <div class="modal-body">
+
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary payment_collect_confirm" data-loading-text="<i class='fa fa-spinner fa-spin '></i> Processing"><i class="fa fa-barcode"></i> <?php echo $this->lang->line('billet_button_generate'); ?></button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+
+<!-- begin: show Billet PDF-->
+<div id="showPrinterPDF" class="modal fade">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">
+                    <span class="modal-inner-title"></span>
+                    <span class="modal-inner-loader pull-right" style="float: right; display: inline-block; padding:5px 15px;" data-loading-text="<i class='fa fa-spinner fa-spin '></i> Processing"></span>
+                </h4>
+            </div>
+            <div class="modal-body">
+
+            </div>
+        </div>
+    </div>
+</div>
+<!-- end: show Billet PDF-->
+
+
 
 <script type="text/javascript">
-    $(document).ready(function () {
+    var base_url = '<?php echo base_url() ?>';
+    $(document).ready(function() {
         $(".date_fee").datepicker({
             format: date_format,
             autoclose: true,
@@ -759,28 +891,92 @@ $language_name = $language["short_code"];
             todayHighlight: true
         });
 
-        $(document).on('click', '.printDoc', function () {
+        $('.delete-item').on('click.DeleteFeeItem', function(e) {
+
+            if (!confirm('Deseja realizar essa operacao ? ')) return;
+            var fee_item_id = $(this).data('fee_item_id')
+            $.ajax({
+                url: `${base_url}studentfee/destroyItem/${fee_item_id}`,
+                dataType: 'json',
+                method: 'post',
+                success: function() {
+                    window.location.reload();
+                }
+            })
+        })
+
+
+        $('.preview_billet').on('click.showPDF', function(e) {
+            e.preventDefault();
+            var $this = $(this)
+            var billet_id = $this.data('billet_id')
+
+            var $el = $('#showPrinterPDF').modal({
+                backdrop: 'static',
+                keyboard: false,
+                show: false
+            });
+
+            $el.find('.modal-inner-title').html($this.data('title'))
+            var $loader = $el.find('.modal-inner-loader');
+            //var textLoaderReset = $loader.html()
+
+            $loader.html($loader.data('loading-text'))
+            $el.modal('show');
+            var $pdf = $('<iframe frameborder="0" width="100%" height="400px">') // create an iframe
+            // add the source
+
+            $el.find('.modal-body').html($pdf);
+
+            $.ajax({
+                url: `${base_url}studentfee/getBillet/${billet_id}`,
+                processData: false,
+                success: function(data) {
+                    // var myResponse = eval(data);
+                    $pdf.attr('src', `${base_url}studentfee/getBillet/${billet_id}`)
+                    setTimeout(() => {
+                        $loader.html('')
+                    }, 2000)
+
+
+
+                }
+            })
+
+
+
+        })
+
+        $(document).on('click', '.printDoc', function() {
             var main_invoice = $(this).data('main_invoice');
             var sub_invoice = $(this).data('sub_invoice');
             var student_session_id = '<?php echo $student['student_session_id'] ?>';
             $.ajax({
                 url: '<?php echo site_url("studentfee/printFeesByName") ?>',
                 type: 'post',
-                data: {'student_session_id': student_session_id, 'main_invoice': main_invoice, 'sub_invoice': sub_invoice},
-                success: function (response) {
+                data: {
+                    'student_session_id': student_session_id,
+                    'main_invoice': main_invoice,
+                    'sub_invoice': sub_invoice
+                },
+                success: function(response) {
                     Popup(response);
                 }
             });
         });
-        $(document).on('click', '.printInv', function () {
+        $(document).on('click', '.printInv', function() {
             var fee_master_id = $(this).data('fee_master_id');
             var fee_session_group_id = $(this).data('fee_session_group_id');
             var fee_groups_feetype_id = $(this).data('fee_groups_feetype_id');
             $.ajax({
                 url: '<?php echo site_url("studentfee/printFeesByGroup") ?>',
                 type: 'post',
-                data: {'fee_groups_feetype_id': fee_groups_feetype_id, 'fee_master_id': fee_master_id, 'fee_session_group_id': fee_session_group_id},
-                success: function (response) {
+                data: {
+                    'fee_groups_feetype_id': fee_groups_feetype_id,
+                    'fee_master_id': fee_master_id,
+                    'fee_session_group_id': fee_session_group_id
+                },
+                success: function(response) {
                     Popup(response);
                 }
             });
@@ -790,7 +986,7 @@ $language_name = $language["short_code"];
 
 
 <script type="text/javascript">
-    $(document).on('click', '.save_button', function (e) {
+    $(document).on('click', '.save_button', function(e) {
         var $this = $(this);
         var action = $this.data('action');
         $this.button('loading');
@@ -812,9 +1008,26 @@ $language_name = $language["short_code"];
         $.ajax({
             url: '<?php echo site_url("studentfee/addstudentfee") ?>',
             type: 'post',
-            data: {action: action, student_session_id: student_session_id, date: date, type: feetype, amount: amount, amount_discount: amount_discount, amount_fine: amount_fine, description: description, student_fees_master_id: student_fees_master_id, fee_groups_feetype_id: fee_groups_feetype_id, payment_mode: payment_mode, guardian_phone: guardian_phone, guardian_email: guardian_email, student_fees_discount_id: student_fees_discount_id, parent_app_key: parent_app_key},
+            data: {
+                'user_id': $('input[name="student_user_id"]').val(),
+                action: action,
+                student_session_id: student_session_id,
+                date: date,
+                type: feetype,
+                amount: amount,
+                amount_discount: amount_discount,
+                amount_fine: amount_fine,
+                description: description,
+                student_fees_master_id: student_fees_master_id,
+                fee_groups_feetype_id: fee_groups_feetype_id,
+                payment_mode: payment_mode,
+                guardian_phone: guardian_phone,
+                guardian_email: guardian_email,
+                student_fees_discount_id: student_fees_discount_id,
+                parent_app_key: parent_app_key
+            },
             dataType: 'json',
-            success: function (response) {
+            success: function(response) {
                 $this.button('reset');
                 if (response.status === "success") {
                     if (action === "collect") {
@@ -823,7 +1036,7 @@ $language_name = $language["short_code"];
                         Popup(response.print, true);
                     }
                 } else if (response.status === "fail") {
-                    $.each(response.error, function (index, value) {
+                    $.each(response.error, function(index, value) {
                         var errorDiv = '#' + index + '_error';
                         $(errorDiv).empty().append(value);
                     });
@@ -835,13 +1048,13 @@ $language_name = $language["short_code"];
 
 
 <script>
-    var base_url = '<?php echo base_url() ?>';
-
-    function Popup(data, winload = false)
-    {
+    function Popup(data, winload = false) {
         var frame1 = $('<iframe />');
         frame1[0].name = "frame1";
-        frame1.css({"position": "absolute", "top": "-1000000px"});
+        frame1.css({
+            "position": "absolute",
+            "top": "-1000000px"
+        });
         $("body").append(frame1);
         var frameDoc = frame1[0].contentWindow ? frame1[0].contentWindow : frame1[0].contentDocument.document ? frame1[0].contentDocument.document : frame1[0].contentDocument;
         frameDoc.document.open();
@@ -865,7 +1078,7 @@ $language_name = $language["short_code"];
         frameDoc.document.write('</body>');
         frameDoc.document.write('</html>');
         frameDoc.document.close();
-        setTimeout(function () {
+        setTimeout(function() {
             window.frames["frame1"].focus();
             window.frames["frame1"].print();
             frame1.remove();
@@ -877,7 +1090,7 @@ $language_name = $language["short_code"];
 
         return true;
     }
-    $(document).ready(function () {
+    $(document).ready(function() {
         $('.delmodal').modal({
             backdrop: 'static',
             keyboard: false,
@@ -889,7 +1102,9 @@ $language_name = $language["short_code"];
             show: false
         });
 
-        $('#confirm-delete').on('show.bs.modal', function (e) {
+      
+
+        $('#confirm-delete').on('show.bs.modal', function(e) {
             $('.invoice_no', this).text("");
             $('#main_invoice', this).val("");
             $('#sub_invoice', this).val("");
@@ -901,34 +1116,42 @@ $language_name = $language["short_code"];
 
         });
 
-        $('#confirm-discountdelete').on('show.bs.modal', function (e) {
+        $('#confirm-discountdelete').on('show.bs.modal', function(e) {
             $('.discount_title', this).text("");
             $('#discount_id', this).val("");
             $('.discount_title', this).text($(e.relatedTarget).data('discounttitle'));
             $('#discount_id', this).val($(e.relatedTarget).data('discountid'));
         });
-
-        $('#confirm-delete').on('click', '.btn-ok', function (e) {
+        var isDeleting = false;
+        $('#confirm-delete').off('click', '.btn-ok').on('click', '.btn-ok', function(e) {
+            if (isDeleting) return;
             var $modalDiv = $(e.delegateTarget);
             var main_invoice = $('#main_invoice').val();
             var sub_invoice = $('#sub_invoice').val();
 
             $modalDiv.addClass('modalloading');
+            isDeleting = true
             $.ajax({
                 type: "post",
                 url: '<?php echo site_url("studentfee/deleteFee") ?>',
                 dataType: 'JSON',
-                data: {'main_invoice': main_invoice, 'sub_invoice': sub_invoice},
-                success: function (data) {
+                data: {
+                    'main_invoice': main_invoice,
+                    'sub_invoice': sub_invoice
+                },
+                success: function(data) {
                     $modalDiv.modal('hide').removeClass('modalloading');
                     location.reload(true);
+                },
+                complete: function() {
+                    isDeleting = false;
                 }
             });
 
 
         });
 
-        $('#confirm-discountdelete').on('click', '.btn-discountdel', function (e) {
+        $('#confirm-discountdelete').on('click', '.btn-discountdel', function(e) {
             var $modalDiv = $(e.delegateTarget);
             var discount_id = $('#discount_id').val();
 
@@ -938,8 +1161,10 @@ $language_name = $language["short_code"];
                 type: "post",
                 url: '<?php echo site_url("studentfee/deleteStudentDiscount") ?>',
                 dataType: 'JSON',
-                data: {'discount_id': discount_id},
-                success: function (data) {
+                data: {
+                    'discount_id': discount_id
+                },
+                success: function(data) {
                     $modalDiv.modal('hide').removeClass('modalloading');
                     location.reload(true);
                 }
@@ -949,7 +1174,7 @@ $language_name = $language["short_code"];
         });
 
 
-        $(document).on('click', '.btn-ok', function (e) {
+        $(document).on('click', '.btn-ok', function(e) {
             var $modalDiv = $(e.delegateTarget);
             var main_invoice = $('#main_invoice').val();
             var sub_invoice = $('#sub_invoice').val();
@@ -959,8 +1184,11 @@ $language_name = $language["short_code"];
                 type: "post",
                 url: '<?php echo site_url("studentfee/deleteFee") ?>',
                 dataType: 'JSON',
-                data: {'main_invoice': main_invoice, 'sub_invoice': sub_invoice},
-                success: function (data) {
+                data: {
+                    'main_invoice': main_invoice,
+                    'sub_invoice': sub_invoice
+                },
+                success: function(data) {
                     $modalDiv.modal('hide').removeClass('modalloading');
                     location.reload(true);
                 }
@@ -974,17 +1202,23 @@ $language_name = $language["short_code"];
             trigger: 'hover',
             container: 'body',
             html: true,
-            content: function () {
+            content: function() {
                 return $(this).closest('td').find('.fee_detail_popover').html();
             }
         });
     });
     var fee_amount = 0;
     var date_format = '<?php echo $result = strtr($this->customlib->getSchoolDateFormat(), ['d' => 'dd', 'm' => 'mm', 'Y' => 'yyyy']) ?>';
-
 </script>
 <script type="text/javascript">
-    $("#myFeesModal").on('shown.bs.modal', function (e) {
+    var ibase_url = "<?php echo trim(site_url(), '/'); ?>";
+    $(document).ready(function() {
+        $('select[name="year_fees"]').change(function() {
+            var path = window.location.pathname;
+            window.location.href = `${ibase_url}/${path.replace(/^\/+/gi,'')}?due_date=${this.value}`
+        });
+    })
+    $("#myFeesModal").on('shown.bs.modal', function(e) {
         e.stopPropagation();
         var discount_group_dropdown = '<option value=""><?php echo $this->lang->line('select'); ?></option>';
         var data = $(e.relatedTarget).data();
@@ -1007,11 +1241,12 @@ $language_name = $language["short_code"];
             type: "post",
             url: '<?php echo site_url("studentfee/geBalanceFee") ?>',
             dataType: 'JSON',
-            data: {'fee_groups_feetype_id': fee_groups_feetype_id,
+            data: {
+                'fee_groups_feetype_id': fee_groups_feetype_id,
                 'student_fees_master_id': student_fees_master_id,
                 'student_session_id': student_session_id
             },
-            beforeSend: function () {
+            beforeSend: function() {
                 $('#discount_group').html("");
                 $("span[id$='_error']").html("");
                 $('#amount').val("");
@@ -1019,7 +1254,7 @@ $language_name = $language["short_code"];
                 $('#amount_fine').val("0");
                 modal.addClass('modal_loading');
             },
-            success: function (data) {
+            success: function(data) {
 
                 if (data.status === "success") {
                     fee_amount = data.balance;
@@ -1028,8 +1263,7 @@ $language_name = $language["short_code"];
                     $('#amount_fine').val(data.remain_amount_fine);
 
 
-                    $.each(data.discount_not_applied, function (i, obj)
-                    {
+                    $.each(data.discount_not_applied, function(i, obj) {
                         discount_group_dropdown += "<option value=" + obj.student_fees_discount_id + " data-disamount=" + obj.amount + ">" + obj.code + "</option>";
                     });
                     $('#discount_group').append(discount_group_dropdown);
@@ -1039,22 +1273,21 @@ $language_name = $language["short_code"];
 
                 }
             },
-            error: function (xhr) { // if error occured
+            error: function(xhr) { // if error occured
                 alert("Error occured.please try again");
 
             },
-            complete: function () {
+            complete: function() {
                 modal.removeClass('modal_loading');
             }
         });
 
 
     });
-
 </script>
 
 <script type="text/javascript">
-    $(document).ready(function () {
+    $(document).ready(function() {
         $.extend($.fn.dataTable.defaults, {
             searching: false,
             ordering: false,
@@ -1063,26 +1296,26 @@ $language_name = $language["short_code"];
             info: false
         });
     });
-    $(document).ready(function () {
+    $(document).ready(function() {
         $('.table-fixed-header').fixedHeader();
     });
 
-//  $(window).on('resize', function () {
-//    $('.header-copy').width($('.table-fixed-header').width())
-//});
+    //  $(window).on('resize', function () {
+    //    $('.header-copy').width($('.table-fixed-header').width())
+    //});
 
-    (function ($) {
+    (function($) {
 
-        $.fn.fixedHeader = function (options) {
+        $.fn.fixedHeader = function(options) {
             var config = {
                 topOffset: 50
-                        //bgColor: 'white'
+                //bgColor: 'white'
             };
             if (options) {
                 $.extend(config, options);
             }
 
-            return this.each(function () {
+            return this.each(function() {
                 var o = $(this);
 
                 var $win = $(window);
@@ -1115,9 +1348,9 @@ $language_name = $language["short_code"];
                 $win.on('scroll', processScroll);
 
                 // hack sad times - holdover until rewrite for 2.1
-                $head.on('click', function () {
+                $head.on('click', function() {
                     if (!isFixed) {
-                        setTimeout(function () {
+                        setTimeout(function() {
                             $win.scrollTop($win.scrollTop() - 47);
                         }, 10);
                     }
@@ -1126,7 +1359,7 @@ $language_name = $language["short_code"];
                 $head.clone().removeClass('header').addClass('header-copy header-fixed').appendTo(o);
                 var header_width = $head.width();
                 o.find('thead.header-copy').width(header_width);
-                o.find('thead.header > tr:first > th').each(function (i, h) {
+                o.find('thead.header > tr:first > th').each(function(i, h) {
                     var w = $(h).width();
                     o.find('thead.header-copy> tr > th:eq(' + i + ')').width(w);
                 });
@@ -1142,7 +1375,7 @@ $language_name = $language["short_code"];
     })(jQuery);
 
 
-    $(".applydiscount").click(function () {
+    $(".applydiscount").click(function() {
         $("span[id$='_error']").html("");
         $('.discount_title').html("");
         $('#student_fees_discount_id').val("");
@@ -1163,7 +1396,7 @@ $language_name = $language["short_code"];
 
 
 
-    $(document).on('click', '.dis_apply_button', function (e) {
+    $(document).on('click', '.dis_apply_button', function(e) {
         var $this = $(this);
         $this.button('loading');
 
@@ -1180,12 +1413,12 @@ $language_name = $language["short_code"];
                 dis_description: dis_description
             },
             dataType: 'json',
-            success: function (response) {
+            success: function(response) {
                 $this.button('reset');
                 if (response.status === "success") {
                     location.reload(true);
                 } else if (response.status === "fail") {
-                    $.each(response.error, function (index, value) {
+                    $.each(response.error, function(index, value) {
                         var errorDiv = '#' + index + '_error';
                         $(errorDiv).empty().append(value);
                     });
@@ -1193,21 +1426,37 @@ $language_name = $language["short_code"];
             }
         });
     });
-
 </script>
 
 <script type="text/javascript">
-    $(document).ready(function () {
-        $(document).on('click', '.printSelected', function () {
+    $(document).ready(function() {
+        accounting.settings = {
+            currency: {
+                symbol: "R$ ", // default currency symbol is '$'
+                format: "%s%v", // controls output: %s = symbol, %v = value/number (can be object: see below)
+                decimal: ",", // decimal point separator
+                thousand: ".", // thousands separator
+                precision: 2 // decimal places
+            },
+            number: {
+                precision: 0, // default precision on numbers is 0
+                thousand: ",",
+                decimal: "."
+            }
+        }
+
+
+
+        $(document).on('click', '.printSelected', function() {
             var array_to_print = [];
-            $.each($("input[name='fee_checkbox']:checked"), function () {
+            $.each($("input[name='fee_checkbox']:checked"), function() {
                 var fee_session_group_id = $(this).data('fee_session_group_id');
                 var fee_master_id = $(this).data('fee_master_id');
                 var fee_groups_feetype_id = $(this).data('fee_groups_feetype_id');
                 item = {};
-                item ["fee_session_group_id"] = fee_session_group_id;
-                item ["fee_master_id"] = fee_master_id;
-                item ["fee_groups_feetype_id"] = fee_groups_feetype_id;
+                item["fee_session_group_id"] = fee_session_group_id;
+                item["fee_master_id"] = fee_master_id;
+                item["fee_groups_feetype_id"] = fee_groups_feetype_id;
 
                 array_to_print.push(item);
             });
@@ -1217,8 +1466,10 @@ $language_name = $language["short_code"];
                 $.ajax({
                     url: '<?php echo site_url("studentfee/printFeesByGroupArray") ?>',
                     type: 'post',
-                    data: {'data': JSON.stringify(array_to_print)},
-                    success: function (response) {
+                    data: {
+                        'data': JSON.stringify(array_to_print)
+                    },
+                    success: function(response) {
                         Popup(response);
                     }
                 });
@@ -1226,17 +1477,17 @@ $language_name = $language["short_code"];
         });
 
 
-        $(document).on('click', '.collectSelected', function () {
+        $(document).on('click', '.collectSelected', function() {
             var $this = $(this);
             var array_to_collect_fees = [];
-            $.each($("input[name='fee_checkbox']:checked"), function () {
+            $.each($("input[name='fee_checkbox']:checked"), function() {
                 var fee_session_group_id = $(this).data('fee_session_group_id');
                 var fee_master_id = $(this).data('fee_master_id');
                 var fee_groups_feetype_id = $(this).data('fee_groups_feetype_id');
                 item = {};
-                item ["fee_session_group_id"] = fee_session_group_id;
-                item ["fee_master_id"] = fee_master_id;
-                item ["fee_groups_feetype_id"] = fee_groups_feetype_id;
+                item["fee_session_group_id"] = fee_session_group_id;
+                item["fee_master_id"] = fee_master_id;
+                item["fee_groups_feetype_id"] = fee_groups_feetype_id;
 
                 array_to_collect_fees.push(item);
             });
@@ -1244,12 +1495,14 @@ $language_name = $language["short_code"];
             $.ajax({
                 type: 'POST',
                 url: base_url + "studentfee/getcollectfee",
-                data: {'data': JSON.stringify(array_to_collect_fees)},
+                data: {
+                    'data': JSON.stringify(array_to_collect_fees)
+                },
                 dataType: "JSON",
-                beforeSend: function () {
+                beforeSend: function() {
                     $this.button('loading');
                 },
-                success: function (data) {
+                success: function(data) {
 
                     $("#listCollectionModal .modal-body").html(data.view);
                     $(".date").datepicker({
@@ -1262,22 +1515,465 @@ $language_name = $language["short_code"];
                     $("#listCollectionModal").modal('show');
                     $this.button('reset');
                 },
-                error: function (xhr) { // if error occured
+                error: function(xhr) { // if error occured
                     alert("Error occured.please try again");
 
                 },
-                complete: function () {
+                complete: function() {
                     $this.button('reset');
                 }
             });
 
         });
 
+
+        // add generate bolete 
+
+        var loading = false;
+
+        function isNotDayUtil() {
+            return getDaysExceptions().indexOf(moment().format('YYYY-MM-DD')) >= 0 || [6, 7].indexOf(Number(moment().format('E'))) >= 0
+        }
+
+        function sortArray(
+            data,
+            key,
+            sort
+        ) {
+            return data.sort((a, b) => {
+
+                const keyA = a[key];
+                const keyB = b[key];
+                let comparison = 0;
+                if (keyA > keyB) comparison = sort ? 1 : -1;
+                if (keyA < keyB) comparison = sort ? -1 : 1;
+                return comparison;
+            });
+        }
+
+        $(document).on('click', '.billetSelected', function() {
+            var $this = $(this);
+            var array_to_collect_fees = [],
+                listOfItemSelected = [];
+
+
+            // var hasPaymentOld = [];
+            // if( isNotDayUtil() ) {
+            //     return alert('Essa operação só pode ser realizada em dias úteis.');
+            // }
+            var feeGroupsFeetypeId,
+                feeSessionGroupId,
+                feeMasterId;
+
+            var listOfBilletsGenerated = []
+            var listOfBilletOld = []
+
+            $.each($("input[name='fee_checkbox']:checked"), function() {
+                var fee_session_group_id = $(this).data('fee_session_group_id');
+                var fee_master_id = $(this).data('fee_master_id');
+                var fee_groups_feetype_id = $(this).data('fee_groups_feetype_id');
+
+                if (!feeGroupsFeetypeId)
+                    feeGroupsFeetypeId = fee_groups_feetype_id
+
+                if (!feeSessionGroupId)
+                    feeSessionGroupId = fee_session_group_id
+
+                if (!feeMasterId)
+                    feeMasterId = fee_master_id
+
+                item = {};
+                item["fee_session_group_id"] = fee_session_group_id;
+                item["fee_master_id"] = fee_master_id;
+                item["fee_groups_feetype_id"] = fee_groups_feetype_id;
+                item["fee_amount"] = $(this).data('fee_amount');
+                item["fee_title"] = $(this).data('fee_title');
+                item["fee_discount"] = $(this).data('fee_discount');
+                item["fee_line_1"] = $(this).data('fee_line_1');
+                item["fee_line_2"] = $(this).data('fee_line_2');
+                item["fee_date_payment"] = $(this).data('fee_date_payment');
+                item["fee_date_payment_old"] = $(this).data('fee_date_payment');
+
+
+                item["fee_fine"] = $(this).data('fee_fine');
+                var existBillet = $(this).data('fee_is_pdf');
+                if (existBillet !== 0) {
+                    listOfBilletsGenerated.push(item["fee_title"]);
+                }
+
+
+                var date = moment(item["fee_date_payment"]);
+                item["fee_date_payment_unix"] = date.unix()
+
+                // console.log(date.format('YYYY-MM-DD' ), moment().format('YYYY-MM-DD' ))
+
+                // console.log(moment().diff(date, 'days'))
+                var hasDateOld = moment().diff(date, 'days') > 0;
+
+                item['fee_billet_old'] = hasDateOld;
+
+                if (hasDateOld) listOfBilletOld.push(fee_groups_feetype_id)
+                array_to_collect_fees.push(item);
+
+            });
+            // console.log(listOfBilletsGenerated)
+            // console.log(listOfBilletOld)
+            // return;
+            if (listOfBilletsGenerated.length > 0) {
+
+                $.notify({
+                    // options
+                    title: '<b>Já existe boleto(s) criado(s) para o(s) lançamento</b><br/>',
+                    message: ` ${listOfBilletsGenerated.join('<br/>')}`
+                }, {
+                    // settings
+                    type: 'danger'
+                });
+                return;
+            }
+
+            if (array_to_collect_fees.length == 0) return $.notify({
+                // options
+                message: `É necessário selecionar o minimo de 1 item`
+            }, {
+                // settings
+                type: 'info'
+            });
+            var html = `
+                            <div class="row">
+                            <div class="form-group">
+                            </div>
+                                <div class="col-xs-12 form-group">
+                                <strong>Alguns itens selecionados, estão com a data vencimento para gerar boleto inválidas. <br/> Será necessário adicionar uma nova data para gerar o boleto</strong>
+                                </div>
+                                
+                                <div class="form-group col-xs-12">
+                                        <label for="inputPassword3" class="col-sm-3 control-label"> <?php echo $this->lang->line('billet_due_date'); ?></label>
+                                        <div class="col-sm-9">
+                                            <div class="col-md-5 col-xs-6 input-group date">
+                                                <input type="text" name="fee_date_payment_new" class="form-control">
+                                                <div class="input-group-addon">
+                                                    <span class="glyphicon glyphicon-th"></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                </div>
+                                <div class="form-group col-xs-12">
+                                        <label for="inputPassword3" class="col-sm-3 control-label"> <?php echo $this->lang->line('discount'); ?></label>
+                                        <div class="col-sm-9">
+                                            <div class="row">
+                                                <div class="col-xs-12"  style="display: flex; ">
+                                                    <div class="form-check form-check-inline">
+                                                        <input class="form-check-input" type="radio" name="discount_option" id="discount_option_1" value="1">
+                                                        <label class="form-check-label"  for="discount_option_1">Percentual %</label>
+                                                    </div>
+                                                    <div class="form-check form-check-inline" style="margin-left:15px;">
+                                                        <input class="form-check-input" checked type="radio" name="discount_option" id="discount_option_2" value="2">
+                                                        <label class="form-check-label" for="discount_option_2">Valor</label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-xs-5" >
+                                                    <input name="discount_value" value="" class="form-control" placeholder="0.00" />
+                                                </div>
+                                                
+                                            </div>
+                                           
+                                        </div>
+                                </div>
+                                <div class="form-group col-xs-12 ">
+                                     <table class="table table-bordered">
+                                       <thead>
+                                          <tr> 
+                                          <th>Código</th>
+                                          <th>Vencimento</th>
+                                            <th>Descricao</th>
+                                            <th>Valor</th>
+                                            <th>Desconto</th>
+                                            <th>Total</th>
+                                          </tr>
+                                       </thead>
+                                       <tbody id="billet_for_generate"></tbody>
+                                     </table>
+                                </div>
+                            </div>
+
+                        `;
+
+            // console.log(listOfBilletOld)
+            if (listOfBilletOld.length > 0) {
+                $("#listBilletModal .modal-body").html(html);
+                setTimeout(function() {
+                    array_to_collect_fees = buildListItemsWithDiscount(array_to_collect_fees);
+                }, 200)
+                var $modal = $("#listBilletModal .modal-footer");
+
+                $("#listBilletModal .modal-body").html(html);
+                $(".date").datepicker({
+                    format: date_format,
+                    autoclose: true,
+                    language: '<?php echo $language_name; ?>',
+                    startDate: '+0d',
+                    todayHighlight: true
+                });
+
+                toggleMaskDiscount()
+
+                $('[name="discount_option"]').change(function() {
+                    toggleMaskDiscount()
+                    array_to_collect_fees = buildListItemsWithDiscount(array_to_collect_fees);
+                })
+                $('[name="discount_value"]').focusout(function() {
+                    array_to_collect_fees = buildListItemsWithDiscount(array_to_collect_fees);
+                })
+
+                $("#listBilletModal").modal('show');
+                $this.button('reset');
+                var fvalidator = $('form#billet_fee_group');
+                fvalidator.validate({
+                    rules: {
+                        fee_date_payment_new: {
+                            required: true
+                        }
+                    }
+                });
+
+                $('form#billet_fee_group').on('submit', function(e) {
+                    e.preventDefault();
+                    if (!fvalidator.valid() || loading) return;
+                    loading = true;
+                    array_to_collect_fees.map(row => {
+
+                        if (listOfBilletOld.indexOf(row.fee_groups_feetype_id) >= 0) {
+                            let datePay = ($('input[name="fee_date_payment_new"]').val().split(/\-|\//gi).reverse().join('-'));
+                            row.fee_date_payment = datePay
+                        }
+                        return row;
+                    })
+                    createAllBillets(array_to_collect_fees, $modal);
+
+                });
+                return;
+            }
+            createAllBillets(array_to_collect_fees, $this);
+
+        });
+
+        function toggleMaskDiscount() {
+            var discount_option = $('[name="discount_option"]:checked').val()
+            if (discount_option == 2) {
+                $('[name="discount_value"]').unmask().mask("#.##0,00", {
+                    reverse: true
+                });
+            } else {
+                $('[name="discount_value"]').unmask().mask('##0,00%', {
+                    reverse: true
+                });
+            }
+        }
+
+        // console.log(getDaysExceptions());
+        function getDiscount(amount) {
+            var discount_option = $('[name="discount_option"]:checked').val()
+            var discount_value = Math.floor(String($('[name="discount_value"]').val()).replace('.', '').replace(',', '.').replace('%', ''))
+            if (discount_option == 1) {
+                return (discount_value / 100) * amount
+            }
+            return discount_value
+        }
+
+        function buildListItemsWithDiscount(items) {
+            var collect_fees = [],
+                listOfItemSelected = [];
+            sortArray(items, 'fee_date_payment_unix', true).forEach(function(item) {
+                item["fee_discount"] = getDiscount(item["fee_amount"]);
+                collect_fees.push(item)
+                listOfItemSelected.push(`
+                               <tr class="${item['fee_billet_old'] ===  true ? 'text-danger': ''  }">
+                                  <td>${item["fee_master_id"]}</td>
+                                  <td>${moment(item["fee_date_payment"]).format('DD/MM/YYYY')}</td>
+                                  <td>${item["fee_title"]}</td>
+                                  <td  data-value="${item["fee_amount"]}" >${accounting.formatMoney(item["fee_amount"])}</td>
+                                  <td data-value="${item["fee_discount"]}">${accounting.formatMoney(item["fee_discount"])}</td>
+                                  <td >${accounting.formatMoney(item["fee_amount"] - item["fee_discount"])}</td>
+                               </tr>
+                            `)
+
+            })
+            $('#listBilletModal .modal-body #billet_for_generate').html(listOfItemSelected.join(''))
+            return collect_fees;
+
+
+        }
+
+        function createAllBillets(array_to_collect_fees, $this) {
+            var $LoaderModalBody = $('#loadingModal .modal-loader-body');
+            $LoaderModalBody.html($LoaderModalBody.data('loading'));
+            var $LoaderModal = $('#loadingModal').modal({
+                backdrop: 'static',
+                keyboard: false,
+                show: true
+            })
+            $.ajax({
+                type: 'POST',
+                url: base_url + "studentfee/generateBillet",
+                data: {
+                    'data': JSON.stringify(array_to_collect_fees),
+                    'user_id': $('input[name="student_user_id"]').val()
+                },
+                dataType: "JSON",
+                beforeSend: function() {
+                    $this.button('loading');
+                },
+                success: function(data) {
+
+                    $LoaderModalBody.html('Os boletos foram enviados para serem gerados com sucesso ')
+                    window.location.reload();
+
+                },
+                error: function(xhr) { // if error occured
+                    $.notify({
+                        // options
+                        message: `Tivemos um problema na conexão com o servidor, por favor recarregue essa página e tente novamente`
+                    }, {
+                        // settings
+                        type: 'danger'
+                    });
+                    $LoaderModal.modal('hide')
+                },
+                complete: function() {
+                    $this.button('reset');
+                    loading = false;
+                }
+            });
+        }
+        ///cancel billet
+
+
+        $(document).on('click', '.billetCancelSelected', function() {
+            var $this = $(this);
+            var array_to_collect_fees = [];
+
+
+
+            $.each($("input[name='fee_checkbox']:checked"), function() {
+                var fee_session_group_id = $(this).data('fee_session_group_id');
+                var fee_master_id = $(this).data('fee_master_id');
+                var fee_groups_feetype_id = $(this).data('fee_groups_feetype_id');
+                item = {};
+                item["fee_session_group_id"] = fee_session_group_id;
+                item["fee_master_id"] = fee_master_id;
+                item["fee_groups_feetype_id"] = fee_groups_feetype_id;
+                item["fee_amount"] = $(this).data('fee_amount');
+                item["fee_discount"] = $(this).data('fee_discount');
+                item["fee_line_1"] = $(this).data('fee_line_1');
+                item["fee_line_2"] = $(this).data('fee_line_2');
+                item["fee_date_payment"] = $(this).data('fee_date_payment');
+                item["fee_fine"] = $(this).data('fee_fine');
+                item["billet_id"] = $(this).data('fee_is_pdf');
+                if ($(this).data('fee_is_pdf') !== 0)
+                    array_to_collect_fees.push(item);
+            });
+
+            if (array_to_collect_fees.length == 0) return alert("Nenhum item válido foi selecionado");
+
+            var options = [{
+                    value: 'ACERTOS',
+                    label: 'ACERTOS',
+                },
+                {
+                    value: 'DEVOLUCAO',
+                    label: 'DEVOLUÇÃO',
+                },
+                {
+                    value: 'SUBISTITUICAO',
+                    label: 'SUBISTITUIÇÃO',
+                },
+                // {
+                //     value: 'PROTESTOAPOSBAIXA',
+                //     label: 'PROTESTO APÓS BAIXA',
+                // },
+                {
+                    value: 'PAGODIRETOAOCLIENTE',
+                    label: 'PAGO DIRETO AO CLIENTE',
+                },
+                {
+                    value: 'FALTADESOLUCAO',
+                    label: 'FALTA DE SOLUÇÃO',
+                },
+
+                {
+                    value: 'APEDIDODOCLIENTE',
+                    label: 'APEDIDO DO CLIENTE',
+                }
+            ];
+            var html = `
+                <div class="row">
+                <div class="form-group">
+                </div>
+                    <div class="form-group">
+                        <div class="col-md-4 col-xs-4 control-label">
+                            <label class="control-label">Selecione o motivo</label>
+                        </div>
+                        <div class="col-md-8 col-xs-8">    
+                            <select name="billet_cancel_motvive" class="form-control">
+                                ${options.map(v => `<option value="${v.value}">${v.label}</option>`).join('')}
+                            </select>
+                        <div>
+                    </div>
+                </div>
+              
+            `;
+            var $modal = $("#listBilletModal .modal-footer");
+            $("#listBilletModal .modal-body").html(html);
+            $("#listBilletModal").modal('show');
+            $this.button('reset');
+            $('form#billet_fee_group').off('submit').on('submit', function(e) {
+                e.preventDefault();
+
+                $.ajax({
+                    type: 'POST',
+                    url: base_url + "studentfee/cancelBillet",
+                    data: {
+                        'data': JSON.stringify(array_to_collect_fees),
+                        'motive': $('select[name="billet_cancel_motvive"]').val(),
+
+                    },
+                    dataType: "JSON",
+                    beforeSend: function() {
+                        $modal.button('loading');
+                    },
+                    success: function(data) {
+
+                        alert('Os boletos foram cancelados com sucesso')
+                        window.location.reload();
+
+                    },
+                    error: function(xhr) { // if error occured
+                        alert("Error occured.please try again");
+
+                    },
+                    complete: function() {
+                        $modal.button('reset');
+                    }
+                });
+            })
+
+
+
+
+
+
+        });
+
+
     });
 
 
-    $(function () {
-        $(document).on('change', "#discount_group", function () {
+
+
+
+    $(function() {
+        $(document).on('change', "#discount_group", function() {
             var amount = $('option:selected', this).data('disamount');
 
             var balance_amount = (parseFloat(fee_amount) - parseFloat(amount)).toFixed(2);
@@ -1293,7 +1989,7 @@ $language_name = $language["short_code"];
         });
     });
 
-    $("#collect_fee_group").submit(function (e) {
+    $("#collect_fee_group").submit(function(e) {
         var form = $(this);
         var url = form.attr('action');
         var smt_btn = $(this).find("button[type=submit]");
@@ -1302,27 +1998,27 @@ $language_name = $language["short_code"];
             url: url,
             dataType: 'JSON',
             data: form.serialize(), // serializes the form's elements.
-            beforeSend: function () {
+            beforeSend: function() {
                 smt_btn.button('loading');
             },
-            success: function (response) {
+            success: function(response) {
 
                 if (response.status === 1) {
 
                     location.reload(true);
                 } else if (response.status === 0) {
-                    $.each(response.error, function (index, value) {
+                    $.each(response.error, function(index, value) {
                         var errorDiv = '#form_collection_' + index + '_error';
                         $(errorDiv).empty().append(value);
                     });
                 }
             },
-            error: function (xhr) { // if error occured
+            error: function(xhr) { // if error occured
 
                 alert("Error occured.please try again");
 
             },
-            complete: function () {
+            complete: function() {
                 smt_btn.button('reset');
             }
         });
@@ -1330,9 +2026,58 @@ $language_name = $language["short_code"];
         e.preventDefault(); // avoid to execute the actual submit of the form.
     });
 
-    $("#select_all").change(function () {  //"select all" change 
+    $("#select_all").change(function() { //"select all" change 
         $('input:checkbox').not(this).prop('checked', this.checked);
         // $(".checkbox").prop('checked', $(this).prop("checked")); //change all ".checkbox" checked status
     });
 
+
+
+    function getDaysExceptions() {
+
+        return [
+            moment().month(1).date(1).format('YYYY-MM-DD'), // Confraternização Universal - Lei nº 662, de 06/04/49
+            moment().month(4).date(21).format('YYYY-MM-DD'),
+            moment().month(5).date(1).format('YYYY-MM-DD'), // Tiradentes - Lei nº 662, de 06/04/49
+            moment().month(9).date(7).format('YYYY-MM-DD'), // Dia da Independência - Lei nº 662, de 06/04/49
+            moment().month(10).date(12).format('YYYY-MM-DD'), // N. S. Aparecida - Lei nº 6802, de 30/06/80
+            moment().month(11).date(2).format('YYYY-MM-DD'), // Todos os santos - Lei nº 662, de 06/04/49
+            moment().month(11).date(15).format('YYYY-MM-DD'), // Proclamação da republica - Lei nº 662, de 06/04/49
+            moment().month(12).date(25).format('YYYY-MM-DD'), // Natal - Lei nº 662, de 06/04/49
+
+            ...getSpecialDay()
+        ]
+    }
+
+    function subtrairDias(data, dias) {
+        return new Date(data.getTime() - (dias * 24 * 60 * 60 * 1000));
+    }
+
+
+    function getSpecialDay() {
+        var ano = moment().format('YYYY');
+        var X = 24;
+        var Y = 5;
+        var a = ano % 19;
+        var b = ano % 4;
+        var c = ano % 7;
+        var d = (19 * a + X) % 30
+        var e = (2 * b + 4 * c + 6 * d + Y) % 7
+        var soma = d + e
+
+        if (soma > 9) {
+            dia = (d + e - 9);
+            mes = 03;
+        } else {
+            dia = (d + e + 22);
+            mes = 02;
+        }
+
+        return [
+            moment(new Date(ano, mes, dia).toDateString()).format('YYYY-MM-DD'),
+            moment(subtrairDias(new Date(ano, mes, dia), 47)).format('YYYY-MM-DD'),
+            // moment(subtrairDias(new Date(ano,mes,dia), 48)).format('YYYY-MM-DD'),
+            moment(subtrairDias(new Date(ano, mes, dia), 46)).format('YYYY-MM-DD'),
+        ]
+    }
 </script>

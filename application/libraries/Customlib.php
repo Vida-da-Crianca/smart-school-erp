@@ -11,7 +11,7 @@ class Customlib
 
     public function __construct()
     {
-        $this->CI = &get_instance();
+        $this->CI = get_instance();
         $this->CI->load->helper('url');
         $this->CI->load->library('session');
         $this->CI->load->library('user_agent');
@@ -537,7 +537,7 @@ class Customlib
     {
         // users table id of users
         $session_Array = $this->CI->session->userdata('admin');
-        $staff_id      = $session_Array['id'];
+        $staff_id      = isset($session_Array['id']) ? $session_Array['id'] : null;
         return $staff_id;
     }
 
@@ -1059,6 +1059,8 @@ class Customlib
     {
 
         $notifications = $this->CI->notificationsetting_model->get();
+
+        
 
         if (!empty($notifications)) {
             foreach ($notifications as $note_key => $note_value) {

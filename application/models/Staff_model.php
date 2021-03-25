@@ -624,7 +624,7 @@ class Staff_model extends MY_Model
     public function getStaffDesignation()
     {
 
-        $query = $this->db->select('*')->where("is_active", "yes")->get("staff_designation");
+        $query = $this->db->select('*')->where("is_active", "yes")->order_by('designation','asc')->get("staff_designation");
 
         return $query->result_array();
     }
@@ -632,7 +632,7 @@ class Staff_model extends MY_Model
     public function getDepartment()
     {
 
-        $query = $this->db->select('*')->where("is_active", "yes")->get('department');
+        $query = $this->db->select('*')->where("is_active", "yes")->order_by('department_name','asc')->get('department');
         return $query->result_array();
     }
 

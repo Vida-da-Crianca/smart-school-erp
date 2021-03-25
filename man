@@ -1,0 +1,47 @@
+#!/usr/bin/env php
+
+<?php
+/**
+ * Part of Cli for CodeIgniter
+ *
+ * @author     Kenji Suzuki <https://github.com/kenjis>
+ * @license    MIT License
+ * @copyright  2015 Kenji Suzuki
+ * @link       https://github.com/kenjis/codeigniter-cli
+ */
+
+use Symfony\Component\Console\Application;
+
+
+
+
+
+
+set_time_limit(0);
+
+/** @const ROOTPATH CodeIgniter project root directory */
+define('ROOTPATH', __DIR__ . '/');
+
+require __DIR__."/vendor/autoload.php";
+
+
+
+$dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
+$dotenv->load();
+
+// generate CodeIgniter instance
+$ci = require_once(__DIR__."/ci_instance.php");
+$ci->load->add_package_path(__DIR__.'/packages/Extends');
+
+
+$fileListCommand = sprintf('%sapplication/config/command.php', ROOTPATH); 
+$listCommands =  file_exists($fileListCommand) ? require_once($fileListCommand) : [] ;
+
+$commands = array_merge($listCommands,[]);
+
+$application  = new Application('Man Command Line', '1.0.0');
+
+  foreach($commands as $key => $command){
+       $application->add( new $command($ci));
+  }
+$application->run();

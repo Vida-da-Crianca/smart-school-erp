@@ -18,14 +18,18 @@ class Expense_model extends MY_Model {
      */
     public function search($text = null, $start_date = null, $end_date = null) {
         if (!empty($text)) {
-            $this->db->select('expenses.id,expenses.date,expenses.invoice_no,expenses.name,expenses.amount,expenses.documents,expenses.note,expense_head.exp_category,expenses.exp_head_id')->from('expenses');
+            $this->db->select('expenses.id,expenses.date,expenses.invoice_no,expenses.name,expenses.amount,
+            expenses.payment_at,
+            expenses.documents,expenses.note,expense_head.exp_category,expenses.exp_head_id')->from('expenses');
             $this->db->join('expense_head', 'expenses.exp_head_id = expense_head.id');
 
             $this->db->like('expenses.name', $text);
             $query = $this->db->get();
             return $query->result_array();
         } else {
-            $this->db->select('expenses.id,expenses.date,expenses.name,expenses.invoice_no,expenses.amount,expenses.documents,expenses.note,expense_head.exp_category,expenses.exp_head_id')->from('expenses');
+            $this->db->select('expenses.id,
+            expenses.payment_at,
+            expenses.date,expenses.name,expenses.invoice_no,expenses.amount,expenses.documents,expenses.note,expense_head.exp_category,expenses.exp_head_id')->from('expenses');
             $this->db->join('expense_head', 'expenses.exp_head_id = expense_head.id');
             $this->db->where('expenses.date >=', $start_date);
             $this->db->where('expenses.date <=', $end_date);
@@ -34,8 +38,12 @@ class Expense_model extends MY_Model {
         }
     }
 
-    public function get($id = null) {
-        $this->db->select('expenses.id,expenses.date,expenses.name,expenses.invoice_no,expenses.amount,expenses.documents,expenses.note,expense_head.exp_category,expenses.exp_head_id')->from('expenses');
+    public function get($id = null, $date = null) {
+        $this->db->select('expenses.id,expenses.date,expenses.name,
+        expenses.owner_type,
+        expenses.owner_id,
+        expenses.payment_at,
+        expenses.invoice_no,expenses.amount,expenses.documents,expenses.note,expense_head.exp_category,expenses.exp_head_id')->from('expenses');
         $this->db->join('expense_head', 'expenses.exp_head_id = expense_head.id');
         if ($id != null) {
             $this->db->where('expenses.id', $id);
@@ -43,6 +51,11 @@ class Expense_model extends MY_Model {
             $this->db->order_by('expenses.id', 'DESC');
         }
 
+        if( $date != null) {
+            $this->db->where("expenses.date", sprintf('%s',$date));
+            // $this->db->where("expenses.date", sprintf('%s 23:59:59',$date));
+        }
+       // $this->db->order_by('');
         $query = $this->db->get();
         if ($id != null) {
             return $query->row_array();

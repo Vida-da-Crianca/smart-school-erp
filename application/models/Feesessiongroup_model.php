@@ -44,6 +44,7 @@ class Feesessiongroup_model extends MY_Model {
         $this->db->join('fee_groups', 'fee_groups.id = fee_session_groups.fee_groups_id');
         $this->db->where('fee_session_groups.session_id', $this->current_session);
         $this->db->where('fee_groups.is_system', 0);
+        $this->db->order_by('group_name','asc');
         if ($id != null) {
             $this->db->where('fee_session_groups.id', $id);
         }

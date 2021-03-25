@@ -6,7 +6,7 @@ if (!defined('BASEPATH'))
 class QDMailer {
 
     public function __construct() {
-        require_once('PHPMailer/PHPMailerAutoload.php');
+        // require_once('PHPMailer/PHPMailerAutoload.php');
     }
 
 }

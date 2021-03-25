@@ -155,6 +155,8 @@ class Feemaster extends Admin_Controller {
             $data['resultlist'] = $resultlist;
         }
 
+        
+        
         $this->load->view('layout/header', $data);
         $this->load->view('admin/feemaster/assign', $data);
         $this->load->view('layout/footer', $data);

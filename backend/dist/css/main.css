@@ -4123,3 +4123,16 @@ input[type=checkbox], input[type=radio] {
     right: 0px;
     top: -4px;
 }
+
+.ui-autocomplete-loading {
+    background: url('../../images/loading-ui.gif') no-repeat right center;
+}
+
+.mb-4{
+    margin-bottom: 20px !important;
+}
+
+.p-2{
+   padding: 15px;
+}
+

@@ -4,12 +4,14 @@ if (!defined('BASEPATH')) {
     exit('No direct script access allowed');
 }
 
-class Studentfeemaster_model extends MY_Model {
+class Studentfeemaster_model extends MY_Model
+{
 
     protected $balance_group;
     protected $balance_type;
 
-    public function __construct() {
+    public function __construct()
+    {
         parent::__construct();
         $this->load->config('ci-blog');
         $this->balance_group = $this->config->item('ci_balance_group');
@@ -17,31 +19,32 @@ class Studentfeemaster_model extends MY_Model {
         $this->current_session = $this->setting_model->getCurrentSession();
     }
 
-    public function searchAssignFeeByClassSection($class_id = null, $section_id = null, $fee_session_group_id = null, $category = null, $gender = null, $rte = null) {
+    public function searchAssignFeeByClassSection($class_id = null, $section_id = null, $fee_session_group_id = null, $category = null, $gender = null, $rte = null)
+    {
         $sql = "SELECT IFNULL(`student_fees_master`.`id`, '0') as `student_fees_master_id`,`classes`.`id` AS `class_id`,"
-                . " `student_session`.`id` as `student_session_id`, `students`.`id`, "
-                . "`classes`.`class`, `sections`.`id` AS `section_id`, `sections`.`section`, "
-                . "`students`.`id`, `students`.`admission_no`, `students`.`roll_no`,"
-                . " `students`.`admission_date`, `students`.`firstname`, `students`.`lastname`,"
-                . " `students`.`image`, `students`.`mobileno`, `students`.`email`, `students`.`state`,"
-                . " `students`.`city`, `students`.`pincode`, `students`.`religion`, `students`.`dob`, "
-                . "`students`.`current_address`, `students`.`permanent_address`,"
-                . " IFNULL(students.category_id, 0) as `category_id`,"
-                . " IFNULL(categories.category, '') as `category`,"
-                . " `students`.`adhar_no`, `students`.`samagra_id`,"
-                . " `students`.`bank_account_no`, `students`.`bank_name`, `students`.`ifsc_code`,"
-                . " `students`.`guardian_name`, `students`.`guardian_relation`, `students`.`guardian_phone`,"
-                . " `students`.`guardian_address`, `students`.`is_active`, `students`.`created_at`,"
-                . " `students`.`updated_at`, `students`.`father_name`, `students`.`rte`,"
-                . " `students`.`gender` FROM `students` JOIN `student_session` "
-                . "ON `student_session`.`student_id` = `students`.`id` JOIN `classes` "
-                . "ON `student_session`.`class_id` = `classes`.`id` JOIN `sections` "
-                . "ON `sections`.`id` = `student_session`.`section_id` LEFT JOIN `categories` "
-                . "ON `students`.`category_id` = `categories`.`id` LEFT JOIN student_fees_master on"
-                . " student_fees_master.student_session_id=student_session.id"
-                . "  AND student_fees_master.fee_session_group_id=" . $this->db->escape($fee_session_group_id)
-                . "WHERE `student_session`.`session_id` =  " . $this->current_session
-                . " and `students`.`is_active` =  'yes'";
+            . " `student_session`.`id` as `student_session_id`, `students`.`id`, "
+            . "`classes`.`class`, `sections`.`id` AS `section_id`, `sections`.`section`, "
+            . "`students`.`id`, `students`.`admission_no`, `students`.`roll_no`,"
+            . " `students`.`admission_date`, `students`.`firstname`, `students`.`lastname`,"
+            . " `students`.`image`, `students`.`mobileno`, `students`.`email`, `students`.`state`,"
+            . " `students`.`city`, `students`.`pincode`, `students`.`religion`, `students`.`dob`, "
+            . "`students`.`current_address`, `students`.`permanent_address`,"
+            . " IFNULL(students.category_id, 0) as `category_id`,"
+            . " IFNULL(categories.category, '') as `category`,"
+            . " `students`.`adhar_no`, `students`.`samagra_id`,"
+            . " `students`.`bank_account_no`, `students`.`bank_name`, `students`.`ifsc_code`,"
+            . " `students`.`guardian_name`, `students`.`guardian_relation`, `students`.`guardian_phone`,"
+            . " `students`.`guardian_address`, `students`.`is_active`, `students`.`created_at`,"
+            . " `students`.`updated_at`, `students`.`father_name`, `students`.`rte`,"
+            . " `students`.`gender` FROM `students` JOIN `student_session` "
+            . "ON `student_session`.`student_id` = `students`.`id` JOIN `classes` "
+            . "ON `student_session`.`class_id` = `classes`.`id` JOIN `sections` "
+            . "ON `sections`.`id` = `student_session`.`section_id` LEFT JOIN `categories` "
+            . "ON `students`.`category_id` = `categories`.`id` LEFT JOIN student_fees_master on"
+            . " student_fees_master.student_session_id=student_session.id"
+            . "  AND student_fees_master.fee_session_group_id=" . $this->db->escape($fee_session_group_id)
+            . "WHERE `student_session`.`session_id` =  " . $this->current_session
+            . " and `students`.`is_active` =  'yes'";
 
         if ($class_id != null) {
             $sql .= " AND `student_session`.`class_id` = " . $this->db->escape($class_id);
@@ -64,7 +67,8 @@ class Studentfeemaster_model extends MY_Model {
         return $query->result_array();
     }
 
-    public function add($data) {
+    public function add($data)
+    {
 
         $this->db->where('student_session_id', $data['student_session_id']);
         $this->db->where('fee_session_group_id', $data['fee_session_group_id']);
@@ -78,7 +82,8 @@ class Studentfeemaster_model extends MY_Model {
         }
     }
 
-    public function addPreviousBal($student_data, $due_date) {
+    public function addPreviousBal($student_data, $due_date)
+    {
         $this->db->trans_start();
         $this->db->trans_strict(false);
         $fee_group_exists = $this->feegroup_model->checkGroupExistsByName($this->balance_group);
@@ -154,7 +159,8 @@ class Studentfeemaster_model extends MY_Model {
         }
     }
 
-    public function findValueExists($array, $find) {
+    public function findValueExists($array, $find)
+    {
         $id = 0;
         foreach ($array as $x => $x_value) {
             if ($x_value->student_session_id == $find) {
@@ -164,7 +170,8 @@ class Studentfeemaster_model extends MY_Model {
         return $id;
     }
 
-    public function selectInArray($fee_session_groups, $student_session_array) {
+    public function selectInArray($fee_session_groups, $student_session_array)
+    {
 
         $this->db->where('fee_session_group_id', $fee_session_groups);
         $this->db->where_in('student_session_id', $student_session_array);
@@ -173,7 +180,8 @@ class Studentfeemaster_model extends MY_Model {
         return $result;
     }
 
-    public function delete($fee_session_groups, $array) {
+    public function delete($fee_session_groups, $array)
+    {
         $this->db->trans_start(); # Starting Transaction
         $this->db->trans_strict(false); # See Note 01. If you wish can remove as well
         //=======================Code Start===========================
@@ -196,7 +204,8 @@ class Studentfeemaster_model extends MY_Model {
         }
     }
 
-    public function getBalanceMasterRecord($group_name, $student_session_array) {
+    public function getBalanceMasterRecord($group_name, $student_session_array)
+    {
         $sql = "select * from student_fees_master where student_session_id in $student_session_array and fee_session_group_id=(SELECT id FROM `fee_session_groups` where fee_groups_id=(SELECT id FROM `fee_groups` WHERE name=" . "'" . $group_name . "'" . ") and session_id=$this->current_session)";
 
         $query = $this->db->query($sql);
@@ -204,8 +213,13 @@ class Studentfeemaster_model extends MY_Model {
         return $result;
     }
 
-    public function getStudentFees($student_session_id) {
-        $sql = "SELECT `student_fees_master`.*,fee_groups.name FROM `student_fees_master` INNER JOIN fee_session_groups on student_fees_master.fee_session_group_id=fee_session_groups.id INNER JOIN fee_groups on fee_groups.id=fee_session_groups.fee_groups_id  WHERE `student_session_id` = " . $student_session_id . " ORDER BY `student_fees_master`.`id`";
+    public function getStudentFees($student_session_id)
+    {
+        $sql = "SELECT `student_fees_master`.*,fee_groups.name FROM `student_fees_master` 
+        INNER JOIN fee_session_groups on student_fees_master.fee_session_group_id=fee_session_groups.id 
+        INNER JOIN fee_groups on fee_groups.id=fee_session_groups.fee_groups_id 
+        
+        WHERE `student_session_id` = " . $student_session_id . " ORDER BY `student_fees_master`.`id`";
         $query = $this->db->query($sql);
         $result = $query->result();
         if (!empty($result)) {
@@ -225,14 +239,59 @@ class Studentfeemaster_model extends MY_Model {
         return $result;
     }
 
-    public function getDueFeeByFeeSessionGroup($fee_session_groups_id, $student_fees_master_id) {
-        $sql = "SELECT student_fees_master.*,fee_groups_feetype.id as `fee_groups_feetype_id`,fee_groups_feetype.amount,fee_groups_feetype.due_date,fee_groups_feetype.fee_groups_id,fee_groups.name,fee_groups_feetype.feetype_id,feetype.code,feetype.type, IFNULL(student_fees_deposite.id,0) as `student_fees_deposite_id`, IFNULL(student_fees_deposite.amount_detail,0) as `amount_detail` FROM `student_fees_master` INNER JOIN fee_session_groups on fee_session_groups.id = student_fees_master.fee_session_group_id INNER JOIN fee_groups_feetype on  fee_groups_feetype.fee_session_group_id = fee_session_groups.id  INNER JOIN fee_groups on fee_groups.id=fee_groups_feetype.fee_groups_id INNER JOIN feetype on feetype.id=fee_groups_feetype.feetype_id LEFT JOIN student_fees_deposite on student_fees_deposite.student_fees_master_id=student_fees_master.id and student_fees_deposite.fee_groups_feetype_id=fee_groups_feetype.id WHERE student_fees_master.fee_session_group_id =" . $fee_session_groups_id . " and student_fees_master.id=" . $student_fees_master_id . " order by fee_groups_feetype.due_date ASC";
+    public function getStudentFees2($student_session_id)
+    {
+        $sql = "SELECT `student_fees_master`.*,fee_groups.name FROM `student_fees_master` 
+        INNER JOIN fee_session_groups on student_fees_master.fee_session_group_id=fee_session_groups.id 
+        INNER JOIN fee_groups on fee_groups.id=fee_session_groups.fee_groups_id 
+        
+        WHERE `student_session_id` = " . $student_session_id . " ORDER BY `student_fees_master`.`id` LIMIT 1";
+        $query = $this->db->query($sql);
+        $result = $query->result();
+        // if (!empty($result)) {
+        //     foreach ($result as $result_key => $result_value) {
+
+        //         $fee_session_group_id = $result_value->fee_session_group_id;
+        //         $student_fees_master_id = $result_value->id;
+        //         $result_value->fees = $this->getDueFeeByFeeSessionGroup($fee_session_group_id, $student_fees_master_id);
+
+        //         if ($result_value->is_system != 0) {
+        //             $result_value->fees[0]->amount = $result_value->amount;
+        //         }
+        //     }
+        // }
+
+
+        return $result;
+    }
+
+    public function getDueFeeByFeeSessionGroup($fee_session_groups_id, $student_fees_master_id)
+    {
+        $sql = "SELECT student_fees_master.*,fee_groups_feetype.id as `fee_groups_feetype_id`,
+        fee_groups_feetype.amount,fee_groups_feetype.due_date,fee_groups_feetype.fee_groups_id,
+        fee_groups.name,fee_groups_feetype.feetype_id,
+        feetype.code,
+        feetype.type, 
+        IFNULL(student_fees_deposite.id,0) as `student_fees_deposite_id`,
+        -- IFNULL(billets.id, 0) as `billet_id`, 
+        -- IFNULL(billets.body, '{}') as `billet_detail`, 
+        -- billets.status as `billet_status`, 
+        IFNULL(student_fees_deposite.amount_detail,0) as `amount_detail` FROM `student_fees_master` 
+        INNER JOIN fee_session_groups on fee_session_groups.id = student_fees_master.fee_session_group_id 
+        INNER JOIN fee_groups_feetype on  fee_groups_feetype.fee_session_group_id = fee_session_groups.id  
+        INNER JOIN fee_groups on fee_groups.id=fee_groups_feetype.fee_groups_id 
+        INNER JOIN feetype on feetype.id=fee_groups_feetype.feetype_id
+        -- LEFT JOIN billets on billets.fee_item_id=fee_groups_feetype.id AND billets.user_id=student_fees_master.student_session_id AND billets.deleted_at IS NULL
+        LEFT JOIN student_fees_deposite on (student_fees_deposite.student_fees_master_id=student_fees_master.id)
+       
+        AND student_fees_deposite.fee_groups_feetype_id=fee_groups_feetype.id WHERE student_fees_master.fee_session_group_id =" . $fee_session_groups_id . " and student_fees_master.id=" . $student_fees_master_id . " order by fee_groups_feetype.due_date ASC";
 
         $query = $this->db->query($sql);
         return $query->result();
     }
 
-    public function getDueFeeByFeeSessionGroupFeetype($fee_session_groups_id, $student_fees_master_id, $fee_groups_feetype_id) {
+    public function getDueFeeByFeeSessionGroupFeetype($fee_session_groups_id, $student_fees_master_id, $fee_groups_feetype_id)
+    {
 
         $sql = "SELECT student_fees_master.id,student_fees_master.is_system,student_fees_master.student_session_id,student_fees_master.fee_session_group_id,student_fees_master.amount as `student_fees_master_amount`,fee_groups_feetype.id as `fee_groups_feetype_id`,students.firstname,students.admission_no,students.lastname,student_session.class_id,classes.class,sections.section,students.guardian_name,students.father_name,student_session.section_id,student_session.student_id,fee_groups_feetype.amount,fee_groups_feetype.due_date,fee_groups_feetype.fee_groups_id,fee_groups.name,fee_groups_feetype.feetype_id,feetype.code,feetype.type, IFNULL(student_fees_deposite.id,0) as `student_fees_deposite_id`, IFNULL(student_fees_deposite.amount_detail,0) as `amount_detail` FROM `student_fees_master` INNER JOIN fee_session_groups on fee_session_groups.id = student_fees_master.fee_session_group_id INNER JOIN fee_groups_feetype on  fee_groups_feetype.fee_session_group_id = fee_session_groups.id  INNER JOIN fee_groups on fee_groups.id=fee_groups_feetype.fee_groups_id INNER JOIN feetype on feetype.id=fee_groups_feetype.feetype_id LEFT JOIN student_fees_deposite on student_fees_deposite.student_fees_master_id=student_fees_master.id and student_fees_deposite.fee_groups_feetype_id=fee_groups_feetype.id INNER JOIN student_session on student_session.id= student_fees_master.student_session_id INNER JOIN classes on classes.id= student_session.class_id INNER JOIN sections on sections.id= student_session.section_id INNER JOIN students on students.id=student_session.student_id  WHERE student_fees_master.fee_session_group_id =" . $fee_session_groups_id . " and student_fees_master.id=" . $student_fees_master_id . " and fee_groups_feetype.id= " . $fee_groups_feetype_id;
 
@@ -240,7 +299,8 @@ class Studentfeemaster_model extends MY_Model {
         return $query->row();
     }
 
-    public function fee_deposit($data, $send_to, $student_fees_discount_id = null) {
+    public function fee_deposit($data, $send_to, $student_fees_discount_id = null)
+    {
         $this->db->where('student_fees_master_id', $data['student_fees_master_id']);
         $this->db->where('fee_groups_feetype_id', $data['fee_groups_feetype_id']);
         $q = $this->db->get('student_fees_deposite');
@@ -291,12 +351,15 @@ class Studentfeemaster_model extends MY_Model {
                 return false;
             } else {
                 $this->db->trans_commit();
+                $inv = json_decode($data['amount_detail'], true)[1];
+                $this->invoiceForCreate($inserted_id, ($inv['amount'] + $inv['amount_fine']) - $inv['amount_discount']);
                 return json_encode(array('invoice_id' => $inserted_id, 'sub_invoice_id' => 1));
             }
         }
     }
 
-    public function get_feesreceived_by() {
+    public function get_feesreceived_by()
+    {
         $result = $this->db->select('CONCAT_WS(" ",staff.name,staff.surname) as name, staff.employee_id,staff.id')->from('staff')->join('staff_roles', 'staff.id=staff_roles.staff_id')->where('staff.is_active', '1')->get()->result_array();
         foreach ($result as $key => $value) {
             $data[$value['id']] = $value['name'] . " (" . $value['employee_id'] . ")";
@@ -304,7 +367,8 @@ class Studentfeemaster_model extends MY_Model {
         return $data;
     }
 
-    public function getFeeCollectionReport($start_date, $end_date, $received_by = null, $group = null) {
+    public function getFeeCollectionReport($start_date, $end_date, $received_by = null, $group = null)
+    {
 
         $this->db->select('`student_fees_deposite`.*,students.firstname,students.lastname,student_session.class_id,classes.class,sections.section,student_session.section_id,student_session.student_id,`fee_groups`.`name`, `feetype`.`type`, `feetype`.`code`,student_fees_master.student_session_id')->from('student_fees_deposite');
         $this->db->join('fee_groups_feetype', 'fee_groups_feetype.id = student_fees_deposite.fee_groups_feetype_id');
@@ -381,7 +445,8 @@ class Studentfeemaster_model extends MY_Model {
         return $return_array;
     }
 
-    public function getFeeBetweenDate($start_date, $end_date) {
+    public function getFeeBetweenDate($start_date, $end_date)
+    {
         $this->db->select('`student_fees_deposite`.*,students.firstname,students.lastname,student_session.class_id,classes.class,sections.section,student_session.section_id,student_session.student_id,`fee_groups`.`name`, `feetype`.`type`, `feetype`.`code`,student_fees_master.student_session_id')->from('student_fees_deposite');
         $this->db->join('fee_groups_feetype', 'fee_groups_feetype.id = student_fees_deposite.fee_groups_feetype_id');
 
@@ -439,13 +504,14 @@ class Studentfeemaster_model extends MY_Model {
         return $return_array;
     }
 
-    public function getDepositAmountBetweenDate($start_date, $end_date) {
+    public function getDepositAmountBetweenDate($start_date, $end_date)
+    {
 
         $this->db->select('`student_fees_deposite`.*')->from('student_fees_deposite');
         $this->db->order_by('student_fees_deposite.id');
         $query = $this->db->get();
         $result_value = $query->result();
-//echo "<pre>"; print_r($end_date); echo "</pre>";die;
+        //echo "<pre>"; print_r($end_date); echo "</pre>";die;
         $return_array = array();
         if (!empty($result_value)) {
             $st_date = strtotime($start_date);
@@ -472,7 +538,8 @@ class Studentfeemaster_model extends MY_Model {
         return $return_array;
     }
 
-    public function findObjectAmount($array, $st_date, $ed_date) {
+    public function findObjectAmount($array, $st_date, $ed_date)
+    {
 
         $ar = json_decode($array->amount_detail);
         $array = array();
@@ -489,7 +556,8 @@ class Studentfeemaster_model extends MY_Model {
         return $array;
     }
 
-    public function findObjectById($array, $st_date, $ed_date) {
+    public function findObjectById($array, $st_date, $ed_date)
+    {
 
         $ar = json_decode($array->amount_detail);
 
@@ -506,7 +574,8 @@ class Studentfeemaster_model extends MY_Model {
         return $array;
     }
 
-    public function findObjectByCollectId($array, $st_date, $ed_date, $receivedBy) {
+    public function findObjectByCollectId($array, $st_date, $ed_date, $receivedBy)
+    {
 
         $ar = json_decode($array->amount_detail);
 
@@ -525,7 +594,8 @@ class Studentfeemaster_model extends MY_Model {
         return $array;
     }
 
-    public function getFeeByInvoice($invoice_id, $sub_invoice_id) {
+    public function getFeeByInvoice($invoice_id, $sub_invoice_id)
+    {
         $this->db->select('`student_fees_deposite`.*,students.firstname,students.lastname,students.admission_no,student_session.class_id,classes.class,sections.section,student_session.section_id,student_session.student_id,`fee_groups`.`name`, `feetype`.`type`, `feetype`.`code`,student_fees_master.student_session_id')->from('student_fees_deposite');
         $this->db->join('fee_groups_feetype', 'fee_groups_feetype.id = student_fees_deposite.fee_groups_feetype_id');
 
@@ -556,7 +626,8 @@ class Studentfeemaster_model extends MY_Model {
         return false;
     }
 
-    public function studentDeposit($data) {
+    public function studentDeposit($data)
+    {
         $sql = "SELECT fee_groups.is_system,student_fees_master.amount as `student_fees_master_amount`, fee_groups.name as `fee_group_name`,feetype.code as `fee_type_code`,fee_groups_feetype.amount,fee_groups_feetype.fine_percentage,fee_groups_feetype.fine_amount,fee_groups_feetype.due_date,IFNULL(student_fees_deposite.amount_detail,0) as `amount_detail` from student_fees_master
                INNER JOIN fee_session_groups on fee_session_groups.id=student_fees_master.fee_session_group_id
               INNER JOIN fee_groups_feetype on fee_groups_feetype.fee_groups_id=fee_session_groups.fee_groups_id
@@ -568,7 +639,8 @@ class Studentfeemaster_model extends MY_Model {
         return $query->row();
     }
 
-    public function getPreviousStudentFees($student_session_id) {
+    public function getPreviousStudentFees($student_session_id)
+    {
         $sql = "SELECT `student_fees_master`.*,fee_groups.name FROM `student_fees_master` INNER JOIN fee_session_groups on student_fees_master.fee_session_group_id=fee_session_groups.id INNER JOIN fee_groups on fee_groups.id=fee_session_groups.fee_groups_id  WHERE `student_session_id` = " . $student_session_id . " ORDER BY `student_fees_master`.`id`";
         $query = $this->db->query($sql);
         $result = $query->result();
@@ -587,43 +659,82 @@ class Studentfeemaster_model extends MY_Model {
         return $result;
     }
 
-    public function fee_deposit_collections($data) {
-        if (!empty($data)) {
+    public function fee_deposit_collections($data, $generate = false)
+    {
+        $this->db->trans_begin();
+        try {
 
 
-            foreach ($data as $d_key => $d_value) {
+            if (!empty($data)) {
+                foreach ($data as $d_key => $d_value) {
 
-                $this->db->where('student_fees_master_id', $data[$d_key]['student_fees_master_id']);
-                $this->db->where('fee_groups_feetype_id', $data[$d_key]['fee_groups_feetype_id']);
-                $q = $this->db->get('student_fees_deposite');
-                if ($q->num_rows() > 0) {
-                    $desc = $data[$d_key]['amount_detail']['description'];
+                    $this->db->where('student_fees_master_id', $data[$d_key]['student_fees_master_id']);
+                    $this->db->where('fee_groups_feetype_id', $data[$d_key]['fee_groups_feetype_id']);
+                    $q = $this->db->get('student_fees_deposite');
+                    if ($q->num_rows() > 0) {
+                        $desc = $data[$d_key]['amount_detail']['description'];
 
-                    $row = $q->row();
-                    $this->db->where('id', $row->id);
-                    $a = json_decode($row->amount_detail, true);
-                    $inv_no = max(array_keys($a)) + 1;
-                    $data[$d_key]['amount_detail']['inv_no'] = $inv_no;
-                    $a[$inv_no] = $data[$d_key]['amount_detail'];
-                    $data[$d_key]['amount_detail'] = json_encode($a);
+                        $row = $q->row();
+                        $this->db->where('id', $row->id);
+                        $a = json_decode($row->amount_detail, true);
+                        $inv_no = max(array_keys($a)) + 1;
+                        $data[$d_key]['amount_detail']['inv_no'] = $inv_no;
+                        $a[$inv_no] = $data[$d_key]['amount_detail'];
+                        $data[$d_key]['amount_detail'] = json_encode($a);
 
-                    $this->db->update('student_fees_deposite', $data[$d_key]);
-                } else {
+                        $this->db->update('student_fees_deposite', $data[$d_key]);
+                        if ($generate)
+                            $this->invoiceForCreate($q->row()->id, ($a[$inv_no]['amount'] + $a[$inv_no]['amount_fine']) - $a[$inv_no]['amount_discount']);
+                    } else {
 
-                    $data[$d_key]['amount_detail']['inv_no'] = 1;
-                    $desc = $data[$d_key]['amount_detail']['description'];
-                    $data[$d_key]['amount_detail'] = json_encode(array('1' => $data[$d_key]['amount_detail']));
+                        $data[$d_key]['amount_detail']['inv_no'] = 1;
+                        $desc = $data[$d_key]['amount_detail']['description'];
+                        $data[$d_key]['amount_detail'] = json_encode(array('1' => $data[$d_key]['amount_detail']));
+                        $a = json_decode($data[$d_key]['amount_detail'], true)[1];
+                        $this->db->insert('student_fees_deposite', $data[$d_key]);
+                        $inserted_id = $this->db->insert_id();
+                        if ($generate)
+                            $this->invoiceForCreate($inserted_id, ($a['amount'] + $a['amount_fine']) - $a['amount_discount']);
 
-                    $this->db->insert('student_fees_deposite', $data[$d_key]);
-                    $inserted_id = $this->db->insert_id();
-
-                    // return json_encode(array('invoice_id' => $inserted_id, 'sub_invoice_id' => 1));
+                        // return json_encode(array('invoice_id' => $inserted_id, 'sub_invoice_id' => 1));
+                    }
                 }
             }
+
+            $this->db->trans_commit();
+        } catch (\Exception $e) {
+
+            $this->db->trans_rollback();
         }
     }
 
-    public function findOnlineObjectById($array, $st_date, $ed_date) {
+    private function invoiceForCreate($student_fees_deposite_id, $price)
+    {
+        $CI = get_instance();
+
+        $CI->load->model(['eloquent/Invoice_eloquent', 'student_model', 'eloquent/Student_deposite_eloquent']);
+
+       $deposite = Student_deposite_eloquent::where('id', '=',$student_fees_deposite_id )->first();
+       
+    //    die($deposite);
+        $invoice = Invoice_eloquent::updateOrCreate([
+            'user_id' => $CI->input->post('user_id'),
+            'student_fees_deposite_id' => $student_fees_deposite_id,
+        ], [
+            'price' => $price,
+            'status' => Invoice_eloquent::PENDING_CREATE,
+            'student_fees_deposite_id' => $student_fees_deposite_id,
+            'due_date' => date('Y-m-d')
+        ]);
+        $this->db->delete('invoice_deposite', ['deposite_id' => $student_fees_deposite_id, 'invoice_id' =>  $invoice->id]);
+        $this->db->insert('invoice_deposite', ['deposite_id' => $student_fees_deposite_id, 'invoice_id' =>  $invoice->id]);
+
+
+
+    }
+
+    public function findOnlineObjectById($array, $st_date, $ed_date)
+    {
 
         $ar = json_decode($array->amount_detail);
         // echo "</pre>";
@@ -641,11 +752,12 @@ class Studentfeemaster_model extends MY_Model {
                 }
             }
         }
-//die;
+        //die;
         return $array;
     }
 
-    public function getOnlineFeeCollectionReport($start_date, $end_date) {
+    public function getOnlineFeeCollectionReport($start_date, $end_date)
+    {
 
         $this->db->select('`student_fees_deposite`.*,students.firstname,students.lastname,student_session.class_id,classes.class,sections.section,student_session.section_id,student_session.student_id,`fee_groups`.`name`, `feetype`.`type`, `feetype`.`code`,student_fees_master.student_session_id')->from('student_fees_deposite');
         $this->db->join('fee_groups_feetype', 'fee_groups_feetype.id = student_fees_deposite.fee_groups_feetype_id');
@@ -659,7 +771,7 @@ class Studentfeemaster_model extends MY_Model {
         $this->db->join('students', 'students.id=student_session.student_id');
         $this->db->where('student_session.session_id', $this->current_session);
         $this->db->order_by('student_fees_deposite.id');
-//$this->db->limit(0, 80); 
+        //$this->db->limit(0, 80); 
 
 
 
@@ -707,7 +819,8 @@ class Studentfeemaster_model extends MY_Model {
         return $return_array;
     }
 
-    public function getFeesAwaiting($start_date, $end_date) {
+    public function getFeesAwaiting($start_date, $end_date)
+    {
         // $sql = "SELECT student_fees_master.*,fee_groups_feetype.id as `fee_groups_feetype_id`,fee_groups_feetype.amount,fee_groups_feetype.due_date,fee_groups_feetype.fee_groups_id,fee_groups.name,fee_groups_feetype.feetype_id,feetype.code,feetype.type, IFNULL(student_fees_deposite.id,0) as `student_fees_deposite_id`, IFNULL(student_fees_deposite.amount_detail,0) as `amount_detail` FROM `student_fees_master` inner  join student_session on student_fees_master.student_session_id=student_session.id INNER JOIN fee_session_groups on fee_session_groups.id = student_fees_master.fee_session_group_id INNER JOIN fee_groups_feetype on  fee_groups_feetype.fee_session_group_id = fee_session_groups.id  INNER JOIN fee_groups on fee_groups.id=fee_groups_feetype.fee_groups_id INNER JOIN feetype on feetype.id=fee_groups_feetype.feetype_id LEFT JOIN student_fees_deposite on student_fees_deposite.student_fees_master_id=student_fees_master.id and student_fees_deposite.fee_groups_feetype_id=fee_groups_feetype.id where date_format(fee_groups_feetype.due_date,'%Y-%m-%d') between '".$start_date."' and '".$end_date."'    order by fee_groups_feetype.due_date asc";
 
 
@@ -717,5 +830,4 @@ class Studentfeemaster_model extends MY_Model {
 
         return $result;
     }
-
 }
