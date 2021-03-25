@@ -65,9 +65,12 @@ class AppImport extends BaseCommand
             'setting_model',
             'customfield_model'
         ]);
-        $year = 2015;
+        $year = 2017;
         $this->current_session = \SessionYear::where('session', 'like', sprintf('%s%%', $year))->first()->id;
 
+
+
+       
 
 
 
@@ -119,6 +122,11 @@ class AppImport extends BaseCommand
             )
             ->select('codturma', 'descricao', 'ano', 'codserie')
             ->get();
+
+
+            // dump($d->count());
+
+            // die();
         try {
 
             foreach ($d as $row) {
@@ -184,7 +192,7 @@ class AppImport extends BaseCommand
 
                         foreach ($listOfOrders as $lanc) {
 
-                         
+                        //    dump($lanc->toArray());
 
                             $fee = $this->buildFee($lanc, (object)
                             [
