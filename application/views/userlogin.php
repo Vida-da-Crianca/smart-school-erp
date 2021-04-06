@@ -111,8 +111,7 @@ if(empty($notice)){
                                     <button type="submit" class="btn">
                                         <?php echo $this->lang->line('sign_in'); ?></button>
                                 </form>
-                                <a style="color:#0;" target="_blank" href="site/login" class="forgot pull-right"> <i class="fa fa-user"></i> Portal Colaborador</a>
-                                <a style="color:#0;padding-right: 20px;" href="site/" target="_blank" class="forgot pull-right"> <i class="fa fa-empire"></i> Home</a>
+                                
                                 <p><a href="<?php echo site_url('site/ufpassword') ?>" class="forgot"> <i class="fa fa-key"></i> <?php echo $this->lang->line('forgot_password'); ?></a> </p> 
                             </div>
                           </div>  
