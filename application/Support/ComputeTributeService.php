@@ -9,8 +9,8 @@ use Carbon\Carbon;
 class ComputeTributeService
 {
 
-   use NotificationComputeTribute, MakeComputeTribute;
-    
+    use NotificationComputeTribute, MakeComputeTribute;
+
     public function handle()
     {
         get_instance()->load->model([
@@ -18,16 +18,16 @@ class ComputeTributeService
             'eloquent/Invoice_resume_eloquent'
         ]);
         $dateTime = new \DateTime();
-        $now = $dateTime->format('Y-m-d');    
+        $now = $dateTime->format('Y-m-d');
         $dateTime->modify('-1 month');
         $now = $dateTime->format('Y-m-d');
         $dateTime->modify('-11 month');
 
         $this->buildTotalOldMonth();
-   
+
         $total = \Invoice_resume_eloquent::whereBetween('due_date', [$dateTime->format('Y-m-01'), $now])
             ->sum('total');
-        
+
         $tribute = $this->makeComputeTribute($total);
         \Invoice_setting_eloquent::updateOrCreate([
             'key' => 'simple_rate',
@@ -45,8 +45,13 @@ class ComputeTributeService
 
         ]);
 
-        $this->notifyDiscord( (object) ['due_date' => $dateTime->format('Y-m-d'), 'total' =>  number_format($total,2,',','.') , 'iss' => $tribute->iss, 'compute' => $tribute->compute_rate]);
-        
+        $this->notifyDiscord((object) [
+            'due_date' => $dateTime->format('Y-m-d'),
+            'total' =>  number_format($total, 2, ',', '.'),
+            'real_iss' => $tribute->real_iss,
+            'iss' => $tribute->iss,
+            'compute' => $tribute->compute_rate
+        ]);
     }
 
 
@@ -55,8 +60,12 @@ class ComputeTributeService
     {
 
         $startDate = Carbon::now()->startOfMonth()->subMonth()->toDateString();
-        $interval = [$startDate, Carbon::now()->subMonth()->endOfMonth()->toDateString()];
+
+        $endDate =  (new Carbon($startDate))->endOfMonth()->toDateString();
+        $interval = [$startDate, $endDate];
+        // dump($interval, Carbon::now()->toDateTimeLocalString());
         $total =  \Invoice_eloquent::whereBetween('due_date', $interval)->valid()->sum('price');
+
         \Invoice_resume_eloquent::updateOrCreate([
             'due_date' => $startDate,
         ], [
@@ -65,6 +74,4 @@ class ComputeTributeService
 
         ]);
     }
-
-
 }

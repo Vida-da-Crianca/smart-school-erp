@@ -6,6 +6,7 @@ namespace Application\Command;
 use Application\Command\Traits\ExceptionsFailInvoice;
 use Application\Support\ComputeTributeService;
 use Carbon\Carbon;
+use Symfony\Component\Console\Input\InputOption;
 use Packages\Commands\BaseCommand;
 
 use Illuminate\Database\Capsule\Manager as DB;
@@ -30,6 +31,10 @@ class TributeCommand extends BaseCommand
         $this
             ->setName($this->name)
             ->setDescription($this->description);
+
+            $this
+        
+            ->addOption('force', 'f', InputOption::VALUE_NONE, 'force compute');    
     }
 
     protected function start()
@@ -37,6 +42,7 @@ class TributeCommand extends BaseCommand
 
 
         $dateTime = new \DateTime();
+        $startDate = Carbon::now()->startOfMonth()->subMonth()->toDateString();
         $second = Carbon::create($dateTime->format('Y'), $dateTime->format('m'), 1, 0, 0);
         $first = Carbon::create($dateTime->format('Y'), $dateTime->format('m'), 1, 0, 40);
 
@@ -52,7 +58,12 @@ class TributeCommand extends BaseCommand
             'eloquent/Invoice_eloquent', 'eloquent/Invoice_setting_eloquent',
             'eloquent/Invoice_resume_eloquent'
         ]);
-        if (getenv('ENVIRONMENT') !== 'development' && !$isValid  && \Invoice_resume_eloquent::where('due_date', Carbon::now()->sub('1', 'month')->format('Y-m-01'))->count() > 0) return;
+        $isCountable = \Invoice_resume_eloquent::where('due_date',  $startDate)->count();
+       
+        if ($this->getOption('force') == false && !$isValid  &&  $isCountable > 0) {
+            $this->text('No compute tribute');
+            return;
+        }
         (new ComputeTributeService)->handle();
     }
 }

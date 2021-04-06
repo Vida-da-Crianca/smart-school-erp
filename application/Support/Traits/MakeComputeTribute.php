@@ -29,7 +29,8 @@ trait MakeComputeTribute
         return (object) [
             'compute_rate' => $calcA ?? $calcA,
             'compute' => $calcB ?? $calcB,
-            'iss' => $iss ?? $iss
+            'iss' => $iss ?? $iss,
+            'real_iss' => $calcB ?? $calcB
         ];
     }
 }

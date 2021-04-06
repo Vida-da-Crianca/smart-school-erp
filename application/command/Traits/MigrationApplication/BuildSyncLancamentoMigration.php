@@ -30,11 +30,12 @@ trait  BuildSyncLancamentoMigration
     function syncFeeItems($data)
     {
 
+    //    dump($data);
         $fee = \Student_fee_item_eloquent::updateOrCreate(
             [
                 'title'    => $data['title'],
                 'feetype_id'      => $data['feetype_id'],
-                'due_date'    => $data['due_date'  ],
+                'due_date'    => $data['due_date'],
                 'class_id'    => $data['class_id'],
                 'student_session_id' => $data['student_session_id'],
                 'user_id' => $data['user_id']
