@@ -120,8 +120,8 @@ $language_name = $language["short_code"];
                                                         <td class="bozero"><?php echo $student['class'] . " (" . $student['section'] . ")" ?> </td>
                                                     </tr>
                                                     <tr>
-                                                        <th><?php echo $this->lang->line('guardian_name'); ?></th>
-                                                        <td><?php echo $student['guardian_name']; ?></td>
+                                                        <th><?php echo $this->lang->line('father_name'); ?></th>
+                                                        <td><?php echo $student['father_name']; ?></td>
                                                         <th><?php echo $this->lang->line('admission_no'); ?></th>
                                                         <td><?php echo $student['admission_no']; ?></td>
                                                     </tr>
