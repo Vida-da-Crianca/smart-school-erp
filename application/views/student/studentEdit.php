@@ -559,21 +559,21 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                                                                         if ($student['guardian_is'] == "father") {
                                                                                             echo "checked";
                                                                                         }
-                                                                                        ?> value="father"> <?php echo $this->lang->line('father'); ?>
+                                                                                        ?> value="pai"> <?php echo $this->lang->line('father'); ?>
                                             </label>
                                             <label class="radio-inline">
                                                 <input type="radio" name="guardian_is" <?php
                                                                                         if ($student['guardian_is'] == "mother") {
                                                                                             echo "checked";
                                                                                         }
-                                                                                        ?> value="mother"> <?php echo $this->lang->line('mother'); ?>
+                                                                                        ?> value="mãe"> <?php echo $this->lang->line('mother'); ?>
                                             </label>
                                             <label class="radio-inline">
                                                 <input type="radio" name="guardian_is" <?php
                                                                                         if ($student['guardian_is'] == "other") {
                                                                                             echo "checked";
                                                                                         }
-                                                                                        ?> value="other"> <?php echo $this->lang->line('other'); ?>
+                                                                                        ?> value="outro"> <?php echo $this->lang->line('other'); ?>
                                             </label>
                                             <span class="text-danger"><?php echo form_error('guardian_is'); ?></span>
                                         </div>
