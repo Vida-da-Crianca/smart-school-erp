@@ -120,8 +120,8 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                             <td><?php echo $student['admission_no']; ?></td>
 											
                                             <td><?php echo $student['firstname'] . " " . $student['lastname']; ?></td>
-											<?php if ($sch_setting->father_name) {  ?>
-                                            <td><?php echo $student['father_name']; ?></td>
+											<?php if ($sch_setting->guardian_name) {  ?>
+                                            <td><?php echo $student['guardian_name']; ?></td>
 											<?php } ?>
                                             <td><?php
                                                 if (!empty($student['dob'])) {
