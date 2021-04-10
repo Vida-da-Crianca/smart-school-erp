@@ -111,7 +111,7 @@ if(empty($notice)){
                                     <button type="submit" class="btn">
                                         <?php echo $this->lang->line('sign_in'); ?></button>
                                 </form>
-                                <span style="text-align:center;font-weight:normal; font-size: 14px; display: block;padding-top: 5px">*Note: Select Class 1 and Section A for demo testing.</span>
+                                <span style="text-align:center;font-weight:normal; font-size: 14px; display: block;padding-top: 5px"></span>
 
                                  <p style="margin-top: 10px;"><a style="color:#0;" target="_blank" href="site/login" class="forgot pull-right"> <i class="fa fa-user"></i> Portal Colaborador</a> <a style="color:#0;padding-right: 20px;" href="/" target="_blank" class="forgot pull-right"> <i class="fa fa-empire"></i> Home Site</a>
                                  </p> 
