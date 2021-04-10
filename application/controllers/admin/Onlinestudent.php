@@ -95,6 +95,7 @@ class Onlinestudent extends Admin_Controller {
         $this->form_validation->set_rules('section_id', $this->lang->line('section'), 'trim|required|xss_clean');
         $this->form_validation->set_rules('gender', $this->lang->line('gender'), 'trim|required|xss_clean');
         $this->form_validation->set_rules('guardian_name', $this->lang->line('guardian_name'), 'trim|required|xss_clean');
+        $this->form_validation->set_rules('guardian_document', $this->lang->line('guardian_document'), 'trim|required|xss_clean');
         $this->form_validation->set_rules('rte', $this->lang->line('rtl'), 'trim|required|xss_clean');
         $this->form_validation->set_rules('guardian_phone', $this->lang->line('guardian_phone'), 'trim|required|xss_clean');
 
@@ -152,6 +153,7 @@ class Onlinestudent extends Admin_Controller {
                 'guardian_email' => $this->input->post('guardian_email'),
                 'gender' => $this->input->post('gender'),
                 'guardian_name' => $this->input->post('guardian_name'),
+                'guardian_document' => $this->input->post('guardian_document'),
                 'guardian_relation' => $this->input->post('guardian_relation'),
                 'guardian_phone' => $this->input->post('guardian_phone'),
                 'guardian_address' => $this->input->post('guardian_address'),
