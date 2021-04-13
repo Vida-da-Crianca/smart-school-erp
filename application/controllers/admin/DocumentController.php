@@ -178,9 +178,9 @@ class DocumentController extends Admin_Controller
                 $student->session->section->section ??  $student->session->section->section
             ),
             'aluno_email' => $student->email,
-            'guardiao_nome' => $student->guardian_name,
+            'guardiao_nome' =>  utf8_decode($student->guardian_name),
             'guardiao_email' => $student->guardian_email,
-            'guardiao_logradouro' =>  utf8_decode($student->guardian_address),
+            'guardiao_logradouro' => ($student->guardian_address),
             'guardiao_logradouro_numero' =>  $student->guardian_address_number,
             'guardiao_logradouro_bairro' =>  utf8_decode($student->guardian_district),
             'guardiao_logradouro_cidade' =>  utf8_decode($student->guardian_city),
@@ -194,12 +194,15 @@ class DocumentController extends Admin_Controller
             'ano_atual' => $now->format('Y'),
 
         ];
-
+       
         $data = array_merge($data, $this->getVarsTypes($student));
         $page =  $parser->parse_string(str_replace(['{{', '}}'], ['{', '}'], $document->body), $data);
         $page = str_replace('figure', 'div', $page);
     
         $page = $this->load->view('parser/pdf', ['body' => $page], true);
+        // dump($data);
+        // echo $page;     
+        // return;
         try {
 
             $html2pdf = new Html2Pdf('P', 'A4', 'pt', true, 'UTF-8', [7,7,7,8]);
