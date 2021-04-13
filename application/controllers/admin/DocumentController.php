@@ -177,6 +177,7 @@ class DocumentController extends Admin_Controller
                 $student->session->class_item->class ?? $student->session->class_item->class,
                 $student->session->section->section ??  $student->session->section->section
             ),
+            
             'aluno_email' => $student->email,
             'guardiao_nome' =>  utf8_decode($student->guardian_name),
             'guardiao_email' => $student->guardian_email,
