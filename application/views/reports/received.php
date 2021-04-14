@@ -220,10 +220,6 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
 
                                             // dump(isset($item->student->guardian_name) ? $item->student->guardian_name : $item->id);
                                     ?>   
-                                    <!-- <tr>
-                                    <td colspan="8"><?php   dump($item->invoice->first()->billet->first()->toArray()); ?> </td>
-                                    </tr> -->
-
                                             <tr>
                                                 <td align="left">
                                                     <?php
