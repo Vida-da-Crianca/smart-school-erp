@@ -1153,10 +1153,13 @@ class Report extends Admin_Controller
                     }
                 });
             }
-
+            
             $items = $items->map(function ($row) {
-
-                $row->input =  $row->feeItem->session->student;
+                if(isset($row->feeItem->session->student))  
+                $row->input =   $row->feeItem->session->student;
+                if(!isset($row->feeItem->session->student) && isset($row->student))
+                 $row->input = $row->student;  
+                
                 return $row;
             });
             // dump($items->toArray());
@@ -1180,7 +1183,7 @@ class Report extends Admin_Controller
 
 
 
-
+        // die();
         $this->load->view('layout/header', $data);
         $this->load->view('reports/received', $data);
         $this->load->view('layout/footer', $data);

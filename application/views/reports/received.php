@@ -219,13 +219,16 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                             $row_total = ($item->feeItem->amount - $detail->amount_discount) + $detail->amount_fine;
 
                                             // dump(isset($item->student->guardian_name) ? $item->student->guardian_name : $item->id);
-                                    ?>
+                                    ?>   
+                                    <!-- <tr>
+                                    <td colspan="8"><?php   dump($item->invoice->first()->billet->first()->toArray()); ?> </td>
+                                    </tr> -->
 
                                             <tr>
                                                 <td align="left">
                                                     <?php
 
-                                                    printf('%s / %s', $item->input->guardian_name ?? $item->input->guardian_name, isset($item->input->fullname)  ? $item->input->fullname : null);
+                                                    printf('%s / %s', isset($item->input->guardian_name) ? $item->input->guardian_name : '', isset($item->input->fullname)  ? $item->input->fullname : null);
                                                     ?>
                                                 </td>
                                                 <td>
@@ -235,7 +238,8 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                                 </td>
                                                 <td>
                                                     <?php
-                                                    print($item->invoice->count() > 0  && isset($item->invoice->first()->billet->bank_bullet_id) ?  $item->invoice->first()->billet->bank_bullet_id : 'S/N');
+                                                  
+                                                    print($item->invoice->count() > 0  && $item->invoice->first()->billet->count() > 0  ?  $item->invoice->first()->billet->first()->bank_bullet_id : 'S/N');
                                                     ?>
                                                 </td>
 
