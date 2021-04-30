@@ -20,10 +20,12 @@ $route['page/(:any)'] = 'welcome/page/$1';
 $route['read/(:any)'] = 'welcome/read/$1';
 $route['online_admission'] = 'welcome/admission';
 $route['frontend'] = 'welcome';
+$route['admin/documents/upload']['post'] = 'admin/UploaderController/index';
 $route['admin/documents']['get'] = 'admin/DocumentController';
 $route['admin/documents/create']['get'] = 'admin/DocumentController/create';
 $route['admin/documents/create']['post'] = 'admin/DocumentController/store';
 $route['admin/documents/preview/(:any)/(:any)']['get'] = 'admin/DocumentController/preview/$1/$2';
+
 $route['admin/documents/(:any)']['get'] = 'admin/DocumentController/show/$1';
 $route['admin/documents/(:any)']['post'] = 'admin/DocumentController/update/$1';
 $route['admin/documents/(:any)']['delete'] = 'admin/DocumentController/destroy/$1';
