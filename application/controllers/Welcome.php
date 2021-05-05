@@ -235,6 +235,14 @@ class Welcome extends Front_Controller
             $this->form_validation->set_rules('section_id', $this->lang->line('section'), 'trim|required|xss_clean');
             $this->form_validation->set_rules('guardian_name', $this->lang->line('guardian_name'), 'trim|required|xss_clean');
             $this->form_validation->set_rules('guardian_phone', $this->lang->line('guardian_phone'), 'trim|required|xss_clean');
+			
+			$this->form_validation->set_rules('guardian_document', $this->lang->line('guardian_document'), 'trim|required|xss_clean');
+			$this->form_validation->set_rules('guardian_phone', $this->lang->line('guardian_phone'), 'trim|required|xss_clean');
+			$this->form_validation->set_rules('guardian_postal_code', $this->lang->line('guardian_postal_code'), 'trim|required|xss_clean');
+			$this->form_validation->set_rules('guardian_address_number', $this->lang->line('guardian_address_number'), 'trim|required|xss_clean');
+			
+			
+			
 
             if ($this->form_validation->run() == false) {
 
@@ -293,15 +301,23 @@ class Welcome extends Front_Controller
                         'mother_name'         => $this->input->post('mother_name'),
                         'mother_phone'        => $this->input->post('mother_phone'),
                         'mother_occupation'   => $this->input->post('mother_occupation'),
-                        'guardian_occupation' => $this->input->post('guardian_occupation'),
+						'guardian_document'	  => $this->input->post('guardian_document'),
+						'guardian_occupation' => $this->input->post('guardian_occupation'),
                         'guardian_email'      => $this->input->post('guardian_email'),
                         'gender'              => $this->input->post('gender'),
                         'guardian_name'       => $this->input->post('guardian_name'),
                         'guardian_relation'   => $this->input->post('guardian_relation'),
                         'guardian_phone'      => $this->input->post('guardian_phone'),
-                        'guardian_address'    => $this->input->post('guardian_address'),
                         'admission_date'      => date('Y/m/d'),
                         'measurement_date'    => date('Y/m/d'),
+						
+						'guardian_postal_code'    => $this->input->post('guardian_postal_code'),
+						'guardian_address'    => $this->input->post('guardian_address'),
+						'guardian_address_number'    => $this->input->post('guardian_address_number'),
+						'guardian_district'    => $this->input->post('guardian_district'),
+						'guardian_city'    => $this->input->post('guardian_city'),
+						'guardian_state'    => $this->input->post('guardian_state'),
+						
                     );
                     if (isset($_FILES["document"]) && !empty($_FILES['document']['name'])) {
                         $time     = md5($_FILES["document"]['name'] . microtime());
@@ -314,7 +330,9 @@ class Welcome extends Front_Controller
 
                     $insert_id = $this->onlinestudent_model->add($data);
 
-                    $this->session->set_flashdata('msg', '<div class="alert alert-success">Thanks for registration. Please note your reference number ' . $insert_id . ' for further communication.</div>');
+                    //$this->session->set_flashdata('msg', '<div class="alert alert-success">Thanks for registration. Please note your reference number ' . $insert_id . ' for further communication.</div>');
+					
+					$this->session->set_flashdata('msg', '<div class="alert alert-success">Obrigado por se registrar. Seu número de referência é ' . $insert_id . ' para comunicações futuras</div>');
 
                     redirect($_SERVER['HTTP_REFERER'], 'refresh');
                 }
