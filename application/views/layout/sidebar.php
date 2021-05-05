@@ -1123,7 +1123,9 @@
                         <a href="#">
                             <i class="fa fa-line-chart ftlayer"></i> <span><?php echo $this->lang->line('reports'); ?></span> <i class="fa fa-angle-left pull-right"></i>
                         </a>
-                        <ul class="treeview-menu">
+						<ul class="treeview-menu">
+
+						 
                             <?php
                             if (($this->rbac->hasPrivilege('student_report', 'can_view') ||
                                 $this->rbac->hasPrivilege('guardian_report', 'can_view') ||

@@ -11,7 +11,6 @@ use WGenial\NumeroPorExtenso\NumeroPorExtenso;
 use Dompdf\Dompdf;
 use Spipu\Html2Pdf\Exception\Html2PdfException;
 use Spipu\Html2Pdf\Exception\ExceptionFormatter;
-use Knp\Snappy\Pdf;
 
 
 if (!defined('BASEPATH')) {
@@ -30,8 +29,6 @@ class DocumentController extends Admin_Controller
 
         $this->sch_setting_detail = $this->setting_model->getSetting();
     }
-
-
 
     public function index()
     {
@@ -131,7 +128,6 @@ class DocumentController extends Admin_Controller
 
         return new JsonResponse(['errors' =>  $this->form_validation->error_string()], 422);
     }
-    
 
     public function destroy($id)
     {
@@ -167,10 +163,7 @@ class DocumentController extends Admin_Controller
         $document =   Document::where('id', $id)->first();
 
         $parser = new Parser();
-
-        $snappy = new Pdf('/usr/local/bin/wkhtmltopdf');
-
-        // dump($snappy);
+ 
         $student =  Student_eloquent::where('id', $user_id)->with(['session' => function ($q) {
             return $q->with(['section', 'class_item'])->where('session_id', $this->sch_setting_detail->session_id);
         }])->first();
@@ -208,24 +201,9 @@ class DocumentController extends Admin_Controller
         $page = str_replace('figure', 'div', $page);
     
         $page = $this->load->view('parser/pdf', ['body' => $page], true);
-
-       
-        // header('Content-Disposition: attachment; filename="file.pdf"');
         // dump($data);
-        // echo $page;
-        $filename = sprintf('/app/temp/%s_%s.pdf',$id,$user_id);
-        @unlink($filename);
-        $snappy->generateFromHtml( $page, $filename);
-        $name = 'documento_'.$user_id;
-        header('Content-Type: application/pdf');
-        header('Content-Disposition: inline; filename="' .$name . '"');
-        header('Content-Transfer-Encoding: binary');
-        header('Accept-Ranges: bytes');
-        // header("Content-Length: " . filesize($filename));
-        // echo $page;
-        readfile($filename);
-        // echo  $snappy->getOutput('http://www.github.com');
-        exit;
+        // echo $page;     
+        // return;
         try {
 
             $html2pdf = new Html2Pdf('P', 'A4', 'pt', true, 'UTF-8', [7,7,7,8]);

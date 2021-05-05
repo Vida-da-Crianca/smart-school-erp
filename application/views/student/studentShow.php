@@ -1,6 +1,13 @@
 <?php
 $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
 ?>
+
+
+
+<!-- fontawesome -->
+<script src="https://kit.fontawesome.com/0409d33244.js"></script>
+
+
 <div class="content-wrapper" style="min-height: 946px;">
     <div class="row">
         <div class="col-md-12">
@@ -517,7 +524,30 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                             </tr>
                                         <?php } ?>
                                         <tr>
-                                            <td><?php echo $this->lang->line('guardian_phone'); ?></td>
+                                            <td>
+											
+											<?php
+												$nf = str_replace(" ","", $student['guardian_phone']);
+												$nf = str_replace("-","", $nf);
+												$nf = str_replace("(","", $nf);
+												$nf = str_replace(")","", $nf);
+												
+											?>
+											
+											<?php
+											
+											if($nf ==""){
+												echo $this->lang->line('guardian_phone'); 
+											}
+											else{
+												echo '<i class="fab fa-whatsapp" style="color: #25D366; cursor: pointer;" onclick="callwz('.$nf.');"></i> '.
+												$this->lang->line('guardian_phone'); 
+											}
+												
+											?>
+											
+											
+											</td>
                                             <td><?php echo $student['guardian_phone']; ?></td>
                                         </tr>
                                         <tr>
@@ -1834,4 +1864,13 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
         }));
 
     });
+</script>
+
+
+<script>
+function callwz(telefone){
+	
+	window.open('https://wa.me/'+telefone);
+	
+}
 </script>

@@ -15,16 +15,6 @@ COPY docker/php.ini /opt/docker/etc/php/php.ini
 
 COPY ./openssl.cnf /etc/ssl/openssl.cnf
 
-
-RUN apt update && \
-    apt install -y xfonts-75dpi xfonts-base gvfs colord glew-utils libvisual-0.4-plugins \
-     gstreamer1.0-tools opus-tools qt5-image-formats-plugins qtwayland5 \
-     qt5-qmltooling-plugins librsvg2-bin lm-sensors
-
-RUN dpkg -i wkhtmltox_0.12.5-1.stretch_amd64.deb && \
-    cp /usr/local/bin/wkhtmltopdf /usr/bin/ && \
-    cp /usr/local/bin/wkhtmltoimage /usr/bin/     
-
 RUN touch /app/.env && \
    chmod 777 /app/application/config/license.php && \
    chmod 777 application/config/config.php && \

@@ -4,6 +4,10 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
 // print_r($student);
 // echo "<pre>";die;
 ?>
+
+<!-- fontawesome -->
+<script src="https://kit.fontawesome.com/0409d33244.js"></script>
+
 <div class="content-wrapper">
     <section class="content-header">
         <h1>
@@ -280,9 +284,9 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                         if ($sch_setting->measurement_date) { ?>
                                             <div class="col-md-3 col-xs-12">
                                                 <div class="form-group">
-                                                    <label for="exampleInputEmail1"><?php echo $this->lang->line('measurement_date'); ?></label>
+                                                    <label for="exampleInputEmail1"><?php echo $this->lang->line('measurement_date'); ?></label> 
 
-                                                    <input id="measure_date" name="measure_date" placeholder="" type="text" class="form-control date" value="<?php echo set_value('measure_date', date($this->customlib->getSchoolDateFormat(), $this->customlib->dateyyyymmddTodateformat($student['measurement_date']))); ?>" readonly="readonly" />
+                                                    <input id="measure_date" name="measure_date" placeholder="" type="text" class="form-control date" value="<?php //echo set_value('measure_date', date($this->customlib->getSchoolDateFormat(), $this->customlib->dateyyyymmddTodateformat($student['measurement_date']))); ?>" readonly="readonly" />-->
                                                     <span class="text-danger"><?php echo form_error('measure_date'); ?></span>
                                                 </div>
                                             </div>
@@ -484,7 +488,18 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                         if ($sch_setting->father_phone) { ?>
                                             <div class="col-md-3">
                                                 <div class="form-group">
-                                                    <label for="exampleInputEmail1"><?php echo $this->lang->line('phone'); ?> <?php echo $this->lang->line('no'); ?></label>
+                                                    <label for="exampleInputEmail1">
+													<?php
+													$nf = str_replace(" ","", set_value('father_phone', $student['father_phone']));
+													$nf = str_replace("-","", $nf);
+													$nf = str_replace("(","", $nf);
+													$nf = str_replace(")","", $nf);
+													
+													?>
+													
+													<i class="fab fa-whatsapp" style="color: #25D366; cursor: pointer;" onclick="callwz(<?php echo $nf; ?>);"></i>
+													
+													<?php echo $this->lang->line('phone'); ?> <?php echo $this->lang->line('no'); ?></label>
                                                     <input id="father_phone" name="father_phone" placeholder="" type="text" class="form-control" value="<?php echo set_value('father_phone', $student['father_phone']); ?>" />
                                                     <span class="text-danger"><?php echo form_error('father_phone'); ?></span>
                                                 </div>
@@ -525,7 +540,18 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                         if ($sch_setting->mother_phone) { ?>
                                             <div class="col-md-3">
                                                 <div class="form-group">
-                                                    <label for="exampleInputEmail1"><?php echo $this->lang->line('mother_phone'); ?></label>
+                                                    <label for="exampleInputEmail1">
+													<?php
+													$nf = str_replace(" ","", set_value('mother_phone', $student['mother_phone']));
+													$nf = str_replace("-","", $nf);
+													$nf = str_replace("(","", $nf);
+													$nf = str_replace(")","", $nf);
+													
+													?>
+													
+													<i class="fab fa-whatsapp" style="color: #25D366; cursor: pointer;" onclick="callwz(<?php echo $nf; ?>);"></i>
+													
+													<?php echo $this->lang->line('mother_phone'); ?></label>
                                                     <input id="mother_phone" name="mother_phone" placeholder="" type="text" class="form-control" value="<?php echo set_value('mother_phone', $student['mother_phone']); ?>" />
                                                     <span class="text-danger"><?php echo form_error('mother_phone'); ?></span>
                                                 </div>
@@ -601,6 +627,16 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                             <div class="row">
                                                 <div class="col-md-6">
                                                     <div class="form-group">
+														<?php
+															$nf = str_replace(" ","", set_value('guardian_phone', $student['guardian_phone']));
+															$nf = str_replace("-","", $nf);
+															$nf = str_replace("(","", $nf);
+															$nf = str_replace(")","", $nf);
+															
+														?>
+														
+														<i class="fab fa-whatsapp" style="color: #25D366; cursor: pointer;" onclick="callwz(<?php echo $nf; ?>);"></i>
+														
                                                         <label for="exampleInputEmail1"><?php echo $this->lang->line('guardian_phone'); ?></label><small class="req"> *</small>
                                                         <input id="guardian_phone" name="guardian_phone" placeholder="" type="text" class="form-control" value="<?php echo set_value('guardian_phone', $student['guardian_phone']); ?>" />
                                                         <span class="text-danger"><?php echo form_error('guardian_phone'); ?></span>
@@ -1138,6 +1174,15 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
         </div>
     </div>
 </div>
+
+
+<script>
+function callwz(telefone){
+	
+	window.open('https://wa.me/55'+telefone);
+	
+}
+</script>
 
 <script type="text/javascript">
     $('#deleteModal').on('shown.bs.modal', function() {
