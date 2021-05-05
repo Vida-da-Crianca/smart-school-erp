@@ -1,4 +1,8 @@
 
+<!-- fontawesome -->
+<script src="https://kit.fontawesome.com/0409d33244.js"></script>
+
+
 <div class="content-wrapper">
     <section class="content-header">
         <h1>
@@ -365,7 +369,20 @@
                                         </div>
                                         <div class="col-md-3">
                                             <div class="form-group">
-                                                <label for="exampleInputEmail1"><?php echo $this->lang->line('phone'); ?> <?php echo $this->lang->line('no'); ?></label>
+											
+											
+											 <label for="exampleInputEmail1">
+												<?php
+													$nf = str_replace(" ","", set_value('father_phone', $student['father_phone']));
+													$nf = str_replace("-","", $nf);
+													$nf = str_replace("(","", $nf);
+													$nf = str_replace(")","", $nf);
+													
+												?>
+												
+												<i class="fab fa-whatsapp" style="color: #25D366; cursor: pointer;" onclick="callwz(<?php echo $nf; ?>);"></i>
+														
+                                               <?php echo $this->lang->line('phone'); ?> <?php echo $this->lang->line('no'); ?></label>
                                                 <input id="father_phone" name="father_phone" placeholder="" type="text" class="form-control"  value="<?php echo set_value('father_phone', $student['father_phone']); ?>" />
                                                 <span class="text-danger"><?php echo form_error('father_phone'); ?></span>
                                             </div>
@@ -392,7 +409,19 @@
                                         </div>
                                         <div class="col-md-3">
                                             <div class="form-group">
-                                                <label for="exampleInputEmail1"><?php echo $this->lang->line('mother_phone'); ?></label>
+											
+												<label for="exampleInputEmail1">
+												<?php
+													$nf = str_replace(" ","", set_value('mother_phone', $student['mother_phone']));
+													$nf = str_replace("-","", $nf);
+													$nf = str_replace("(","", $nf);
+													$nf = str_replace(")","", $nf);
+													
+												?>
+												
+												<i class="fab fa-whatsapp" style="color: #25D366; cursor: pointer;" onclick="callwz(<?php echo $nf; ?>);"></i>
+												
+                                               <?php echo $this->lang->line('mother_phone'); ?></label>
                                                 <input id="mother_phone" name="mother_phone" placeholder="" type="text" class="form-control"  value="<?php echo set_value('mother_phone', $student['mother_phone']); ?>" />
                                                 <span class="text-danger"><?php echo form_error('mother_phone'); ?></span>
                                             </div>
@@ -454,7 +483,21 @@
                                             <div class="row">
                                                 <div class="col-md-6">
                                                     <div class="form-group">
-                                                        <label for="exampleInputEmail1"><?php echo $this->lang->line('guardian_phone'); ?></label><small class="req"> *</small>
+					
+                                                        <label for="exampleInputEmail1">
+														
+														<?php
+															$nf = str_replace(" ","", set_value('guardian_phone', $student['guardian_phone']));
+															$nf = str_replace("-","", $nf);
+															$nf = str_replace("(","", $nf);
+															$nf = str_replace(")","", $nf);
+															
+														?>
+														
+														<i class="fab fa-whatsapp" style="color: #25D366; cursor: pointer;" onclick="callwz(<?php echo $nf; ?>);"></i>
+														
+														<?php echo $this->lang->line('guardian_phone'); ?></label>
+														<small class="req"> *</small>
                                                         <input id="guardian_phone" name="guardian_phone" placeholder="" type="text" class="form-control"  value="<?php echo set_value('guardian_phone', $student['guardian_phone']); ?>" />
                                                         <span class="text-danger"><?php echo form_error('guardian_phone'); ?></span>
                                                     </div>
@@ -477,14 +520,90 @@
                                             </div>
 
                                         </div>
+										
+										<div class="col-md-3">
+                                                <div class="form-group">
+                                                    <label for="exampleInputEmail1"><?php echo $this->lang->line('guardian_document'); ?></label><small class="req"> *</small>
+                                                    <input id="guardian_document" name="guardian_document" placeholder="" type="text" class="form-control" value="<?php echo set_value('guardian_document', $student['guardian_document']); ?>" />
+                                                    <span class="text-danger"><?php echo form_error('guardian_document'); ?></span>
+                                                </div>
 
-                                        <div class="col-md-6">
-                                            <label for="exampleInputEmail1"><?php echo $this->lang->line('guardian_address'); ?></label>
-                                            <textarea id="guardian_address" name="guardian_address" placeholder="" class="form-control" rows="4"><?php echo set_value('guardian_address', $student['guardian_address']); ?></textarea>
-                                            <span class="text-danger"><?php echo form_error('guardian_address'); ?></span>
-                                        </div>
+                                            </div>
+											
+										</div>
+										
+							
 
-                                    </div>
+                                        
+										
+										
+										
+										
+<div class="row">
+
+
+<!--<div class="col-md-6">
+<label for="exampleInputEmail1"><?php //echo $this->lang->line('guardian_address'); ?></label>
+<textarea id="guardian_address" name="guardian_address" placeholder="" class="form-control" rows="4"><?php //echo set_value('guardian_address', $student['guardian_address']); ?></textarea>
+<span class="text-danger"><?php //echo form_error('guardian_address'); ?></span>
+</div>-->
+										
+
+   <!--<div class="row col-md-12">-->
+     
+	 
+	 <div class="col-md-12">
+         <label for="exampleInputEmail1">Responsável Cep</label> <small class="req"> *</small><small class="req"> *</small>
+         <input maxlength="9" id="guardian_postal_code" name="guardian_postal_code" 
+		 placeholder="08342350" class="form-control" 
+		 value="<?php echo set_value('guardian_postal_code', $student['guardian_postal_code']); ?>">
+      <span class="text-danger"><?php echo form_error('guardian_postal_code '); ?></span>
+      </div>
+	  <!-- botão pesquisar CEP 
+      <div class="col-md-4 form-group">
+         <label for="exampleInputEmail1">&nbsp;</label>
+         <button data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> Processando" id="trigger-cep" data-target="guardian_postal_code" 
+		 style="padding: 3.8px 15px;" type="button" class="btn onlineformbtn" onclick="pesquisaCep();">Pesquisar endereço</button>
+      </div>-->
+   <!--</div>-->
+</div>   
+ 
+<div class="row"> 
+	<br>
+   <div class="col-md-4">
+      <label for="exampleInputEmail1">Endereço do Responsável Financeiro </label>
+      <input maxlength="30" id="guardian_address" name="guardian_address" placeholder="" class="form-control" 
+	  value="<?php echo set_value('guardian_address', $student['guardian_address']); ?>">
+      <span class="text-danger"><?php echo form_error('guardian_address'); ?></span>
+   </div>
+   <div class="col-md-2">
+      <label>Número</label>
+      <input onkeyup="this.value=this.value.replace(/[^\d]/,'')" maxlength="30" id="guardian_address_number" name="guardian_address_number" placeholder="23" class="form-control" 
+	  value="<?php echo set_value('guardian_address_number', $student['guardian_address_number']); ?>">
+      <span class="text-danger"><?php echo form_error('guardian_address_number'); ?></span>
+   </div>
+   <div class="col-md-3">
+      <label for="exampleInputEmail1">Responsável Bairro</label>
+      <input maxlength="20" id="guardian_district" name="guardian_district" placeholder="" class="form-control" 
+	  value="<?php echo set_value('guardian_district', $student['guardian_district']); ?>">
+      <span class="text-danger"><?php echo form_error('guardian_district'); ?></span>
+   </div>
+   <div class="col-md-2">
+      <label for="exampleInputEmail1">Responsável Cidade</label>
+      <input maxlength="20" id="guardian_city" name="guardian_city" placeholder="Barretos" class="form-control" 
+	  value="<?php echo set_value('guardian_city', $student['guardian_city']); ?>">
+      <span class="text-danger"><?php echo form_error('guardian_city'); ?></span>
+   </div>
+   <div class="col-md-1">
+      <label for="exampleInputEmail1">UF</label>
+      <input maxlength="2" id="guardian_state" name="guardian_state" placeholder="SP" class="form-control" 
+	  value="<?php echo set_value('guardian_state', $student['guardian_state']); ?>">
+       <span class="text-danger"><?php echo form_error('guardian_state'); ?></span>
+   </div>
+   
+</div>
+
+										</div>
                                 </div>
                             </div>
                             <div class="bozero">
@@ -611,6 +730,13 @@
 </section>
 </div>
 
+<script>
+function callwz(telefone){
+	
+	window.open('https://wa.me/55'+telefone);
+	
+}
+</script>
 <script type="text/javascript">
     $(document).ready(function () {
         var date_format = '<?php echo $result = strtr($this->customlib->getSchoolDateFormat(), ['d' => 'dd', 'm' => 'mm', 'Y' => 'yyyy']) ?>';
@@ -753,14 +879,21 @@
     function auto_fill_guardian_address() {
         if ($("#autofill_current_address").is(':checked'))
         {
-            $('#current_address').val($('#guardian_address').val());
+            var endereco = $('#guardian_address').val()+", "+$('#guardian_address_number').val()+", "+$('#guardian_district').val()+", "+$('#guardian_city').val()+" - "+$('#guardian_state').val();
+			$('#current_address').val(endereco);
         }
+		else{
+			$('#current_address').val("");
+		}
     }
     function auto_fill_address() {
         if ($("#autofill_address").is(':checked'))
         {
             $('#permanent_address').val($('#current_address').val());
         }
+		else{
+			$('#permanent_address').val("");
+		}
     }
     $('input:radio[name="guardian_is"]').change(
             function () {
