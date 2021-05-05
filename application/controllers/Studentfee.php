@@ -631,10 +631,7 @@ class Studentfee extends Admin_Controller
         $fee_session_group_id = $this->input->post('fee_session_group_id');
         $setting_result = $this->setting_model->get();
         $data['settinglist'] = $setting_result;
-		
-		//die($fee_groups_feetype_id);
-        $data['feeList'] = 
-		$this->studentfeemaster_model->getDueFeeByFeeSessionGroupFeetype($fee_session_group_id, $fee_master_id, $fee_groups_feetype_id);
+        $data['feeList'] = $this->studentfeemaster_model->getDueFeeByFeeSessionGroupFeetype($fee_session_group_id, $fee_master_id, $fee_groups_feetype_id);
 
         $this->load->view('print/printFeesByGroup', $data);
     }

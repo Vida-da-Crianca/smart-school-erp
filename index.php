@@ -244,6 +244,8 @@ switch (ENVIRONMENT)
 	// The name of THIS file
 	define('SELF', pathinfo(__FILE__, PATHINFO_BASENAME));
 
+	define('ROOT_FOLDER', __DIR__);
+
 	// Path to the system folder
 	define('BASEPATH', str_replace('\\', '/', $system_path));
 

@@ -248,7 +248,7 @@ if ($this->session->flashdata('msg')) {
 
                 <div class="col-md-12">
                   <div class="form-group">   
-                    <label for="exampleInputEmail1EWE"><?php echo $this->lang->line('guardian_address'); ?></label>
+                    <label for="exampleInputEmail1"><?php echo $this->lang->line('guardian_address'); ?></label>
                     <textarea id="guardian_address" name="guardian_address" placeholder="" class="form-control" rows="2"><?php echo set_value('guardian_address'); ?></textarea>
                     <span class="text-danger"><?php echo form_error('guardian_address'); ?></span>
                   </div>  

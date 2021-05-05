@@ -380,18 +380,16 @@ class Student extends Admin_Controller
                 'guardian_occupation' => $this->input->post('guardian_occupation'),
                 'guardian_email'      => $this->input->post('guardian_email'),
                 'guardian_document'      => only_numeric($this->input->post('guardian_document')),
+                'guardian_postal_code'      => only_numeric($this->input->post('guardian_postal_code')),
+                'guardian_district'      => $this->input->post('guardian_district'),
+                'guardian_state'      => $this->input->post('guardian_state'),
+                'guardian_city'      => $this->input->post('guardian_city'),
                 'gender'              => $this->input->post('gender'),
                 'guardian_name'       => $this->input->post('guardian_name'),
                 'guardian_relation'   => $this->input->post('guardian_relation'),
                 'guardian_phone'      => $this->input->post('guardian_phone'),
-				
-				'guardian_postal_code'      => only_numeric($this->input->post('guardian_postal_code')),
                 'guardian_address'    => $this->input->post('guardian_address'),
                 'guardian_address_number'    => $this->input->post('guardian_address_number'),
-				'guardian_district'    => $this->input->post('guardian_district'), 
-				'guardian_city'    => $this->input->post('guardian_city'), 
-				'guardian_state'    => $this->input->post('guardian_state'),
-				
                 'vehroute_id'         => $vehroute_id,
                 'hostel_room_id'      => $hostel_room_id,
                 'note'                => $this->input->post('note'),
@@ -484,13 +482,6 @@ class Student extends Admin_Controller
 
                 $data_insert['father_name'] = $this->input->post('father_name');
             }
-			
-			
-			if (isset($father_name)) {
-
-                $data_insert['father_name'] = $this->input->post('father_name');
-            }
-			
 
             if (isset($father_phone)) {
 
@@ -973,7 +964,7 @@ class Student extends Admin_Controller
 
         $category = $this->category_model->get();
 
-        $fields = array('admission_no', 'roll_no', 'firstname', 'lastname', 'gender', 'dob', 'category_id', 'religion', 'cast', 'mobileno', 'email', 'admission_date', 'blood_group', 'school_house_id', 'height', 'weight', 'measurement_date', 'father_name', 'father_phone', 'father_occupation', 'mother_name', 'mother_phone', 'mother_occupation', 'guardian_is', 'guardian_name', 'guardian_relation', 'guardian_email', 'guardian_phone', 'guardian_occupation', 'guardian_address', 'guardian_address_number', 'guardian_district', 'guardian_city', 'guardian_state', 'current_address', 'permanent_address', 'bank_account_no', 'bank_name', 'ifsc_code', 'adhar_no', 'samagra_id', 'rte', 'previous_school', 'note');
+        $fields = array('admission_no', 'roll_no', 'firstname', 'lastname', 'gender', 'dob', 'category_id', 'religion', 'cast', 'mobileno', 'email', 'admission_date', 'blood_group', 'school_house_id', 'height', 'weight', 'measurement_date', 'father_name', 'father_phone', 'father_occupation', 'mother_name', 'mother_phone', 'mother_occupation', 'guardian_is', 'guardian_name', 'guardian_relation', 'guardian_email', 'guardian_phone', 'guardian_occupation', 'guardian_address', 'guardian_address_number', 'current_address', 'permanent_address', 'bank_account_no', 'bank_name', 'ifsc_code', 'adhar_no', 'samagra_id', 'rte', 'previous_school', 'note');
 
         $data["fields"]       = $fields;
         $data['categorylist'] = $category;
@@ -1288,40 +1279,40 @@ class Student extends Admin_Controller
             }
 
             $data = array(
-                'id'                  	 => $id,
-                'firstname'           	 => $this->input->post('firstname'),
-                'rte'                 	 => $this->input->post('rte'),
-                'state'                  => $this->input->post('state'),
-                'city'                	 => $this->input->post('city'),
-                'guardian_is'         	 => $this->input->post('guardian_is'),
-                'pincode'             	 => $this->input->post('pincode'),
-                'cast'                	 => $this->input->post('cast'),
-                'previous_school'     	 => $this->input->post('previous_school'),
-                'dob'                    => date('Y-m-d', $this->customlib->datetostrtotime($this->input->post('dob'))),
-                'current_address'     	 => $this->input->post('current_address'),
-                'permanent_address'   	 => $this->input->post('permanent_address'),
-                'adhar_no'            	 => $this->input->post('adhar_no'),
-                'samagra_id'          	 => $this->input->post('samagra_id'),
-                'bank_account_no'     	 => $this->input->post('bank_account_no'),
-                'bank_name'           	 => $this->input->post('bank_name'),
-                'ifsc_code'           	 => $this->input->post('ifsc_code'),
-                'guardian_occupation'	 => $this->input->post('guardian_occupation'),
-                'guardian_email'     	 => $this->input->post('guardian_email'),
-                'guardian_document'  	 => only_numeric($this->input->post('guardian_document')),
-                'guardian_postal_code'	 => only_numeric($this->input->post('guardian_postal_code')),
-                'guardian_district'   	 => $this->input->post('guardian_district'),
-                'guardian_state'     	 => $this->input->post('guardian_state'),
-                'guardian_city'      	 => $this->input->post('guardian_city'),
-                'gender'             	 => $this->input->post('gender'),
-                'guardian_name'      	 => $this->input->post('guardian_name'),
-                'guardian_relation'  	 => $this->input->post('guardian_relation'),
-                'guardian_phone'     	 => $this->input->post('guardian_phone'),
-                'guardian_address'   	 => $this->input->post('guardian_address'),
-                'guardian_address_number'=> $this->input->post('guardian_address_number'),
-                'vehroute_id'        	 => $vehroute_id,
-                'hostel_room_id'     	 => $hostel_room_id,
-                'note'               	 => $this->input->post('note'),
-                'is_active'          	 => 'yes',
+                'id'                  => $id,
+                'firstname'           => $this->input->post('firstname'),
+                'rte'                 => $this->input->post('rte'),
+                'state'               => $this->input->post('state'),
+                'city'                => $this->input->post('city'),
+                'guardian_is'         => $this->input->post('guardian_is'),
+                'pincode'             => $this->input->post('pincode'),
+                'cast'                => $this->input->post('cast'),
+                'previous_school'     => $this->input->post('previous_school'),
+                'dob'                 => date('Y-m-d', $this->customlib->datetostrtotime($this->input->post('dob'))),
+                'current_address'     => $this->input->post('current_address'),
+                'permanent_address'   => $this->input->post('permanent_address'),
+                'adhar_no'            => $this->input->post('adhar_no'),
+                'samagra_id'          => $this->input->post('samagra_id'),
+                'bank_account_no'     => $this->input->post('bank_account_no'),
+                'bank_name'           => $this->input->post('bank_name'),
+                'ifsc_code'           => $this->input->post('ifsc_code'),
+                'guardian_occupation' => $this->input->post('guardian_occupation'),
+                'guardian_email'      => $this->input->post('guardian_email'),
+                'guardian_document'      => only_numeric($this->input->post('guardian_document')),
+                'guardian_postal_code'      => only_numeric($this->input->post('guardian_postal_code')),
+                'guardian_district'      => $this->input->post('guardian_district'),
+                'guardian_state'      => $this->input->post('guardian_state'),
+                'guardian_city'      => $this->input->post('guardian_city'),
+                'gender'              => $this->input->post('gender'),
+                'guardian_name'       => $this->input->post('guardian_name'),
+                'guardian_relation'   => $this->input->post('guardian_relation'),
+                'guardian_phone'      => $this->input->post('guardian_phone'),
+                'guardian_address'    => $this->input->post('guardian_address'),
+                'guardian_address_number'    => $this->input->post('guardian_address_number'),
+                'vehroute_id'         => $vehroute_id,
+                'hostel_room_id'      => $hostel_room_id,
+                'note'                => $this->input->post('note'),
+                'is_active'           => 'yes',
             );
 
             $house             = $this->input->post('house');

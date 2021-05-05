@@ -45,30 +45,6 @@
                     if ($this->rbac->hasPrivilege('expense_group_report', 'can_view')) { ?>
                         <li class="col-lg-4 col-md-4 col-sm-6 <?php echo set_SubSubmenu('Reports/finance/expensegroup'); ?>"><a href="<?php echo base_url(); ?>report/expensegroup"><i class="fa fa-file-text-o"></i> <?php echo $this->lang->line('expense') . " " . $this->lang->line('group') . " " . $this->lang->line('report'); ?></a></li>
                     <?php } ?>
-					
-					<li class="col-lg-4 col-md-4 col-sm-6 <?php echo set_SubSubmenu('Reports/finance/expensegroup'); ?>">
-					
-					
-					<a href="<?php echo base_url(); ?>report/boletos_emitidos"><i class="fa fa-file-text-o"></i> 
-					Boletos emitidos
-					</a>
-					
-					<a href="<?php echo base_url(); ?>report/recebimentos_previstos"><i class="fa fa-file-text-o"></i> 
-					Recebimentos previstos
-					</a>
-					
-					<a href="<?php echo base_url(); ?>report/lista_de_documentos"><i class="fa fa-file-text-o"></i> 
-					Lista de documentos
-					</a>
-					
-					
-					 
-					
-					
-					
-					
-					
-					</li>
 
                     <?php if ($this->rbac->hasPrivilege('expense_received_report', 'can_view')) : ?>
                         <li class="col-lg-4 col-md-4 col-sm-6 <?php echo set_SubSubmenu('Reports/finance/received'); ?>">

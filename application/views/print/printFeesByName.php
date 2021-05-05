@@ -232,16 +232,9 @@
                         ?>
                         <div class="row">                           
                             <div class="col-xs-6 text-left">
-                                <br/> 
+                                <br/>
                                 <address>
-                                    <strong>
-									<?php 
-									
-									print_r($feeList);
-									
-									//echo $feeList->firstname . " " . $feeList->lastname; ?>
-									
-									</strong><br>
+                                    <strong><?php echo $feeList->firstname . " " . $feeList->lastname; ?></strong><br>
 
                                     <?php echo $this->lang->line('father_name'); ?>: <?php echo $student['father_name']; ?><br>
                                     <?php echo $this->lang->line('class'); ?>: <?php echo $feeList->class . " (" . $feeList->section . ")"; ?>
