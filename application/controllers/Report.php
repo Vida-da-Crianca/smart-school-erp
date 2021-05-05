@@ -330,6 +330,111 @@ class Report extends Admin_Controller
         $this->load->view('reports/class_subject', $data);
         $this->load->view('layout/footer', $data);
     }
+	
+	
+	
+	
+	function boletos_emitidos()
+    {
+
+        $this->session->set_userdata('top_menu', 'Reports');
+        $this->session->set_userdata('sub_menu', 'Reports/finance');
+        $this->session->set_userdata('subsub_menu', 'Reports/student_information/boletos_emitidos');
+        $data['title'] = 'Boletos Emitidos';
+        $data['searchlist'] = $this->search_type;
+        $data['sch_setting']        = $this->sch_setting_detail;
+        $data['adm_auto_insert']    = $this->sch_setting_detail->adm_auto_insert;
+        $searchterm = '';
+        $class = $this->class_model->get();
+        $data['classlist'] = $class;
+        foreach ($data['classlist'] as $key => $value) {
+            $carray[] = $value['id'];
+        }
+        if (isset($_POST['search_type']) && $_POST['search_type'] != '') {
+
+            $between_date = $this->customlib->get_betweendate($_POST['search_type']);
+            $data['search_type'] = $search_type = $_POST['search_type'];
+        } else {
+
+            $between_date = $this->customlib->get_betweendate('this_year');
+            $data['search_type'] = $search_type = '';
+        }
+
+        $from_date = date('Y-m-d', strtotime($between_date['from_date']));
+
+        $to_date = date('Y-m-d', strtotime($between_date['to_date']));
+
+        $condition = " date_format(admission_date,'%Y-%m-%d') between  '" . $from_date . "' and '" . $to_date . "'";
+        $data['filter_label'] = date($this->customlib->getSchoolDateFormat(), strtotime($from_date)) . " To " . date($this->customlib->getSchoolDateFormat(), strtotime($to_date));
+        $this->form_validation->set_rules('search_type', $this->lang->line('search') . " " . $this->lang->line('type'), 'trim|required|xss_clean');
+
+
+        if ($this->form_validation->run() == false) {
+
+            $data['resultlist'] = array();
+        } else {
+
+            $data['resultlist'] = $this->student_model->admission_report($searchterm, $carray, $condition);
+        }
+
+
+        $this->load->view('layout/header', $data);
+        $this->load->view('reports/boletos_emitidos', $data);
+        $this->load->view('layout/footer', $data);
+    }
+	
+	
+	function recebimentos_previstos()
+    {
+
+        $this->session->set_userdata('top_menu', 'Reports');
+        $this->session->set_userdata('sub_menu', 'Reports/finance');
+        $this->session->set_userdata('subsub_menu', 'Reports/student_information/recebimentos_previstos');
+        $data['title'] = 'Boletos Emitidos';
+        $data['searchlist'] = $this->search_type;
+        $data['sch_setting']        = $this->sch_setting_detail;
+        $data['adm_auto_insert']    = $this->sch_setting_detail->adm_auto_insert;
+        $searchterm = '';
+        $class = $this->class_model->get();
+        $data['classlist'] = $class;
+        foreach ($data['classlist'] as $key => $value) {
+            $carray[] = $value['id'];
+        }
+        if (isset($_POST['search_type']) && $_POST['search_type'] != '') {
+
+            $between_date = $this->customlib->get_betweendate($_POST['search_type']);
+            $data['search_type'] = $search_type = $_POST['search_type'];
+        } else {
+
+            $between_date = $this->customlib->get_betweendate('this_year');
+            $data['search_type'] = $search_type = '';
+        }
+
+        $from_date = date('Y-m-d', strtotime($between_date['from_date']));
+
+        $to_date = date('Y-m-d', strtotime($between_date['to_date']));
+
+        $condition = " date_format(admission_date,'%Y-%m-%d') between  '" . $from_date . "' and '" . $to_date . "'";
+        $data['filter_label'] = date($this->customlib->getSchoolDateFormat(), strtotime($from_date)) . " To " . date($this->customlib->getSchoolDateFormat(), strtotime($to_date));
+        $this->form_validation->set_rules('search_type', $this->lang->line('search') . " " . $this->lang->line('type'), 'trim|required|xss_clean');
+
+
+        if ($this->form_validation->run() == false) {
+
+            $data['resultlist'] = array();
+        } else {
+
+            $data['resultlist'] = $this->student_model->admission_report($searchterm, $carray, $condition);
+        }
+
+
+        $this->load->view('layout/header', $data);
+        $this->load->view('reports/recebimentos_previstos', $data);
+        $this->load->view('layout/footer', $data);
+    }
+	
+	
+	
 
     function admission_report()
     {
