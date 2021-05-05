@@ -4,10 +4,11 @@
     }
 </style>
 <?php
-if (!$form_admission) {
-    ?>
+if (!$form_admission)
+{
+?>
     <div class="alert alert-danger">
-       <?php echo $this->lang->line('admission_form_disable_please_contact_to_administrator');?>
+       <?php echo $this->lang->line('admission_form_disable_please_contact_to_administrator'); ?>
     </div>
     <?php
     return;
@@ -15,9 +16,10 @@ if (!$form_admission) {
 ?>
 
 <?php
-if ($this->session->flashdata('msg')) {
+if ($this->session->flashdata('msg'))
+{
     $message = $this->session->flashdata('msg');
-     echo $message;
+    echo $message;
 }
 ?>
 
@@ -25,8 +27,10 @@ if ($this->session->flashdata('msg')) {
 
  <h2><?php echo $this->lang->line('online') . " " . $this->lang->line('admission'); ?></h2>
   <?php
-if (isset($error_message)) {
-   // echo "<div class='alert alert-danger'>" . $error_message . "</div>";
+if (isset($error_message))
+{
+    // echo "<div class='alert alert-danger'>" . $error_message . "</div>";
+    
 }
 ?>
 
@@ -37,14 +41,16 @@ if (isset($error_message)) {
             <select  id="class_id" name="class_id" class="form-control"  >
                 <option value=""><?php echo $this->lang->line('select'); ?></option>
                 <?php
-foreach ($classlist as $class) {
-    ?>
-                    <option value="<?php echo $class['id'] ?>"<?php if (set_value('class_id') == $class['id']) {
+foreach ($classlist as $class)
+{
+?>
+                    <option value="<?php echo $class['id'] ?>"<?php if (set_value('class_id') == $class['id'])
+    {
         echo "selected=selected";
     }
-    ?>><?php echo $class['class'] ?></option>
+?>><?php echo $class['class'] ?></option>
                     <?php
-$count++;
+    $count++;
 }
 ?>
             </select>
@@ -54,9 +60,13 @@ $count++;
     <div class="col-md-3" style="display: none;">
 
         <div class="form-group">
-            <label for="exampleInputEmail1"><?php echo $this->lang->line('section'); ?></label><small class="req"> *</small>
+            <label for="exampleInputEmail1"><?php echo $this
+    ->lang
+    ->line('section'); ?></label><small class="req"> *</small>
             <select  id="section_id" name="section_id" class="form-control" >
-                <option value=""   ><?php echo $this->lang->line('select'); ?></option>
+                <option value=""   ><?php echo $this
+    ->lang
+    ->line('select'); ?></option>
             </select>
             <span class="text-danger"><?php echo form_error('section_id'); ?></span>
         </div>
@@ -65,7 +75,9 @@ $count++;
 
     <div class="col-md-3">
         <div class="form-group">
-            <label for="exampleInputEmail1"><?php echo $this->lang->line('first_name'); ?></label><small class="req"> *</small>
+            <label for="exampleInputEmail1"><?php echo $this
+    ->lang
+    ->line('first_name'); ?></label><small class="req"> *</small>
             <input id="firstname" name="firstname" placeholder="" type="text" class="form-control"  value="<?php echo set_value('firstname'); ?>" />
             <span class="text-danger"><?php echo form_error('firstname'); ?></span>
         </div>
@@ -75,7 +87,9 @@ $count++;
 
     <div class="col-md-3">
         <div class="form-group">
-            <label for="exampleInputEmail1"><?php echo $this->lang->line('last_name'); ?></label>
+            <label for="exampleInputEmail1"><?php echo $this
+    ->lang
+    ->line('last_name'); ?></label>
             <input id="lastname" name="lastname" placeholder="" type="text" class="form-control"  value="<?php echo set_value('lastname'); ?>" />
             <span class="text-danger"><?php echo form_error('lastname'); ?></span>
         </div>
@@ -84,16 +98,22 @@ $count++;
   <div class="row">
     <div class="col-md-3">
         <div class="form-group">
-            <label for="exampleInputFile"> <?php echo $this->lang->line('gender'); ?></label><small class="req"> *</small>
+            <label for="exampleInputFile"> <?php echo $this
+    ->lang
+    ->line('gender'); ?></label><small class="req"> *</small>
             <select class="form-control" name="gender">
-                <option value=""><?php echo $this->lang->line('select'); ?></option>
+                <option value=""><?php echo $this
+    ->lang
+    ->line('select'); ?></option>
                 <?php
-foreach ($genderList as $key => $value) {
-    ?>
-                    <option value="<?php echo $key; ?>" <?php if (set_value('gender') == $key) {
+foreach ($genderList as $key => $value)
+{
+?>
+                    <option value="<?php echo $key; ?>" <?php if (set_value('gender') == $key)
+    {
         echo "selected";
     }
-    ?>><?php echo $value; ?></option>
+?>><?php echo $value; ?></option>
                     <?php
 }
 ?>
@@ -103,14 +123,18 @@ foreach ($genderList as $key => $value) {
     </div>
     <div class="col-md-3">
         <div class="form-group">
-            <label for="exampleInputEmail1"><?php echo $this->lang->line('date_of_birth'); ?></label><small class="req"> *</small>
+            <label for="exampleInputEmail1"><?php echo $this
+    ->lang
+    ->line('date_of_birth'); ?></label><small class="req"> *</small>
             <input  type="text" class="form-control date2"  value="<?php echo set_value('dob'); ?>" id="dob" name="dob" readonly="readonly"/>
             <span class="text-danger"><?php echo form_error('dob'); ?></span>
         </div>
     </div>
   <div class="col-md-3">
         <div class="form-group">
-            <label for="exampleInputEmail1"><?php echo $this->lang->line('mobile_no'); ?></label>
+            <label for="exampleInputEmail1"><?php echo $this
+    ->lang
+    ->line('mobile_no'); ?></label>
             <input  type="text" class="form-control"  value="<?php echo set_value('mobileno'); ?>" id="mobileno" name="mobileno"/>
             <span class="text-danger"><?php echo form_error('mobileno'); ?></span>
         </div>
@@ -118,7 +142,9 @@ foreach ($genderList as $key => $value) {
 
     <div class="col-md-3">
         <div class="form-group">
-            <label for="exampleInputEmail1"><?php echo $this->lang->line('email'); ?></label>
+            <label for="exampleInputEmail1"><?php echo $this
+    ->lang
+    ->line('email'); ?></label>
             <input  type="text" class="form-control"  value="<?php echo set_value('email'); ?>" id="email" name="email"/>
             <span class="text-danger"><?php echo form_error('email'); ?></span>
         </div>
@@ -129,24 +155,32 @@ foreach ($genderList as $key => $value) {
 
 </div><!--./row-->
     <div class="row">
-        <div class="col-md-12"><h4 class="pagetitleh2"><?php echo $this->lang->line('parent_guardian_detail'); ?></h4></div>
+        <div class="col-md-12"><h4 class="pagetitleh2"><?php echo $this
+    ->lang
+    ->line('parent_guardian_detail'); ?></h4></div>
                 <div class="col-md-4">
                     <div class="form-group">
-                        <label for="exampleInputEmail1"><?php echo $this->lang->line('father_name'); ?></label>
+                        <label for="exampleInputEmail1"><?php echo $this
+    ->lang
+    ->line('father_name'); ?></label>
                         <input id="father_name" name="father_name" placeholder="" type="text" class="form-control"  value="<?php echo set_value('father_name'); ?>" />
                         <span class="text-danger"><?php echo form_error('father_name'); ?></span>
                     </div>
                 </div>
                 <div class="col-md-4">
                     <div class="form-group">
-                        <label for="exampleInputEmail1"><?php echo $this->lang->line('father_phone'); ?></label>
+                        <label for="exampleInputEmail1"><?php echo $this
+    ->lang
+    ->line('father_phone'); ?></label>
                         <input id="father_phone" name="father_phone" placeholder="" type="text" class="form-control"  value="<?php echo set_value('father_phone'); ?>" />
                         <span class="text-danger"><?php echo form_error('father_phone'); ?></span>
                     </div>
                 </div>
                 <div class="col-md-4">
                     <div class="form-group">
-                        <label for="exampleInputEmail1"><?php echo $this->lang->line('father_occupation'); ?></label>
+                        <label for="exampleInputEmail1"><?php echo $this
+    ->lang
+    ->line('father_occupation'); ?></label>
                         <input id="father_occupation" name="father_occupation" placeholder="" type="text" class="form-control"  value="<?php echo set_value('father_occupation'); ?>" />
                         <span class="text-danger"><?php echo form_error('father_occupation'); ?></span>
                     </div>
@@ -155,21 +189,27 @@ foreach ($genderList as $key => $value) {
 
                 <div class="col-md-4">
                     <div class="form-group">
-                        <label for="exampleInputEmail1"><?php echo $this->lang->line('mother_name'); ?></label>
+                        <label for="exampleInputEmail1"><?php echo $this
+    ->lang
+    ->line('mother_name'); ?></label>
                         <input id="mother_name" name="mother_name" placeholder="" type="text" class="form-control"  value="<?php echo set_value('mother_name'); ?>" />
                         <span class="text-danger"><?php echo form_error('mother_name'); ?></span>
                     </div>
                 </div>
                 <div class="col-md-4">
                     <div class="form-group">
-                        <label for="exampleInputEmail1"><?php echo $this->lang->line('mother_phone'); ?></label>
+                        <label for="exampleInputEmail1"><?php echo $this
+    ->lang
+    ->line('mother_phone'); ?></label>
                         <input id="mother_phone" name="mother_phone" placeholder="" type="text" class="form-control"  value="<?php echo set_value('mother_phone'); ?>" />
                         <span class="text-danger"><?php echo form_error('mother_phone'); ?></span>
                     </div>
                 </div>
                 <div class="col-md-4">
                     <div class="form-group">
-                        <label for="exampleInputEmail1"><?php echo $this->lang->line('mother_occupation'); ?></label>
+                        <label for="exampleInputEmail1"><?php echo $this
+    ->lang
+    ->line('mother_occupation'); ?></label>
                         <input id="mother_occupation" name="mother_occupation" placeholder="" type="text" class="form-control"  value="<?php echo set_value('mother_occupation'); ?>" />
                         <span class="text-danger"><?php echo form_error('mother_occupation'); ?></span>
                     </div>
@@ -178,21 +218,29 @@ foreach ($genderList as $key => $value) {
 
         <div class="row">
                 <div class="form-group col-md-12">
-                    <label><?php echo $this->lang->line('if_guardian_is'); ?><small class="req"> *</small>&nbsp;&nbsp;&nbsp;</label>
+                    <label><?php echo $this
+    ->lang
+    ->line('if_guardian_is'); ?><small class="req"> *</small>&nbsp;&nbsp;&nbsp;</label>
                     <label class="radio-inline">
                         <input type="radio" name="guardian_is" <?php
 echo set_value('guardian_is') == "father" ? "checked" : "";
-?>   value="father"> <?php echo $this->lang->line('father'); ?>
+?>   value="father"> <?php echo $this
+    ->lang
+    ->line('father'); ?>
                     </label>
                     <label class="radio-inline">
                         <input type="radio" name="guardian_is" <?php
 echo set_value('guardian_is') == "mother" ? "checked" : "";
-?>   value="mother"> <?php echo $this->lang->line('mother'); ?>
+?>   value="mother"> <?php echo $this
+    ->lang
+    ->line('mother'); ?>
                     </label>
                     <label class="radio-inline">
                         <input type="radio" name="guardian_is" <?php
 echo set_value('guardian_is') == "other" ? "checked" : "";
-?>   value="other"> <?php echo $this->lang->line('other'); ?>
+?>   value="other"> <?php echo $this
+    ->lang
+    ->line('other'); ?>
                     </label>
                     <span class="text-danger"><?php echo form_error('guardian_is'); ?></span>
                 </div>
@@ -207,9 +255,16 @@ echo set_value('guardian_is') == "other" ? "checked" : "";
                 </div>
 
 
-
-
-                    <div class="col-md-4">
+						<div class="col-md-4">
+						<div class="form-group">
+						 <label for="exampleInputEmail1"><?php echo $this->lang->line('guardian_document'); ?></label><small class="req"> *</small>
+						<input id="guardian_document" name="guardian_document" placeholder="" type="text" class="form-control" value="<?php echo set_value('guardian_document'); ?>" />
+						<span class="text-danger"><?php echo form_error('guardian_document'); ?></span>
+						</div>
+						</div>
+											
+											
+						<div class="col-md-4">
                             <div class="form-group">
                                 <label for="exampleInputEmail1"><?php echo $this->lang->line('guardian_name'); ?></label><small class="req"> *</small>
                                 <input id="guardian_name" name="guardian_name" placeholder="" type="text" class="form-control"  value="<?php echo set_value('guardian_name'); ?>" />
@@ -250,21 +305,76 @@ echo set_value('guardian_is') == "other" ? "checked" : "";
 
                 </div>
 
-                <div class="col-md-12">
+                <!--<div class="col-md-12">
                   <div class="form-group">
-                    <label for="exampleInputEmail1"><?php echo $this->lang->line('guardian_address'); ?></label>
-                    <textarea id="guardian_address" name="guardian_address" placeholder="" class="form-control" rows="2"><?php echo set_value('guardian_address'); ?></textarea>
-                    <span class="text-danger"><?php echo form_error('guardian_address'); ?></span>
-                  </div>
+                    <label for="exampleInputEmail1"><?php //echo $this->lang->line('guardian_address'); ?></label>
+                    <textarea id="guardian_address" name="guardian_address" placeholder="" class="form-control" rows="2">
+					<?php //echo set_value('guardian_address'); ?>
+					</textarea>
+                    <span class="text-danger"><?php //echo form_error('guardian_address'); ?></span>
+                  </div>-->
                 </div>
+				
+				
+				<div class="row">
 
+   <div class="row col-md-12">
+     
+	 <div class="col-md-2 form-group">
+         <label for="exampleInputEmail1">Responsável Cep</label> <small class="req"> *</small><small class="req"> *</small>
+         <input maxlength="9" id="guardian_postal_code" name="guardian_postal_code" placeholder="08342350" class="form-control" value="<?php if(isset($_POST['guardian_postal_code'])){ echo $_POST['guardian_postal_code']; };?>">
+		 <span class="text-danger"><?php echo form_error('guardian_postal_code'); ?></span>
+      </div>
+	  <!-- botão pesquisar CEP -->
+      <div class="col-md-4 form-group">
+         <label for="exampleInputEmail1">&nbsp;</label>
+         <button data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> Processando" id="trigger-cep" data-target="guardian_postal_code" 
+		 style="padding: 3.8px 15px;" type="button" class="btn onlineformbtn" onclick="pesquisaCep();">Pesquisar endereço</button>
+      </div>
+   </div>
+   
+   
+   <div class="col-md-4">
+      <label for="exampleInputEmail1">Endereço do Responsável Financeiro </label>
+      <input maxlength="30" id="guardian_address" name="guardian_address" placeholder="Rua exemplo" class="form-control" 
+	  value="<?php echo set_value('guardian_address');?>">
+      <span class="text-danger"><?php echo form_error('guardian_address'); ?></span>
+   </div>
+   <div class="col-md-2">
+      <label>Número</label>
+      <input onkeyup="this.value=this.value.replace(/[^\d]/,'')" maxlength="30" id="guardian_address_number" name="guardian_address_number" placeholder="23" class="form-control" 
+	  value="<?php echo set_value('guardian_address_number');?>">
+      <span class="text-danger"><?php echo form_error('guardian_address_number'); ?></span>
+   </div>
+   <div class="col-md-3">
+      <label for="exampleInputEmail1">Responsável Bairro</label>
+      <input maxlength="20" id="guardian_district" name="guardian_district" placeholder="" class="form-control" 	  
+	  value="<?php echo set_value('guardian_district');?>">
+      <span class="text-danger"><?php echo form_error('guardian_district'); ?></span>
+   </div>
+   <div class="col-md-2">
+      <label for="exampleInputEmail1">Responsável Cidade</label>
+      <input maxlength="20" id="guardian_city" name="guardian_city" placeholder="Barretos" class="form-control" 
+	  value="<?php if(isset($_POST['guardian_city'])){ echo $_POST['guardian_city']; };?>">
+      <span class="text-danger"><?php echo form_error('guardian_city'); ?></span>
+   </div>
+   <div class="col-md-1">
+      <label for="exampleInputEmail1">UF</label>
+      <input maxlength="2" id="guardian_state" name="guardian_state" placeholder="SP" class="form-control" 
+	  value="<?php if(isset($_POST['guardian_state'])){ echo $_POST['guardian_state']; };?>">
+       <span class="text-danger"><?php echo form_error('guardian_state'); ?></span>
+   </div>
+</div>
 
-            <div class="col-md-12">
-              <div class="form-group pull-right">
-                <button type="submit" class="onlineformbtn"><?php echo $this->lang->line('save'); ?></button>
-               </div>
-            </div>
-        </div><!--./row-->
+	<div class="row mt-5">
+ 
+	<div class="col-md-12">
+	<div class="form-group pull-right">
+	<button type="submit" class="onlineformbtn" style="margin-top:22.8px;"><?php echo $this->lang->line('save'); ?></button>
+	</div>
+	</div>
+	</div><!--./row-->
+	
 </form>
 
 
@@ -369,3 +479,94 @@ echo set_value('guardian_is') == "other" ? "checked" : "";
 </script>
 
 
+
+
+ <!-- Adicionando JQuery -->
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"
+            integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+            crossorigin="anonymous"></script>
+
+    <!-- Adicionando Javascript -->
+    <script>
+
+        $(document).ready(function() {
+
+            function limpa_formulário_cep() {
+                // Limpa valores do formulário de cep.
+				$("#guardian_address").val("");
+				$("#guardian_address_number").val("");
+				$("#guardian_district").val("");
+				$("#guardian_city").val("");
+				$("#guardian_state").val("");
+            }
+		 });
+            
+            //Quando o campo cep perde o foco.
+            function pesquisaCep(){
+		
+                //Nova variável "cep" somente com dígitos.
+                var cep = $("#guardian_postal_code").val().replace(/\D/g, '');
+
+                //Verifica se campo cep possui valor informado.
+                if (cep != "") {
+
+                    //Expressão regular para validar o CEP.
+                    var validacep = /^[0-9]{8}$/;
+
+                    //Valida o formato do CEP.
+                    if(validacep.test(cep)) {
+
+                        //Preenche os campos com "..." enquanto consulta webservice.
+						$("#guardian_address").val("...");
+						$("#guardian_district").val("...");
+						$("#guardian_city").val("...");
+						$("#guardian_state").val("...");
+
+                        //Consulta o webservice viacep.com.br/
+                        $.getJSON("https://viacep.com.br/ws/"+ cep +"/json/?callback=?", function(dados) {
+
+                            if (!("erro" in dados)) {
+                                //Atualiza os campos com os valores da consulta.
+								$("#guardian_address").val(dados.logradouro);
+								$("#guardian_address_number").val("");
+								$("#guardian_address_number").focus();
+								$("#guardian_district").val(dados.bairro);
+								$("#guardian_city").val(dados.localidade);
+								$("#guardian_state").val(dados.uf);
+
+
+                            } //end if.
+                            else {
+                                //CEP pesquisado não foi encontrado.
+                                limpa_formulário_cep();
+                                alert("CEP não encontrado.");
+                            }
+                        });
+                    } //end if.
+                    else {
+                        //cep é inválido.
+                        limpa_formulário_cep();
+                        alert("Formato de CEP inválido.");
+                    }
+                } //end if.
+                else {
+                    //cep sem valor, limpa formulário.
+                   alert("CEP inválido/nulo.");
+					$("#guardian_postal_code").focus();
+                }
+            };
+       
+
+    </script>
+	
+	
+	<script src="https://altasis.com.br/projetos/vidadecrianca/backend/plugins/jquery.mask.min.js"></script>
+	<script type="text/javascript">
+    $('[name="guardian_postal_code"]').mask('00000-000');
+    $('[name="guardian_document"]').mask('000.000.000-00');
+
+
+    $(function() {
+        $('.languageselectpicker').selectpicker();
+    });
+</script>
