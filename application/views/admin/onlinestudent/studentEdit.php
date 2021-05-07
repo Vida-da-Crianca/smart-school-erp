@@ -541,31 +541,32 @@
 										
 <div class="row">
 
-
-<!--<div class="col-md-6">
-<label for="exampleInputEmail1"><?php //echo $this->lang->line('guardian_address'); ?></label>
-<textarea id="guardian_address" name="guardian_address" placeholder="" class="form-control" rows="4"><?php //echo set_value('guardian_address', $student['guardian_address']); ?></textarea>
-<span class="text-danger"><?php //echo form_error('guardian_address'); ?></span>
-</div>-->
-										
-
-   <!--<div class="row col-md-12">-->
-     
-	 
+	<div class="row col-md-12">
+	<div class="col-md-2 form-group">
+	<label for="exampleInputEmail1"><?php echo $this->lang->line('guardian_postal_code'); ?></label><small class="req"> *</small>
+	<input maxlength="20" id="guardian_postal_code" name="guardian_postal_code" placeholder="08342350" class="form-control" value="<?php echo set_value('guardian_postal_code', $student['guardian_postal_code']); ?>" />
+	<span class="text-danger"><?php echo form_error('guardian_postal_code'); ?></span>
+	</div>
+	<div class="col-md-4 form-group" style="
+	margin-top:22.8px;
+	">
+	<label for="exampleInputEmail1">&nbsp;</label>
+	<button 
+	data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> Processing"
+	id="trigger-cep" data-target="guardian_postal_code"  style="padding: 3.8px 15px;" type="button" class="btn btn-primary">Pesquisar endereco</button>
+	</div>
+	</div>
+	
+	<!--
 	 <div class="col-md-12">
          <label for="exampleInputEmail1">Responsável Cep</label> <small class="req"> *</small><small class="req"> *</small>
          <input maxlength="9" id="guardian_postal_code" name="guardian_postal_code" 
 		 placeholder="08342350" class="form-control" 
-		 value="<?php echo set_value('guardian_postal_code', $student['guardian_postal_code']); ?>">
-      <span class="text-danger"><?php echo form_error('guardian_postal_code '); ?></span>
+		 value="<?php //echo set_value('guardian_postal_code', $student['guardian_postal_code']); ?>">
+      <span class="text-danger"><?php //echo form_error('guardian_postal_code '); ?></span>
       </div>
-	  <!-- botão pesquisar CEP 
-      <div class="col-md-4 form-group">
-         <label for="exampleInputEmail1">&nbsp;</label>
-         <button data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> Processando" id="trigger-cep" data-target="guardian_postal_code" 
-		 style="padding: 3.8px 15px;" type="button" class="btn onlineformbtn" onclick="pesquisaCep();">Pesquisar endereço</button>
-      </div>-->
-   <!--</div>-->
+	  -->
+
 </div>   
  
 <div class="row"> 
@@ -919,3 +920,7 @@ function callwz(telefone){
             });
 
 </script>
+
+
+<script type="text/javascript" src="<?php echo base_url(); ?>backend/js/postalCodeAutoComplete.js"></script>
+<script type="text/javascript" src="<?php echo base_url(); ?>backend/dist/js/savemode.js"></script>
