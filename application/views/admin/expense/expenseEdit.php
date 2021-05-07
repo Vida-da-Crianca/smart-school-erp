@@ -204,6 +204,12 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                                             <i class="fa fa-remove"></i>
                                                         </a>
                                                     <?php } ?>
+													
+													<!--por altasis em 07-05-2021 -->
+													<a data-placement="left" href="<?php echo base_url(); ?>admin/recibo/gerar/<?php echo $expense['id'] ?>" target="_blank" class="btn btn-default btn-xs" data-toggle="tooltip" title="PDF" onclick="">
+														<i class="fa fa-file-pdf-o"></i>
+													</a>
+
                                                 </td>
                                             </tr>
                                             <?php
