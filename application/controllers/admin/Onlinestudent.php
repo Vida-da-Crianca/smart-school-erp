@@ -95,6 +95,14 @@ class Onlinestudent extends Admin_Controller {
         $this->form_validation->set_rules('section_id', $this->lang->line('section'), 'trim|required|xss_clean');
         $this->form_validation->set_rules('gender', $this->lang->line('gender'), 'trim|required|xss_clean');
         $this->form_validation->set_rules('guardian_name', $this->lang->line('guardian_name'), 'trim|required|xss_clean');
+		$this->form_validation->set_rules('guardian_postal_code', $this->lang->line('guardian_postal_code'), 'trim|required|xss_clean');
+		$this->form_validation->set_rules('guardian_address_number', $this->lang->line('guardian_address_number'), 'trim|required|xss_clean');
+		
+		$this->form_validation->set_rules('guardian_district', $this->lang->line('guardian_district'), 'trim|required|xss_clean');
+		$this->form_validation->set_rules('guardian_city', $this->lang->line('guardian_city'), 'trim|required|xss_clean');
+		$this->form_validation->set_rules('guardian_state', $this->lang->line('guardian_state'), 'trim|required|xss_clean');
+		
+		
         $this->form_validation->set_rules('guardian_document', $this->lang->line('guardian_document'), 'trim|required|xss_clean');
         $this->form_validation->set_rules('rte', $this->lang->line('rtl'), 'trim|required|xss_clean');
         $this->form_validation->set_rules('guardian_phone', $this->lang->line('guardian_phone'), 'trim|required|xss_clean');
@@ -157,6 +165,11 @@ class Onlinestudent extends Admin_Controller {
                 'guardian_relation' => $this->input->post('guardian_relation'),
                 'guardian_phone' => $this->input->post('guardian_phone'),
                 'guardian_address' => $this->input->post('guardian_address'),
+				'guardian_address_number' => $this->input->post('guardian_address_number'),
+				'guardian_postal_code' => $this->input->post('guardian_postal_code'),
+				'guardian_district' => $this->input->post('guardian_district'),
+				'guardian_city' => $this->input->post('guardian_city'),
+				'guardian_state' => $this->input->post('guardian_state'),
                 'vehroute_id' => $vehroute_id,
                 'hostel_room_id' => $hostel_room_id,
                 'school_house_id' => $this->input->post('house'),
@@ -192,7 +205,7 @@ class Onlinestudent extends Admin_Controller {
             }
         }
     }
-
+ 
     public function getByClass() {
         $class_id = $this->input->post('class_id');
         $data = $this->section_model->getClassBySection($class_id);

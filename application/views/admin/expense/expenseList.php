@@ -1,4 +1,4 @@
-<?php $currency_symbol = $this->customlib->getSchoolCurrencyFormat(); ?>
+    <?php $currency_symbol = $this->customlib->getSchoolCurrencyFormat(); ?>
 <!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper">
 
@@ -183,6 +183,7 @@
 
                                                     </td>
                                                     <td class="mailbox-name"><?php echo ($currency_symbol . $expense['amount']); ?></td>
+                                                    
                                                     <td class="mailbox-date pull-right">
                                                         <?php if ($expense['documents']) {
                                                         ?>
@@ -205,6 +206,14 @@
                                                                 <i class="fa fa-remove"></i>
                                                             </a>
                                                         <?php } ?>
+
+                                                        <!--por altasis em 07-05-2021 -->
+														<?php if($expense['payment_at'] != null){ ?>	
+                                                        <a data-placement="left" href="<?php echo base_url(); ?>admin/recibo/gerar/<?php echo $expense['id'] ?>" target="_blank" class="btn btn-default btn-xs" data-toggle="tooltip" title="PDF" onclick="">
+															<i class="fa fa-file-pdf-o"></i>
+                                                        </a>
+														<?php } ?>
+
                                                     </td>
                                                 </tr>
                                         <?php

@@ -560,7 +560,7 @@ echo set_value('guardian_is') == "other" ? "checked" : "";
     </script>
 	
 	
-	<script src="https://altasis.com.br/projetos/vidadecrianca/backend/plugins/jquery.mask.min.js"></script>
+	<script src="<?php echo current_url() ?>backend/plugins/jquery.mask.min.js"></script>
 	<script type="text/javascript">
     $('[name="guardian_postal_code"]').mask('00000-000');
     $('[name="guardian_document"]').mask('000.000.000-00');

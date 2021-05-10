@@ -294,6 +294,72 @@ class Studentfeemaster_model extends MY_Model
     {
 
         $sql = "SELECT student_fees_master.id,student_fees_master.is_system,student_fees_master.student_session_id,student_fees_master.fee_session_group_id,student_fees_master.amount as `student_fees_master_amount`,fee_groups_feetype.id as `fee_groups_feetype_id`,students.firstname,students.admission_no,students.lastname,student_session.class_id,classes.class,sections.section,students.guardian_name,students.father_name,student_session.section_id,student_session.student_id,fee_groups_feetype.amount,fee_groups_feetype.due_date,fee_groups_feetype.fee_groups_id,fee_groups.name,fee_groups_feetype.feetype_id,feetype.code,feetype.type, IFNULL(student_fees_deposite.id,0) as `student_fees_deposite_id`, IFNULL(student_fees_deposite.amount_detail,0) as `amount_detail` FROM `student_fees_master` INNER JOIN fee_session_groups on fee_session_groups.id = student_fees_master.fee_session_group_id INNER JOIN fee_groups_feetype on  fee_groups_feetype.fee_session_group_id = fee_session_groups.id  INNER JOIN fee_groups on fee_groups.id=fee_groups_feetype.fee_groups_id INNER JOIN feetype on feetype.id=fee_groups_feetype.feetype_id LEFT JOIN student_fees_deposite on student_fees_deposite.student_fees_master_id=student_fees_master.id and student_fees_deposite.fee_groups_feetype_id=fee_groups_feetype.id INNER JOIN student_session on student_session.id= student_fees_master.student_session_id INNER JOIN classes on classes.id= student_session.class_id INNER JOIN sections on sections.id= student_session.section_id INNER JOIN students on students.id=student_session.student_id  WHERE student_fees_master.fee_session_group_id =" . $fee_session_groups_id . " and student_fees_master.id=" . $student_fees_master_id . " and fee_groups_feetype.id= " . $fee_groups_feetype_id;
+		
+		echo
+"<script>
+console.log('".$sql."');
+</script>"
+;
+
+		
+		/*$sql = "SELECT 
+student_fee_items.student_session_id,
+student_fees_master.id,
+       student_fees_master.is_system,
+       student_fees_master.student_session_id,
+       student_fees_master.fee_session_group_id,
+       student_fees_master.amount                     AS
+       `student_fees_master_amount`,
+       fee_groups_feetype.id                          AS `fee_groups_feetype_id`
+       ,
+       students.firstname,
+       students.admission_no,
+       students.lastname,
+       student_session.class_id,
+       classes.class,
+       sections.section,
+       students.guardian_name,
+       students.father_name,
+       student_session.section_id,
+       student_session.student_id,
+       fee_groups_feetype.amount,
+       fee_groups_feetype.due_date,
+       fee_groups_feetype.fee_groups_id,
+       fee_groups.name,
+       fee_groups_feetype.feetype_id,
+       feetype.code,
+       feetype.type,
+       Ifnull(student_fees_deposite.id, 0)            AS
+       `student_fees_deposite_id`,
+       Ifnull(student_fees_deposite.amount_detail, 0) AS `amount_detail`
+FROM   student_fee_items, `student_fees_master`
+       INNER JOIN fee_session_groups
+               ON fee_session_groups.id =
+                  student_fees_master.fee_session_group_id
+       INNER JOIN fee_groups_feetype
+               ON fee_groups_feetype.fee_session_group_id =
+                  fee_session_groups.id
+       INNER JOIN fee_groups
+               ON fee_groups.id = fee_groups_feetype.fee_groups_id
+       INNER JOIN feetype
+               ON feetype.id = fee_groups_feetype.feetype_id
+       LEFT JOIN student_fees_deposite
+              ON
+       student_fees_deposite.student_fees_master_id = student_fees_master.id
+       AND student_fees_deposite.fee_groups_feetype_id =
+           fee_groups_feetype.id
+       INNER JOIN student_session
+               ON student_session.id = student_fees_master.student_session_id
+       INNER JOIN classes
+               ON classes.id = student_session.class_id
+       INNER JOIN sections
+               ON sections.id = student_session.section_id
+       INNER JOIN students
+               ON students.id = student_session.student_id
+WHERE  student_fee_items.id = 17478 AND
+student_fees_master.fee_session_group_id = ".$fee_session_groups_id." AND
+student_fees_master.student_session_id = student_fee_items.student_session_id AND
+feetype.id = ".$fee_groups_feetype_id."" */
 
         $query = $this->db->query($sql);
         return $query->row();

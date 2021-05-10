@@ -65,33 +65,27 @@
                                     <li role="presentation" class="active"><a href="#student" aria-controls="student" role="tab" data-toggle="tab">Variaveis do Aluno</a></li>
                                     <li role="presentation"><a href="#guardian" aria-controls="guardian" role="tab" data-toggle="tab">Variaveis do Responsavel</a></li>
                                     <li role="presentation"><a href="#finance" aria-controls="finance" role="tab" data-toggle="tab">Variaveis do Financeiro</a></li>
-
+                                   
                                 </ul>
 
                                 <!-- Tab panes -->
                                 <div class="tab-content p-2">
                                     <div role="tabpanel" class="tab-pane active" id="student">
-                                        <ul class="list-group">
-                                            <?= sprintf('%s', implode('', array_map(function ($row) {
-                                                return sprintf('<li class="list-group-item">{{%s}}</li>', $row);
-                                            }, get_student_var_document()))) ?>
-                                        </ul>
+                                     <ul class="list-group">
+                                       <?=sprintf('%s', implode('', array_map( function($row){ return sprintf('<li class="list-group-item">{{%s}}</li>', $row);}, get_student_var_document()) ))?>
+                                      </ul>
                                     </div>
                                     <div role="tabpanel" class="tab-pane" id="guardian">
-                                        <ul class="list-group">
-                                            <?= sprintf('%s', implode('', array_map(function ($row) {
-                                                return sprintf('<li class="list-group-item">{{%s}}</li>', $row);
-                                            }, get_guardian_var_document()))) ?>
-                                        </ul>
+                                    <ul class="list-group">
+                                       <?=sprintf('%s', implode('', array_map( function($row){ return sprintf('<li class="list-group-item">{{%s}}</li>', $row);}, get_guardian_var_document()) ))?>
+                                      </ul>
                                     </div>
                                     <div role="tabpanel" class="tab-pane" id="finance">
-                                        <ul class="list-group" style="list-style: none; word-wrap: break-word; ">
-                                            <?= sprintf('%s', implode('', array_map(function ($row) {
-                                                return sprintf('<li class="col-md-3 col-xs-6" style="margin-bottom: 5px;"><span class="list-group-item"> {{%s}}</span></li>', $row);
-                                            }, get_finance_var_document()))) ?>
-                                        </ul>
+                                    <ul class="list-group" style="list-style: none; word-wrap: break-word; ">
+                                       <?=sprintf('%s', implode('', array_map( function($row){ return sprintf('<li class="col-md-3 col-xs-6" style="margin-bottom: 5px;"><span class="list-group-item"> {{%s}}</span></li>', $row);}, get_finance_var_document()) ))?>
+                                      </ul>
                                     </div>
-
+                                    
                                 </div>
 
                             </div>
@@ -310,91 +304,23 @@
                 },
                 onImageUpload: async (files) => {
                     return new Promise(async (resolve) => {
-
-                        var fd = new FormData();
-                        fd.append('file', files[0])
-                        await $.when([
-                            $.ajax({
-                                url: '/admin/documents/upload',
-                                type: 'post',
-                                data: fd,
-                                contentType: false,
-                                processData: false,
-                                success: function({
-                                    url
-                                }) {
-
-                                    $img = $('<img>').attr({
-                                        src: url,
-                                        width: 150
-                                    })
-                                    setTimeout(function() {
-                                        $summernote.summernote('insertNode', $img[0]);
-                                    }, 10);
-                                },
-
-                                complete: function() {
-
-                                }
-                            })
-                        ]);
-                        resolve();
-
-
+                        const img = await convertBase64(files[0])
+                        $img = $('<img>').attr({
+                            src: img,
+                            width: 150
+                        })
+                        setTimeout(function() {
+                            $summernote.summernote('insertNode', $img[0]);
+                        }, 10);
                         // console.log(await fileToBase64(files[0]))
                         // $summernote.summernote('insertImage', img);
 
-
+                        resolve();
                     })
 
                 }
             }
         });
-
-        function resize() {
-            //define the width to resize e.g 600px
-            var resize_width = 600; //without px
-
-            //get the image selected
-            var item = document.querySelector('#uploader').files[0];
-
-            //create a FileReader
-            var reader = new FileReader();
-
-            //image turned to base64-encoded Data URI.
-            reader.readAsDataURL(item);
-            reader.name = item.name; //get the image's name
-            reader.size = item.size; //get the image's size
-            reader.onload = function(event) {
-                var img = new Image(); //create a image
-                img.src = event.target.result; //result is base64-encoded Data URI
-                img.name = event.target.name; //set name (optional)
-                img.size = event.target.size; //set size (optional)
-                img.onload = function(el) {
-                    var elem = document.createElement('canvas'); //create a canvas
-
-                    //scale the image to 600 (width) and keep aspect ratio
-                    var scaleFactor = resize_width / el.target.width;
-                    elem.width = resize_width;
-                    elem.height = el.target.height * scaleFactor;
-
-                    //draw in canvas
-                    var ctx = elem.getContext('2d');
-                    ctx.drawImage(el.target, 0, 0, elem.width, elem.height);
-
-                    //get the base64-encoded Data URI from the resize image
-                    var srcEncoded = ctx.canvas.toDataURL(el.target, 'image/jpeg', 0);
-
-                    //assign it to thumb src
-                    document.querySelector('#image').src = srcEncoded;
-
-                    /*Now you can send "srcEncoded" to the server and
-                    convert it to a png o jpg. Also can send
-                    "el.target.name" that is the file's name.*/
-
-                }
-            }
-        }
 
 
         async function convertBase64(file) {

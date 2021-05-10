@@ -138,7 +138,16 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                                             <i class="fa fa-remove"></i>
                                                         </a>
                                                     <?php endif; ?>
+													
+													<!--por altasis em 07-05-2021 -->
+													<?php if($value['payment_at'] != null){ ?>													<!--por altasis em 07-05-2021 -->
+													<a data-placement="left" href="<?php echo base_url(); ?>admin/recibo/gerar/<?php echo $value['id'] ?>" target="_blank" class="btn btn-default btn-xs" data-toggle="tooltip" title="PDF" onclick="">
+														<i class="fa fa-file-pdf-o"></i>
+													</a>
+													<?php } ?>
                                                 </td>
+												
+												
                                             </tr>
                                         <?php
                                                     $count++;
