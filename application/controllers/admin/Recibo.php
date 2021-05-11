@@ -5,8 +5,8 @@ class Recibo extends Admin_Controller {
 	  
 	  
 	$data = array(
-		'title'   => 'Sobre',
-		'content' => 'Texto da página sobre',
+		'title'   => 'Recibo',
+		'content' => 'Gerador de Recibo',
 	);
 
    
