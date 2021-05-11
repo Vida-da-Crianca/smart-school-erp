@@ -181,6 +181,7 @@ else{
 			<td width="33%">
 			</td>
 		</tr>
+
 		<tr>
 			<td colspan="3" syle="text-align: justify;">
 				
@@ -201,9 +202,11 @@ else{
 				<br>
 				<b>Descrição/Observação: </b>'.$desc.'
 				<br>
+
 				
 			</td>
 		</tr>
+
 		<tr>
 			<td colspan="3">
 				<center>
@@ -214,9 +217,11 @@ else{
 				<br>
 				'.$funcEmp.'
 				<br>
+
 				</center>
 			</td>
 		</tr>
+
 		<tr>
 			<td colspan="3">
 				<center>
@@ -226,6 +231,8 @@ else{
 				</center>
 			</td>
 		</tr>
+
+
 	</table>';
 
 
@@ -234,16 +241,21 @@ else{
 	//RECIBO
 	echo'
 	<body onload="window.print()"> 
+
 		<style>
 		@media print {
 			.pagebreak { page-break-before: always; } /* page-break-after works, as well */
 		}
 		</style>
 		<br>
+
 		'.$recibo.'
 		------------------------------------------------------------------------------------------------------------------------------------------
 		'.$recibo.'
+
 	</body>
+
+
 	';
 }
 
