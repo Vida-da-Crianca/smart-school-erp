@@ -1,0 +1,105 @@
+version: "3.7"
+services:
+  db:
+    image: mysql:8
+    environment:
+      MYSQL_DATABASE: erpjb
+      MYSQL_PASSWORD: erpjb@2020
+      MYSQL_ROOT_PASSWORD: erpjb@2020
+      MYSQL_USER: erpjp
+    command: 
+      [
+        '--default_authentication_plugin=mysql_native_password',
+        '--character-set-server=utf8mb4',
+        '--collation-server=utf8mb4_unicode_ci'
+      ]
+      
+    volumes:
+      - /var/apps/erpjb/production/database/msyql:/var/lib/mysql
+    networks:
+     - app_net
+    configs:
+      -
+        source: mysql.conf
+        target: /etc/mysql/conf.d/group.cnf 
+  jobs:
+    image: $IMAGE_ID:$VERSION
+    working_dir: /app/
+    volumes:
+      - /var/apps/erpjb/production/app/uploads:/app/uploads
+      - /var/apps/erpjb/production/app/logs:/app/application/logs
+      - /var/apps/erpjb/production/app/temp:/app/temp
+    depends_on:
+      - app
+    environment:
+      - ENVIRONMENT=testing
+      - DB_HOST=db
+      - DB_NAME=erpjb
+      - DB_PASSWORD=erpjb@2020
+      - DB_USER=root
+      - BANK_INTER_PDF_FILES=temp/
+      - DISCORD_EXCEPTIONS_TESTING=https://discord.com/api/webhooks/794558220210929665/dEPJ0vReTea20tkskBfUpBklStkm7kasX42bqAZvIv3rCwqaz-2vgLEu_uNpOvt8p1Uv
+      - DISCORD_LOGS_TESTING=https://discord.com/api/webhooks/794557932775014471/PuvTfwHF9_afVU-dNZbP7rlWB2IkUPX0ZaIe9kxZXFbfv1buzBzfsRQkyRBK_k7pM7NF
+      - DISCORD_BILLET_OLD_TESTING=https://discord.com/api/webhooks/794557932775014471/PuvTfwHF9_afVU-dNZbP7rlWB2IkUPX0ZaIe9kxZXFbfv1buzBzfsRQkyRBK_k7pM7NF
+      - BASE_URL=https://erpjb.com.br
+      - LICENSE_APP=63AH2N-XTFFLP-952QAM-UTBUai9NL0Q5R2lLeE4xbXZBMGVMVnEwMlpvTTU0QmNFcml6emVLNkk0MD0=
+    tty: true
+    networks:
+      - app_net
+      - redis_net
+    command: >
+        /bin/bash -c " 
+         php man migrate -n &&
+         php man normalize:billete:deposite &&
+         php man normalize:billete:attach-invoice &&
+         php man schedule:run"
+  app:
+    image: $IMAGE_ID:$VERSION
+    depends_on: 
+     - db
+     - redis
+    environment:
+      - ENVIRONMENT=testing
+      - DB_HOST=db
+      - DB_NAME=erpjb
+      - DB_PASSWORD=erpjb@2020
+      - DB_USER=root
+      - BANK_INTER_PDF_FILES=temp/
+      - DISCORD_EXCEPTIONS_TESTING=https://discord.com/api/webhooks/794558220210929665/dEPJ0vReTea20tkskBfUpBklStkm7kasX42bqAZvIv3rCwqaz-2vgLEu_uNpOvt8p1Uv
+      - DISCORD_LOGS_TESTING=https://discord.com/api/webhooks/794557932775014471/PuvTfwHF9_afVU-dNZbP7rlWB2IkUPX0ZaIe9kxZXFbfv1buzBzfsRQkyRBK_k7pM7NF
+      - DISCORD_BILLET_OLD_TESTING=https://discord.com/api/webhooks/794557932775014471/PuvTfwHF9_afVU-dNZbP7rlWB2IkUPX0ZaIe9kxZXFbfv1buzBzfsRQkyRBK_k7pM7NF
+      - BASE_URL=https://erpjb.com.br
+      - LICENSE_APP=63AH2N-XTFFLP-952QAM-UTBUai9NL0Q5R2lLeE4xbXZBMGVMVnEwMlpvTTU0QmNFcml6emVLNkk0MD0=
+    volumes:
+      - /var/apps/erpjb/production/app/uploads:/app/uploads
+      - /var/apps/erpjb/production/app/logs:/app/application/logs
+      - /var/apps/erpjb/production/app/temp:/app/temp
+    
+    deploy:
+      labels:
+        traefik.http.services.erpjpb-production.loadbalancer.server.port: "80"
+        traefik.http.routers.erpjpb-production.rule: (Host(`erpjb.com.br`))
+        traefik.docker.network: proxy
+        traefik.enable: "true"
+        traefik.http.routers.erpjpb-production.entrypoints: http
+        traefik.http.routers.erpjpb-production-secure.entrypoints: https
+        traefik.http.routers.erpjpb-production-secure.rule: Host(`erpjb.com.br`)
+        traefik.http.routers.erpjpb-production-secure.tls: "true"
+        traefik.http.routers.erpjpb-production-secure.tls.certresolver: le
+        traefik.http.middlewares.erpjpb-production_redirect.redirectscheme.scheme: https
+        traefik.http.routers.erpjpb-production.middlewares: "erpjpb-production_redirect"
+    tty: true
+    networks:
+      - proxy
+      - app_net
+      - redis_net
+networks:
+  proxy:
+    external: true
+  redis_net:
+    external: true  
+  app_net:
+
+configs:
+   mysql.conf:
+     file: './mysql.conf'  

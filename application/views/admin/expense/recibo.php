@@ -1,7 +1,4 @@
 <?php
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
 
     function removerFormatacaoNumero( $strNumero )
     {
@@ -151,7 +148,7 @@ foreach ($queryScola->result() as $dadoEscola)
 //tratando data de pgt
 if($dataPgt == null){
 	echo "Impossível criar recibo. Item não pago.";
-	
+	die();
 }
 else{
 	$dataa = explode("-",$dataPgt);

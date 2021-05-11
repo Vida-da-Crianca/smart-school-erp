@@ -1,0 +1,107 @@
+version: "3.7"
+services:
+  redis:
+    image: redis:6.0.9
+    networks:
+      - erp_net
+  memcahed:
+    image: memcached:1.6-alpine
+    networks:
+      - erp_net
+
+  db:
+    image: mysql:8
+    environment:
+      MYSQL_DATABASE: erp
+      MYSQL_PASSWORD: erp
+      MYSQL_ROOT_PASSWORD: erp
+      MYSQL_USER: erp
+    command: 
+      [
+        '--default_authentication_plugin=mysql_native_password',
+        # '--character-set-server=utf8mb4',
+        # '--collation-server=utf8mb4_unicode_ci'
+        
+      ]
+    volumes:
+      - ./data:/var/lib/mysql
+    networks:
+     - erp_net
+    ports:
+     - 3307:3306
+    configs:
+      -
+        source: mysql.conf
+        target: /etc/mysql/conf.d/group.cnf
+  # jobs:
+  #   image: webdevops/php-nginx:7.4
+  #   working_dir: /app/
+  #   depends_on:
+  #     - db
+  #     - redis
+  #   environment:
+  #     - VERSION_erp=1.0.2
+  #     - PHP_DATE_TIMEZONE=America/Sao_Paulo
+  #     - LICENSE_APP=63AH2N-XTFFLP-952QAM-UTBUai9NL0Q5R2lLeE4xbXZBMGVMVnEwMlpvTTU0QmNFcml6emVLNkk0MD0=
+  #   volumes:
+  #    - ./:/app/
+  #   tty: true
+  #   networks:
+  #     - proxy
+  #     - erp_net 
+  #   command: [
+  #     "/app/schedule-run.sh"
+  #   ] 
+  #   configs:
+  #     - 
+  #       source: openssl.cnf
+  #       target: /etc/ssl/openssl.cnf
+  app:
+    image: webdevops/php-nginx:7.4
+    working_dir: /app/
+    depends_on:
+      - db
+      - redis
+    environment:
+      - VERSION_erp=1.0.2
+      - PHP_DATE_TIMEZONE=America/Sao_Paulo
+      - LICENSE_APP=63AH2N-XTFFLP-952QAM-UTBUai9NL0Q5R2lLeE4xbXZBMGVMVnEwMlpvTTU0QmNFcml6emVLNkk0MD0=
+      - BASE_URL=http://erp.dev.in/
+      - ENVIRONMENT=development
+    volumes:
+     - ./:/app/
+    configs:
+      - 
+        source: openssl.cnf
+        target: /etc/ssl/openssl.cnf
+    deploy:
+      labels:
+        traefik.http.services.erp.loadbalancer.server.port: "80"
+        traefik.http.routers.erp.rule: (Host(`erp.dev.in`) )
+        traefik.docker.network: proxy
+        traefik.enable: "true"
+        traefik.http.routers.erp.entrypoints: http
+        traefik.http.routers.erp-secure.entrypoints: https
+        traefik.http.routers.erp-secure.rule: (Host(`erp.dev.in`))
+        traefik.http.routers.erp-secure.tls: "true"
+        # traefik.http.routers.erp-secure.tls.certresolver: le
+        # traefik.http.middlewares.erp_redirect.redirectscheme.scheme: https
+        # traefik.http.routers.erp.middlewares: "erp_redirect"
+    tty: true
+    networks:
+      - proxy
+      - erp_net
+networks:
+  proxy:
+    external: true
+  erp_net:
+configs:
+   mysql.conf:
+     file: './mysql.conf'
+   openssl.cnf:
+     file: ./openssl.cnf
+  #  cron:
+  #    file: ./docker/cron.sh
+  #  supervisor.conf:
+  #    file: ./docker/supervisor.conf 
+
