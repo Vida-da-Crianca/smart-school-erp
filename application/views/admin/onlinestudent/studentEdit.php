@@ -1,5 +1,3 @@
-<!--AJUSTADO POR EWERTON(altasis) EM 13-05-2021-->
-
 
 <!-- fontawesome -->
 <script src="https://kit.fontawesome.com/0409d33244.js"></script>
@@ -8,7 +6,7 @@
 <div class="content-wrapper">
     <section class="content-header">
         <h1>
-            <i class="fa fa-user-plus"></i> <?php echo $this->lang->line('student_information'); ?> <small><?php echo $this->lang->line('student'); ?></small></h1>
+            <i class="fa fa-user-plus"></i> <?php echo $this->lang->line('student_information'); ?> <small><?php echo $this->lang->line('student1'); ?></small></h1>
     </section>
     <!-- Main content -->
     <section class="content">
@@ -542,15 +540,11 @@
 										
 										
 <div class="row">
-    <?php
-    //REMOVENDO - do CEP para o value. Erro encontrado em 10-05-2021 e corrigido em 13-05-2021
-    //por Ewerton (Altasis)
-    $cep = str_replace("-","",$student['guardian_postal_code']);
-    ?>
+
 	<div class="row col-md-12">
 	<div class="col-md-2 form-group">
 	<label for="exampleInputEmail1"><?php echo $this->lang->line('guardian_postal_code'); ?></label><small class="req"> *</small>
-	<input maxlength="20" id="guardian_postal_code" name="guardian_postal_code" placeholder="08342350" class="form-control" value="<?php echo set_value('guardian_postal_code', $cep); ?>" />
+	<input maxlength="20" id="guardian_postal_code" name="guardian_postal_code" placeholder="08342350" class="form-control" value="<?php echo set_value('guardian_postal_code', $student['guardian_postal_code']); ?>" />
 	<span class="text-danger"><?php echo form_error('guardian_postal_code'); ?></span>
 	</div>
 	<div class="col-md-4 form-group" style="
@@ -565,7 +559,7 @@
 	
 	<!--
 	 <div class="col-md-12">
-         <label for="exampleInputEmail1">ResponsÃ¡vel Cep</label> <small class="req"> *</small><small class="req"> *</small>
+         <label for="exampleInputEmail1">Responsável Cep</label> <small class="req"> *</small><small class="req"> *</small>
          <input maxlength="9" id="guardian_postal_code" name="guardian_postal_code" 
 		 placeholder="08342350" class="form-control" 
 		 value="<?php //echo set_value('guardian_postal_code', $student['guardian_postal_code']); ?>">
@@ -578,25 +572,25 @@
 <div class="row"> 
 	<br>
    <div class="col-md-4">
-      <label for="exampleInputEmail1">EndereÃ§o do ResponsÃ¡vel Financeiro </label>
+      <label for="exampleInputEmail1">Endereço do Responsável Financeiro </label>
       <input maxlength="30" id="guardian_address" name="guardian_address" placeholder="" class="form-control" 
 	  value="<?php echo set_value('guardian_address', $student['guardian_address']); ?>">
       <span class="text-danger"><?php echo form_error('guardian_address'); ?></span>
    </div>
    <div class="col-md-2">
-      <label>NÃºmero</label>
+      <label>Número</label>
       <input onkeyup="this.value=this.value.replace(/[^\d]/,'')" maxlength="30" id="guardian_address_number" name="guardian_address_number" placeholder="23" class="form-control" 
 	  value="<?php echo set_value('guardian_address_number', $student['guardian_address_number']); ?>">
       <span class="text-danger"><?php echo form_error('guardian_address_number'); ?></span>
    </div>
    <div class="col-md-3">
-      <label for="exampleInputEmail1">ResponsÃ¡vel Bairro</label>
+      <label for="exampleInputEmail1">Responsável Bairro</label>
       <input maxlength="20" id="guardian_district" name="guardian_district" placeholder="" class="form-control" 
 	  value="<?php echo set_value('guardian_district', $student['guardian_district']); ?>">
       <span class="text-danger"><?php echo form_error('guardian_district'); ?></span>
    </div>
    <div class="col-md-2">
-      <label for="exampleInputEmail1">ResponsÃ¡vel Cidade</label>
+      <label for="exampleInputEmail1">Responsável Cidade</label>
       <input maxlength="20" id="guardian_city" name="guardian_city" placeholder="Barretos" class="form-control" 
 	  value="<?php echo set_value('guardian_city', $student['guardian_city']); ?>">
       <span class="text-danger"><?php echo form_error('guardian_city'); ?></span>
