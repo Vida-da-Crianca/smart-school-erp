@@ -41,7 +41,7 @@ services:
       - DISCORD_EXCEPTIONS_TESTING=https://discord.com/api/webhooks/794558220210929665/dEPJ0vReTea20tkskBfUpBklStkm7kasX42bqAZvIv3rCwqaz-2vgLEu_uNpOvt8p1Uv
       - DISCORD_LOGS_TESTING=https://discord.com/api/webhooks/794557932775014471/PuvTfwHF9_afVU-dNZbP7rlWB2IkUPX0ZaIe9kxZXFbfv1buzBzfsRQkyRBK_k7pM7NF
       - DISCORD_BILLET_OLD_TESTING=https://discord.com/api/webhooks/794557932775014471/PuvTfwHF9_afVU-dNZbP7rlWB2IkUPX0ZaIe9kxZXFbfv1buzBzfsRQkyRBK_k7pM7NF
-      - BASE_URL=https://erpjb.com.br
+      - BASE_URL=https://staging.eeividadecrianca.com.br
       - LICENSE_APP=63AH2N-XTFFLP-952QAM-UTBUai9NL0Q5R2lLeE4xbXZBMGVMVnEwMlpvTTU0QmNFcml6emVLNkk0MD0=
     tty: true
     networks:
@@ -68,7 +68,7 @@ services:
       - DISCORD_EXCEPTIONS_TESTING=https://discord.com/api/webhooks/794558220210929665/dEPJ0vReTea20tkskBfUpBklStkm7kasX42bqAZvIv3rCwqaz-2vgLEu_uNpOvt8p1Uv
       - DISCORD_LOGS_TESTING=https://discord.com/api/webhooks/794557932775014471/PuvTfwHF9_afVU-dNZbP7rlWB2IkUPX0ZaIe9kxZXFbfv1buzBzfsRQkyRBK_k7pM7NF
       - DISCORD_BILLET_OLD_TESTING=https://discord.com/api/webhooks/794557932775014471/PuvTfwHF9_afVU-dNZbP7rlWB2IkUPX0ZaIe9kxZXFbfv1buzBzfsRQkyRBK_k7pM7NF
-      - BASE_URL=https://erpjb.com.br
+      - BASE_URL=https://staging.eeividadecrianca.com.br
       - LICENSE_APP=63AH2N-XTFFLP-952QAM-UTBUai9NL0Q5R2lLeE4xbXZBMGVMVnEwMlpvTTU0QmNFcml6emVLNkk0MD0=
     volumes:
       - /var/apps/erpjb/production/app/uploads:/app/uploads
