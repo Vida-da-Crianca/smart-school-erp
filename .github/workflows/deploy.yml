@@ -58,7 +58,7 @@ jobs:
     needs: [build,deployTest]
     environment:
       name: Staging
-      url: https://erpjb.com.br/
+      url: https://staging.eeividadecrianca.com.br
     steps:
       - uses: actions/checkout@v2
       - name: Create Folder for Application
@@ -96,7 +96,7 @@ jobs:
     needs: [build, ]
     environment:
       name: Staging
-      url: https://erpjb.com.br/
+      url: https://staging.eeividadecrianca.com.br
     steps:
      
       - name: Validando testes da aplicação
