@@ -78,12 +78,12 @@ services:
     deploy:
       labels:
         traefik.http.services.erpjpb-production.loadbalancer.server.port: "80"
-        traefik.http.routers.erpjpb-production.rule: (Host(`erpjb.com.br`))
+        traefik.http.routers.erpjpb-production.rule: (Host(`https://staging.eeividadecrianca.com.br`))
         traefik.docker.network: proxy
         traefik.enable: "true"
         traefik.http.routers.erpjpb-production.entrypoints: http
         traefik.http.routers.erpjpb-production-secure.entrypoints: https
-        traefik.http.routers.erpjpb-production-secure.rule: Host(`erpjb.com.br`)
+        traefik.http.routers.erpjpb-production-secure.rule: Host(`https://staging.eeividadecrianca.com.br`)
         traefik.http.routers.erpjpb-production-secure.tls: "true"
         traefik.http.routers.erpjpb-production-secure.tls.certresolver: le
         traefik.http.middlewares.erpjpb-production_redirect.redirectscheme.scheme: https
