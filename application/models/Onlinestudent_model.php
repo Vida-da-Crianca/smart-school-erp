@@ -1,5 +1,10 @@
 <?php
 
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
+
 if (!defined('BASEPATH')) {
     exit('No direct script access allowed');
 }
@@ -79,12 +84,15 @@ class Onlinestudent_model extends MY_Model {
             $class_section_id = $data['class_section_id'];
 
             if ($action == "enroll") {
+                
                 //==========================
                 $insert = true;
                 $sch_setting_detail = $this->setting_model->getSetting();
 
                 if ($sch_setting_detail->adm_auto_insert) {
                     if ($sch_setting_detail->adm_update_status) {
+
+                        
 
                         $admission_no = $sch_setting_detail->adm_prefix . $sch_setting_detail->adm_start_from;
 
@@ -95,14 +103,21 @@ class Onlinestudent_model extends MY_Model {
                         $admission_no = $sch_setting_detail->adm_prefix . sprintf("%0" . $sch_setting_detail->adm_no_digit . "d", $last_admission_digit + 1);
 
                         $data['admission_no'] = $admission_no;
+
+                    
+
                     } else {
+                        
                         $admission_no = $sch_setting_detail->adm_prefix . $sch_setting_detail->adm_start_from;
                         $data['admission_no'] = $admission_no;
                     }
                 }
 
                 $admission_no_exists = $this->student_model->check_adm_exists($data['admission_no']);
-                if ($admission_no_exists) {
+
+                //die($admission_no_exists);
+                
+                if (!$admission_no_exists) {
                     $insert = false;
                     $record_update_status = false;
                 }
@@ -171,8 +186,12 @@ class Onlinestudent_model extends MY_Model {
 
                     $data['is_enroll'] = 1;
                     $data['class_section_id'] = $class_section_id;
+
+                    
                 }
             }
+
+            
 
             $this->db->where('id', $data_id);
             $this->db->update('online_admissions', $data);
