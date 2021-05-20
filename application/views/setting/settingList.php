@@ -486,7 +486,7 @@
                                         <div class="form-group row">
                                             <label class="col-sm-4"><?php echo $this->lang->line('admission') . " " . $this->lang->line('start') . " " . $this->lang->line('from') ?><small class="req"> *</small></label>
                                             <div class="col-sm-8">
-                                                <input type="text" name="adm_start_from" id="adm_start_from" class="form-control" value="<?php echo $result->adm_start_from; ?>">
+                                                <input type="text" maxlength='12' name="adm_start_from" id="adm_start_from" class="form-control" value="<?php echo $result->adm_start_from; ?>" placeholder="AtÃ© 12 numeros">
                                                 <span class="text-danger"><?php echo form_error('adm_start_from'); ?></span>
                                             </div>
                                         </div>
