@@ -166,7 +166,7 @@ class Onlinestudent extends Admin_Controller {
                 'guardian_phone' => $this->input->post('guardian_phone'),
                 'guardian_address' => $this->input->post('guardian_address'),
 				'guardian_address_number' => $this->input->post('guardian_address_number'),
-				'guardian_postal_code' => $this->input->post('guardian_postal_code'),
+				'guardian_postal_code' => str_replace("-","", $this->input->post('guardian_postal_code')),
 				'guardian_district' => $this->input->post('guardian_district'),
 				'guardian_city' => $this->input->post('guardian_city'),
 				'guardian_state' => $this->input->post('guardian_state'),
