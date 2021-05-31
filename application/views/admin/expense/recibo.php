@@ -1,4 +1,7 @@
 <?php
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
 
     function removerFormatacaoNumero( $strNumero )
     {
@@ -148,7 +151,7 @@ foreach ($queryScola->result() as $dadoEscola)
 //tratando data de pgt
 if($dataPgt == null){
 	echo "Impossível criar recibo. Item não pago.";
-	die();
+	
 }
 else{
 	$dataa = explode("-",$dataPgt);
@@ -181,7 +184,6 @@ else{
 			<td width="33%">
 			</td>
 		</tr>
-
 		<tr>
 			<td colspan="3" syle="text-align: justify;">
 				
@@ -202,11 +204,9 @@ else{
 				<br>
 				<b>Descrição/Observação: </b>'.$desc.'
 				<br>
-
 				
 			</td>
 		</tr>
-
 		<tr>
 			<td colspan="3">
 				<center>
@@ -217,22 +217,18 @@ else{
 				<br>
 				'.$funcEmp.'
 				<br>
-
 				</center>
 			</td>
 		</tr>
-
 		<tr>
 			<td colspan="3">
 				<center>
 					<br>
-					<br>
+					<br> 
 					Emitido por: '.$_SESSION['admin']['username'].', em '.$dataHora.'
 				</center>
 			</td>
 		</tr>
-
-
 	</table>';
 
 
@@ -241,22 +237,33 @@ else{
 	//RECIBO
 	echo'
 	<body onload="window.print()"> 
-
 		<style>
 		@media print {
 			.pagebreak { page-break-before: always; } /* page-break-after works, as well */
 		}
 		</style>
 		<br>
-
 		'.$recibo.'
 		------------------------------------------------------------------------------------------------------------------------------------------
 		'.$recibo.'
-
 	</body>
-
-
 	';
 }
 
 ?>
+
+    © 2021 GitHub, Inc.
+    Terms
+    Privacy
+    Security
+    Status
+    Docs
+
+    Contact GitHub
+    Pricing
+    API
+    Training
+    Blog
+    About
+
+Loading complete
