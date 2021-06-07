@@ -1,3 +1,4 @@
+    <?php error_reporting(E_ALL & ~E_NOTICE); ?>
     <div class="content-wrapper" style="min-height: 946px;">
         <section class="content-header">
             <h1>
