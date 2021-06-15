@@ -2354,7 +2354,7 @@ table th[class*="col-"] {
 .table-hover > tbody > tr.active:hover > td,
 .table-hover > tbody > tr:hover > .active,
 .table-hover > tbody > tr.active:hover > th {
-  background-color: #e8e8e8;
+  background-color: #868686;
 }
 .table > thead > tr > td.success,
 .table > tbody > tr > td.success,
