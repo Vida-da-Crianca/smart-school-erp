@@ -50,7 +50,11 @@
 
 
     <script src="<?php echo base_url(); ?>backend/custom/jquery.min.js"></script>
+    
     <script src="<?php echo base_url(); ?>backend/dist/js/moment.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.23/js/jquery.dataTables.min.js"></script>
+    <script src="//cdn.datatables.net/plug-ins/1.10.12/sorting/datetime-moment.js"></script>
+    
     <script src="<?php echo base_url(); ?>backend/dist/js/jquery.validate.min.js"></script>
     <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/additional-methods.min.js"></script>
     <script src="<?php echo base_url(); ?>backend/datepicker/js/bootstrap-datetimepicker.js"></script>
