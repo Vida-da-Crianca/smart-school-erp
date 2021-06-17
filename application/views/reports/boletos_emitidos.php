@@ -619,6 +619,7 @@
             }
         });
 
+        <?php if($show_table): ?>
         //$.fn.dataTable.moment( 'DD/MM/YYYY' );
         var $table = $('#invoice_table').DataTable({
             ordering: true,
@@ -747,10 +748,8 @@
             }
         });
         
-        
-    
 	$("#totalValor").html("R$ <?php echo number_format($total, 2, ',', '.'); ?>");
-        
+        <?php endif; ?>
         
         
          function dropdownLabel() {
