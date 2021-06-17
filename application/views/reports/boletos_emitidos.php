@@ -206,13 +206,13 @@
                                     </div>
                                     <div class="col-md-3 form-group">
                                         <label>Status</label>
+                                        
+                                        
                                         <div class="row">
                                                 <div class="col-xs-12 dropdown" id="classDropdown">
                                                     <div class="button-group w-full" data-toggle="dropdown">
                                                         <button type="button" class="btn btn-default btn-sm">
-                                                            <span data-default="Selecione um Status" 
-                                                                  class="dropdown-label">Selecione um Status</span> 
-                                                                  <span class="caret"></span>
+                                                            <span data-default="Selecione uma turma" class="dropdown-label">Selecione uma turma</span> <span class="caret"></span>
                                                         </button>
                                                     </div>
                                                     <ul class="dropdown-menu">
@@ -221,12 +221,13 @@
                                                         foreach ($statusList as $boleto) { if(!empty($boleto->status)){
                                                         ?>
                                                             <li class="ui-checkbox">
-                                                                <label class="small control control-checkbox" data-value="<?php echo $boleto->status ?>">
+                                                                <label class="small control control-checkbox" data-value="<?php $boleto->status ?>">
                                                                     <input type="checkbox" 
                                                                            data-value="<?php echo $boleto->status ?>" 
                                                                            data-label="<?php echo $boleto->status ?>" 
-                                                                               <?php echo (in_array($boleto->status, $status)) ? "checked" : ''; ?> name="status[]" 
-                                                                               value="<?php echo $boleto->status; ?>" />&nbsp;<?php echo $boleto->status ?>
+                                                                               <?php if (in_array($boleto->status, $status)) echo "checked" ?> 
+                                                                           name="class_id_option[]" value="<?php echo $boleto->status; ?>" />
+                                                                    &nbsp;<?php echo $boleto->status ?>
                                                                     <div class="control_indicator"></div>
                                                                 </label>
                                                             </li>
@@ -240,8 +241,9 @@
                                                     </ul>
                                                 </div>
 
-                                                <span class="text-danger"><?php //echo form_error('class_id_option[]'); ?></span>
+                                                <span class="text-danger"><?php echo form_error('class_id_option[]'); ?></span>
                                             </div>
+                                        
                                     </div>
                                 </div>
                                 
@@ -283,7 +285,7 @@
                             <table id="invoice_table" class="dataTable display" role="grid" style="width: 100%;">
                                 <thead>
                                     <tr>
-                                        </th>
+                                        
                                         <th>Nome Responsável financeiro</th>
 										<th>CPF</th>
                                         <th>Aluno</th>
@@ -437,6 +439,162 @@
         width: 100%;
         text-align: left;
     }
+    
+    .w-full {
+            width: 100% !important;
+        }
+
+        .w-full button {
+            width: 100% !important;
+            text-align: left;
+            display: flex !important;
+            justify-content: space-between !important;
+            align-items: center !important;
+            border-radius: 0 !important;
+            background: transparent !important;
+        }
+
+        .ui-checkbox {
+            padding: 0px 5px;
+            
+        }
+
+        .control {
+            font-family: arial;
+            display: block;
+            position: relative;
+            padding-left: 25px;
+            margin-bottom: 3px;
+            padding-top: 1px;
+            cursor: pointer;
+            font-size: 13px;
+        }
+
+        .control input {
+            position: absolute;
+            z-index: -1;
+            opacity: 0;
+        }
+
+        .control_indicator {
+            position: absolute;
+            top: 1px;
+            left: 0;
+            height: 15px;
+            width: 15px;
+            background: #e6e6e6;
+            border: 0px solid #000000;
+            border-radius: 0px;
+        }
+
+        .control:hover input~.control_indicator,
+        .control input:focus~.control_indicator {
+            background: #cccccc;
+        }
+
+        .control input:checked~.control_indicator {
+            background: #2a6a7b;
+        }
+
+        .control:hover input:not([disabled]):checked~.control_indicator,
+        .control input:checked:focus~.control_indicator {
+            background: '#0e6647d';
+        }
+
+        .control input:disabled~.control_indicator {
+            background: #e6e6e6;
+            opacity: 0.6;
+            pointer-events: none;
+        }
+
+        .control_indicator:after {
+            box-sizing: unset;
+            content: '';
+            position: absolute;
+            display: none;
+        }
+
+        .control input:checked~.control_indicator:after {
+            display: block;
+        }
+
+        .control-checkbox .control_indicator:after {
+            left: 5px;
+            top: 2px;
+            width: 3px;
+            height: 8px;
+            border: solid #ffffff;
+            border-width: 0 2px 2px 0;
+            transform: rotate(45deg);
+        }
+
+        .control-checkbox input:disabled~.control_indicator:after {
+            border-color: #7b7b7b;
+        }
+
+        .control-checkbox .control_indicator::before {
+            content: '';
+            display: block;
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 4.5rem;
+            height: 4.5rem;
+            margin-left: -1.3rem;
+            margin-top: -1.3rem;
+            background: #2aa1c0;
+            border-radius: 3rem;
+            opacity: 0.6;
+            z-index: 99999;
+            transform: scale(0);
+        }
+
+        @keyframes s-ripple {
+            0% {
+                transform: scale(0);
+            }
+
+            20% {
+                transform: scale(1);
+            }
+
+            100% {
+                opacity: 0;
+                transform: scale(1);
+            }
+        }
+
+        @keyframes s-ripple-dup {
+            0% {
+                transform: scale(0);
+            }
+
+            30% {
+                transform: scale(1);
+            }
+
+            60% {
+                transform: scale(1);
+            }
+
+            100% {
+                opacity: 0;
+                transform: scale(1);
+            }
+        }
+
+        .control-checkbox input+.control_indicator::before {
+            animation: s-ripple 250ms ease-out;
+        }
+
+        .control-checkbox input:checked+.control_indicator::before {
+            animation-name: s-ripple-dup;
+        }
+
+        .dropdown-menu{
+
+            overflow-y: auto;
+        }
 </style>
 <script type="text/javascript">
     $(document).ready(function() {
@@ -592,6 +750,49 @@
         
     
 	$("#totalValor").html("R$ <?php echo number_format($total, 2, ',', '.'); ?>");
+        
+        
+        
+         function dropdownLabel() {
+                var $element = $('#classDropdown .dropdown-label');
+                var checkedOptions = [];
+                var checkedIdOptions = [];
+                var label = $element.data('default')
+                $('#classDropdown input:checked').each(function(e) {
+
+                    checkedOptions.push($(this).data('label'));
+                    checkedIdOptions.push($(this).data('value'));
+                })
+
+                if (checkedOptions.length > 0) {
+                    label = checkedOptions.slice(0, 2).join(', ');
+                    if (checkedOptions.length > 2) {
+                        label = `${label} <b> (+${checkedOptions.length - 2})</b>`
+                    }
+
+                    //getSectionByClass(checkedIdOptions);
+                }
+
+                $element.html(label);
+                initializeObserveDropdown();
+            }
+            dropdownLabel();
+
+
+            function initializeObserveDropdown() {
+                $('.control').off('click.classID').on('click.classID', function(event) {
+                    var $element = $(this).find('input');
+                    var checked = $element.prop('checked');
+                    $element.prop('checked', !checked);
+                    // $(event.target).blur();
+                    setTimeout(function() {
+                        dropdownLabel();
+                    }, 50)
+                    // event.preventDefault();
+                    return false;
+                });
+            }
+
 	
 });
 	
