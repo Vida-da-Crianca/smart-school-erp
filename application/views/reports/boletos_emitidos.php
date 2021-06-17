@@ -226,7 +226,7 @@
                                                                            data-value="<?php echo $boleto->status ?>" 
                                                                            data-label="<?php echo $boleto->status ?>" 
                                                                                <?php if (in_array($boleto->status, $status)) echo "checked" ?> 
-                                                                           name="class_id_option[]" value="<?php echo $boleto->status; ?>" />
+                                                                           name="status[]" value="<?php echo $boleto->status; ?>" />
                                                                     &nbsp;<?php echo $boleto->status ?>
                                                                     <div class="control_indicator"></div>
                                                                 </label>
