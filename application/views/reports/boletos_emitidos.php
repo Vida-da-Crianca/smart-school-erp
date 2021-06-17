@@ -212,7 +212,7 @@
                                                 <div class="col-xs-12 dropdown" id="classDropdown">
                                                     <div class="button-group w-full" data-toggle="dropdown">
                                                         <button type="button" class="btn btn-default btn-sm">
-                                                            <span data-default="Selecione uma turma" class="dropdown-label">Selecione uma turma</span> <span class="caret"></span>
+                                                            <span data-default="Selecione um status" class="dropdown-label">Selecione um status</span> <span class="caret"></span>
                                                         </button>
                                                     </div>
                                                     <ul class="dropdown-menu">
