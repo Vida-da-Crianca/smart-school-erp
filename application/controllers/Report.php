@@ -426,7 +426,167 @@ class Report extends Admin_Controller
 
             $data['resultlist'] = $this->student_model->admission_report($searchterm, $carray, $condition);
         }
+        
+        //Vamos montar os dados do relatorio aqui no controller
+        //pois estava la na view com slq espalhada no meio do HTML
+        //vamos fazer aqui pra ficar separado... dados de view. :)
+        if((int)$this->input->post('gerarRelatorio') == 1){ //quando clica no botao Pesquisar ele manda essa flag...
+           
+            //Vou colocar a SQL aqui direto mas sei que nao é o recomendado
+            //mas... como nao temos tempo vou fazer aqui mesmo..depois jogamos isso para um model
+            
+            $sql = "SELECT 
+                    student_fee_items.id AS idFinanceiro, 
+                    concat(students.firstname,' ', students.lastname) AS alunoNome,
+                    student_fee_items.title AS recebimentoNome,
+                    student_fee_items.amount AS recebimentoValor,
+                    student_fee_items.due_date AS recebimentoDataVencimento,
+                    DATE_FORMAT(student_fee_items.due_date,'%d/%m/%Y') AS recebimentoDataVencimentoBr,
+                    IFNULL( 
+                                  (
+                             SELECT billets.bank_bullet_id  
+                             FROM billet_student_fee_item 
+                             LEFT JOIN  billets ON billets.id = billet_student_fee_item.billet_id 
+                             WHERE billet_student_fee_item.fee_item_id = student_fee_items.id LIMIT 1
+                                  )
+                        , 0) AS boletoNumero,
+                    IFNULL( 
+                                (
+                                        SELECT invoices.invoice_number FROM invoices 
+                            LEFT JOIN invoice_billet ON invoice_billet.invoice_id = invoices.id 
+                            WHERE invoice_billet.billet_id = (
 
+                                                 SELECT billets.id  
+                                                 FROM billet_student_fee_item 
+                                                 LEFT JOIN  billets ON billets.id = billet_student_fee_item.billet_id 
+                                                 WHERE billet_student_fee_item.fee_item_id = student_fee_items.id LIMIT 1 
+                            )
+                        )
+                    , 0) AS notaNumero
+                FROM student_fee_items  
+                LEFT JOIN student_session ON student_session.id = student_fee_items.student_session_id 
+                LEFT JOIN students ON students.id = student_session.student_id 
+                WHERE student_fee_items.id > 0 ";
+            
+            //Filtro por datas
+            $dst = str_replace(' ', '', $_POST['start']);	
+            $den = str_replace(' ', '', $_POST['end']);
+            
+            if(!empty($dst) && !empty($dst)){
+                $dats = new DateTime($dst);
+                $start = $dats->format('Y-m-d');
+                $date = new DateTime($den);
+                $end = $date->format('Y-m-d');
+            }
+            else{
+                $start = date('Y-m-01');
+                $end = date('Y-m-t');
+            }
+            $sql .= " AND student_fee_items.due_date BETWEEN '$start' AND '$end' ";
+            
+            //Filtro Boleto
+            $with_billet = (int) $this->input->post('with_billet');
+            
+            //Filtro por status
+            $status = (int) $this->input->post('status');
+            
+            //Filtro por classe
+            $class_id_option = (isset($_POST['class_id_option']) ? $_POST['class_id_option'] : []);
+            if(is_array($class_id_option) && count($class_id_option) > 0){
+                $sql .= " AND student_fee_items.class_id IN (".(implode(',', $class_id_option)).") ";
+            }
+            
+            $sql .= " ORDER BY student_fee_items.due_date ASC,  alunoNome ASC";
+            
+            //student_fee_items.id = 12103
+            
+            $results = $this->db->query($sql)->result();
+            
+            //Vamos pegar os IDs dos financeirtos(student_fee_items)
+            //pois vamos precisar deles la embaixo
+            $idsFinanceiros = array_column($results, 'idFinanceiro');
+            $idsFinanceiros[] = 8989899898;//evitar BUG no where in...
+            
+            
+            //temos que calcular agora para cada registro
+            //o valor já recebido
+            //para isso temos que pegar o registro na tabela de DEPOSITOS
+            //vinculado ao boleto e somar o total recebido para aquele registro
+            
+            //Por questoes de performance, vamos primeiro pegar os registros da tabela de DEPOSITOS
+            //e armazenar num array onde a chave sera o id da tabela de FINANCEIROS(student_fee_items)
+            //assim nao temos que rodar um SQL no abnco para cada registro financeiro...
+            
+            //Pegar os depositos e armarzenar num array
+            $depositosPorFinanceiro = [];
+            $depositos = $this->db->where_in('student_fees_id',$idsFinanceiros)->get('student_fees_deposite')->result();
+            foreach ($depositos as $deposito){
+                $depositosPorFinanceiro[(int)$deposito->student_fees_id][] = $deposito->amount_detail;// --> isso é um JSON 
+             }
+            
+             
+             $resultsFinal = [];
+             //Agora para cada registro financeiro, vamos calcular o total já recebido
+             foreach ($results as $row){
+                 
+                 $contabilizar = true;
+                 
+                 if($with_billet != 99){ //filtro po BOLETO com o sem
+                     
+                     if($with_billet == 1 && (int)$row->boletoNumero == 0){$contabilizar = false;}
+                     if($with_billet == 2 && (int)$row->boletoNumero > 0){$contabilizar = false;}
+                 }
+                 
+                 
+                 
+                 if($contabilizar){
+                    $row->valorRecebido = 0; //criamos esse campo zerado
+                    $row->totalDesconto = 0;
+                    $row->totalMulta = 0;
+
+                    if(isset($depositosPorFinanceiro[(int)$row->idFinanceiro])){ //tem depositos para esse financeiro
+
+                        foreach ($depositosPorFinanceiro[(int)$row->idFinanceiro] as $_deposito){
+
+                            $depositos = json_decode($_deposito);//no banco de dados esta armazenado como JSON
+
+                            foreach ($depositos as $fee_deposits_key => $fee_deposits_value) {
+                               $row->valorRecebido += ($fee_deposits_value->amount - $fee_deposits_value->amount_discount) + $fee_deposits_value->amount_fine;
+                               $row->totalDesconto +=  $fee_deposits_value->amount_discount;
+                               $row->totalMulta +=  $fee_deposits_value->amount_fine;
+                           }
+
+
+                        }
+
+                    }//tem depositos para esse financeiro
+
+
+                    //calcular o BALANCO
+                    $row->balanco = $row->recebimentoValor - ($row->valorRecebido +  $row->totalDesconto) + $row->totalMulta;
+
+                    $row->pago = ($row->balanco == 0);
+                    
+                    
+                    if($status == 1 && !$row->pago){$contabilizar = false;}
+                    if($status == 2 && $row->pago){$contabilizar = false;}
+                    
+                    if($contabilizar){
+                        $resultsFinal[] = $row;
+                    }
+                 
+                }
+                 
+             }
+             
+                        
+             $data['results']= $resultsFinal;
+            
+        }
+        
+        $data['classlist'] = $this->class_model->get();
+        $data['class_id_option'] = $this->input->post('class_id_option') ? $this->input->post('class_id_option') : [];
+      
 
         $this->load->view('layout/header', $data);
         $this->load->view('reports/recebimentos_previstos', $data);
