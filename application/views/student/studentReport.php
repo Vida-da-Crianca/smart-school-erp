@@ -514,7 +514,7 @@
             }
             
             
-             <?php if($resultlist): ?>
+             <?php if($resultlist):     ?>
                         var $table = $('#invoice_table').DataTable({
                         ordering: true,
                         paging: false,
