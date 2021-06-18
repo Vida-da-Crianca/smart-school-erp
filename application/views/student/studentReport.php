@@ -141,7 +141,7 @@
                                     <div class="download_label"><?php echo $this->lang->line('student') . " " . $this->lang->line('report') . "<br>";
                                                                 $this->customlib->get_postmessage();
                                                                 ?></div>
-                                    <table class="table table-striped table-bordered table-hover example" cellspacing="0" width="100%">
+                                    <table class="table table-striped table-bordered table-hover example" id="invoice_table" cellspacing="0" width="100%">
                                         <thead>
                                             <tr>
                                                 <th><?php echo $this->lang->line('section'); ?></th>
@@ -511,6 +511,123 @@
                 //     return false;
                 // });
             }
+            
+            
+             <?php if($resultlist): ?>
+                        var $table = $('#invoice_table').DataTable({
+                        ordering: true,
+                        paging: false,
+                        info: false,
+                        filter: true,
+                        dom: 'fBrtip<"clear">',
+                        buttons: [
+
+                            {
+                                extend: 'copyHtml5',
+                                text: '<i class="fa fa-files-o"></i>',
+                                titleAttr: 'Copy',
+                                title: $('.download_label').html(),
+                                footer: true,
+                                exportOptions: {
+                                    columns: ':visible'
+                                }
+                            },
+
+                            {
+                                extend: 'excelHtml5',
+                                text: '<i class="fa fa-file-excel-o"></i>',
+                                titleAttr: 'Excel',
+                                footer: true,
+                                title: $('.download_label').html(),
+                                exportOptions: {
+                                    columns: ':visible'
+                                }
+                            },
+
+                            {
+                                extend: 'csvHtml5',
+                                text: '<i class="fa fa-file-text-o"></i>',
+                                titleAttr: 'CSV',
+                                footer: true,
+                                title: $('.download_label').html(),
+                                exportOptions: {
+                                    columns: ':visible'
+                                }
+                            },
+
+                            {
+                                extend: 'pdfHtml5',
+                                footer: true,
+                                text: '<i class="fa fa-file-pdf-o"></i>',
+                                titleAttr: 'PDF',
+                                title: $('.download_label').html(),
+                                exportOptions: {
+                                    //  columns: ':all'
+
+                                }
+                            },
+                            {
+                                extend: 'print',
+                                text: '<i class="fa fa-print"></i>',
+                                titleAttr: 'Print',
+                                footer: true,
+                                title: $('.download_label').html(),
+                                exportOptions: {
+                                    columns: ':visible'
+                                }
+                            },
+
+                            {
+                                extend: 'colvis',
+                                text: '<i class="fa fa-columns"></i>',
+                                titleAttr: 'Columns',
+                                footer: true,
+                                title: $('.download_label').html(),
+                                postfixButtons: ['colvisRestore']
+                            },
+                        ],
+                        columns: [
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            { "sType": "date-uk" },                           
+                            null,
+                            null,
+                            null
+                        ],
+                        language: {
+                            "url": "<?php echo base_url('backend/dist/datatables/Portuguese-Brasil.json'); ?>",
+                             "decimal": ",",
+                            "thousands": "."
+                        },
+                        footerCallback: function(row, data, start, end, display) {
+                           
+
+                        }
+                    });
+        <?php endif; ?>
+            
+            
+            
+            
+            
+            jQuery.extend( jQuery.fn.dataTableExt.oSort, {
+                "date-uk-pre": function ( a ) {
+                    var ukDatea = a.split('-');
+                    return (ukDatea[2] + ukDatea[1] + ukDatea[0]) * 1;
+                },
+
+                "date-uk-asc": function ( a, b ) {
+                    return ((a < b) ? -1 : ((a > b) ? 1 : 0));
+                },
+
+                "date-uk-desc": function ( a, b ) {
+                    return ((a < b) ? 1 : ((a > b) ? -1 : 0));
+                }
+            } );
+            
 
         });
     </script>
