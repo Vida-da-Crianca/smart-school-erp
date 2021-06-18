@@ -427,7 +427,7 @@ class Report extends Admin_Controller
             $data['resultlist'] = $this->student_model->admission_report($searchterm, $carray, $condition);
         }
         
-        $option_session_id =  $this->input->post('option_session_id') ?   $this->input->post('option_session_id') : 0;
+        $option_session_id =  $this->input->post('option_session_id') ?   $this->input->post('option_session_id') : $this->sch_setting_detail->session_id;
         $data['option_session_id'] = $option_session_id;
         
         //Vamos montar os dados do relatorio aqui no controller
