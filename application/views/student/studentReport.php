@@ -130,7 +130,8 @@
 
 
                         <?php
-                        if (isset($resultlist)) {
+                        if (isset($resultlist)) { 
+                            
                         ?>
                             <div class="">
                                 <div class="box-header ptbnull"></div>
