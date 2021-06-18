@@ -470,7 +470,8 @@ class Report extends Admin_Controller
                 LEFT JOIN student_session ON student_session.id = student_fee_items.student_session_id 
                 LEFT JOIN students ON students.id = student_session.student_id 
                 WHERE student_fee_items.id > 0 
-                AND student_session.session_id = $option_session_id ";
+                AND student_session.session_id = $option_session_id 
+                AND student_fee_items.deleted_at IS NULL ";
                     
             
             //Filtro por datas
