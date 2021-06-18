@@ -142,7 +142,7 @@
                                     <div class="download_label"><?php echo $this->lang->line('student') . " " . $this->lang->line('report') . "<br>";
                                                                 $this->customlib->get_postmessage();
                                                                 ?></div>
-                                    <table class="table table-striped table-bordered table-hover example" id="invoice_table" cellspacing="0" width="100%">
+                                    <table class="table table-striped table-bordered table-hover" id="invoice_table" cellspacing="0" width="100%">
                                         <thead>
                                             <tr>
                                                 <th><?php echo $this->lang->line('section'); ?></th>
