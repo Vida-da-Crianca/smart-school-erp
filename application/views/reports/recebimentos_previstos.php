@@ -285,13 +285,13 @@
                                     <td class="bg-info text-right">
                                         <b>
                                             <span class='small'>R$</span>
-                                            <?php echo number_format($receber, 2, ',', '.'); ?>
+                                            <?php echo number_format($recebido, 2, ',', '.'); ?>
                                         </b>
                                     </td>
                                     <td class="bg-info text-right">
                                         <b>
                                             <span class='small'>R$</span>
-                                            <?php echo number_format($recebido, 2, ',', '.'); ?>
+                                            <?php echo number_format($receber, 2, ',', '.'); ?>
                                         </b>
                                     </td>
                                     <td></td>
