@@ -427,6 +427,9 @@ class Report extends Admin_Controller
             $data['resultlist'] = $this->student_model->admission_report($searchterm, $carray, $condition);
         }
         
+        $option_session_id =  $this->input->post('option_session_id') ?   $this->input->post('option_session_id') : 0;
+        $data['option_session_id'] = $option_session_id;
+        
         //Vamos montar os dados do relatorio aqui no controller
         //pois estava la na view com slq espalhada no meio do HTML
         //vamos fazer aqui pra ficar separado... dados de view. :)
@@ -466,7 +469,9 @@ class Report extends Admin_Controller
                 FROM student_fee_items  
                 LEFT JOIN student_session ON student_session.id = student_fee_items.student_session_id 
                 LEFT JOIN students ON students.id = student_session.student_id 
-                WHERE student_fee_items.id > 0 ";
+                WHERE student_fee_items.id > 0 
+                AND student_session.session_id = $option_session_id ";
+                    
             
             //Filtro por datas
             $dst = str_replace(' ', '', $_POST['start']);	
@@ -584,6 +589,10 @@ class Report extends Admin_Controller
             
         }
         
+         $this->load->model([
+            'eloquent/SessionYear'
+        ]);
+        $data['options_session'] = SessionYear::all()->pluck('session', 'id')->toArray();
         $data['classlist'] = $this->class_model->get();
         $data['class_id_option'] = $this->input->post('class_id_option') ? $this->input->post('class_id_option') : [];
       

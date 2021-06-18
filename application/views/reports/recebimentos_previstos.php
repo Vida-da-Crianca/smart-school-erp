@@ -109,6 +109,15 @@
                     
                     
                     <div class = "row">
+                        <div class="col-md-2 form-group">
+                          
+                                    <label><?php echo $this->lang->line('session') ; ?></label>
+                                    <?php
+                                    print(form_dropdown('option_session_id', $options_session, $option_session_id, 'class="form-control" '));
+                                    ?>
+                                    
+                              
+                        </div>
                         <div class="col-sm-4 col-md-2">
                             <div class="form-group">
                                 <label><?php echo $this->lang->line('class'); ?></label><small class="req"> *</small>
