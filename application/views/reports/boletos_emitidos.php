@@ -310,33 +310,37 @@
 										foreach ($query->result() as $row)
 										{
 											
-											//verificamos se tem nota.
-											$this->db->select("invoice_id FROM invoice_billet where billet_id = ".$row->id ."", FALSE);
-											$query2 = $this->db->get();	
-											
-											foreach ($query2->result() as $row2){
-												$temInvoice = $row2->invoice_id;
-											}
-											
-											if(isset($temInvoice)){
-												if(($temInvoice != null)OR($temInvoice != "")){
-													//pegando numero da nota
-													$this->db->select("invoice_number FROM `invoices` where id = ".$temInvoice."", FALSE);
-													$query3 = $this->db->get();	
-													
-													foreach ($query3->result() as $row3){
-														$ninvoice = $row3->invoice_number;
-													}
-													
-												}
-												else{
-													$ninvoice = "Sem Nota associada";
-												}
-											}
-											else{
-												$ninvoice = "Sem Nota associada";
-											}
-												
+                                                                                        if(!empty($row->bank_bullet_id)){//quando NAO tem o numero do boleto no banco.. significa que boleto nao foi enviado para o banco, foi baixado ANTEs de ser enviado, nesse caso nao tem nota assiciada
+                                                                                       
+                                                                                                //verificamos se tem nota.
+                                                                                                $this->db->select("invoice_id FROM invoice_billet where billet_id = ".$row->id ."", FALSE);
+                                                                                                $query2 = $this->db->get();	
+
+                                                                                                foreach ($query2->result() as $row2){
+                                                                                                        $temInvoice = $row2->invoice_id;
+                                                                                                }
+
+                                                                                                if(isset($temInvoice)){
+                                                                                                        if(($temInvoice != null)OR($temInvoice != "")){
+                                                                                                                //pegando numero da nota
+                                                                                                                $this->db->select("invoice_number FROM `invoices` where id = ".$temInvoice."", FALSE);
+                                                                                                                $query3 = $this->db->get();	
+
+                                                                                                                foreach ($query3->result() as $row3){
+                                                                                                                        $ninvoice = $row3->invoice_number;
+                                                                                                                }
+
+                                                                                                        }
+                                                                                                        else{
+                                                                                                                $ninvoice = "Sem Nota associada";
+                                                                                                        }
+                                                                                                }
+                                                                                                else{
+                                                                                                        $ninvoice = "Sem Nota associada";
+                                                                                                }
+                                                                                        }else{
+                                                                                            $ninvoice = "Sem Nota associada.";
+                                                                                        }
 											
 											
 											
