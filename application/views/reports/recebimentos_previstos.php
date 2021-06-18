@@ -439,7 +439,12 @@ $(document).ready(function(){
                 "url": "<?php echo base_url('backend/dist/datatables/Portuguese-Brasil.json'); ?>",
                  "decimal": ",",
                 "thousands": "."
-            }           
+            },
+             footerCallback: function(row, data, start, end, display) {
+                var api = this.api(),data;
+                
+                $('.dataTables_wrapper table > tfoot').show();
+            }
         });
        <?php endif; ?> 
 
