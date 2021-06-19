@@ -231,7 +231,8 @@
                                class="btn btn-lg btn-primary"
                                style="color: #fff;"
                                >
-                                    <?php echo count($resultlist); ?> Documentos Processados, Clique Para Gerar o PDF <i class="fa fa-file-pdf-o"></i>
+                                    <?php echo count($resultlist); ?> Documentos Processados!<br />
+                                    Clique Para Gerar o PDF <i class="fa fa-file-pdf-o"></i>
                             </a>  
                         </div>
                         
