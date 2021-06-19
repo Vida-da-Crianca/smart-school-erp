@@ -2341,4 +2341,97 @@ class Report extends Admin_Controller
             return 0;
         }
     }
+
+    
+    
+    
+    function lista_de_documentos(){
+        
+        
+         if (!$this->rbac->hasPrivilege('student_report', 'can_view')) {
+            access_denied();
+        }
+
+        $this->session->set_userdata('top_menu', 'Reports');
+        $this->session->set_userdata('sub_menu', 'Reports/student_information');
+        $this->session->set_userdata('subsub_menu', 'Reports/student_information/student_report');
+
+        $data['title']           = 'student fee';
+        $data['title']           = 'student fee';
+        $genderList              = $this->customlib->getGender();
+        $data['genderList']      = $genderList;
+        $RTEstatusList           = $this->customlib->getRteStatus();
+        $data['RTEstatusList']   = $RTEstatusList;
+        $class                   = $this->class_model->get();
+        $data['classlist']       = $class;
+        $data['sch_setting']     = $this->sch_setting_detail;
+        $data['adm_auto_insert'] = $this->sch_setting_detail->adm_auto_insert;
+        $userdata                = $this->customlib->getUserData();
+        $carray                  = array();
+
+          $this->load->model('eloquent/Document');
+            $data['documents'] =  Document::orderBy('title', 'asc')->get();
+            
+
+
+        if (!empty($data["classlist"])) {
+            foreach ($data["classlist"] as $ckey => $cvalue) {
+
+                $carray[] = $cvalue["id"];
+            }
+        }
+
+        $category             = $this->category_model->get();
+        $data['categorylist'] = $category;
+
+        $data['listOfClassId'] = $this->input->post('class_id_option') ? $this->input->post('class_id_option') : [];
+        $data['class_id_option'] = $this->input->post('class_id_option') ? $this->input->post('class_id_option') : [];
+      
+        
+        $data['document_id'] = (int) $this->input->post('document');
+        
+        if ($this->input->server('REQUEST_METHOD') == "GET") {
+           
+            $this->load->view('layout/header', $data);
+             $this->load->view('reports/lista_de_documentos', $data);
+            $this->load->view('layout/footer', $data);
+        } else {
+            $this->form_validation->set_rules('class_id_option[]', $this->lang->line('class'), 'trim|required|xss_clean');
+
+            
+            if ($this->form_validation->run() == false) {
+            
+                $this->load->view('layout/header', $data);
+                $this->load->view('reports/lista_de_documentos', $data);
+                $this->load->view('layout/footer', $data);
+            } else {
+                $class       = $this->input->post('class_id_option') ? $this->input->post('class_id_option') : [];
+                $section     = $this->input->post('section_id');
+                $category_id = $this->input->post('category_id');
+                $gender      = $this->input->post('gender');
+                $rte         = $this->input->post('rte');
+                $search      = $this->input->post('search');
+               
+                if (isset($search)) {
+                  
+                    if ($search == 'search_filter') {
+                        $resultlist         = $this->student_model->searchByClassSectionCategoryGenderRte($class, $section, $category_id, $gender, $rte);
+                        $data['resultlist'] = $resultlist;
+                    }
+                    $data['class_id_option']    = $class;
+                    $data['section_id']  = $section;
+                    $data['category_id'] = $category_id;
+                    $data['gender']      = $gender;
+                    $data['rte_status']  = $rte;
+                    $this->load->view('layout/header', $data);
+                     $this->load->view('reports/lista_de_documentos', $data);
+                    $this->load->view('layout/footer', $data);
+                }
+            }
+        }
+        
+        
+        
+    }
 }
+
