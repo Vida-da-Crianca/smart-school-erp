@@ -217,111 +217,29 @@
                         <!--./box-body-->
 
 
-                        <?php
-                        if (isset($resultlist)) {
-                        ?>
-                            <div class="">
-                                <div class="box-header ptbnull"></div>
-                                <div class="box-header ptbnull">
-                                    <h3 class="box-title titlefix"><i class="fa fa-users"></i> <?php echo form_error('student'); ?> <?php echo $this->lang->line('student') . " " . $this->lang->line('report'); ?></h3>
-                                </div>
-                                <div class="box-body table-responsive">
-                                    <div class="download_label"><?php echo $this->lang->line('student') . " " . $this->lang->line('report') . "<br>";
-                                                                $this->customlib->get_postmessage();
-                                                                ?></div>
-                                    <table class="table table-striped table-bordered table-hover" id="invoice_table"  cellspacing="0" width="100%">
-                                        <thead>
-                                            <tr>
-                                                <th><?php echo $this->lang->line('section'); ?></th>
-
-                                               
-                                                <th><?php echo $this->lang->line('class'); ?></th>
-                                                <th><?php echo $this->lang->line('student_name'); ?></th>
-
-                                               
-                                                <th><?php echo $this->lang->line('admission_no'); ?></th>
-                                                <th><?php echo $this->lang->line('guardian_name'); ?></th>
-
-                                                <th><?php echo $this->lang->line('date_of_birth'); ?></th>
-                                                <th><?php echo $this->lang->line('gender'); ?></th>
-                                                <?php if ($sch_setting->category) {  ?>
-                                                    <th><?php echo $this->lang->line('category'); ?></th>
-                                                <?php }
-                                                if ($sch_setting->mobile_no) {  ?>
-                                                    <th><?php echo $this->lang->line('mobile_no'); ?></th>
-                                                <?php }
-                                                if ($sch_setting->local_identification_no) { ?>
-                                                    <th><?php echo $this->lang->line('local_identification_no'); ?></th>
-                                                <?php }
-                                                if ($sch_setting->national_identification_no) { ?>
-                                                    <th><?php echo $this->lang->line('national_identification_no'); ?></th>
-                                                <?php }
-                                                if ($sch_setting->rte) { ?>
-                                                    <th><?php echo $this->lang->line('rte'); ?></th>
-                                                <?php } ?>
-                                                    
-                                                    <th>
-                                                        Documento
-                                                    </th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <?php if (empty($resultlist)) { ?>
-                                                <?php } else {
-                                                $count = 1;
-                                                foreach ($resultlist as $student) {        ?>
-                                                    <tr>
-                                                        <td><?php echo $student['section']; ?></td>
-
-                                                        <td><?php echo $student['class']; ?></td>
-
-                                                        <td>
-                                                            <a href="<?php echo base_url(); ?>student/view/<?php echo $student['id']; ?>"><?php echo $student['firstname'] . " " . $student['lastname']; ?></a>
-                                                        </td>
-
-                                                        
-                                                        <td><?php echo $student['admission_no']; ?></td>
-                                                        <td><?php echo $student['guardian_name']; ?></td>
-
-                                                        <td><?php echo date($this->customlib->getSchoolDateFormat(), $this->customlib->dateyyyymmddTodateformat($student['dob'])); ?></td>
-                                                        <td><?php echo $student['gender']; ?></td>
-                                                        <?php if ($sch_setting->category) {  ?>
-                                                            <td><?php echo $student['category']; ?></td>
-                                                        <?php }
-                                                        if ($sch_setting->mobile_no) {  ?>
-                                                            <td><?php echo $student['mobileno']; ?></td>
-                                                        <?php }
-                                                        if ($sch_setting->national_identification_no) { ?>
-                                                            <td><?php echo $student['samagra_id']; ?></td>
-                                                        <?php }
-                                                        if ($sch_setting->local_identification_no) { ?>
-                                                            <td><?php echo $student['adhar_no']; ?></td>
-                                                        <?php }
-                                                        if ($sch_setting->rte) { ?>
-                                                            <td><?php echo $student['rte']; ?></td>
-                                                        <?php } ?>
-                                                            <td>
-                                                                <a href="<?php echo base_url('admin/documents/preview/').$document_id.'/'.$student['id']; ?>"
-                                                                   class="btn btn-primary btn-xs"
-                                                                   target="_blank">
-                                                                    Ver <i class="fa fa-eye"></i>
-                                                                </a>
-                                                            </td>
-                                                    </tr>
-                                            <?php $count++;
-                                                }
-                                            }
-                                            ?>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
+                        <?php if (isset($resultlist)): 
+                              $students_arr = []; 
+                              foreach ($resultlist as $student) { 
+                                $students_arr[] = $student['id'];
+                              }
+                            
+                      
+?>
+                        
+                        <div class="alert text-center">
+                            <a href="<?php echo base_url('admin/documents/previewMultiple/').$document_id.'/'.(implode('-', $students_arr)); ?>" target="_blank" 
+                               class="btn btn-lg btn-primary"
+                               style="color: #fff;"
+                               >
+                                    <?php echo count($resultlist); ?> Documentos Processados, Clique Para Gerar o PDF <i class="fa fa-file-pdf-o"></i>
+                            </a>  
+                        </div>
+                        
+                        <?php endif; ?>
+                           
                     </div>
                     <!--./box box-primary -->
 
-                <?php
-                        }
-                ?>
                 </div><!-- ./col-md-12 -->
             </div>
     </div>
@@ -622,106 +540,7 @@
             
             
             
-            
-            <?php if($resultlist): ?>
-                        var $table = $('#invoice_table').DataTable({
-                        ordering: true,
-                        paging: false,
-                        info: false,
-                        filter: true,
-                        dom: 'fBrtip<"clear">',
-                        buttons: [
-
-                            {
-                                extend: 'copyHtml5',
-                                text: '<i class="fa fa-files-o"></i>',
-                                titleAttr: 'Copy',
-                                title: $('.download_label').html(),
-                                footer: true,
-                                exportOptions: {
-                                    columns: ':visible'
-                                }
-                            },
-
-                            {
-                                extend: 'excelHtml5',
-                                text: '<i class="fa fa-file-excel-o"></i>',
-                                titleAttr: 'Excel',
-                                footer: true,
-                                title: $('.download_label').html(),
-                                exportOptions: {
-                                    columns: ':visible'
-                                }
-                            },
-
-                            {
-                                extend: 'csvHtml5',
-                                text: '<i class="fa fa-file-text-o"></i>',
-                                titleAttr: 'CSV',
-                                footer: true,
-                                title: $('.download_label').html(),
-                                exportOptions: {
-                                    columns: ':visible'
-                                }
-                            },
-
-                            {
-                                extend: 'pdfHtml5',
-                                footer: true,
-                                text: '<i class="fa fa-file-pdf-o"></i>',
-                                titleAttr: 'PDF',
-                                title: $('.download_label').html(),
-                                exportOptions: {
-                                    //  columns: ':all'
-
-                                }
-                            },
-                            {
-                                extend: 'print',
-                                text: '<i class="fa fa-print"></i>',
-                                titleAttr: 'Print',
-                                footer: true,
-                                title: $('.download_label').html(),
-                                exportOptions: {
-                                    columns: ':visible'
-                                }
-                            },
-
-                            {
-                                extend: 'colvis',
-                                text: '<i class="fa fa-columns"></i>',
-                                titleAttr: 'Columns',
-                                footer: true,
-                                title: $('.download_label').html(),
-                                postfixButtons: ['colvisRestore']
-                            },
-                        ],
-                        columns: [
-                            null,
-                            null,
-                            null,
-                            null,
-                            null,
-                            { "sType": "date-uk" },                           
-                            null,
-                            null,
-                            null,
-                            null
-                        ],
-                        language: {
-                            "url": "<?php echo base_url('backend/dist/datatables/Portuguese-Brasil.json'); ?>",
-                             "decimal": ",",
-                            "thousands": "."
-                        },
-                        footerCallback: function(row, data, start, end, display) {
-                           
-
-                        }
-                    });
-        <?php endif; ?>
-            
-            
-            
+         
             
             
 

@@ -219,6 +219,85 @@ class DocumentController extends Admin_Controller
         }
     }
 
+    
+     function previewMultiple($id, $_users_arr)
+    {
+        $this->load->model(['eloquent/Document', 'eloquent/Student_eloquent']);
+        $document =   Document::where('id', $id)->first();
+
+        $parser = new Parser();
+ 
+        $allPages = '';
+        
+        $users_arr = explode('-',$_users_arr);
+        
+        foreach($users_arr as $user_id){
+        
+                $student =  Student_eloquent::where('id', $user_id)->with(['session' => function ($q) {
+                    return $q->with(['section', 'class_item'])->where('session_id', $this->sch_setting_detail->session_id);
+                }])->first();
+
+                $now = new \DateTime();
+                $data = [
+                    'aluno_nome' => $student->fullname,
+                    // 'class' => $student->session->class_item,
+                    'aluno_turma' => sprintf(
+                        '%s - %s',
+                        $student->session->class_item->class ?? $student->session->class_item->class,
+                        $student->session->section->section ??  $student->session->section->section
+                    ),
+
+                    'aluno_email' => $student->email,
+                    'guardiao_nome' =>  utf8_decode($student->guardian_name),
+                    'guardiao_email' => $student->guardian_email,
+                    'guardiao_logradouro' => ($student->guardian_address),
+                    'guardiao_logradouro_numero' =>  $student->guardian_address_number,
+                    'guardiao_logradouro_bairro' =>  utf8_decode($student->guardian_district),
+                    'guardiao_logradouro_cidade' =>  utf8_decode($student->guardian_city),
+                    'guardiao_logradouro_estado' =>  $student->guardian_state,
+                    'guardiao_logradouro_cep' =>   mask($student->guardian_postal_code, '#####-###'),
+                    'guardiao_documento' =>  mask($student->guardian_document,'###.###.###-##'),
+                    'guardiao_ocupacao' => $student->guardian_ocupation,
+                    'mes_atual_extenso' => get_month($now),
+                    'mes_atual_numero' => $now->format('m'),
+                    'dia_atual' => $now->format('d'),
+                    'ano_atual' => $now->format('Y'),
+
+                ];
+
+                $data = array_merge($data, $this->getVarsTypes($student));
+                $page =  $parser->parse_string(str_replace(['{{', '}}'], ['{', '}'], $document->body), $data);
+                $page = str_replace('figure', 'div', $page);
+
+                //$page = ;
+               
+                $allPages .= $page;
+                
+                 
+                $allPages .=' <div style="page-break-after:always; clear:both"></div>
+';
+        }
+        // dump($data);
+        // echo $allPages;  
+        // die('');
+        // return;
+        try {
+
+            $html2pdf = new Html2Pdf('P', 'A4', 'pt', true, 'UTF-8', [7,7,7,8]);
+            // $html2pdf->setDefaultFont('dejavusans');
+            $html2pdf->pdf->SetDisplayMode('fullpage');
+            $html2pdf->writeHTML($this->load->view('parser/pdf', ['body' => $allPages], true));    
+            //$html2pdf->
+            $html2pdf->output();
+            die();
+        } catch (Html2PdfException $e) {
+            $html2pdf->clean();
+            $formatter = new ExceptionFormatter($e);
+            echo $formatter->getHtmlMessage();
+        }
+    }
+
+
 
     private function getVarsTypes($student): array
     {

@@ -24,6 +24,7 @@ $route['admin/documents']['get'] = 'admin/DocumentController';
 $route['admin/documents/create']['get'] = 'admin/DocumentController/create';
 $route['admin/documents/create']['post'] = 'admin/DocumentController/store';
 $route['admin/documents/preview/(:any)/(:any)']['get'] = 'admin/DocumentController/preview/$1/$2';
+$route['admin/documents/previewMultiple/(:any)/(:any)']['get'] = 'admin/DocumentController/previewMultiple/$1/$2';
 $route['admin/documents/(:any)']['get'] = 'admin/DocumentController/show/$1';
 $route['admin/documents/(:any)']['post'] = 'admin/DocumentController/update/$1';
 $route['admin/documents/(:any)']['delete'] = 'admin/DocumentController/destroy/$1';
