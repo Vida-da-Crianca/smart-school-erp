@@ -959,7 +959,7 @@ $language_name = $language["short_code"];
             var sub_invoice = $(this).data('sub_invoice');
             var student_session_id = '<?php echo $student['student_session_id'] ?>';
             $.ajax({
-                url: '<?php echo site_url("studentfee/printFeesByName") ?>',
+                url: '<?php echo site_url("studentfee/printComprovantePagamento") ?>',
                 type: 'post',
                 data: {
                     'student_session_id': student_session_id,
