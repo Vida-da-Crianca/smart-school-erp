@@ -623,6 +623,31 @@ class Studentfee extends Admin_Controller
         $data['feeList'] = $fee_record;
         $this->load->view('print/printFeesByName', $data);
     }
+    
+     public function printComprovantePagamento(){
+        
+        
+        $student_session_id = $this->input->post('student_session_id');
+        $setting_result = $this->setting_model->get();
+        $data['settinglist'] = $setting_result;
+        $student = $this->studentsession_model->searchStudentsBySession($student_session_id);
+        $data['student'] = $student;
+        
+        $student_fee_id = $this->input->post('student_fee_id');
+        $this->load->model(['eloquent/Student_eloquent', 'eloquent/Student_fee_item_eloquent']);
+        $data['fee_value'] = Student_fee_item_eloquent::where('id', $student_fee_id)
+                // ->whereYear('due_date', $due_date)
+                ->with(['deposite', 'billet'])
+                ->orderBy('due_date','ASC')
+                ->get()[0];
+       
+       // echo '<pre>';
+       // print_r($data['fee_value']->deposite);
+        
+        
+        $this->load->view('print/printComprovantePagamento', $data);
+    }
+    
 
     public function printFeesByGroup()
     {

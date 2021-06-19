@@ -349,7 +349,9 @@ $language_name = $language["short_code"];
                                                             <button type="button" data-student_session_id="<?php echo $fee->student_session_id; ?>" data-student_fees_master_id="<?php echo $fee->id; ?>" data-fee_groups_feetype_id="<?php echo $fee_value->feetype_id; ?>" data-group="<?php echo $fee_value->name; ?>" data-type="<?php echo $fee_value->code; ?>" class="btn btn-xs btn-default myCollectFeeBtn <?php echo $display_none; ?>" title="<?php echo $this->lang->line('add_fees'); ?>" data-toggle="modal" data-target="#myFeesModal"><i class="fa fa-plus"></i></button>
 
 
-                                                            <button class="btn btn-xs btn-default printInv" data-fee_master_id="<?php echo $fee_value->id ?>" data-fee_session_group_id="<?php echo $fee_value->fee_session_group_id ?>" data-fee_groups_feetype_id="<?php echo $fee_value->feetype_id ?>" title="<?php echo $this->lang->line('print'); ?>"><i class="fa fa-print"></i> </button>
+                                                            <button class="btn btn-xs btn-default printInv" 
+                                                                    data-fee_master_id="<?php echo $fee_value->id ?>" 
+                                                                    data-fee_session_group_id="<?php echo $fee_value->fee_session_group_id ?>" data-fee_groups_feetype_id="<?php echo $fee_value->feetype_id ?>" title="<?php echo $this->lang->line('print'); ?>"><i class="fa fa-print"></i> </button>
                                                         <?php endif; ?>
                                                     </div>
                                                 </td>
@@ -420,7 +422,11 @@ $language_name = $language["short_code"];
                                                                             </button>
                                                                         <?php endif; ?>
                                                                     <?php } ?>
-                                                                    <button class="btn btn-xs btn-default printDoc" data-main_invoice="<?php echo $fee_value->student_fees_deposite_id ?>" data-sub_invoice="<?php echo $fee_deposits_value->inv_no ?>" title="<?php echo $this->lang->line('print'); ?>"><i class="fa fa-print"></i> </button>
+                                                                    <button class="btn btn-xs btn-default printDoc" 
+                                                                            data-feed_id="<?php echo $fee_value->id ?>" 
+                                                                            data-main_invoice="<?php echo $fee_value->student_fees_deposite_id ?>" 
+                                                                            data-sub_invoice="<?php echo $fee_deposits_value->inv_no ?>" 
+                                                                            title="<?php echo $this->lang->line('print'); ?>"><i class="fa fa-print"></i> </button>
                                                                 </div>
                                                             </td>
                                                         </tr>
@@ -948,6 +954,7 @@ $language_name = $language["short_code"];
         })
 
         $(document).on('click', '.printDoc', function() {
+             var feed_id = $(this).data('feed_id');
             var main_invoice = $(this).data('main_invoice');
             var sub_invoice = $(this).data('sub_invoice');
             var student_session_id = '<?php echo $student['student_session_id'] ?>';
@@ -957,7 +964,8 @@ $language_name = $language["short_code"];
                 data: {
                     'student_session_id': student_session_id,
                     'main_invoice': main_invoice,
-                    'sub_invoice': sub_invoice
+                    'sub_invoice': sub_invoice,
+                    'student_fee_id' : feed_id
                 },
                 success: function(response) {
                     Popup(response);
