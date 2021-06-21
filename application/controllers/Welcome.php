@@ -311,8 +311,8 @@ class Welcome extends Front_Controller
                         'admission_date'      => date('Y/m/d'),
                         'measurement_date'    => date('Y/m/d'),
 						
-						'guardian_postal_code'    => $this->input->post('guardian_postal_code'),
-						'guardian_address'    => $this->input->post('guardian_address'),
+						'guardian_postal_code'    => str_replace(array('',' ','-','_',','),'',$this->input->post('guardian_postal_code')),
+                                                'guardian_address'    => $this->input->post('guardian_address'),
 						'guardian_address_number'    => $this->input->post('guardian_address_number'),
 						'guardian_district'    => $this->input->post('guardian_district'),
 						'guardian_city'    => $this->input->post('guardian_city'),

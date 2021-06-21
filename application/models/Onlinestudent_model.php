@@ -117,7 +117,7 @@ class Onlinestudent_model extends MY_Model {
 
                 //die($admission_no_exists);
                 
-                if (!$admission_no_exists) {
+                if ($admission_no_exists) {
                     $insert = false;
                     $record_update_status = false;
                 }
