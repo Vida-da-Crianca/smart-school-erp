@@ -309,8 +309,8 @@ class Welcome extends Front_Controller
                         'mother_name'         => $this->input->post('mother_name'),
                         'mother_phone'        => $this->input->post('mother_phone'),
                         'mother_occupation'   => $this->input->post('mother_occupation'),
-						'guardian_document'	  => $this->input->post('guardian_document'),
-						'guardian_occupation' => $this->input->post('guardian_occupation'),
+			'guardian_document'	  => str_replace(array('',' ','-','_',',','-','.'),'',$this->input->post('guardian_document')),
+			'guardian_occupation' => $this->input->post('guardian_occupation'),
                         'guardian_email'      => trim(strtolower($this->input->post('guardian_email'))),
                        
                         'gender'              => $this->input->post('gender'),
