@@ -236,11 +236,19 @@ class Welcome extends Front_Controller
             $this->form_validation->set_rules('guardian_name', $this->lang->line('guardian_name'), 'trim|required|xss_clean');
             $this->form_validation->set_rules('guardian_phone', $this->lang->line('guardian_phone'), 'trim|required|xss_clean');
 			
-			$this->form_validation->set_rules('guardian_document', $this->lang->line('guardian_document'), 'trim|required|xss_clean');
-			$this->form_validation->set_rules('guardian_phone', $this->lang->line('guardian_phone'), 'trim|required|xss_clean');
-			$this->form_validation->set_rules('guardian_postal_code', $this->lang->line('guardian_postal_code'), 'trim|required|xss_clean');
-			$this->form_validation->set_rules('guardian_address_number', $this->lang->line('guardian_address_number'), 'trim|required|xss_clean');
+            $this->form_validation->set_rules('guardian_document', $this->lang->line('guardian_document'), 'trim|required|xss_clean');
+            $this->form_validation->set_rules('guardian_phone', $this->lang->line('guardian_phone'), 'trim|required|xss_clean');
+            $this->form_validation->set_rules('guardian_postal_code', $this->lang->line('guardian_postal_code'), 'trim|required|xss_clean');
+            $this->form_validation->set_rules('guardian_address_number', $this->lang->line('guardian_address_number'), 'trim|required|xss_clean');
 			
+            
+            $this->form_validation->set_rules('guardian_email', $this->lang->line('guardian_email'), 'trim|required|xss_clean|valid_email');
+            $this->form_validation->set_rules('guardian_address', $this->lang->line('guardian_address'), 'trim|required|xss_clean');
+            $this->form_validation->set_rules('guardian_district', $this->lang->line('guardian_district'), 'trim|required|xss_clean');
+            $this->form_validation->set_rules('guardian_state', $this->lang->line('guardian_state'), 'trim|required|xss_clean');
+            $this->form_validation->set_rules('guardian_city', $this->lang->line('guardian_city'), 'trim|required|xss_clean');
+		
+		
 			
 			
 
@@ -303,7 +311,8 @@ class Welcome extends Front_Controller
                         'mother_occupation'   => $this->input->post('mother_occupation'),
 						'guardian_document'	  => $this->input->post('guardian_document'),
 						'guardian_occupation' => $this->input->post('guardian_occupation'),
-                        'guardian_email'      => $this->input->post('guardian_email'),
+                        'guardian_email'      => trim(strtolower($this->input->post('guardian_email'))),
+                       
                         'gender'              => $this->input->post('gender'),
                         'guardian_name'       => $this->input->post('guardian_name'),
                         'guardian_relation'   => $this->input->post('guardian_relation'),

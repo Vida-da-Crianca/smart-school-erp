@@ -348,7 +348,9 @@ echo set_value('guardian_is') == "other" ? "checked" : "";
    
    <div class="col-md-4">
       <label for="exampleInputEmail1">Endereço do Responsável Financeiro </label>
-      <input maxlength="30" id="guardian_address" name="guardian_address" placeholder="Rua exemplo" class="form-control" 
+      <input maxlength="30" id="guardian_address" name="guardian_address" 
+             readonly="readonly"
+             placeholder="Rua exemplo" class="form-control" 
 	  value="<?php echo set_value('guardian_address');?>">
       <span class="text-danger"><?php echo form_error('guardian_address'); ?></span>
    </div>
@@ -360,19 +362,19 @@ echo set_value('guardian_is') == "other" ? "checked" : "";
    </div>
    <div class="col-md-3">
       <label for="exampleInputEmail1">Responsável Bairro</label>
-      <input maxlength="20" id="guardian_district" name="guardian_district" placeholder="" class="form-control" 	  
+      <input maxlength="20" id="guardian_district" name="guardian_district"  readonly="readonly" placeholder="" class="form-control" 	  
 	  value="<?php echo set_value('guardian_district');?>">
       <span class="text-danger"><?php echo form_error('guardian_district'); ?></span>
    </div>
    <div class="col-md-2">
       <label for="exampleInputEmail1">Responsável Cidade</label>
-      <input maxlength="20" id="guardian_city" name="guardian_city" placeholder="Barretos" class="form-control" 
+      <input maxlength="20" id="guardian_city" name="guardian_city"  readonly="readonly" placeholder="Barretos" class="form-control" 
 	  value="<?php if(isset($_POST['guardian_city'])){ echo $_POST['guardian_city']; };?>">
       <span class="text-danger"><?php echo form_error('guardian_city'); ?></span>
    </div>
    <div class="col-md-1">
       <label for="exampleInputEmail1">UF</label>
-      <input maxlength="2" id="guardian_state" name="guardian_state" placeholder="SP" class="form-control" 
+      <input maxlength="2" id="guardian_state" name="guardian_state"   readonly="readonly" placeholder="SP" class="form-control" 
 	  value="<?php if(isset($_POST['guardian_state'])){ echo $_POST['guardian_state']; };?>">
        <span class="text-danger"><?php echo form_error('guardian_state'); ?></span>
    </div>
