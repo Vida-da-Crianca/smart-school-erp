@@ -1344,7 +1344,7 @@ class Student extends Admin_Controller
             $mother_occupation = $this->input->post('mother_occupation');
 
             if (isset($measurement_date)) {
-                $data['measurement_date'] = date('Y-m-d', $this->customlib->datetostrtotime($this->input->post('measure_date')));
+                $data['measurement_date'] = date('Y-m-d');//, $this->customlib->datetostrtotime($this->input->post('measure_date')));
             }
 
             if (isset($house)) {
