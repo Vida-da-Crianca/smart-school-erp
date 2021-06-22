@@ -1140,7 +1140,7 @@ class Customlib
     public function getUserData()
     {
         $result         = $this->getLoggedInUserData();
-        $id             = $result["id"];
+        $id             = isset($result["id"]) ? $result["id"] : 0;
         $data           = $this->CI->staff_model->get($id);
         $setting_result = $this->CI->setting_model->get();
         if (!empty($setting_result)) {
