@@ -62,7 +62,7 @@ echo $class['class'] ?></option>
             <span class="text-danger"><?php echo form_error('class_id'); ?></span>
         </div>
     </div>
-    <div class="col-md-3" style="display: none;">
+    <div class="col-md-3">
 
         <div class="form-group">
             <label for="exampleInputEmail1"><?php echo $this
