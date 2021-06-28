@@ -68,7 +68,7 @@ jobs:
         
           mkdir -p -m 777 $DIRECTORY_APPLICATION/$STAGING_PATH/logs
           mkdir -p -m 777 $DIRECTORY_APPLICATION/$STAGING_PATH/temp
-          rsync -qr -I   ./uploads/  $DIRECTORY_APPLICATION/$STAGING_PATH/uploads
+          rsync -qr -I --ignore-existing  ./uploads/  $DIRECTORY_APPLICATION/$STAGING_PATH/uploads
       
       - name:  Deploy Stack
         run: |
@@ -116,7 +116,7 @@ jobs:
         run: |
           mkdir -p -m 777 $DIRECTORY_APPLICATION/$PRODUCTION_PATH/logs
           mkdir -p -m 777 $DIRECTORY_APPLICATION/$PRODUCTION_PATH/temp
-          rsync -qr -I   ./uploads/  $DIRECTORY_APPLICATION/$PRODUCTION_PATH/uploads
+          rsync -qr -I --ignore-existing  ./uploads/  $DIRECTORY_APPLICATION/$PRODUCTION_PATH/uploads
       - name: Deploy Stack
         run: |
           IMAGE_ID=carlosocarvalho/$IMAGE_NAME
