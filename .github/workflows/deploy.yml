@@ -84,12 +84,7 @@ jobs:
           echo IMAGE_ID=$IMAGE_ID
           echo VERSION=$VERSION
           docker stack deploy -c stage-stack.yaml $STACK_NAME_STAGING
-      
-      - name: Prune System
-        run: |
-              sleep 5
-              docker system prune --force
-  
+          docker system prune --force
   deployTest:
     runs-on: "docker-stack"
     needs: [build, ]
