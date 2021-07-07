@@ -157,7 +157,9 @@
                         if ($this->rbac->hasPrivilege('disable_reason', 'can_view')) {
                         ?>
                             <li class="<?php echo set_Submenu('student/disable_reason'); ?>"><a href="<?php echo base_url(); ?>admin/disable_reason"><i class="fa fa-angle-double-right"></i> <?php echo $this->lang->line('disable') . " " . $this->lang->line('reason'); ?></a></li>
-                        <?php
+                            <li class="<?php echo set_Submenu('student/orcamento'); ?>"><a href="<?php echo site_url('admin/orcamento'); ?>"><i class="fa fa-angle-double-right"></i> Orçamentos</a></li><?php #alterado; ?>
+                           
+                                <?php
                         }
                         ?>
 
@@ -560,7 +562,9 @@
                             if ($this->rbac->hasPrivilege('section', 'can_view')) {
                             ?>
                                 <li class="<?php echo set_Submenu('sections/index'); ?>"><a href="<?php echo base_url(); ?>sections"><i class="fa fa-angle-double-right"></i> <?php echo $this->lang->line('sections'); ?></a></li>
-                            <?php
+                           <li class="<?php echo set_Submenu('data_corte/index'); ?>"><a href="<?php echo base_url(); ?>admin/data_corte"><i class="fa fa-angle-double-right"></i> Datas de Corte</a></li>
+                        
+ <?php
                             }
                             ?>
 

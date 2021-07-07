@@ -36,6 +36,7 @@ class Itemstock extends Admin_Controller {
                 'store_id' => $store_id,
                 'quantity' => $this->input->post('symbol') . $this->input->post('quantity'),
                 'purchase_price' => $this->input->post('purchase_price'),
+                'sale_price' => $this->input->post('sale_price'), #alterado
                 'date' => date('Y-m-d', $this->customlib->datetostrtotime($this->input->post('date'))),
                 'description' => $this->input->post('description'),
             );
@@ -165,6 +166,7 @@ class Itemstock extends Admin_Controller {
                 'store_id' => $store_id,
                 'quantity' => $this->input->post('symbol') . $this->input->post('quantity'),
                 'purchase_price' => $this->input->post('purchase_price'),
+                 'sale_price' => $this->input->post('sale_price'), #alterado
                 'date' => date('Y-m-d', $this->customlib->datetostrtotime($this->input->post('date'))),
                 'description' => $this->input->post('description'),
             );

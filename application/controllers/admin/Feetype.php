@@ -32,6 +32,7 @@ class Feetype extends Admin_Controller {
                 'type' => $this->input->post('name'),
                 'code' => $this->input->post('code'),
                 'description' => $this->input->post('description'),
+                'parcelaEscolar' => (int)$this->input->post('parcelaEscolar'),#alterado
             );
             $this->feetype_model->add($data);
             $this->session->set_flashdata('msg', '<div class="alert alert-success text-left">'.$this->lang->line('success_message').'</div>');
@@ -82,6 +83,7 @@ class Feetype extends Admin_Controller {
                 'type' => $this->input->post('name'),
                 'code' => $this->input->post('code'),
                 'description' => $this->input->post('description'),
+                'parcelaEscolar' => (int)$this->input->post('parcelaEscolar'), #alterado
             );
             $this->feetype_model->add($data);
             $this->session->set_flashdata('msg', '<div class="alert alert-success text-left">'.$this->lang->line('update_message').'</div>');

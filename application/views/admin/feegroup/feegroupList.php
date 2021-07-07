@@ -1,4 +1,4 @@
-<?php $currency_symbol = $this->customlib->getSchoolCurrencyFormat(); ?>
+<?php $currency_symbol = $this->customlib->getSchoolCurrencyFormat(); #alterado ?>
 <!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper">
 
@@ -42,6 +42,29 @@
                                     <textarea class="form-control" id="description" name="description" placeholder="" rows="3" placeholder="Enter ..."><?php echo set_value('description'); ?></textarea>
                                     <span class="text-danger"></span>
                                 </div>
+                                
+                                <div class="form-group">
+
+                                    <label for="exampleInputEmail1"><?php echo $this->lang->line('class'); ?> </label><small class="req"> *</small>
+
+                                    <select  id="class_id" name="class_id" class="form-control" >
+                                        <option value=""><?php echo $this->lang->line('select'); ?></option>
+                                        <?php
+                                        foreach ($classlist as $class) {
+                                            ?>
+                                            <option value="<?php echo $class['id'] ?>" <?php
+                                            if (set_value('class_id') == $class['id']) {
+                                                echo "selected=selected";
+                                            }
+                                            ?>>
+                                                <?php echo $class['class'] ?></option>
+                                            <?php
+                                        }
+                                        ?>
+                                    </select>
+                                    <span class="text-danger"><?php echo form_error('class_id'); ?></span>
+                                </div>
+                                
                             </div><!-- /.box-body -->
 
                             <div class="box-footer">
@@ -73,7 +96,8 @@
                             <table class="table table-striped table-bordered table-hover example">
                                 <thead>
                                     <tr>
-                                        <th><?php echo $this->lang->line('name'); ?>
+                                        <th><?php echo $this->lang->line('name'); ?></th>
+                                         <th><?php echo $this->lang->line('class'); ?>    
                                         </th>
 
 
@@ -83,7 +107,7 @@
                                 </thead>
                                 <tbody>
                                     <?php
-                                    foreach ($feegroupList as $feegroup) {
+                                    foreach ($feegroupList as $feegroup) { 
                                         ?>
                                         <tr>
                                             <td class="mailbox-name">
@@ -102,6 +126,9 @@
                                                     }
                                                     ?>
                                                 </div>
+                                            </td>
+                                            <td>
+                                                    <?php echo $feegroup['className']; ?>
                                             </td>
 
                                             <td class="mailbox-date pull-right">

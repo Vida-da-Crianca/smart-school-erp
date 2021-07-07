@@ -120,6 +120,11 @@
                                     <input id="purchase_price" name="purchase_price" placeholder="" type="text" class="form-control purchase_price"  value="<?php echo set_value('purchase_price', ($item['purchase_price'])); ?>" />
                                     <span class="text-danger"><?php echo form_error('purchase_price'); ?></span>
                                 </div>
+                                 <div class="form-group">
+                                    <label for="exampleInputEmail1">Preço de Venda</label><small class="req"> *</small><?php #alterado ;?>
+                                    <input id="date" name="sale_price" placeholder="" type="text" class="form-control purchase_price"  value="<?php echo set_value('sale_price', ($item['sale_price'])); ?>"  />
+                                    <span class="text-danger"><?php echo form_error('sale_price'); ?></span>
+                                </div>
 
                                  <div class="form-group">
                                     <label for="exampleInputEmail1"><?php echo $this->lang->line('date'); ?></label>
@@ -173,8 +178,9 @@
                                         <th><?php echo $this->lang->line('supplier'); ?></th>
                                         <th><?php echo $this->lang->line('store'); ?></th>
                                         <th><?php echo $this->lang->line('quantity'); ?></th>
-                                        <th><?php echo $this->lang->line('purchase')." ".$this->lang->line('price'); ?></th>
-                                        <th><?php echo $this->lang->line('date'); ?></th>
+                                        <th><?php echo $this->lang->line('price') . "(" . $currency_symbol . ")"; ?></th>
+                                        <th><?php echo 'Venda' . "(" . $currency_symbol . ")"; ?></th>
+                                       <th><?php echo $this->lang->line('date'); ?></th>
                                         <th class="text-right"><?php echo $this->lang->line('action'); ?></th>
                                     </tr>
                                 </thead>
@@ -225,6 +231,10 @@
                                                 </td>
                                                  <td class="mailbox-name">
                                                     <?php echo $items['purchase_price']; ?>
+
+                                                </td>
+                                                 <td class="mailbox-name">
+                                                    <?php echo (float)$items['sale_price']; ?>
 
                                                 </td>
                                                 <td class="mailbox-name">

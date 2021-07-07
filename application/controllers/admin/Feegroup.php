@@ -37,6 +37,10 @@ class FeeGroup extends Admin_Controller {
         }
         $feegroup_result = $this->feegroup_model->get();
         $data['feegroupList'] = $feegroup_result;
+        
+         ##alterado
+        $class  = $this->class_model->get();
+        $data['classlist'] = $class;
 
         $this->load->view('layout/header', $data);
         $this->load->view('admin/feegroup/feegroupList', $data);
@@ -70,6 +74,10 @@ class FeeGroup extends Admin_Controller {
                 )
         );
 
+         ##alterado
+        $class  = $this->class_model->get();
+        $data['classlist'] = $class;
+        
         if ($this->form_validation->run() == FALSE) {
             $this->load->view('layout/header', $data);
             $this->load->view('admin/feegroup/feegroupEdit', $data);

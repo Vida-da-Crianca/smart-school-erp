@@ -3,6 +3,12 @@
 if (!defined('BASEPATH'))
     exit('No direct script access allowed');
 
+use Spipu\Html2Pdf\Html2Pdf;
+// use mikehaertl\wkhtmlto\Pdf;
+use Dompdf\Dompdf;
+use Spipu\Html2Pdf\Exception\Html2PdfException;
+use Spipu\Html2Pdf\Exception\ExceptionFormatter; #alterado
+
 class Site extends Public_Controller {
 
     public function __construct() {
@@ -437,6 +443,51 @@ class Site extends Public_Controller {
         }
         echo json_encode($array);
     }
+    
+     public function orcamento($token=null){#alterado
+       try{
+           
+           $this->orcamento_model->getByToken(trim($token));
+           $data['orcamento'] = $this->orcamento_model;
+           $data['itens'] = $this->orcamento_item_model->getAll(['idOrcamento'=> $this->orcamento_model->idOrcamento]);
+           
+            /*$img = (FCPATH.'uploads/school_content/logo/'.$this->sch_setting_detail->admin_logo);
+            $type = pathinfo($img, PATHINFO_EXTENSION);
+            $datax = file_get_contents($img);*/
+            
+            $class = $this->class_model->get($this->orcamento_model->class_id);
+            $section = $this->section_model->get($this->orcamento_model->section_id);
+            $staff = $this->staff_model->get($this->orcamento_model->staff_id);
+           
+           $data['escola'] = [
+               /*'nome' => $this->sch_setting_detail->name,
+               'email' => $this->sch_setting_detail->email,
+               'telefone' => $this->sch_setting_detail->phone,
+               'endereco' => $this->sch_setting_detail->address,
+               'logo' => 'data:image/' . $type . ';base64,' . base64_encode($datax),*/
+               'turma'=> isset($class['class']) ? $class['class'] : '---',
+               'periodo'=> isset($section['section']) ? $section['section'] : '---',
+               'usuario'=> isset($staff['name']) ? $staff['name'].' '.$staff['surname'] : '---'
+           ];
+          
+           
+           $page = $this->load->view('admin/orcamento/print', $data,true);
+          
+          // echo $page;
+          // die('');
+           
+           $html2pdf = new Html2Pdf('P', 'A4', 'pt', true, 'UTF-8', 5);
+            // $html2pdf->setDefaultFont('dejavusans');
+           $html2pdf->pdf->SetDisplayMode('real');
+            $html2pdf->writeHTML($page);
+            $html2pdf->output('Orcamento_'.$this->orcamento_model->idOrcamento.'.pdf');
+            die();
+           
+       } catch (\Exception $e){
+          echo 'Erro: '.$e->getMessage();
+       }
+    }
+
 
 }
 

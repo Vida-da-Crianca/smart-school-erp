@@ -301,6 +301,267 @@
 
         });
     }));
-    });
+});
+
+/*Fucoes de apoio com recursos de UI e acesso á dados - @leandro*/
+ $(document).ready(function () {
+        /***
+	 * Abre um Dialog e carrega uma URL nele
+	 */	
+	$.fn._dialog = function(options)
+	{
+		var settings = $.extend({
+			
+			title: 'Nova Janela',
+			size: BootstrapDialog.SIZE_WIDE,
+			url: '',
+			data: '',
+			btnOk: 'Salvar',
+			callback : ''
+						
+			
+		},options);
+		
+		id = Math.floor(Math.random() * (9999 - 1)) + 1;
+										
+		var dialog = new BootstrapDialog({
+			 	title: settings.title,
+			 	
+			 	type: BootstrapDialog.TYPE_DEFAULT,
+			 	size: settings.size,
+                                closeByBackdrop: false,
+	            message: $('<div id="dialog-'+id+'"><div class="alert text-center"><i class="fa fa-circle-o-notch fa-spin"></i></div></div>'),
+	           
+	            onshown: function(dialogRef){
+	               
+                       $('.modal-dialog').css('z-index',1200);
+	            	
+	            	 $.post(settings.url, settings.data)
+	        		 .done(function(resp){ dialog.getModalBody().html(resp); /*$('.bootstrap-dialog-body').addClass('my_dialog_body_'+id); $('.my_dialog_body_'+id).html(resp);*/ })
+	        		 .fail(function(err){
+	        				        			 
+	        			text = '<div class="row" style="margin-top: 1%;"><div class="col-md-6 col-md-offset-3"><div class="alert alert-danger lead text-center">Erro ao Carregar Conteúdo! Tente Novamente!';	
+
+	        			text += '</div></div></div>';			
+
+	        			dialogRef.setMessage(text);
+	        			
+	        		});
+	            	
+	            	
+	            },onhidden:function(dialogRef){
+                        
+                       
+                        
+                    }
+	        });
+		
+		dialog.open();
+		
+	};
+	
+	/***
+	 * Faz uma requisicao a uma URL passa paremetros e exibe o conteudo em um 'output'
+	 */
+	$.fn.search = function(options)
+	{
+		var settings = $.extend({
+			url: '',
+			output: '', 
+			data: null,
+                        loading: true
+						
+			
+		},options);
+		
+                if(settings.loading){
+                    $(settings.output).html("<div class='alert text-center'><i class='fa fa-circle-o-notch fa-spin'></i></div>");
+                }
+		
+		$.post( (settings.url ) ,settings.data)
+		.done(function(resp){
+			$(settings.output).html(resp);
+		})
+		.fail(function(err){
+			
+			text = '<div class="alert text-center text-danger" style="border: 1px solid #F9959B; background-color: #FDEBEC;">';
+                        text +='<i class="fa fa-warning"></i> Ocorreu um erro...<br />';   
+                        text +='</div>';	
+
+			$(settings.output).html(text);
+			
+		});
+		
+		
+	};
+	
+	/*faz um submit em uma URL passa paramentros e recebe uma resposta JSON */
+	$.fn._submit = function(options)
+	{
+		var settings = $.extend({
+			
+			url: '',
+			button: '', 
+			data: null,
+			callback: null
+						
+			
+		},options);
+		
+		resp_json = null;
+		
+                $(settings.button).prop('data-loading-text','aguarde...');
+		$(settings.button).button('loading');	
+                
+                if(settings.loading){
+                   $('.overlay-loading-box').show();
+                }
+		
+		$.post( settings.url  ,settings.data)
+		.done(function(resp){
+			
+			try
+			{
+				resp_json =  jQuery.parseJSON(resp);
+				
+				$(settings.button).button('reset');
+                                
+                                
+                                if(typeof settings.callback == 'function'){
+                                    settings.callback.call(this, resp_json);
+                                }
+                                
+                                if(settings.loading){
+                                    $('.overlay-loading-box').hide();
+                                }
+                                
+                               
+			}
+			catch (e) {
+				
+                            alert('Resposta Inválida do Servidor... Por Favor, Tente Novamente!');
+                               
+                            if(settings.loading){
+                                $('.overlay-loading-box').hide();
+                            }   
+                               
+			}
+                        
+                         if( (typeof $(settings.button)) == 'object'){
+                               $(settings.button).button('reset');
+                                
+                          }
+			
+			
+			
+			
+		})
+		.fail(function(err){
+			
+			
+                        alert('Erro na Requisição ao Servidor... Por Favor, Tente Novamente!');
+                           
+                        if( (typeof $(settings.button)) == 'object'){
+                                    $(settings.button).button('reset');
+                                
+                          }
+                          
+                           if(settings.loading){
+                                    $('.overlay-loading-box').hide();
+                                }
+			
+			
+			
+		});
+		
+		
+		
+		
+	};
+        
+        
+        $.fn.formatMoney = function(num)
+	{
+            return num.toLocaleString("pt-BR",{ minimumFractionDigits: 2 });
+	};
+	
+	$.fn._maskMoney = function(selector)
+	{
+            $(selector).mask('#.##0,00', {clearIfNotMatch: false,selectOnFocus: true,reverse: true});
+	};
+	
+	$.fn.comboBox = function(options)
+	{
+		var settings = $.extend({
+			
+			url: '',
+			data: null,
+			selected: null,
+			combobox : ''	,
+                        callback: null
+			
+		},options);
+		
+		$(settings.combobox).html('<option>Aguarde...</option>');
+		
+		$.post(settings.url, settings.data )
+		.done(function(resp){
+			
+			try
+			{
+				resp_json =  jQuery.parseJSON(resp);
+				
+				if(resp_json.status)
+				{
+					if(resp_json.results.length > 0)
+					{
+						html = '';
+						
+						for(var i in resp_json.results)
+						{
+							html += '<option value="'+resp_json.results[i].value+'" ';
+							if(resp_json.results[i].value == settings.selected){
+								html += 'selected="selected"';
+                                                            }
+							html += ">";
+							html += resp_json.results[i].label;
+							html += '</option>';
+							
+						}
+						
+						$(settings.combobox).html(html);
+                                                
+                                                
+                                                 if(typeof settings.callback == 'function'){
+                                                            settings.callback.call(this, resp_json);
+                                                 }
+                                                
+					}
+					else{
+                                            
+                                            $(settings.combobox).html('<option value="0">*** Nenhum Resultado ***</option>');
+                                        }
+				}
+				else
+					$(settings.combobox).html('<option>*** Erro ao Processar ***</option>');
+			}
+			catch (e) {
+				
+				$(settings.combobox).html('<option>*** ERRO ***</option>');
+				
+			}
+			
+		})
+		.fail(function(){
+			
+			$(settings.combobox).html('<option>*** Erro ***</option>');
+		});
+		
+	};
+	
+	
+	
+	
+ });
 
   

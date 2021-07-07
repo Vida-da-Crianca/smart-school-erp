@@ -1,5 +1,5 @@
 <?php
-$currency_symbol = $this->customlib->getSchoolCurrencyFormat();
+$currency_symbol = $this->customlib->getSchoolCurrencyFormat(); #alterado
 ?>
 <!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper">
@@ -39,7 +39,9 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
 
                                 <div class="form-group">
                                     <label for="exampleInputEmail1"><?php echo $this->lang->line('name'); ?></label><small class="req"> *</small>
-                                    <input autofocus="" id="name" name="name" placeholder="" type="text" class="form-control"  value="<?php echo set_value('name', $feegroup['name']); ?>" />
+                                    <input autofocus="" id="name" name="name" placeholder="" type="text" 
+                                           class="form-control" 
+                                           value="<?php echo set_value('name', $feegroup['name']); ?>" />
                                     <span class="text-danger"><?php echo form_error('name'); ?></span>
                                 </div>
 
@@ -48,6 +50,30 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                     <textarea class="form-control" id="description" name="description" placeholder="" rows="3" placeholder="Enter ..."><?php echo set_value('description'); ?><?php echo set_value('description', $feegroup['description']) ?></textarea>
                                     <span class="text-danger"><?php echo form_error('description'); ?></span>
                                 </div>
+                                
+                                
+                                <div class="form-group">
+
+                                    <label for="exampleInputEmail1"><?php echo $this->lang->line('class'); ?> </label><small class="req"> *</small>
+
+                                    <select  id="class_id" name="class_id" class="form-control" >
+                                        <option value=""><?php echo $this->lang->line('select'); ?></option>
+                                        <?php
+                                        foreach ($classlist as $class) {
+                                            ?>
+                                            <option value="<?php echo $class['id'] ?>" <?php
+                                            if (set_value('class_id',$feegroup['class_id']) == $class['id']) {
+                                                echo "selected=selected";
+                                            }
+                                            ?>>
+                                                <?php echo $class['class'] ?></option>
+                                            <?php
+                                        }
+                                        ?>
+                                    </select>
+                                    <span class="text-danger"><?php echo form_error('class_id'); ?></span>
+                                </div>
+                                
                             </div><!-- /.box-body -->
 
                             <div class="box-footer">
@@ -80,8 +106,9 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                 <thead>
                                     <tr>
 
-                                        <th><?php echo $this->lang->line('name'); ?>
-                                        </th>
+                                        <th><?php echo $this->lang->line('name'); ?></th>
+                                        
+                                        <th><?php echo $this->lang->line('class'); ?>  </th>
 
                                         <th class="text-right"><?php echo $this->lang->line('action'); ?></th>
                                     </tr>
@@ -110,6 +137,9 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                                     ?>
                                                 </div>
                                             </td>
+                                            <td>
+                                                    <?php echo $feegroup['className']; ?>
+                                            </td>
 
                                             <td class="mailbox-date pull-right">
                                                 <?php
@@ -127,6 +157,7 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                                     </a>
                                                 <?php } ?>
                                             </td>
+                                             
                                         </tr>
                                         <?php
                                         $count++;

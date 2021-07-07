@@ -15,6 +15,16 @@ $route['404_override'] = 'school/show_404';
 $route['translate_uri_dashes'] = FALSE;
 $route['cron/(:any)'] = 'cron/index/$1';
 
+#alterado
+$route['admin/orcamento/output/(:any)'] = 'admin/orcamento/Orcamento/output/$1';
+$route['admin/orcamento/item/(:any)'] = 'admin/orcamento/Item/$1';
+$route['admin/orcamento'] = 'admin/orcamento/Orcamento/index';
+$route['admin/orcamento/(:any)'] = 'admin/orcamento/Orcamento/$1';
+
+$route['admin/data_corte'] = 'admin/data_corte/Data_corte/index';
+$route['admin/data_corte/delete/(:any)'] = 'admin/data_corte/Data_corte/delete/$1';
+$route['admin/data_corte/(:any)'] = 'admin/data_corte/Data_corte/$1';
+
 //======= front url rewriting==========
 $route['page/(:any)'] = 'welcome/page/$1';
 $route['read/(:any)'] = 'welcome/read/$1';

@@ -10,13 +10,15 @@ class Feegroup_model extends MY_Model {
         $this->current_session = $this->setting_model->getCurrentSession();
     }
 
+    #alterado
     public function get($id = null) {
-        $this->db->select()->from('fee_groups');
-        $this->db->where('is_system', 0);
+        $this->db->select('fee_groups.*, IFNULL(classes.class,"---") AS className')->from('fee_groups');
+        $this->db->join('classes','classes.id = fee_groups.class_id','left');
+        $this->db->where('fee_groups.is_system', 0);
         if ($id != null) {
-            $this->db->where('id', $id);
+            $this->db->where('fee_groups.id', $id);
         } else {
-            $this->db->order_by('id');
+            $this->db->order_by('fee_groups.id');
         }
         $query = $this->db->get();
         if ($id != null) {

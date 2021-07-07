@@ -358,5 +358,75 @@ class Welcome extends Front_Controller
 
         }
     }
+    
+        /*Retorna um combobox de Turmas com base na data de nascimento do aluno #alterado*/
+    public function getListaTurmasPorDataNascimento(){
+         try {
+			
+            $dataNascimento = $this->tools->formatarData($this->input->post('dataNascimento'), 'br', 'us');
+            $dtNascimento = new DateTime($dataNascimento .' 00:00:00'); 
+            
+            $config = $this->db->select('session_id')->from('sch_settings')->get()->result();
+            $datasCorte = $this->data_corte_model->getAll(['session_id'=>count($config)>0?$config[0]->session_id : 0 ]); 
+            //$this->pre($dtNascimento);
+            //$this->pre($datasCorte);
+            $dados = array();
+
+            foreach ($datasCorte as $row)
+            {
+                $dtInicial = new DateTime($row->dataInicial.' 00:00:00');
+                $dtFinal = new DateTime($row->dataFinal.' 23:59:59');
+                
+                 //$this->pre($dtNascimento);
+                 //$this->pre($dtInicial);
+                 //$this->pre($dtFinal);
+                
+                if($dtNascimento >= $dtInicial && $dtNascimento <= $dtFinal){
+                    $dados[] = array('value'=>$row->class_id,'label'=> $row->className );
+                }
+                
+                
+            }
+            
+            if(count($dados)<=0){
+                $dados[] = array('value'=>0,'label'=> '*** Escolha uma Turma ***' );
+            }
+
+            echo json_encode(array('status'=>true,'results'=>$dados));			
+
+
+        }
+        catch (\Exception $e)
+        {
+            echo json_encode(array('status'=>false));
+	}
+    }
+    
+     public function getListaPeriodosPorTurma(){
+         try {
+			
+            $class_id = (int) $this->input->post('class_id');
+           
+            $dados = array();
+
+            $res = $this->section_model->getClassBySectionAll($class_id);
+            $dados[] = array('value'=>0,'label'=> 'Selecione o Período' );
+            
+            foreach ($res as $row)
+            {
+               $dados[] = array('value'=>$row['section_id'],'label'=> $row['section'] ); 
+            }
+            
+
+            echo json_encode(array('status'=>true,'results'=>$dados));			
+
+
+        }
+        catch (\Exception $e)
+        {
+            echo json_encode(array('status'=>false));
+	}
+    }
+    
 
 }
