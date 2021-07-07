@@ -94,7 +94,7 @@ if(empty($notice)){
                                     echo "<div class='alert alert-success'>" . $this->session->flashdata('message') . "</div>";
                                 };
                                 ?>
-                                <form action="<?php echo site_url('site/userlogin') ?>" method="post">
+                                <form action="<?php echo site_url('userlogin') ?>" method="post">
                                     <?php echo $this->customlib->getCSRF(); ?>
                                     <div class="form-group has-feedback">
                                         <label class="sr-only" for="form-username">
@@ -113,7 +113,7 @@ if(empty($notice)){
                                 </form>
                                 <span style="text-align:center;font-weight:normal; font-size: 14px; display: block;padding-top: 5px"></span>
 
-                                 <p style="margin-top: 10px;"><a style="color:#0;" target="_blank" href="site/login" class="forgot pull-right"> <i class="fa fa-user"></i> Portal Colaborador</a> <a style="color:#0;padding-right: 20px;" href="/" target="_blank" class="forgot pull-right"> <i class="fa fa-empire"></i> Home Site</a>
+                                 <p style="margin-top: 10px;"><a style="color:#0;" target="_blank" href="<?php echo base_url('site/login'); ?>" class="forgot pull-right"> <i class="fa fa-user"></i> Portal Colaborador</a> <a style="color:#0;padding-right: 20px;" href="/" target="_blank" class="forgot pull-right"> <i class="fa fa-empire"></i> Home Site</a>
                                  </p> 
                                 
                                 <p><a href="<?php echo site_url('site/ufpassword') ?>" class="forgot"> <i class="fa fa-key"></i> <?php echo $this->lang->line('forgot_password'); ?></a> </p> 

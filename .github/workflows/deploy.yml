@@ -66,10 +66,9 @@ jobs:
         run: |
           echo "Create directories for  $DIRECTORY_APPLICATION/$STAGING_PATH/"
         
-          mkdir -p -m 777 $DIRECTORY_APPLICATION/$STAGING_PATH/uploads
           mkdir -p -m 777 $DIRECTORY_APPLICATION/$STAGING_PATH/logs
           mkdir -p -m 777 $DIRECTORY_APPLICATION/$STAGING_PATH/temp
-          rsync -qr -I   ./uploads/  $DIRECTORY_APPLICATION/$STAGING_PATH/uploads
+          rsync -qr -I --ignore-existing  ./uploads/  $DIRECTORY_APPLICATION/$STAGING_PATH/uploads
       
       - name:  Deploy Stack
         run: |
@@ -85,12 +84,7 @@ jobs:
           echo IMAGE_ID=$IMAGE_ID
           echo VERSION=$VERSION
           docker stack deploy -c stage-stack.yaml $STACK_NAME_STAGING
-      
-      - name: Prune System
-        run: |
-              sleep 5
-              docker system prune --force
-  
+          docker system prune --force
   deployTest:
     runs-on: "docker-stack"
     needs: [build, ]
@@ -120,11 +114,9 @@ jobs:
       - uses: actions/checkout@v2
       - name: Create Folder for Application
         run: |
-          rm -rf $DIRECTORY_APPLICATION/$PRODUCTION_PATH/*
-          mkdir -p -m 777 $DIRECTORY_APPLICATION/$PRODUCTION_PATH/uploads
           mkdir -p -m 777 $DIRECTORY_APPLICATION/$PRODUCTION_PATH/logs
           mkdir -p -m 777 $DIRECTORY_APPLICATION/$PRODUCTION_PATH/temp
-          rsync -qr -I   ./uploads/  $DIRECTORY_APPLICATION/$PRODUCTION_PATH/uploads
+          rsync -qr -I --ignore-existing  ./uploads/  $DIRECTORY_APPLICATION/$PRODUCTION_PATH/uploads
       - name: Deploy Stack
         run: |
           IMAGE_ID=carlosocarvalho/$IMAGE_NAME

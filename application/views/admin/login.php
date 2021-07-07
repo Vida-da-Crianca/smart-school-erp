@@ -91,7 +91,7 @@
                                             <button type="submit" class="btn"><?php echo $this->lang->line('sign_in'); ?></button>
                                         </form>
                                         <span style="text-align:center;font-weight:normal; font-size: 14px; display: block;padding-top: 5px">.</span>
-                                <p style="margin-top: 10px;"><a style="color:#000;" target="_blank" href="site/userlogin" class="forgot pull-right"> <i class="fa fa-user"></i> Portal Aluno</a> <a style="color:#000; padding-right: 20px;" href="/" target="_blank" class="forgot pull-right">Site <i class="fa fa-empire"></i> </a>
+                                <p style="margin-top: 10px;"><a style="color:#000;" target="_blank" href="<?php echo base_url('site/userlogin'); ?>" class="forgot pull-right"> <i class="fa fa-user"></i> Portal Aluno</a> <a style="color:#000; padding-right: 20px;" href="/" target="_blank" class="forgot pull-right">Site <i class="fa fa-empire"></i> </a>
                                  </p> 
                                         <a href="<?php echo site_url('site/forgotpassword') ?>" class="forgot"><i class="fa fa-key"></i> <?php echo $this->lang->line('forgot_password'); ?>?</a>
                                     </div>
