@@ -60,7 +60,7 @@ $autoload['packages'] = array();
   |	$autoload['libraries'] = array('user_agent' => 'ua');
  */
 $autoload['libraries'] = array('database', 'email','session', 'form_validation', 'upload', 'pagination',
-   'Customlib', 'Role', 'Smsgateway', 'QDMailer','Adler32','Aes');
+   'Customlib', 'Role', 'Smsgateway', 'QDMailer','Adler32','Aes','Tools');
 
 /*
   | -------------------------------------------------------------------
