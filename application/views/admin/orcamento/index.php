@@ -72,9 +72,9 @@
         </div> <!-- general form elements -->
     </section><!-- Main content -->
 </div>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
-<link href="<?php echo base_url();?>backend/bootstrap-dialog/dist/css/bootstrap-dialog.min.css" rel="stylesheet">
-<script src="<?php echo base_url();?>backend/bootstrap-dialog/dist/js/bootstrap-dialog.min.js"></script> 
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js" type="text/javascript"></script>
+<link href="<?php echo base_url();?>backend/bootstrap-dialog/dist/css/bootstrap-dialog.min.css" rel="stylesheet" type="text/css">
+<script src="<?php echo base_url();?>backend/bootstrap-dialog/dist/js/bootstrap-dialog.min.js" type="text/javascript"></script> 
 
 <script type='text/javascript'>
 $(document).ready(function(){
