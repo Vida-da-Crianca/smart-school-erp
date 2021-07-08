@@ -47,9 +47,19 @@ class MY_Controller extends CI_Controller {
 class Admin_Controller extends MY_Controller {
 
     protected $aaaa = false;
+    
+    protected $resp_status;
+    protected $resp_msg;
+    
+    protected $post_filters;
+
+    protected $estados;
+
 
     public function __construct() {
         parent::__construct();
+       
+        
         $this->auth->is_logged_in();
         $this->check_license();
         $this->load->library('rbac');
@@ -58,6 +68,34 @@ class Admin_Controller extends MY_Controller {
 
         $this->config->load('ci-blog');
         $this->config->load('custom_filed-config');
+        
+        $this->estados['AC'] = 'AC';
+        $this->estados['AL'] = 'AL';
+        $this->estados['AP'] = 'AP';
+        $this->estados['AM'] = 'AM';
+        $this->estados['BA'] = 'BA';
+        $this->estados['CE'] = 'CE';
+        $this->estados['DF'] = 'DF';
+        $this->estados['ES'] = 'ES';
+        $this->estados['GO'] = 'GO';
+        $this->estados['MA'] = 'MA';
+        $this->estados['MT'] = 'MT';
+        $this->estados['MS'] = 'MS';
+        $this->estados['MG'] = 'MG';
+        $this->estados['PA'] = 'PA';
+        $this->estados['PB'] = 'PB';
+        $this->estados['PR'] = 'PR';
+        $this->estados['PE'] = 'PE';
+        $this->estados['PI'] = 'PI';
+        $this->estados['RJ'] = 'RJ';
+        $this->estados['RN'] = 'RN';
+        $this->estados['RS'] = 'RS';
+        $this->estados['RO'] = 'RO';
+        $this->estados['RR'] = 'RR';
+        $this->estados['SC'] = 'SC';
+        $this->estados['SP'] = 'SP';
+        $this->estados['SE'] = 'SE';
+        $this->estados['TO'] = 'TO';
        
     }
 
@@ -103,6 +141,212 @@ class Admin_Controller extends MY_Controller {
         $this->config->set_item('SSLK', getenv('LICENSE_APP', ''));
     }
 
+    protected function lastQuery()
+    {
+        echo $this->db->last_query() . '<br />';
+    }
+
+    protected function dump($var)
+    {
+        var_dump($var);
+    }
+
+    protected function pre($var)
+    {
+        echo '<pre>';
+        print_r($var);
+        echo '</pre>';
+    }
+    
+    protected function checkAjaxSubmit()
+    {
+        $this->resp_status = false;
+      
+        return $this->input->is_ajax_request() && $this->input->post('_submit') == 'yeap';
+    }
+
+    protected function showJSONResp()
+    {
+        echo json_encode(array('status' => $this->resp_status, 'msg' => $this->resp_msg));
+        exit;
+    }
+
+     protected function extractPostFilters()
+    {
+        $this->post_filters = array();
+
+        $posts = $this->input->post();
+
+        foreach ($posts as $key => $value)
+        {
+            //if (!empty($value))
+            {
+                $this->post_filters[$key] = $value;
+            }
+        }
+    }
+
+    protected function extractPostFields()
+    {
+        $this->post_fields = array();
+
+        $posts = $this->input->post();
+
+        foreach ($posts as $key => $value)
+        {
+            if (!empty($value))
+            {
+                $this->post_fields[$key] = $value;
+            }
+        }
+    }
+    
+    protected function parseFloat($str)
+    {
+        return (float) str_replace(array('.', ','), array('', '.'), $str);
+    }
+    
+    protected function modelTransStart()
+    {
+        $this->db->trans_begin();
+    }
+
+    protected function modelTransEnd()
+    {
+        if ($this->db->trans_status() === FALSE)
+            $this->db->trans_rollback();
+        else
+            $this->db->trans_commit();
+    }
+    
+    protected function formatarData($data)
+    {
+        if (!empty($data))
+        {
+            return $this->tools->formatarData($data, 'br', 'usa');
+        }
+        else
+            return '';
+    }
+    protected function extractFiltrosTipoData()
+    {
+        try
+        {
+            if(!empty($this->post_filters['data1']) && !empty($this->post_filters['data2'])){
+                $this->post_filters['data1'] = $this->formatarData($this->post_filters['data1']);
+                $this->post_filters['data2'] = $this->formatarData($this->post_filters['data2']);
+            }
+        }
+        catch (Exception $ex)
+        {
+            throw new Exception('Erro ao formatar FILTROS de DATAS');
+        }
+    }
+    
+    protected function extractFieldFromArray($arr, $field)
+    {
+        try
+        {
+
+            $tmp = array();
+
+            foreach ($arr as $row)
+            {
+                if (isset($row->$field))
+                    $tmp[] = $row->$field;
+            }
+
+            return $tmp;
+        }
+        catch (Exception $ex)
+        {
+            throw new Exception('Erro ao extrair IDs do Array');
+        }
+    }
+    
+     public function _classToArray($objClass, $exclude = null)
+    {
+        $results = array();
+
+        if (is_object($objClass))
+        {
+
+
+
+            $vars = get_object_vars($objClass);
+
+            if (is_array($exclude) && count($exclude) > 0)
+            {
+
+                foreach ($vars as $key => $value)
+                {
+                    if (!in_array($key, $exclude))
+                    {
+                        $results[$key] = $value;
+                    }
+                }
+            }
+            else
+            {
+                $results = $vars;
+            }
+        }
+
+        return $results;
+    }
+    
+    protected function soNumeros($str){
+        return preg_replace('/[^0-9]/', '', $str);
+    }
+    
+    function CPFValido($cpf)
+	{
+		// Verifiva se o número digitado contém todos os digitos
+		$cpf = str_pad(preg_replace('/[^0-9]/', '', $cpf), 11, '0', STR_PAD_LEFT);
+	
+		// Verifica se nenhuma das sequências abaixo foi digitada, caso seja, retorna falso
+		if (strlen($cpf) != 11 ||
+				$cpf == '00000000000' ||
+				$cpf == '11111111111' ||
+				$cpf == '22222222222' ||
+				$cpf == '33333333333' ||
+				$cpf == '44444444444' ||
+				$cpf == '55555555555' ||
+				$cpf == '66666666666' ||
+				$cpf == '77777777777' ||
+				$cpf == '88888888888' ||
+				$cpf == '99999999999') {
+			return FALSE;
+		} else {
+			// Calcula os números para verificar se o CPF é verdadeiro
+			for ($t = 9; $t < 11; $t++) {
+				for ($d = 0, $c = 0; $c < $t; $c++) {
+					$d += $cpf{$c} * (($t + 1) - $c);
+				}
+	
+				$d = ((10 * $d) % 11) % 10;
+				if ($cpf{$c} != $d) {
+					return FALSE;
+				}
+			}
+			return TRUE;
+		}
+	}
+       
+        
+    protected function checkFormValidationErrors()
+    {
+        $this->form_validation->set_error_delimiters('', '');
+
+        if ($this->form_validation->run() == FALSE)
+            throw new Exception(validation_errors());
+    }
+  
+
+
+
+    
+    
 }
 
 class Student_Controller extends MY_Controller {
