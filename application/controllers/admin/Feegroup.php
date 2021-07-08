@@ -30,6 +30,7 @@ class FeeGroup extends Admin_Controller {
             $data = array(
                 'name' => $this->input->post('name'),
                 'description' => $this->input->post('description'),
+                'class_id' => (int) $this->input->post('class_id')
             );
             $this->feegroup_model->add($data);
             $this->session->set_flashdata('msg', '<div class="alert alert-success text-left">'.$this->lang->line('success_message').'</div>');
@@ -87,6 +88,7 @@ class FeeGroup extends Admin_Controller {
                 'id' => $id,
                 'name' => $this->input->post('name'),
                 'description' => $this->input->post('description'),
+                'class_id' => (int) $this->input->post('class_id')
             );
             $this->feegroup_model->add($data);
             $this->session->set_flashdata('msg', '<div class="alert alert-success text-left">'.$this->lang->line('success_message').'</div>');
