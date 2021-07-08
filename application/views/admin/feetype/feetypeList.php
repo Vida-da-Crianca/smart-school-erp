@@ -48,6 +48,15 @@
                                     <textarea class="form-control" id="description" name="description" rows="3"><?php echo set_value('description'); ?></textarea>
                                     <span class="text-danger"></span>
                                 </div>
+                                
+                                <div class="form-group">
+                                    <label for="exampleInputEmail1">
+                                        <input type="checkbox" name="parcelaEscolar" value="1" 
+                                                   <?php echo set_value('parcelaEscolar',0) == 1 ? 'checked="checked"' : ''; ?>
+                                               /> Parcela Escolar 
+                                    </label>
+                                    <span class="text-danger"></span>
+                                </div>
                             </div><!-- /.box-body -->
 
                             <div class="box-footer">
@@ -107,6 +116,7 @@
                                                         <p class="text text-info"><?php echo $feetype['description']; ?></p>
                                                         <?php
                                                     }
+                                                    echo (int)$feetype['parcelaEscolar'] == 1 ? '<i class="small">(Parcela Escolar)</i>': '';
                                                     ?>
                                                 </div>
                                             </td>

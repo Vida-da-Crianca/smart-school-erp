@@ -54,6 +54,14 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                     <textarea class="form-control" id="description" name="description" placeholder="" rows="3" placeholder="Enter ..."><?php echo set_value('description'); ?><?php echo set_value('description', $feetype['description']) ?></textarea>
                                     <span class="text-danger"><?php echo form_error('description'); ?></span>
                                 </div>
+                                <div class="form-group">
+                                    <label for="exampleInputEmail1">
+                                        <input type="checkbox" name="parcelaEscolar" value="1" 
+                                                   <?php echo set_value('parcelaEscolar',$feetype['parcelaEscolar']) == 1 ? 'checked="checked"' : ''; ?>
+                                               /> Parcela Escolar 
+                                    </label>
+                                    <span class="text-danger"></span>
+                                </div>
                             </div><!-- /.box-body -->
 
                             <div class="box-footer">
@@ -110,6 +118,8 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                                         <p class="text text-info"><?php echo $feetype['description']; ?></p>
                                                         <?php
                                                     }
+                                                     echo (int)$feetype['parcelaEscolar'] == 1 ? '<i class="small">(Parcela Escolar)</i>': '';
+                                                  
                                                     ?>
                                                 </div>
                                             </td>
