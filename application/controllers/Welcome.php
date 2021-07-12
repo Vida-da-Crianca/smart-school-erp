@@ -291,6 +291,13 @@ class Welcome extends Front_Controller
                     $class_id   = $this->input->post('class_id');
                     $section_id = $this->input->post('section_id');
 
+                    //carregar o class_section_id
+                    $res = $this->db->where('class_id',$class_id)
+                            ->where('section_id',$section_id)
+                            ->get('class_sections')->result();
+                    
+                    $class_section_id = (count($res)>0? $res[0]->id : 0);
+
                     $dob = explode('/',$this->input->post('dob'));
                     if(is_array($dob) && count($dob) == 3){
                         $dob = $dob[2].'-'.$dob[1].'-'.$dob[0];
@@ -305,7 +312,7 @@ class Welcome extends Front_Controller
                         'firstname'           => $this->input->post('firstname'),
                         'lastname'            => $this->input->post('lastname'),
                         'mobileno'            => $this->input->post('mobileno'),
-                        'class_section_id'    => $this->input->post('section_id'),
+                        'class_section_id'    => $class_section_id,//$this->input->post('section_id'),
                         'guardian_is'         => $this->input->post('guardian_is'),
                         'dob'                 => $dob,//date('Y-m-d', strtotime($this->input->post('dob'))),
                         'current_address'     => $this->input->post('current_address'),

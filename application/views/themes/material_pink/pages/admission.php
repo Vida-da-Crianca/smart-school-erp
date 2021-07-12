@@ -35,49 +35,7 @@ if (isset($error_message))
 ?>
 
  <div class="row">
-    <div class="col-md-3">
-        <div class="form-group">
-            <label for="exampleInputEmail1"><?php echo $this->lang->line('class'); ?></label><small class="req"> *</small>
-            <select  id="class_id" name="class_id" class="form-control"  >
-                <option value=""><?php echo $this->lang->line('select'); ?></option>
-                <?php
-foreach ($classlist as $class)
-{
-?>
-                    <option value="<?php echo $class['id'] ?>"<?php if (set_value('class_id') == $class['id'])
-    {
-        echo "selected=selected";
-    }
-?>><?php 
-$count ="";
-echo $class['class'] ?></option>
-                    <?php
-    $count++;
-}
-?>
-
-
-
-            </select>
-            <span class="text-danger"><?php echo form_error('class_id'); ?></span>
-        </div>
-    </div>
-    <div class="col-md-3">
-
-        <div class="form-group">
-            <label for="exampleInputEmail1"><?php echo $this
-    ->lang
-    ->line('section'); ?></label><small class="req"> *</small>
-            <select  id="section_id" name="section_id" class="form-control" >
-                <option value=""   ><?php echo $this
-    ->lang
-    ->line('select'); ?></option>
-            </select>
-            <span class="text-danger"><?php echo form_error('section_id'); ?></span>
-        </div>
-    </div>
-
-
+   
     <div class="col-md-3">
         <div class="form-group">
             <label for="exampleInputEmail1"><?php echo $this
@@ -99,8 +57,8 @@ echo $class['class'] ?></option>
             <span class="text-danger"><?php echo form_error('lastname'); ?></span>
         </div>
     </div>
-  </div><!--./row-->
-  <div class="row">
+  
+  
     <div class="col-md-3">
         <div class="form-group">
             <label for="exampleInputFile"> <?php echo $this
@@ -131,11 +89,13 @@ foreach ($genderList as $key => $value)
             <label for="exampleInputEmail1"><?php echo $this
     ->lang
     ->line('date_of_birth'); ?></label><small class="req"> *</small>
-            <input  type="text" class="form-control date2" 
+            <input  type="text" class="form-control" 
                     value="<?php echo set_value('dob'); ?>" id="dob" name="dob"/>
             <span class="text-danger"><?php echo form_error('dob'); ?></span>
         </div>
     </div>
+         
+      
   <div class="col-md-3">
         <div class="form-group">
             <label for="exampleInputEmail1"><?php echo $this
@@ -156,10 +116,52 @@ foreach ($genderList as $key => $value)
         </div>
     </div>
 
+     <div class="col-md-3">
+         
+         <div class="form-group">
+            <label for="exampleInputEmail1"><?php echo $this->lang->line('class'); ?></label><small class="req"> *</small>
+            <?php echo form_dropdown('class_id',['0'=>'## Nenhuma Turma Disponível ###'], '', "id='class_id' class='form-control'"); ?>
+ <span class="text-danger"><?php echo form_error('class_id'); ?></span>
+         </div>
+         
+        <!--<div class="form-group">
+            <label for="exampleInputEmail1"><?php echo $this->lang->line('class'); ?></label><small class="req"> *</small>
+            <select  id="class_id" name="class_id" class="form-control"  >
+                <option value=""><?php echo $this->lang->line('select'); ?></option>
+                <?php
+foreach ($classlist as $class)
+{
+?>
+                    <option value="<?php echo $class['id'] ?>"<?php if (set_value('class_id') == $class['id'])
+    {
+        echo "selected=selected";
+    }
+?>><?php 
+$count ="";
+echo $class['class'] ?></option>
+                    <?php
+    $count++;
+}
+?>
 
 
 
-</div><!--./row-->
+            </select>
+            <span class="text-danger"><?php echo form_error('class_id'); ?></span>
+        </div>-->
+    </div>
+    <div class="col-md-3">
+
+        <div class="form-group">
+            <label for="exampleInputEmail1"><?php echo $this->lang->line('section'); ?></label><small class="req"> *</small>
+            <select  id="section_id" name="section_id" class="form-control" >
+                <option value=""   ><?php echo $this->lang->line('select'); ?></option>
+            </select>
+            <span class="text-danger"><?php echo form_error('section_id'); ?></span>
+        </div>
+    </div>
+    
+</div>
     <div class="row">
         <div class="col-md-12"><h4 class="pagetitleh2"><?php echo $this
     ->lang
@@ -402,14 +404,14 @@ $(document).ready(function () {
 
         var class_id = $('#class_id').val();
         var section_id = '<?php echo set_value('section_id', 0) ?>';
+       
+        //getSectionByClass(class_id, section_id);
 
-        getSectionByClass(class_id, section_id);
-
-        $(document).on('change', '#class_id', function (e) {
-            $('#section_id').html("");
-            var class_id = $(this).val();
-            getSectionByClass(class_id, 0);
-        });
+       // $(document).on('change', '#class_id', function (e) {
+       //     $('#section_id').html("");
+       //     var class_id = $(this).val();
+       //     getSectionByClass(class_id, 0);
+       // });
 
         $('.date2').datepicker({
             autoclose: true,
@@ -565,7 +567,130 @@ $(document).ready(function () {
         $('.date2').mask('00/00/0000'); 
 
 
-        $('.languageselectpicker').selectpicker();
+        //$('.languageselectpicker').selectpicker();
+        
+        
+        
+        
+    
+    
+    
+    $.fn.comboBox = function(options)
+	{
+		var settings = $.extend({
+			
+			url: '',
+			data: null,
+			selected: null,
+			combobox : ''	,
+                        callback: null
+			
+		},options);
+		
+		$(settings.combobox).html('<option>Aguarde...</option>');
+		
+		$.post(settings.url, settings.data )
+		.done(function(resp){
+			
+			try
+			{
+				resp_json =  jQuery.parseJSON(resp);
+				
+				if(resp_json.status)
+				{
+					if(resp_json.results.length > 0)
+					{
+						html = '';
+						
+						for(var i in resp_json.results)
+						{
+							html += '<option value="'+resp_json.results[i].value+'" ';
+							if(resp_json.results[i].value == settings.selected){
+								html += 'selected="selected"';
+                                                            }
+							html += ">";
+							html += resp_json.results[i].label;
+							html += '</option>';
+							
+						}
+						
+						$(settings.combobox).html(html);
+                                                
+                                                
+                                                 if(typeof settings.callback == 'function'){
+                                                            settings.callback.call(this, resp_json);
+                                                 }
+                                                
+					}
+					else{
+                                            
+                                            $(settings.combobox).html('<option value="0">*** Nenhum Resultado ***</option>');
+                                        }
+				}
+				else
+					$(settings.combobox).html('<option>*** Erro ao Processar ***</option>');
+			}
+			catch (e) {
+				console.log(e);
+				$(settings.combobox).html('<option>*** ERRO ***</option>');
+				
+			}
+			
+		})
+		.fail(function(){
+			
+			$(settings.combobox).html('<option>*** Erro ***</option>');
+		});
+		
+	};
+        
+        
+    /*TURMA E PERIODO ---------------------------------------------------------*/
+    /*Carrega o combobox de periodos*/
+    $.fn.comboBoxPeriodo = function(){
+        $(this).comboBox({
+            url : '<?php echo base_url(); ?>welcome/getListaPeriodosPorTurma',
+            data: { class_id : $('#class_id').val() },
+            combobox : '#section_id',
+            selected: '',
+            callback: {function(){} }
+        }); 
+       
+    };
+    
+    /*Verificar a turma com base na data de nascimento*/
+    $.fn.carregarComboBoxTurmasDisponiveis = function(dataNascimento){
+        $(this).comboBox({
+            url : '<?php echo base_url(); ?>welcome/getListaTurmasPorDataNascimento',
+            data: { dataNascimento : dataNascimento },
+            combobox : '#class_id',
+            selected: '',
+            callback: function(){ 
+                $(this).comboBoxPeriodo(); 
+            } 
+        });     
+    };
+    $(this).carregarComboBoxTurmasDisponiveis('<?php echo set_value('dob',date('01/01/2030')); ?>');
+    
+  
+    $('#dob').mask('99/99/9999');    
+        let typingTimer;                //timer identifier
+        let doneTypingInterval = 1000;  //time in ms (5 seconds)
+        let myInput = document.getElementById('dob');
+
+        //on keyup, start the countdown
+        $('#dob').keyup(function(){
+            clearTimeout(typingTimer);
+            if ($('#dob').val()) {
+                typingTimer = setTimeout(function(){
+                    $(this).carregarComboBoxTurmasDisponiveis($('#dob').val());
+                }, doneTypingInterval);
+            }
+        });
+
+    
+    /*TURMA E PERIODO ---------------------------------------------------------*/
+	
 
 });
     
