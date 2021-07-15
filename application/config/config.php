@@ -372,7 +372,7 @@ $config['encryption_key'] = getenv('APP_KEY');
  */
 //$config['sess_driver'] = 'redis';
 $config['sess_cookie_name'] = getenv('CI_SESSION');
-$config['sess_expiration'] = 7200;
+$config['sess_expiration'] = 86400;
 //$config['sess_save_path'] =  'tcp://redis:6379'; //sys_get_temp_dir();
 
 $config['sess_driver'] = 'database';
