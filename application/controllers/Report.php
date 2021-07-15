@@ -569,9 +569,9 @@ class Report extends Admin_Controller
 
 
                     //calcular o BALANCO
-                    $row->balanco = $row->recebimentoValor - ($row->valorRecebido +  $row->totalDesconto) + $row->totalMulta;
+                    $row->balanco = (($row->recebimentoValor + $row->totalMulta) - $row->totalDesconto) - ($row->valorRecebido) ;
 
-                    $row->pago = ($row->balanco == 0);
+                    $row->pago = ($row->balanco <= 0);
                     
                     
                     if($status == 1 && !$row->pago){$contabilizar = false;}

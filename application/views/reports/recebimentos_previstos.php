@@ -109,7 +109,7 @@
                     
                     
                     <div class = "row">
-                        <div class="col-md-2 form-group">
+                         <div class="col-md-2 form-group">
                           
                                     <label><?php echo $this->lang->line('session') ; ?></label>
                                     <?php
@@ -206,7 +206,7 @@
             <div class="box-body" style="max-width:100% !important;">
                 <div class="table table-responsive">
 
-                    <table id="results_table" class="dataTable display" role="grid" style="width: 100%;">
+                    <table id="results_table" class="dataTable display" role="grid" >
                             <thead class="header">
                                 <tr>
                                     <th>Aluno</th>
@@ -218,6 +218,9 @@
                                     <th>Vencimento</th>
                                     
                                     <th class="text-right">Valor</th>
+                                    <th class="text-right">Multas</th>
+                                    <th class="text-right">Descontos</th>
+                                    
                                     <th class="text-right">Valor Recebido</th>
                                     <th class="text-right">Valor à Receber</th>
                                     
@@ -226,7 +229,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <?php $total = $recebido = $receber = 0; foreach ($results as $row): 
+                                <?php $total = $recebido = $receber = $multa = $desconto = 0; foreach ($results as $row): 
                                     
                                     $exibir = true;
                                     
@@ -254,6 +257,19 @@
                                             <span class="small">R$</span> 
                                             <?php echo number_format($row->recebimentoValor, 2, ',', '.');  $total += $row->recebimentoValor; ?>
                                          </td>
+                                         
+                                         
+                                         <td class="text-right">
+                                            <span class="small">+ R$</span> 
+                                            <?php echo number_format($row->totalMulta, 2, ',', '.');  $multa += $row->totalMulta; ?>
+                                         </td>
+                                         <td class="text-right">
+                                            <span class="small">- R$</span> 
+                                            <?php echo number_format($row->totalDesconto, 2, ',', '.');  $desconto += $row->totalDesconto; ?>
+                                         </td>
+                                         
+                                         
+                                         
                                          <td class="text-right">
                                             <span class="small">R$</span> 
                                             <?php echo number_format($row->valorRecebido, 2, ',', '.'); $recebido += $row->valorRecebido; ?>
@@ -280,6 +296,18 @@
                                         <b>
                                             <span class='small'>R$</span>
                                             <?php echo number_format($total, 2, ',', '.'); ?>
+                                        </b>
+                                    </td>
+                                    <td class="bg-info text-right">
+                                        <b>
+                                            <span class='small'>R$</span>
+                                            <?php echo number_format($multa, 2, ',', '.'); ?>
+                                        </b>
+                                    </td>
+                                    <td class="bg-info text-right">
+                                        <b>
+                                            <span class='small'>R$</span>
+                                            <?php echo number_format($desconto, 2, ',', '.'); ?>
                                         </b>
                                     </td>
                                     <td class="bg-info text-right">
@@ -433,6 +461,8 @@ $(document).ready(function(){
                 null,
                 null,
                 null,
+                null,
+                null,
                 null
             ],
             language: {
@@ -440,7 +470,7 @@ $(document).ready(function(){
                  "decimal": ",",
                 "thousands": "."
             },
-             footerCallback: function(row, data, start, end, display) {
+           footerCallback: function(row, data, start, end, display) {
                 var api = this.api(),data;
                 
                 $('.dataTables_wrapper table > tfoot').show();
