@@ -586,6 +586,9 @@ jQuery.extend( jQuery.fn.dataTableExt.oSort, {
         .control-checkbox input:disabled~.control_indicator:after {
             border-color: #7b7b7b;
         }
+        
+        
+        
 
         .control-checkbox .control_indicator::before {
             content: '';

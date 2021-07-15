@@ -568,6 +568,8 @@ class Report extends Admin_Controller
                     }//tem depositos para esse financeiro
 
 
+                    
+                    
                     //calcular o BALANCO
                     $row->balanco = (($row->recebimentoValor + $row->totalMulta) - $row->totalDesconto) - ($row->valorRecebido) ;
 
