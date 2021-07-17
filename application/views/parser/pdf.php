@@ -16,6 +16,16 @@
             page-break-before: always;
             /* word-break: break-all; */
         }
+        table {
+            border-collapse: collapse;
+         
+        }
+        table tr th,
+        table tr td{
+            border: 1px solid #ccc;
+            padding: 5px;
+
+        }
     </style>
 </head>
 <body>
