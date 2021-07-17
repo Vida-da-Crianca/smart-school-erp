@@ -28,7 +28,7 @@ class Expense extends Admin_Controller {
         $this->form_validation->set_rules('name', $this->lang->line('name'), 'trim|required|xss_clean');
         $this->form_validation->set_rules('date', $this->lang->line('date'), 'trim|required|xss_clean');
         $this->form_validation->set_rules('payment_at', $this->lang->line('date'), 'trim|xss_clean');
-        $this->form_validation->set_rules('owner_id', $this->lang->line('date'), 'trim|xss_clean');
+        $this->form_validation->set_rules('owner_id', $this->lang->line('date'), 'trim|xss_clean|required');
         $this->form_validation->set_rules('documents', $this->lang->line('documents'), 'callback_handle_upload');
         $this->form_validation->set_rules('owner_type', $this->lang->line('owner_type'), 'trim|required|xss_clean');
         if ($this->form_validation->run() == FALSE) {
