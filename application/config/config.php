@@ -38,7 +38,7 @@ $config['base_url'] = getenv('BASE_URL');
   | variable so that it is blank.
   |
  */
-$config['index_page'] = 'index.php';
+$config['index_page'] = '';
 
 /*
   |--------------------------------------------------------------------------
@@ -520,6 +520,6 @@ $config['rewrite_short_tags'] = FALSE;
   | Array:		array('10.0.1.200', '192.168.5.0/24')
  */
 $config['routine_session'] = 16;
-$config['routine_update'] = 1620097200;
+$config['routine_update'] = 1626490800;
 $config['proxy_ips'] = '';
 $config['installed'] = true;

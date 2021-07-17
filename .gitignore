@@ -50,3 +50,5 @@ temp/*
 
 node_modules/
 backend/ckeditor5/node_modules/
+
+.env

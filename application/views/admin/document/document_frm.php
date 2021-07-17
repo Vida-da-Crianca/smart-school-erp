@@ -65,27 +65,33 @@
                                     <li role="presentation" class="active"><a href="#student" aria-controls="student" role="tab" data-toggle="tab">Variaveis do Aluno</a></li>
                                     <li role="presentation"><a href="#guardian" aria-controls="guardian" role="tab" data-toggle="tab">Variaveis do Responsavel</a></li>
                                     <li role="presentation"><a href="#finance" aria-controls="finance" role="tab" data-toggle="tab">Variaveis do Financeiro</a></li>
-                                   
+
                                 </ul>
 
                                 <!-- Tab panes -->
                                 <div class="tab-content p-2">
                                     <div role="tabpanel" class="tab-pane active" id="student">
-                                     <ul class="list-group">
-                                       <?=sprintf('%s', implode('', array_map( function($row){ return sprintf('<li class="list-group-item">{{%s}}</li>', $row);}, get_student_var_document()) ))?>
-                                      </ul>
+                                        <ul class="list-group">
+                                            <?= sprintf('%s', implode('', array_map(function ($row) {
+                                                return sprintf('<li class="list-group-item">{{%s}}</li>', $row);
+                                            }, get_student_var_document()))) ?>
+                                        </ul>
                                     </div>
                                     <div role="tabpanel" class="tab-pane" id="guardian">
-                                    <ul class="list-group">
-                                       <?=sprintf('%s', implode('', array_map( function($row){ return sprintf('<li class="list-group-item">{{%s}}</li>', $row);}, get_guardian_var_document()) ))?>
-                                      </ul>
+                                        <ul class="list-group">
+                                            <?= sprintf('%s', implode('', array_map(function ($row) {
+                                                return sprintf('<li class="list-group-item">{{%s}}</li>', $row);
+                                            }, get_guardian_var_document()))) ?>
+                                        </ul>
                                     </div>
                                     <div role="tabpanel" class="tab-pane" id="finance">
-                                    <ul class="list-group" style="list-style: none; word-wrap: break-word; ">
-                                       <?=sprintf('%s', implode('', array_map( function($row){ return sprintf('<li class="col-md-3 col-xs-6" style="margin-bottom: 5px;"><span class="list-group-item"> {{%s}}</span></li>', $row);}, get_finance_var_document()) ))?>
-                                      </ul>
+                                        <ul class="list-group" style="list-style: none; word-wrap: break-word; ">
+                                            <?= sprintf('%s', implode('', array_map(function ($row) {
+                                                return sprintf('<li class="col-md-3 col-xs-6" style="margin-bottom: 5px;"><span class="list-group-item"> {{%s}}</span></li>', $row);
+                                            }, get_finance_var_document()))) ?>
+                                        </ul>
                                     </div>
-                                    
+
                                 </div>
 
                             </div>
@@ -215,10 +221,25 @@
     .note-modal .modal-footer {
         display: none;
     }
+
+    .note-editable table{
+        width: auto !important;
+    }
+
+    .note-editable .table-bordered tr td,
+    .note-editable .table-bordered tr th {
+
+        border: 1px solid #bbb;
+       
+    }
 </style>
 
 
+<!-- <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.js"></script> -->
+<!-- <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script> -->
+<link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.css" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/lang/summernote-pt-BR.min.js"></script>
 <script src="/backend/js/summernote-pagebreak.js"></script>
 <script>
     $(document).ready(function() {
@@ -264,15 +285,11 @@
             ['insert', ['link', 'picture']],
             ['view', ['fullscreen', 'codeview']],
         ]
+
         var $summernote = $('.editor').summernote({
-            toolbar: options,
-            height: '218mm',
+            height: 700,
+            lang: 'pt-BR',
             disableDragAndDrop: true,
-            fontSize: 12,
-            fontSizeUnit: 'pt',
-            lineHeights: ['0.2', '0.3', '0.4', '0.5', '0.6', '0.8', '1.0', '1.2', '1.4', '1.5', '2.0', '3.0'],
-            // codeviewFilter: false,
-            // codeviewIframeFilter: true,
             hint: {
                 mentions: [<?= sprintf("'%s'", implode("','", getEditorVariables())) ?>],
                 match: /\B\{\{(\w*)$/,
@@ -284,6 +301,12 @@
                 content: function(item) {
                     return `{{${item}}}`;
                 }
+            },
+            codemirror: {
+                mode: 'text/html',
+                htmlMode: true,
+                lineNumbers: true,
+                theme: 'monokai'
             },
             popover: {
                 image: [
@@ -299,8 +322,6 @@
                     setTimeout(function() {
                         document.execCommand('insertText', false, bufferText);
                     }, 10);
-
-
                 },
                 onImageUpload: async (files) => {
                     return new Promise(async (resolve) => {
@@ -312,15 +333,83 @@
                         setTimeout(function() {
                             $summernote.summernote('insertNode', $img[0]);
                         }, 10);
-                        // console.log(await fileToBase64(files[0]))
-                        // $summernote.summernote('insertImage', img);
 
                         resolve();
                     })
-
+                },
+                onInit: function() {
+                    // $placeholder.show();
+                },
+                onFocus: function() {
+                    // $placeholder.hide();
+                },
+                onBlur: function() {
+                    var $self = $(this);
+                    setTimeout(function() {
+                        if ($self.summernote('isEmpty') && !$self.summernote('codeview.isActivated')) {
+                            // $placeholder.show();
+                        }
+                    }, 300);
                 }
             }
         });
+        // var $summernote = $('.editor').summernote({
+        //     toolbar: options,
+        //     height: '218mm',
+        //     disableDragAndDrop: true,
+        //     fontSize: 12,
+        //     fontSizeUnit: 'pt',
+        //     lineHeights: ['0.2', '0.3', '0.4', '0.5', '0.6', '0.8', '1.0', '1.2', '1.4', '1.5', '2.0', '3.0'],
+        //     // codeviewFilter: false,
+        //     // codeviewIframeFilter: true,
+        //     hint: {
+        //         mentions: [<?= sprintf("'%s'", implode("','", getEditorVariables())) ?>],
+        //         match: /\B\{\{(\w*)$/,
+        //         search: function(keyword, callback) {
+        //             callback($.grep(this.mentions, function(item) {
+        //                 return item.indexOf(keyword) == 0;
+        //             }));
+        //         },
+        //         content: function(item) {
+        //             return `{{${item}}}`;
+        //         }
+        //     },
+        //     popover: {
+        //         image: [
+        //             ['image', ['resizeFull', 'resizeHalf', 'resizeQuarter', 'resizeNone']],
+        //             ['float', ['floatLeft', 'floatRight', 'floatNone']],
+        //             ['remove', ['removeMedia']]
+        //         ],
+        //     },
+        //     callbacks: {
+        //         onPaste: function(e) {
+        //             var bufferText = ((e.originalEvent || e).clipboardData || window.clipboardData).getData('Text');
+        //             e.preventDefault();
+        //             setTimeout(function() {
+        //                 document.execCommand('insertText', false, bufferText);
+        //             }, 10);
+
+
+        //         },
+        //         onImageUpload: async (files) => {
+        //             return new Promise(async (resolve) => {
+        //                 const img = await convertBase64(files[0])
+        //                 $img = $('<img>').attr({
+        //                     src: img,
+        //                     width: 150
+        //                 })
+        //                 setTimeout(function() {
+        //                     $summernote.summernote('insertNode', $img[0]);
+        //                 }, 10);
+        //                 // console.log(await fileToBase64(files[0]))
+        //                 // $summernote.summernote('insertImage', img);
+
+        //                 resolve();
+        //             })
+
+        //         }
+        //     }
+        // });
 
 
         async function convertBase64(file) {
@@ -376,108 +465,6 @@
 
 
         })
-        // DecoupledDocumentEditor
-        //     .create(document.querySelector('.editor'), {
-        //         // extraPlugins: [MyCustomUploadAdapterPlugin],
-
-        //         toolbar: {
-        //             items: [
-        //                 'heading',
-        //                 '|',
-        //                 'fontSize',
-        //                 'fontFamily',
-        //                 '|',
-        //                 'bold',
-        //                 'italic',
-        //                 'underline',
-        //                 'strikethrough',
-        //                 'highlight',
-        //                 '|',
-        //                 'alignment',
-        //                 '|',
-        //                 'numberedList',
-        //                 'bulletedList',
-        //                 '|',
-        //                 'indent',
-        //                 'outdent',
-        //                 '|',
-        //                 'todoList',
-        //                 'link',
-        //                 'blockQuote',
-        //                 'imageUpload',
-        //                 'insertTable',
-        //                 // 'mediaEmbed',
-        //                 '|',
-        //                 'undo',
-        //                 'redo',
-        //                 // 'imageResize:50',
-        //                 // 'imageResize:75',
-        //                 // 'imageResize:original',
-        //                 'imageTextAlternative',
-        //                 'imageStyle:alignLeft',
-        //                 'imageStyle:alignCenter',
-        //                 'imageStyle:alignRight',
-        //                 'imageStyle:full',
-        //                 'imageStyle:side',
-        //             ]
-        //         },
-        //         image: {
-        //             resizeUnit: 'px',
-        //             styles: [
-        //                 'alignLeft', 'alignCenter', 'alignRight'
-        //             ],
-        //         },
-        //         pagination: {
-        //             // A4
-        //             pageWidth: '21cm',
-        //             pageHeight: '29.7cm',
-
-        //             pageMargins: {
-        //                 top: '3mm',
-        //                 bottom: '3mm',
-        //                 right: '3mm',
-        //                 left: '3mm'
-        //             }
-        //         },
-        //         language: 'pt-br',
-        //         // image: {
-        //         //     toolbar: [
-        //         //         'imageTextAlternative',
-        //         //         'imageStyle:full',
-        //         //         'imageStyle:side'
-        //         //     ]
-        //         // },
-        //         table: {
-        //             contentToolbar: [
-        //                 'tableColumn',
-        //                 'tableRow',
-        //                 'mergeTableCells',
-
-        //                 'tableProperties', 'tableCellProperties'
-        //             ]
-        //         },
-        //         // licenseKey: '',
-
-        //     })
-        //     .then(editor => {
-        //         window.editor = editor;
-
-        //         const toolbarContainer = document.querySelector('.main-content-editor__toolbar');
-        //         toolbarContainer.appendChild(editor.ui.view.toolbar.element);
-
-        //         window.editor = editor;
-
-        //         editor.execute('tableWidth', {
-        //             value: '100%'
-        //         });
-
-        //     })
-        //     .catch(error => {
-        //         console.error('Oops, something went wrong!');
-        //         // console.error('Please, report the following error on https://github.com/ckeditor/ckeditor5/issues with the build id and the error stack trace:');
-        //         console.warn('Build id: 5v0h87dz5yp4-ucn1dsls94e0');
-        //         console.error(error);
-        //     });
 
 
 

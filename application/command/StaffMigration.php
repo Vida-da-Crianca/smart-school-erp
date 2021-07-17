@@ -41,7 +41,7 @@ class StaffMigration extends BaseCommand
 
     protected function start()
     {
-        $this->CI->load->model(['eloquent/migrate/Movimento', 'eloquent/Expense']);
+        $this->CI->load->model(['eloquent/migrate/Movimento', 'eloquent/Expense', 'eloquent/migrate/Funcionario', 'eloquent/Staff', 'eloquent/StaffRole']);
 
         $items =  \Funcionario::with(['bank', 'city.uf'])->get();
 
@@ -51,9 +51,18 @@ class StaffMigration extends BaseCommand
             $staff = ($this->buildStaff($row));
             // if( empty($row->rg ))
             // dump($staff);
-            \Staff::updateOrCreate([
-                'employee_id' => $staff['employee_id'],
-            ],  $staff);
+
+            $has = \Staff::where('employee_id',  $staff['employee_id'])->first();
+            
+           if($has){
+            if (\StaffRole::where('staff_id', $has->id)->count() == 0) {
+                \StaffRole::create(['staff_id' =>  $has->id, 'role_id' => 2,'is_active' => 1]);
+            }
+
+           }
+            // \Staff::updateOrCreate([
+            //     'employee_id' => $staff['employee_id'],
+            // ],  $staff);
             
 
         }

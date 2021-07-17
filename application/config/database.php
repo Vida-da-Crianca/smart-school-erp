@@ -75,6 +75,7 @@ use Illuminate\Database\Capsule\Manager as Capsule;
 $active_group = 'default';
 $query_builder = TRUE;
 
+
 $db['default'] = array(
 	'dsn'	=> '',
 	'hostname' => getenv('DB_HOST', 'db'),
