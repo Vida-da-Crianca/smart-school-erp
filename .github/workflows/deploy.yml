@@ -64,8 +64,6 @@ jobs:
       - name: Create Folder for Application
       
         run: |
-          echo "Create directories for  $DIRECTORY_APPLICATION/$STAGING_PATH/"
-        
           mkdir -p -m 777 $DIRECTORY_APPLICATION/$STAGING_PATH/logs
           mkdir -p -m 777 $DIRECTORY_APPLICATION/$STAGING_PATH/temp
           rsync -qr -I --ignore-existing  ./uploads/  $DIRECTORY_APPLICATION/$STAGING_PATH/uploads
@@ -83,6 +81,8 @@ jobs:
           [ "$VERSION" == "master" ] && VERSION=latest
           echo IMAGE_ID=$IMAGE_ID
           echo VERSION=$VERSION
+          docker stack rm $STACK_NAME_STAGING
+          sleep 15
           docker stack deploy -c stage-stack.yaml $STACK_NAME_STAGING
           docker system prune --force
   deployTest:
@@ -94,11 +94,8 @@ jobs:
     steps:
      
       - name: Validando testes da aplicação
-      
         run: |
           echo "Ainda não testes para esse projeto"
-        
-        
       - name:  Test Pass
         run: |
          echo "Ainda não testes para esse projeto"
@@ -131,7 +128,6 @@ jobs:
           echo IMAGE_ID=$IMAGE_ID
           echo VERSION=$VERSION
           docker stack deploy -c production-stack.yml $STACK_NAME
-      
       - name: Prune System
         run: |
               sleep 5
