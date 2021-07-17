@@ -10,7 +10,7 @@
                 </div><!-- /.box-tools -->
             </div><!-- /.box-header -->
             <div class="box-body">
-                <form method="post" action="<?php ?>">
+                <form id="document" method="post" action="<?php ?>">
                     <div class="row">
                         <div class="col-md-10 col-md-offset-1 text-danger display-errors">
                             <!-- <?php echo validation_errors(); ?> -->
@@ -425,7 +425,7 @@
             })
 
         }
-        $('form').on('submit', function(e) {
+        $('form#document').on('submit', function(e) {
             e.preventDefault();
 
             var url = $(this).attr('action')
@@ -441,12 +441,10 @@
                 success: function() {
                     window.location.href = '<?= site_url('/admin/documents') ?>';
                 },
-                error: function({
-                    responseJSON: e
-                }) {
+                error: function(responseJSON) {
                     var {
                         errors
-                    } = e
+                    } = responseJSON
                     var $el = $('.display-errors')
                     $el.html(errors)
                     $("html, body").animate({
