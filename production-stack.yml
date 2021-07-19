@@ -84,6 +84,6 @@ networks:
     external: true     
   app_net:
 
-configs:
-   mysql.conf:
-     file: './mysql.conf'  
+# configs:
+#    mysql.conf:
+#      file: './mysql.conf'  
