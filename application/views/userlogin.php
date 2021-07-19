@@ -94,7 +94,7 @@ if(empty($notice)){
                                     echo "<div class='alert alert-success'>" . $this->session->flashdata('message') . "</div>";
                                 };
                                 ?>
-                                <form action="<?php echo base_url('site/userlogin') ?>" method="post">
+                                <form action="<?php echo base_url('site/userlogin')  ?>" method="post">
                                     <?php echo $this->customlib->getCSRF(); ?>
                                     <div class="form-group has-feedback">
                                         <label class="sr-only" for="form-username">
