@@ -12,6 +12,7 @@ class Student extends Admin_Controller
     public function __construct()
     {
         parent::__construct();
+        
         $this->config->load('app-config');
         $this->load->library('smsgateway');
         $this->load->library('mailsmsconf');
@@ -253,6 +254,9 @@ class Student extends Admin_Controller
 
     public function create()
     {
+        
+        
+       
         if (!$this->rbac->hasPrivilege('student', 'can_add')) {
             access_denied();
         }
@@ -1344,7 +1348,7 @@ class Student extends Admin_Controller
             $mother_occupation = $this->input->post('mother_occupation');
 
             if (isset($measurement_date)) {
-                $data['measurement_date'] = date('Y-m-d');//, $this->customlib->datetostrtotime($this->input->post('measure_date')));
+                $data['measurement_date'] = date('Y-m-d', $this->customlib->datetostrtotime($this->input->post('measure_date')));
             }
 
             if (isset($house)) {
