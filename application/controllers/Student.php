@@ -251,8 +251,11 @@ class Student extends Admin_Controller
         redirect('student/view/' . $student_id);
     }
 
-    public function create()
+   public function create()
     {
+        
+        
+       
         if (!$this->rbac->hasPrivilege('student', 'can_add')) {
             access_denied();
         }
@@ -716,6 +719,7 @@ class Student extends Admin_Controller
         }
     }
 
+    
     public function create_doc()
     {
 
