@@ -361,7 +361,11 @@ class Student extends Admin_Controller
             if (empty($hostel_room_id)) {
                 $hostel_room_id = 0;
             }
+            
+            $dob = $this->tools->formatarData($this->input->post('dob'),'br','us');
 
+            
+            
             $data_insert = array(
                 'firstname'           => $this->input->post('firstname'),
                 'rte'                 => $this->input->post('rte'),
@@ -371,7 +375,7 @@ class Student extends Admin_Controller
                 'pincode'             => $this->input->post('pincode'),
                 'cast'                => $this->input->post('cast'),
                 'previous_school'     => $this->input->post('previous_school'),
-                'dob'                 => date('Y-m-d', $this->customlib->datetostrtotime($this->input->post('dob'))),
+                'dob'                 => $dob,//date('Y-m-d', $this->customlib->datetostrtotime($this->input->post('dob'))),
                 'current_address'     => $this->input->post('current_address'),
                 'permanent_address'   => $this->input->post('permanent_address'),
 
