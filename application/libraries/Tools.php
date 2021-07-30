@@ -30,8 +30,6 @@ class Tools
 	}
 	
 	
-        
-        
 
 	public function formatarData($data,$entrada,$saida,$separador = null)
 	{

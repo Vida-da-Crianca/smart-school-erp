@@ -28,7 +28,6 @@ class Welcome extends Front_Controller
 
     public function index()
     {
-       
         $setting                     = $this->frontcms_setting_model->get();
         $this->data['active_menu']   = 'home';
         $this->data['page_side_bar'] = $setting->is_active_sidebar;
@@ -202,11 +201,9 @@ class Welcome extends Front_Controller
     public function admission()
     {
 
-       
-        
         if ($this->module_lib->hasActive('online_admission')) {
             $this->data['active_menu'] = 'online-admission';
-            $page                      = array('title' => 'Matrícula Online', 'meta_title' => 'online admission form', 'meta_keyword' => 'online admission form', 'meta_description' => 'online admission form');
+            $page                      = array('title' => 'Online Admission Form', 'meta_title' => 'online admission form', 'meta_keyword' => 'online admission form', 'meta_description' => 'online admission form');
 
             $this->data['page_side_bar']  = false;
             $this->data['featured_image'] = false;
@@ -234,8 +231,8 @@ class Welcome extends Front_Controller
             $this->form_validation->set_rules('guardian_is', $this->lang->line('guardian'), 'trim|required|xss_clean');
             $this->form_validation->set_rules('gender', $this->lang->line('gender'), 'trim|required|xss_clean');
             $this->form_validation->set_rules('dob', $this->lang->line('date_of_birth'), 'trim|required|xss_clean');
-            $this->form_validation->set_rules('class_id', $this->lang->line('class'), 'trim|required|xss_clean|integer|greater_than[0]');
-            $this->form_validation->set_rules('section_id', $this->lang->line('section'), 'trim|required|xss_clean|integer|greater_than[0]');
+            $this->form_validation->set_rules('class_id', $this->lang->line('class'), 'trim|required|xss_clean');
+            $this->form_validation->set_rules('section_id', $this->lang->line('section'), 'trim|required|xss_clean');
             $this->form_validation->set_rules('guardian_name', $this->lang->line('guardian_name'), 'trim|required|xss_clean');
             $this->form_validation->set_rules('guardian_phone', $this->lang->line('guardian_phone'), 'trim|required|xss_clean');
 			
@@ -243,11 +240,14 @@ class Welcome extends Front_Controller
             $this->form_validation->set_rules('guardian_phone', $this->lang->line('guardian_phone'), 'trim|required|xss_clean');
             $this->form_validation->set_rules('guardian_postal_code', $this->lang->line('guardian_postal_code'), 'trim|required|xss_clean');
             $this->form_validation->set_rules('guardian_address_number', $this->lang->line('guardian_address_number'), 'trim|required|xss_clean');
+			
+            
             $this->form_validation->set_rules('guardian_email', $this->lang->line('guardian_email'), 'trim|required|xss_clean|valid_email');
             $this->form_validation->set_rules('guardian_address', $this->lang->line('guardian_address'), 'trim|required|xss_clean');
             $this->form_validation->set_rules('guardian_district', $this->lang->line('guardian_district'), 'trim|required|xss_clean');
             $this->form_validation->set_rules('guardian_state', $this->lang->line('guardian_state'), 'trim|required|xss_clean');
             $this->form_validation->set_rules('guardian_city', $this->lang->line('guardian_city'), 'trim|required|xss_clean');
+		
 		
 			
 			
@@ -297,16 +297,13 @@ class Welcome extends Front_Controller
                             ->get('class_sections')->result();
                     
                     $class_section_id = (count($res)>0? $res[0]->id : 0);
-                    
-                   
+
                     $dob = explode('/',$this->input->post('dob'));
                     if(is_array($dob) && count($dob) == 3){
                         $dob = $dob[2].'-'.$dob[1].'-'.$dob[0];
                     }else{
                         $dob = date('Y-m-d');
                     }
-                    
-                   
                     
                     $data = array(
                         'roll_no'             => $this->input->post('roll_no'),
@@ -317,7 +314,7 @@ class Welcome extends Front_Controller
                         'mobileno'            => $this->input->post('mobileno'),
                         'class_section_id'    => $class_section_id,//$this->input->post('section_id'),
                         'guardian_is'         => $this->input->post('guardian_is'),
-                        'dob'                 => $dob, //date('Y-m-d', strtotime($this->input->post('dob'))),
+                        'dob'                 => $dob,//date('Y-m-d', strtotime($this->input->post('dob'))),
                         'current_address'     => $this->input->post('current_address'),
                         'permanent_address'   => $this->input->post('permanent_address'),
                         'father_name'         => $this->input->post('father_name'),
@@ -329,6 +326,7 @@ class Welcome extends Front_Controller
 			'guardian_document'	  => str_replace(array('',' ','-','_',',','-','.'),'',$this->input->post('guardian_document')),
 			'guardian_occupation' => $this->input->post('guardian_occupation'),
                         'guardian_email'      => trim(strtolower($this->input->post('guardian_email'))),
+                       
                         'gender'              => $this->input->post('gender'),
                         'guardian_name'       => $this->input->post('guardian_name'),
                         'guardian_relation'   => $this->input->post('guardian_relation'),
@@ -336,12 +334,12 @@ class Welcome extends Front_Controller
                         'admission_date'      => date('Y/m/d'),
                         'measurement_date'    => date('Y/m/d'),
 						
-                        'guardian_postal_code'    => str_replace(array('',' ','-','_',','),'',$this->input->post('guardian_postal_code')),
-                        'guardian_address'    => $this->input->post('guardian_address'),
-                        'guardian_address_number'    => $this->input->post('guardian_address_number'),
-                        'guardian_district'    => $this->input->post('guardian_district'),
-                        'guardian_city'    => $this->input->post('guardian_city'),
-                        'guardian_state'    => $this->input->post('guardian_state'),
+						'guardian_postal_code'    => str_replace(array('',' ','-','_',','),'',$this->input->post('guardian_postal_code')),
+                                                'guardian_address'    => $this->input->post('guardian_address'),
+						'guardian_address_number'    => $this->input->post('guardian_address_number'),
+						'guardian_district'    => $this->input->post('guardian_district'),
+						'guardian_city'    => $this->input->post('guardian_city'),
+						'guardian_state'    => $this->input->post('guardian_state'),
 						
                     );
                     if (isset($_FILES["document"]) && !empty($_FILES['document']['name'])) {
@@ -357,7 +355,7 @@ class Welcome extends Front_Controller
 
                     //$this->session->set_flashdata('msg', '<div class="alert alert-success">Thanks for registration. Please note your reference number ' . $insert_id . ' for further communication.</div>');
 					
-                    $this->session->set_flashdata('msg', '<div class="alert alert-success">Obrigado por se registrar. Seu número de referência é ' . $insert_id . ' para comunicações futuras</div>');
+					$this->session->set_flashdata('msg', '<div class="alert alert-success">Obrigado por se registrar. Seu número de referência é ' . $insert_id . ' para comunicações futuras</div>');
 
                     redirect($_SERVER['HTTP_REFERER'], 'refresh');
                 }
@@ -367,9 +365,8 @@ class Welcome extends Front_Controller
 
         }
     }
-
     
-      /*Retorna um combobox de Turmas com base na data de nascimento do aluno #alterado*/
+        /*Retorna um combobox de Turmas com base na data de nascimento do aluno #alterado*/
     public function getListaTurmasPorDataNascimento(){
          try {
 			
@@ -438,6 +435,5 @@ class Welcome extends Front_Controller
 	}
     }
     
-    
-    
+
 }
