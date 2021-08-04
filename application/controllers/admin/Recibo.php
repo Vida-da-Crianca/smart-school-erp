@@ -33,4 +33,3 @@ class Recibo extends Admin_Controller {
   
   
 }
-?> 
