@@ -394,7 +394,7 @@ class Site extends Public_Controller {
                             'is_rtl' => $setting_result[0]['is_rtl'],
                             'theme' => $setting_result[0]['theme'],
                             'image' => $result[0]->image,
-                            'gender' => $result[0]->gender,
+                            'gender' => isset($result[0]->gender) ? $result[0]->gender : 'male',
                         );
                         $language_result1 = $this->language_model->get($language['lang_id']);
                         if ($this->customlib->get_rtl_languages($language_result1['short_code'])) {
