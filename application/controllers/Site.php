@@ -490,5 +490,3 @@ class Site extends Public_Controller {
 
 
 }
-
-?>
