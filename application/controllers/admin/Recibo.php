@@ -1,6 +1,15 @@
 <?php
 class Recibo extends Admin_Controller {
 
+    
+     function __construct()
+    {
+        parent::__construct();
+        //$this->sch_setting_detail = $this->setting_model->getSetting();
+        
+        //$this->load->model('source_model');
+    }   
+    
  function index(){
 	  
 	  
