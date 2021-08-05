@@ -579,6 +579,7 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                     </div>
                                     <div class="row">
                                         <div class="form-group col-md-12">
+                                            <?php var_dump($student['guardian_is']); ?>
                                             <label><?php echo $this->lang->line('if_guardian_is'); ?></label><small class="req"> *</small>&nbsp;&nbsp;&nbsp;
                                             <label class="radio-inline">
                                                 <input type="radio" name="guardian_is" <?php
