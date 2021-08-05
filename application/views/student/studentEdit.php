@@ -579,28 +579,28 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                     </div>
                                     <div class="row">
                                         <div class="form-group col-md-12">
-                                            <?php var_dump($student['guardian_is']); ?>
+                                           
                                             <label><?php echo $this->lang->line('if_guardian_is'); ?></label><small class="req"> *</small>&nbsp;&nbsp;&nbsp;
                                             <label class="radio-inline">
                                                 <input type="radio" name="guardian_is" <?php
                                                                                         if ($student['guardian_is'] == "father") {
                                                                                             echo "checked";
                                                                                         }
-                                                                                        ?> value="pai"> <?php echo $this->lang->line('father'); ?>
+                                                                                        ?> value="father"> <?php echo $this->lang->line('father'); ?>
                                             </label>
                                             <label class="radio-inline">
                                                 <input type="radio" name="guardian_is" <?php
                                                                                         if ($student['guardian_is'] == "mother") {
                                                                                             echo "checked";
                                                                                         }
-                                                                                        ?> value="mãe"> <?php echo $this->lang->line('mother'); ?>
+                                                                                        ?> value="mother"> <?php echo $this->lang->line('mother'); ?>
                                             </label>
                                             <label class="radio-inline">
                                                 <input type="radio" name="guardian_is" <?php
                                                                                         if ($student['guardian_is'] == "other") {
                                                                                             echo "checked";
                                                                                         }
-                                                                                        ?> value="outro"> <?php echo $this->lang->line('other'); ?>
+                                                                                        ?> value="other"> <?php echo $this->lang->line('other'); ?>
                                             </label>
                                             <span class="text-danger"><?php echo form_error('guardian_is'); ?></span>
                                         </div>
