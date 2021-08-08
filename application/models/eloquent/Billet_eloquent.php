@@ -27,7 +27,8 @@ class Billet_eloquent extends  Eloquent {
         'fee_master_id',
         'user_id',
         'due_date',
-        'custom_number'
+        'custom_number',
+        'sended_mail_at'
         
     ];
 

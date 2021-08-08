@@ -53,13 +53,15 @@ class MailerTester extends BaseCommand
             $content = $this->CI->load->view('mailer/billet.tpl.php', $options,  TRUE);
             $this->CI->mailer->send_mail($options->email, 'Envio de boletos', $content /**/);
 
-            discord_log(
-                sprintf('Email do boleto enviado %s %s', PHP_EOL, $options->email )
-            );
+            // discord_log(
+            //     sprintf('Email do boleto enviado %s %s', PHP_EOL, $options->email )
+            // );
         } catch (\Exception $e) {
-            discord_exception(
-                sprintf('Falha no e-mail %s %s', PHP_EOL, $e->getMessage() )
-            );
+            // discord_exception(
+            //     sprintf('Falha no e-mail %s %s', PHP_EOL, $e->getMessage() )
+            // );
+
+            dump( $e->getMessage());
         }
 
         // $this->CI->mailer->setDebug(SMTP::DEBUG_SERVER)->send_mail('contato@carlosocarvalho.com.br', 'Email tests', 'Minha mensagem de text');

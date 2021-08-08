@@ -102,7 +102,7 @@ class InvoiceCommand extends BaseCommand
                 'base'  => str_replace('.', ',', $item->price),
                 'descricaoNF' =>   $descptionNF, //sprintf('%s%sValor aprox. dos tributos (Lei nº 12.741/2012):  R$ %s - Aliq: %s', $descptionNF, PHP_EOL , $tributteCalculate, $options['simple_rate']) ,
                 'tomador_tipo' => 2,
-                'valor_aprox_tributos' => $tributteCalculate,
+                'total_tributos' => $tributteCalculate,
                 'tomador_cnpj' => $item->student->guardian_document, //cnoj da empresa
                 'tomador_email' =>  getenv('ENVIRONMENT') == 'development' ?  getenv('MAIL_NOTA') : $item->student->guardian_email,
                 'tomador_razao' => $item->student->guardian_name,

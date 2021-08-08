@@ -8,7 +8,9 @@ use Application\Command\CategoryExpenseMigration;
 use Application\Command\CleanDirectoryTemp;
 use Application\Command\Normalize\DepositePaidBillet;
 use Application\Command\ExpenseMigration;
+use Application\Command\Fake\InvoiceCommand as FakeInvoiceCommand;
 use Application\Command\InvoiceCheckOnBillet;
+use Application\Command\MailBilletSendCommand;
 use Application\Command\MailerTester;
 use Application\Command\Normalize\BilletAttachInvoice;
 use Application\Command\Normalize\DepositeAllBilletPending;
@@ -40,4 +42,6 @@ return [
     'normalilze_deposite_billet' => DepositePaidBillet::class,
     'normalize_deposite_all_billet_pending' => DepositeAllBilletPending::class,
     'normalize_invoice_all_billet' => BilletAttachInvoice::class,
+    'billet:mail' => MailBilletSendCommand::class,
+    'fake:invoice:create' => FakeInvoiceCommand::class
 ];
