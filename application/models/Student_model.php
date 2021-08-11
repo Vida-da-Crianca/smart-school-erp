@@ -503,7 +503,9 @@ class Student_model extends MY_Model
         if ($rte != null) {
             $this->db->where('students.rte', $rte);
         }
-        $this->db->order_by('students.id');
+         $this->db->order_by('classes.id','ASC');
+        $this->db->order_by('sections.id','ASC');
+        $this->db->order_by('students.firstname','ASC');
         $query = $this->db->get();
         return $query->result_array();
     }
