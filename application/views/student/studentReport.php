@@ -218,7 +218,7 @@
                                     </table>
                                     
                                 </div>
-                                <b><?php echo $count; ?></b> resultados
+                                <b><?php echo count($resultlist); ?></b> resultados
                             </div>
                     </div>
                     <!--./box box-primary -->
