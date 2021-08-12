@@ -216,7 +216,9 @@
                                             ?>
                                         </tbody>
                                     </table>
+                                    
                                 </div>
+                                <b><?php echo $count; ?></b> resultados
                             </div>
                     </div>
                     <!--./box box-primary -->
