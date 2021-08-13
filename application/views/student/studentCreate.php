@@ -53,7 +53,40 @@
                                                 </div>
                                             </div>
                                         <?php } ?>
-                                        
+                                        <div class="col-md-3">
+                                            <div class="form-group">
+                                                <label for="exampleInputEmail1"><?php echo $this->lang->line('class'); ?></label><small class="req"> *</small>
+                                                <select id="class_id" name="class_id" class="form-control">
+                                                    <option value=""><?php echo $this->lang->line('select'); ?></option>
+                                                    <?php
+                                                    foreach ($classlist as $class) {
+                                                    ?>
+                                                        <option value="<?php echo $class['id'] ?>" <?php
+                                                                                                    if (set_value('class_id') == $class['id']) {
+                                                                                                        echo "selected=selected";
+                                                                                                    }
+                                                                                                    ?>><?php echo $class['class'] ?></option>
+                                                    <?php
+                                                    }
+                                                    ?>
+                                                </select>
+                                                <span class="text-danger"><?php echo form_error('class_id'); ?></span>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3">
+
+                                            <div class="form-group">
+                                                <label for="exampleInputEmail1"><?php echo $this->lang->line('section'); ?></label><small class="req"> *</small>
+                                                <select id="section_id" name="section_id" class="form-control">
+                                                    <option value=""><?php echo $this->lang->line('select'); ?></option>
+                                                </select>
+                                                <span class="text-danger"><?php echo form_error('section_id'); ?></span>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                    <div class="row">
+
                                         <div class="col-md-3">
                                             <div class="form-group">
                                                 <label for="exampleInputEmail1"><?php echo $this->lang->line('first_name'); ?></label><small class="req"> *</small>
@@ -70,7 +103,7 @@
                                                 </div>
                                             </div>
                                         <?php } ?>
-                                        <div class="col-md-2">
+                                        <div class="col-md-3">
                                             <div class="form-group">
                                                 <label for="exampleInputFile"> <?php echo $this->lang->line('gender'); ?></label><small class="req"> *</small>
                                                 <select class="form-control" name="gender">
@@ -90,57 +123,15 @@
                                                 <span class="text-danger"><?php echo form_error('gender'); ?></span>
                                             </div>
                                         </div>
-                                       
-                                    </div>
-                                    
-                                    
-                                    <div class = "row">
-                                         <div class="col-md-2">
+                                        <div class="col-md-3">
                                             <div class="form-group">
                                                 <label for="exampleInputEmail1"><?php echo $this->lang->line('date_of_birth'); ?></label><small class="req"> *</small>
-                                                <input id="dob" name="dob" placeholder="" type="text" class="form-control" 
-                                                       value="<?php echo set_value('dob'); ?>" />
+                                                <input id="dob" name="dob" placeholder="" type="text" class="form-control date" value="<?php echo set_value('dob'); ?>" />
                                                 <span class="text-danger"><?php echo form_error('dob'); ?></span>
                                             </div>
                                         </div>
-                                        <div class="col-md-3">
-                                            <div class="form-group">
-                                                <label for="exampleInputEmail1"><?php echo $this->lang->line('class'); ?></label><small class="req"> *</small>
-                                                  <?php echo form_dropdown('class_id',['0'=>'## Nenhuma Turma Disponível ###'], '', "id='class_id' class='form-control'"); ?>
-                                                  <span class="text-danger"><?php echo form_error('class_id'); ?></span>
-                                                <!--<select id="class_id" name="class_id" class="form-control">
-                                                    <option value=""><?php echo $this->lang->line('select'); ?></option>
-                                                    <?php
-                                                    foreach ($classlist as $class) {
-                                                    ?>
-                                                        <option value="<?php echo $class['id'] ?>" <?php
-                                                                                                    if (set_value('class_id') == $class['id']) {
-                                                                                                        echo "selected=selected";
-                                                                                                    }
-                                                                                                    ?>><?php echo $class['class'] ?></option>
-                                                    <?php
-                                                    }
-                                                    ?>
-                                                </select>-->
-                                                <span class="text-danger"><?php echo form_error('class_id'); ?></span>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-3">
-
-                                            <div class="form-group">
-                                                <label for="exampleInputEmail1"><?php echo $this->lang->line('section'); ?></label><small class="req"> *</small>
-                                                <select id="section_id" name="section_id" class="form-control">
-                                                    <option value=""><?php echo $this->lang->line('select'); ?></option>
-                                                </select>
-                                                <span class="text-danger"><?php echo form_error('section_id'); ?></span>
-                                            </div>
-                                        </div>
- 
-                                    </div>     
-                                    
-                                
-                                <div class="row">
-                                   
+                                    </div>
+                                    <div class="row">
                                         <?php if ($sch_setting->category) { ?>
                                             <div class="col-md-2">
                                                 <div class="form-group">
@@ -936,19 +927,19 @@
         var hostel_id = $('#hostel_id').val();
         var hostel_room_id = '<?php echo set_value('hostel_room_id', 0) ?>';
         getHostel(hostel_id, hostel_room_id);
-       // getSectionByClass(class_id, section_id);
+        getSectionByClass(class_id, section_id);
 
-      //  $(document).on('change', '#class_id', function(e) {
-      ////      $('#section_id').html("");
-      //      var class_id = $(this).val();
-      //      getSectionByClass(class_id, 0);
-      //  });
+        $(document).on('change', '#class_id', function(e) {
+            $('#section_id').html("");
+            var class_id = $(this).val();
+            getSectionByClass(class_id, 0);
+        });
 
 
 
-       // $('.datetime').datetimepicker({
+        $('.datetime').datetimepicker({
 
-      //  });
+        });
         $(".color").colorpicker();
 
         $("#btnreset").click(function() {
@@ -1199,58 +1190,6 @@
         }
 
     });
-</script>
-<script type='text/javascript'>
-$(document).ready(function(){
-
-             
-   /*TURMA E PERIODO ---------------------------------------------------------*/
-    /*Carrega o combobox de periodos*/
-    $.fn.comboBoxPeriodo = function(){
-        $(this).comboBox({
-            url : '<?php echo base_url(); ?>welcome/getListaPeriodosPorTurma',
-            data: { class_id : $('#class_id').val() },
-            combobox : '#section_id',
-            selected: '',
-            callback: {function(){} }
-        }); 
-       
-    };
-    
-    /*Verificar a turma com base na data de nascimento*/
-    $.fn.carregarComboBoxTurmasDisponiveis = function(dataNascimento){
-        $(this).comboBox({
-            url : '<?php echo base_url(); ?>welcome/getListaTurmasPorDataNascimento',
-            data: { dataNascimento : dataNascimento },
-            combobox : '#class_id',
-            selected: '',
-            callback: function(){ 
-                $(this).comboBoxPeriodo(); 
-            } 
-        });     
-    };
-    $(this).carregarComboBoxTurmasDisponiveis('<?php echo set_value('dob',date('01/01/2030')); ?>');
-    
-  
-    $('#dob').mask('99/99/9999');    
-        let typingTimer;                //timer identifier
-        let doneTypingInterval = 1000;  //time in ms (5 seconds)
-        let myInput = document.getElementById('dob');
-
-        //on keyup, start the countdown
-        $('#dob').keyup(function(){
-            clearTimeout(typingTimer);
-            if ($('#dob').val()) {
-                typingTimer = setTimeout(function(){
-                    $(this).carregarComboBoxTurmasDisponiveis($('#dob').val());
-                }, doneTypingInterval);
-            }
-        });
-
-    
-    /*TURMA E PERIODO ---------------------------------------------------------*/
-
-});
 </script>
 <script type="text/javascript" src="<?php echo base_url(); ?>backend/js/postalCodeAutoComplete.js"></script>
 <script type="text/javascript" src="<?php echo base_url(); ?>backend/dist/js/savemode.js"></script>
