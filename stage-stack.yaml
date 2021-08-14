@@ -50,8 +50,6 @@ services:
     command: >
         /bin/bash -c " 
          php man migrate -n &&
-         php man normalize:billete:deposite &&
-         php man normalize:billete:attach-invoice &&
          php man schedule:run"
   app:
     image: $IMAGE_ID:$VERSION
