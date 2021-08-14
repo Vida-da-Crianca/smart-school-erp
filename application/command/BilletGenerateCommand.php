@@ -2,6 +2,7 @@
 
 namespace Application\Command;
 
+use Application\Command\Traits\SendMailBillet;
 use Application\Core\BankInterPayment;
 use Billet_eloquent;
 use Illuminate\Database\Eloquent\Collection;
@@ -12,6 +13,8 @@ use Illuminate\Database\Capsule\Manager as DB;
 
 class BilletGenerateCommand extends BaseCommand
 {
+    
+    use SendMailBillet;
 
     protected $name = 'billet:generate';
 
@@ -39,7 +42,10 @@ class BilletGenerateCommand extends BaseCommand
     {
 
         $this->CI->load->library(['bank_payment_inter', 'mailer']);
-        $this->CI->load->model(['eloquent/Billet_eloquent', 'eloquent/Email_setting_eloquent', 'eloquent/Invoice_eloquent']);
+        $this->CI->load->model(['eloquent/Billet_eloquent', 
+        'eloquent/Email_setting_eloquent',
+        'eloquent/MailerEloquent',
+         'eloquent/Invoice_eloquent']);
 
 
         DB::beginTransaction();
@@ -79,15 +85,24 @@ class BilletGenerateCommand extends BaseCommand
     {
         try {
             $content = $this->CI->load->view('mailer/billet.tpl.php', $options,  TRUE);
-            $this->CI->mailer->send_mail($options->email, 'Envio de boletos', $content /**/);
-            discord_log(
-                sprintf('Email do boleto enviado %s %s', PHP_EOL, $options->email )
-            );
+            
+            \MailerEloquent::create([
+                'subject' => 'Envio de boletos - Vida de Criança',
+                'from' => '', 
+                'message' => $content,
+                'to' =>  getenv('ENVIRONMENT') == 'development' ?  'contato@carlosocarvalho.com.br' : $options->email]);
+            //  $this->onQueue($options);
+            // $this->CI->mailer->send_mail($options->email, 'Envio de boletos', $content /**/);
+            // discord_log(
+            //     sprintf('Email do boleto enviado %s %s', PHP_EOL, $options->email )
+            // );
             
         } catch (\Exception $e) {
-            discord_exception(
-                sprintf('Falha no e-mail %s %s', PHP_EOL, $e->getMessage)
-            );
+
+            dump($e->getMessage());
+            // discord_exception(
+            //     sprintf('Falha no e-mail %s %s', PHP_EOL, $e->getMessage)
+            // );
         }
     }
 
@@ -171,7 +186,7 @@ class BilletGenerateCommand extends BaseCommand
                 'bank_bullet_id' => $options->billet->number,
             ]);
         DB::commit();
-        discord_log(sprintf('%s', json_encode($options, JSON_PRETTY_PRINT)), 'Novo Boleto');
+        // discord_log(sprintf('%s', json_encode($options, JSON_PRETTY_PRINT)), 'Novo Boleto');
         // \Invoice_eloquent::create([
         //     'price' =>  $billet->price,
         //     'status' => \Invoice_eloquent::PENDING_CREATE,

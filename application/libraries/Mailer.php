@@ -37,7 +37,7 @@ class Mailer
     public function send_mail($toemail, $subject, $body, $FILES = array(), $cc = "")
     {
 
-        $mail          = new \PHPMailer\PHPMailer\PHPMailer;
+        $mail          = new \PHPMailer\PHPMailer\PHPMailer(true);
         $mail->CharSet = 'UTF-8';
         $school_name   = $this->sch_setting[0]['name'];
         $mail->SMTPOptions = [
