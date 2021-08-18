@@ -12,6 +12,7 @@ class Student extends Admin_Controller
     public function __construct()
     {
         parent::__construct();
+        
         $this->config->load('app-config');
         $this->load->library('smsgateway');
         $this->load->library('mailsmsconf');
@@ -253,6 +254,9 @@ class Student extends Admin_Controller
 
     public function create()
     {
+        
+        
+       
         if (!$this->rbac->hasPrivilege('student', 'can_add')) {
             access_denied();
         }
@@ -358,6 +362,8 @@ class Student extends Admin_Controller
             if (empty($hostel_room_id)) {
                 $hostel_room_id = 0;
             }
+            
+            $dob = $this->tools->formatarData($this->input->post('dob'),'br','us');
 
             $data_insert = array(
                 'firstname'           => $this->input->post('firstname'),
@@ -368,7 +374,7 @@ class Student extends Admin_Controller
                 'pincode'             => $this->input->post('pincode'),
                 'cast'                => $this->input->post('cast'),
                 'previous_school'     => $this->input->post('previous_school'),
-                'dob'                 => date('Y-m-d', $this->customlib->datetostrtotime($this->input->post('dob'))),
+                'dob'                 => $dob,//date('Y-m-d', $this->customlib->datetostrtotime($this->input->post('dob'))),
                 'current_address'     => $this->input->post('current_address'),
                 'permanent_address'   => $this->input->post('permanent_address'),
 
@@ -1344,7 +1350,7 @@ class Student extends Admin_Controller
             $mother_occupation = $this->input->post('mother_occupation');
 
             if (isset($measurement_date)) {
-                $data['measurement_date'] = date('Y-m-d');//, $this->customlib->datetostrtotime($this->input->post('measure_date')));
+                $data['measurement_date'] = date('Y-m-d', $this->customlib->datetostrtotime($this->input->post('measure_date')));
             }
 
             if (isset($house)) {
