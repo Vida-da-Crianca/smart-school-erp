@@ -2032,3 +2032,4 @@ class Student extends Admin_Controller
         echo json_encode($array);
     }
 }
+
