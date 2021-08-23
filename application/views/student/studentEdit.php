@@ -296,7 +296,7 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                                 <div class="form-group">
                                                     <label for="exampleInputEmail1"><?php echo $this->lang->line('measurement_date'); ?></label>
 
-                                                    <input id="measure_date" name="measure_date" placeholder="" type="text" class="form-control date" value="<?php //echo set_value('measure_date', date($this->customlib->getSchoolDateFormat(), $this->customlib->dateyyyymmddTodateformat($student['measurement_date']))); ?>" readonly="readonly" />-->
+                                                    <input id="measure_date" name="measure_date" placeholder="" type="text" class="form-control date" value="<?php //echo set_value('measure_date', date($this->customlib->getSchoolDateFormat(), $this->customlib->dateyyyymmddTodateformat($student['measurement_date']))); ?>" readonly="readonly" />
                                                     <span class="text-danger"><?php echo form_error('measure_date'); ?></span>
                                                 </div>
                                             </div>
