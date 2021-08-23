@@ -12,7 +12,7 @@ class Student extends Admin_Controller
     public function __construct()
     {
         parent::__construct();
-        
+
         $this->config->load('app-config');
         $this->load->library('smsgateway');
         $this->load->library('mailsmsconf');
@@ -106,7 +106,7 @@ class Student extends Admin_Controller
 
         $data['listOfClassId'] = $this->input->post('class_id_option') ? $this->input->post('class_id_option') : [];
         $data['class_id_option'] = $this->input->post('class_id_option') ? $this->input->post('class_id_option') : [];
-      
+
         if ($this->input->server('REQUEST_METHOD') == "GET") {
             $this->load->view('layout/header', $data);
             $this->load->view('student/studentReport', $data);
@@ -114,9 +114,9 @@ class Student extends Admin_Controller
         } else {
             $this->form_validation->set_rules('class_id_option[]', $this->lang->line('class'), 'trim|required|xss_clean');
 
-            
+
             if ($this->form_validation->run() == false) {
-            
+
                 $this->load->view('layout/header', $data);
                 $this->load->view('student/studentReport', $data);
                 $this->load->view('layout/footer', $data);
@@ -127,9 +127,9 @@ class Student extends Admin_Controller
                 $gender      = $this->input->post('gender');
                 $rte         = $this->input->post('rte');
                 $search      = $this->input->post('search');
-               
+
                 if (isset($search)) {
-                  
+
                     if ($search == 'search_filter') {
                         $resultlist         = $this->student_model->searchByClassSectionCategoryGenderRte($class, $section, $category_id, $gender, $rte);
                         $data['resultlist'] = $resultlist;
@@ -254,9 +254,9 @@ class Student extends Admin_Controller
 
     public function create()
     {
-        
-        
-       
+
+
+
         if (!$this->rbac->hasPrivilege('student', 'can_add')) {
             access_denied();
         }
@@ -362,7 +362,7 @@ class Student extends Admin_Controller
             if (empty($hostel_room_id)) {
                 $hostel_room_id = 0;
             }
-            
+
             $dob = $this->tools->formatarData($this->input->post('dob'),'br','us');
 
             $data_insert = array(
@@ -390,14 +390,14 @@ class Student extends Admin_Controller
                 'guardian_name'       => $this->input->post('guardian_name'),
                 'guardian_relation'   => $this->input->post('guardian_relation'),
                 'guardian_phone'      => $this->input->post('guardian_phone'),
-				
+
 				'guardian_postal_code'      => only_numeric($this->input->post('guardian_postal_code')),
                 'guardian_address'    => $this->input->post('guardian_address'),
                 'guardian_address_number'    => $this->input->post('guardian_address_number'),
-				'guardian_district'    => $this->input->post('guardian_district'), 
-				'guardian_city'    => $this->input->post('guardian_city'), 
+				'guardian_district'    => $this->input->post('guardian_district'),
+				'guardian_city'    => $this->input->post('guardian_city'),
 				'guardian_state'    => $this->input->post('guardian_state'),
-				
+
                 'vehroute_id'         => $vehroute_id,
                 'hostel_room_id'      => $hostel_room_id,
                 'note'                => $this->input->post('note'),
@@ -490,13 +490,13 @@ class Student extends Admin_Controller
 
                 $data_insert['father_name'] = $this->input->post('father_name');
             }
-			
-			
+
+
 			if (isset($father_name)) {
 
                 $data_insert['father_name'] = $this->input->post('father_name');
             }
-			
+
 
             if (isset($father_phone)) {
 
@@ -1293,6 +1293,8 @@ class Student extends Admin_Controller
                 $hostel_room_id = 0;
             }
 
+            $dob = $this->tools->formatarData($this->input->post('dob'),'br','us');
+
             $data = array(
                 'id'                  	 => $id,
                 'firstname'           	 => $this->input->post('firstname'),
@@ -1303,7 +1305,7 @@ class Student extends Admin_Controller
                 'pincode'             	 => $this->input->post('pincode'),
                 'cast'                	 => $this->input->post('cast'),
                 'previous_school'     	 => $this->input->post('previous_school'),
-                'dob'                    => date('Y-m-d', $this->customlib->datetostrtotime($this->input->post('dob'))),
+                'dob'                    => $dob,//date('Y-m-d', $this->customlib->datetostrtotime($this->input->post('dob'))),
                 'current_address'     	 => $this->input->post('current_address'),
                 'permanent_address'   	 => $this->input->post('permanent_address'),
                 'adhar_no'            	 => $this->input->post('adhar_no'),

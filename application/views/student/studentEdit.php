@@ -37,7 +37,7 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                     <input type="hidden" name="sibling_id" value="<?php echo set_value('sibling_id', 0); ?>" id="sibling_id">
                                     <div class="row">
                                         <?php if (!$adm_auto_insert) { ?>
-                                            <div class="col-md-3">
+                                            <div class="col-md-2">
                                                 <div class="form-group">
                                                     <label for="exampleInputEmail1"><?php echo $this->lang->line('admission_no'); ?></label><small class="req"> *</small>
                                                     <input autofocus="" id="admission_no" name="admission_no" placeholder="" type="text" class="form-control" value="<?php echo set_value('admission_no', $student['admission_no']); ?>" />
@@ -46,7 +46,7 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                             </div>
                                         <?php }
                                         if ($sch_setting->roll_no) { ?>
-                                            <div class="col-md-3">
+                                            <div class="col-md-2">
                                                 <div class="form-group">
                                                     <label for="exampleInputEmail1"><?php echo $this->lang->line('roll_no'); ?></label>
                                                     <input id="roll_no" name="roll_no" placeholder="" type="text" class="form-control" value="<?php echo set_value('roll_no', $student['roll_no']); ?>" />
@@ -54,41 +54,8 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                                 </div>
                                             </div>
                                         <?php } ?>
-                                        <div class="col-md-3">
-                                            <div class="form-group">
-                                                <label for="exampleInputEmail1"><?php echo $this->lang->line('class'); ?></label><small class="req"> *</small>
-                                                <select id="class_id" name="class_id" class="form-control">
-                                                    <option value=""><?php echo $this->lang->line('select'); ?></option>
-                                                    <?php
-                                                    foreach ($classlist as $class) {
-                                                    ?>
-                                                        <option value="<?php echo $class['id'] ?>" <?php
-                                                                                                    if ($student['class_id'] == $class['id']) {
-                                                                                                        echo "selected =selected";
-                                                                                                    }
-                                                                                                    ?>><?php echo $class['class'] ?></option>
-                                                    <?php
-                                                        $count++;
-                                                    }
-                                                    ?>
-                                                </select>
-                                                <span class="text-danger"><?php echo form_error('class_id'); ?></span>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-3">
-                                            <div class="form-group">
-                                                <label for="exampleInputEmail1"><?php echo $this->lang->line('section'); ?></label><small class="req"> *</small>
-                                                <select id="section_id" name="section_id" class="form-control">
-                                                    <option value=""><?php echo $this->lang->line('select'); ?></option>
-                                                </select>
-                                                <span class="text-danger"><?php echo form_error('section_id'); ?></span>
-                                            </div>
-                                        </div>
 
-                                    </div>
-
-                                    <div class="row">
-                                        <div class="col-md-3">
+                                         <div class="col-md-3">
                                             <div class="form-group">
                                                 <label for="exampleInputEmail1"><?php echo $this->lang->line('first_name'); ?></label><small class="req"> *</small>
                                                 <input id="firstname" name="firstname" placeholder="" type="text" class="form-control" value="<?php echo set_value('firstname', $student['firstname']); ?>" />
@@ -105,7 +72,7 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                                 </div>
                                             </div>
                                         <?php } ?>
-                                        <div class="col-md-3">
+                                        <div class="col-md-2">
                                             <div class="form-group">
                                                 <label for="exampleInputFile"> <?php echo $this->lang->line('gender'); ?> </label><small class="req"> *</small>
                                                 <select class="form-control" name="gender">
@@ -125,14 +92,57 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                                 <span class="text-danger"><?php echo form_error('gender'); ?></span>
                                             </div>
                                         </div>
-                                        <div class="col-md-3">
+
+                                    </div>
+
+                                    <div class = "row">
+                                          <div class="col-md-3">
                                             <div class="form-group">
                                                 <label for="exampleInputEmail1"><?php echo $this->lang->line('date_of_birth'); ?></label><small class="req"> *</small>
-                                                <input id="dob" name="dob" placeholder="" type="text" class="form-control date" value="<?php echo set_value('dob', date($this->customlib->getSchoolDateFormat(), $this->customlib->dateyyyymmddTodateformat($student['dob']))); ?>" />
+                                                <input id="dob" name="dob" placeholder="" type="text" class="form-control"
+                                                       value="<?php
+                                                       $dob = new DateTime($student['dob']);
+                                                       echo set_value('dob', $dob->format('d/m/Y'));//date($this->customlib->getSchoolDateFormat(), $this->customlib->dateyyyymmddTodateformat($student['dob']))); ?>" />
                                                 <span class="text-danger"><?php echo form_error('dob'); ?></span>
                                             </div>
                                         </div>
+                                         <div class="col-md-3">
+                                            <div class="form-group">
+                                                <label for="exampleInputEmail1"><?php echo $this->lang->line('class'); ?></label><small class="req"> *</small>
+                                                 <?php echo form_dropdown('class_id',['0'=>'## Nenhuma Turma Disponível ###'], '', "id='class_id' class='form-control'"); ?>
+                                                  <span class="text-danger"><?php echo form_error('class_id'); ?></span>
+<!--<select id="class_id" name="class_id" class="form-control">
+                                                    <option value=""><?php echo $this->lang->line('select'); ?></option>
+                                                    <?php
+                                                    foreach ($classlist as $class) {
+                                                    ?>
+                                                        <option value="<?php echo $class['id'] ?>" <?php
+                                                                                                    if ($student['class_id'] == $class['id']) {
+                                                                                                        echo "selected =selected";
+                                                                                                    }
+                                                                                                    ?>><?php echo $class['class'] ?></option>
+                                                    <?php
+                                                        $count++;
+                                                    }
+                                                    ?>
+                                                </select>-->
+                                                <span class="text-danger"><?php echo form_error('class_id'); ?></span>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <div class="form-group">
+                                                <label for="exampleInputEmail1"><?php echo $this->lang->line('section'); ?></label><small class="req"> *</small>
+                                                <select id="section_id" name="section_id" class="form-control">
+                                                    <option value=""><?php echo $this->lang->line('select'); ?></option>
+                                                </select>
+                                                <span class="text-danger"><?php echo form_error('section_id'); ?></span>
+                                            </div>
+                                        </div>
+
                                     </div>
+
+
+
                                     <div class="row">
                                         <?php if ($sch_setting->category) {
                                         ?>
@@ -284,7 +294,7 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                         if ($sch_setting->measurement_date) { ?>
                                             <div class="col-md-3 col-xs-12">
                                                 <div class="form-group">
-                                                    <label for="exampleInputEmail1"><?php echo $this->lang->line('measurement_date'); ?></label> 
+                                                    <label for="exampleInputEmail1"><?php echo $this->lang->line('measurement_date'); ?></label>
 
                                                     <input id="measure_date" name="measure_date" placeholder="" type="text" class="form-control date" value="<?php //echo set_value('measure_date', date($this->customlib->getSchoolDateFormat(), $this->customlib->dateyyyymmddTodateformat($student['measurement_date']))); ?>" readonly="readonly" />-->
                                                     <span class="text-danger"><?php echo form_error('measure_date'); ?></span>
@@ -494,11 +504,11 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
 													$nf = str_replace("-","", $nf);
 													$nf = str_replace("(","", $nf);
 													$nf = str_replace(")","", $nf);
-													
+
 													?>
-													
+
 													<i class="fab fa-whatsapp" style="color: #25D366; cursor: pointer;" onclick="callwz(<?php echo $nf; ?>);"></i>
-													
+
 													<?php echo $this->lang->line('phone'); ?> <?php echo $this->lang->line('no'); ?></label>
                                                     <input id="father_phone" name="father_phone" placeholder="" type="text" class="form-control" value="<?php echo set_value('father_phone', $student['father_phone']); ?>" />
                                                     <span class="text-danger"><?php echo form_error('father_phone'); ?></span>
@@ -546,11 +556,11 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
 													$nf = str_replace("-","", $nf);
 													$nf = str_replace("(","", $nf);
 													$nf = str_replace(")","", $nf);
-													
+
 													?>
-													
+
 													<i class="fab fa-whatsapp" style="color: #25D366; cursor: pointer;" onclick="callwz(<?php echo $nf; ?>);"></i>
-													
+
 													<?php echo $this->lang->line('mother_phone'); ?></label>
                                                     <input id="mother_phone" name="mother_phone" placeholder="" type="text" class="form-control" value="<?php echo set_value('mother_phone', $student['mother_phone']); ?>" />
                                                     <span class="text-danger"><?php echo form_error('mother_phone'); ?></span>
@@ -585,21 +595,21 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                                                                         if ($student['guardian_is'] == "father") {
                                                                                             echo "checked";
                                                                                         }
-                                                                                        ?> value="pai"> <?php echo $this->lang->line('father'); ?>
+                                                                                        ?> value="father"> <?php echo $this->lang->line('father'); ?>
                                             </label>
                                             <label class="radio-inline">
                                                 <input type="radio" name="guardian_is" <?php
                                                                                         if ($student['guardian_is'] == "mother") {
                                                                                             echo "checked";
                                                                                         }
-                                                                                        ?> value="mãe"> <?php echo $this->lang->line('mother'); ?>
+                                                                                        ?> value="mother"> <?php echo $this->lang->line('mother'); ?>
                                             </label>
                                             <label class="radio-inline">
                                                 <input type="radio" name="guardian_is" <?php
                                                                                         if ($student['guardian_is'] == "other") {
                                                                                             echo "checked";
                                                                                         }
-                                                                                        ?> value="outro"> <?php echo $this->lang->line('other'); ?>
+                                                                                        ?> value="other"> <?php echo $this->lang->line('other'); ?>
                                             </label>
                                             <span class="text-danger"><?php echo form_error('guardian_is'); ?></span>
                                         </div>
@@ -632,11 +642,11 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
 															$nf = str_replace("-","", $nf);
 															$nf = str_replace("(","", $nf);
 															$nf = str_replace(")","", $nf);
-															
+
 														?>
-														
+
 														<i class="fab fa-whatsapp" style="color: #25D366; cursor: pointer;" onclick="callwz(<?php echo $nf; ?>);"></i>
-														
+
                                                         <label for="exampleInputEmail1"><?php echo $this->lang->line('guardian_phone'); ?></label><small class="req"> *</small>
                                                         <input id="guardian_phone" name="guardian_phone" placeholder="" type="text" class="form-control" value="<?php echo set_value('guardian_phone', $student['guardian_phone']); ?>" />
                                                         <span class="text-danger"><?php echo form_error('guardian_phone'); ?></span>
@@ -694,7 +704,7 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                                   margin-top:22.8px;
                                                 ">
                                                 <label for="exampleInputEmail1">&nbsp;</label>
-                                                    <button 
+                                                    <button
                                                     data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> Processing"
                                                     id="trigger-cep" data-target="guardian_postal_code"  style="padding: 3.8px 15px;" type="button" class="btn btn-primary">Pesquisar endereco</button>
                                                 </div>
@@ -716,8 +726,8 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                             </div>
                                         <?php } ?>
 
-                                       
-                                       
+
+
                                         <?php
                                         if ($sch_setting->guardian_district) { ?>
                                             <div class="col-md-3">
@@ -890,13 +900,13 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
         var hostel_id = $('#hostel_id').val();
         var hostel_room_id = '<?php echo set_value('hostel_room_id', $student['hostel_room_id']) ?>';
         getHostel(hostel_id, hostel_room_id);
-        getSectionByClass(class_id, section_id, 'section_id');
+       /* getSectionByClass(class_id, section_id, 'section_id');
 
         $(document).on('change', '#class_id', function(e) {
             $('#section_id').html("");
             var class_id = $(this).val();
             getSectionByClass(class_id, 0, 'section_id');
-        });
+        });*/
 
 
         $(document).on('click', '#sibiling_class_id', function() {
@@ -1063,17 +1073,17 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                     $('#guardian_name').val($('#father_name').val());
                     $('#guardian_phone').val($('#father_phone').val());
                     $('#guardian_occupation').val($('#father_occupation').val());
-                    $('#guardian_relation').val("Father")
+                    $('#guardian_relation').val("Pai");
                 } else if (value == "mother") {
                     $('#guardian_name').val($('#mother_name').val());
                     $('#guardian_phone').val($('#mother_phone').val());
                     $('#guardian_occupation').val($('#mother_occupation').val());
-                    $('#guardian_relation').val("Mother")
+                    $('#guardian_relation').val("Mãe");
                 } else {
                     $('#guardian_name').val("");
                     $('#guardian_phone').val("");
                     $('#guardian_occupation').val("");
-                    $('#guardian_relation').val("")
+                    $('#guardian_relation').val("");
                 }
             }
         });
@@ -1178,9 +1188,9 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
 
 <script>
 function callwz(telefone){
-	
+
 	window.open('https://wa.me/55'+telefone);
-	
+
 }
 </script>
 
@@ -1299,8 +1309,60 @@ function callwz(telefone){
 
 
 
-    
+
 </script>
 
+<script type='text/javascript'>
+$(document).ready(function(){
+
+
+   /*TURMA E PERIODO ---------------------------------------------------------*/
+    /*Carrega o combobox de periodos*/
+    $.fn.comboBoxPeriodo = function(){
+        $(this).comboBox({
+            url : '<?php echo base_url(); ?>welcome/getListaPeriodosPorTurma',
+            data: { class_id : $('#class_id').val() },
+            combobox : '#section_id',
+            selected: '<?php echo set_value('section_id',$student['section_id']); ?>',
+            callback: {function(){} }
+        });
+
+    };
+
+    /*Verificar a turma com base na data de nascimento*/
+    $.fn.carregarComboBoxTurmasDisponiveis = function(dataNascimento){
+        $(this).comboBox({
+            url : '<?php echo base_url(); ?>welcome/getListaTurmasPorDataNascimento',
+            data: { dataNascimento : dataNascimento },
+            combobox : '#class_id',
+            selected: '<?php echo set_value('class_id',$student['class_id']); ?>',
+            callback: function(){
+                $(this).comboBoxPeriodo();
+            }
+        });
+    };
+    $(this).carregarComboBoxTurmasDisponiveis('<?php echo set_value('dob',$dob->format('d/m/Y')); ?>');
+
+
+    $('#dob').mask('99/99/9999');
+        let typingTimer;                //timer identifier
+        let doneTypingInterval = 1000;  //time in ms (5 seconds)
+        let myInput = document.getElementById('dob');
+
+        //on keyup, start the countdown
+        $('#dob').keyup(function(){
+            clearTimeout(typingTimer);
+            if ($('#dob').val()) {
+                typingTimer = setTimeout(function(){
+                    $(this).carregarComboBoxTurmasDisponiveis($('#dob').val());
+                }, doneTypingInterval);
+            }
+        });
+
+
+    /*TURMA E PERIODO ---------------------------------------------------------*/
+
+});
+</script>
 <script type="text/javascript" src="<?php echo base_url(); ?>backend/js/postalCodeAutoComplete.js"></script>
 <script type="text/javascript" src="<?php echo base_url(); ?>backend/dist/js/savemode.js"></script>
