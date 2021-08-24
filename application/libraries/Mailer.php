@@ -64,7 +64,7 @@ class Mailer
         }
         $mail->SetFrom('financeiro@eeividadecrianca.com.br', $school_name);
         // $mail->SetFrom($this->CI->mail_config->smtp_username, $school_name);
-        // $mail->AddReplyTo($this->CI->mail_config->smtp_username, $this->CI->mail_config->smtp_username);
+        $mail->AddReplyTo('financeiro@eeividadecrianca.com.br', $school_name);
         if (!empty($FILES)) {
             if (isset($_FILES['files']) && !empty($_FILES['files'])) {
                 $no_files = count($_FILES["files"]['name']);

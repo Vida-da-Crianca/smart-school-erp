@@ -123,7 +123,7 @@ trait SendMailBillet
         $body =  $billet->body_json;
         // $first = $billet->feeItems()->first();
 
-        dump($billet);
+        // dump($billet->toArray());
 
         $options = [
             'name' => $billet->student->guardian_name,
@@ -132,17 +132,19 @@ trait SendMailBillet
             'link' => site_url('billet/live/' . $billet->bank_bullet_id),
             'code' => null,
             'file' => '',
-            'due_date' =>  $billet->due_date,
-            'items' => []
+            'due_date' =>  is_string($billet->due_date)  ? new \DateTime($billet->due_date) : $billet->due_date,
+            'items' => [],
+            'admission_no' => $billet->student->admission_no
         ];
         $items = [];
 
 
-
-        $billet->feeItems->each(function ($row) use (&$items, $billet) {
+        $billets = [];
+        $billet->feeItems->each(function ($row) use (&$items, $billet, &$billets) {
 
             $body =  $row->body_json;
             $discount = sprintf('- Desc. R$ %s', number_format($body->fee_discount, 2, ',', '.'));
+            $billets[] = $billet->bank_bullet_id;
             $items[] = (object) [
                 'billet' =>  $billet->bank_bullet_id,
                 'name' => $billet->student->full_name,
@@ -160,11 +162,9 @@ trait SendMailBillet
         $options['items'] = $items;
         $options['body_text'] =  $this->CI->lang->line('notification_billet_old_text_header');
        
-        // dump($options);
-        $content = $this->CI->load->view('mailer/billet.tpl.php', $options,  TRUE);
-
+        $content = $this->CI->load->view('mailer/billet.tpl.php', $options,  TRUE); 
         \MailerEloquent::create([
-            'subject' => 'Envio de boletos - Vida de Criança',
+            'subject' => sprintf('Vida da Criança - Boleto(s) vencido(s) %s/%s', implode(',', $billets), $billet->student->admission_no),
             'from' => '', 
             'message' => $content,
             'to' =>  getenv('ENVIRONMENT') == 'development' ?  'contato@carlosocarvalho.com.br' : $billet->student->guardian_email

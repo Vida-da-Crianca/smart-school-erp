@@ -38,6 +38,7 @@ class MailerCommand extends BaseCommand
         $data =  \MailerEloquent::whereNull('sended_at')->get();
         // dump($data->count());
         foreach ($data as $row) {
+            usleep(200000);
             try {
                 $status = $this->CI->LMailer->send_mail(
                     getenv('ENVIRONMENT') == 'development' ?  'contato@carlosocarvalho.com.br' : $row->to,
