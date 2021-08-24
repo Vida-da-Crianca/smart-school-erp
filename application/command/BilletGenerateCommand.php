@@ -86,8 +86,13 @@ class BilletGenerateCommand extends BaseCommand
         try {
             $content = $this->CI->load->view('mailer/billet.tpl.php', $options,  TRUE);
             
+
+            $billets = [];
+            foreach($options->items as $item){
+                  $billets[]  = $item->billet;
+            }
             \MailerEloquent::create([
-                'subject' => 'Envio de boletos - Vida de Criança',
+                'subject' => sprintf('Vida da Criança - Boleto(s) %s/%s', implode(',', $billets), $options->admission_no),
                 'from' => '', 
                 'message' => $content,
                 'to' =>  getenv('ENVIRONMENT') == 'development' ?  'contato@carlosocarvalho.com.br' : $options->email]);
@@ -208,7 +213,8 @@ class BilletGenerateCommand extends BaseCommand
             'code' => $options->billet->barcode,
             'file' => '',
             'due_date' =>  new \DateTime($billet->due_date),
-            'items' => $items
+            'items' => $items,
+            'admission_no' => $student->admission_no
         ];
 
         $this->sendMail($data);
