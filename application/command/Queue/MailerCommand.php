@@ -41,7 +41,7 @@ class MailerCommand extends BaseCommand
             usleep(200000);
             try {
                 $status = $this->CI->LMailer->send_mail(
-                    getenv('ENVIRONMENT') == 'development' ?  'contato@carlosocarvalho.com.br' : $row->to,
+                    getenv('ENVIRONMENT') == 'development' ?  'quenduk@yahoo.com.br' : $row->to,
                     $row->subject,
                     $row->message /**/
                 );
@@ -50,10 +50,10 @@ class MailerCommand extends BaseCommand
                 if ($status) {
 
                     $log = [
-                        'title' =>sprintf('<span style="color: green;">✓</span> Novo boleto enviado - [%s]', $row->to),
+                        'title' =>sprintf('<span style="color: green;">✓</span> %s - [%s]', $row->subject, $row->to),
                         'send_mail' => 1,
                         'message' => sprintf(
-                            'Um novo e-mail foi enviado para o e-mail %s',
+                            'Um novo e-mail foi enviado para o e-mail %s ',
                            $row->to,
                         ),
                         'is_individual' => 1
