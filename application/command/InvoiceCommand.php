@@ -66,6 +66,9 @@ class InvoiceCommand extends BaseCommand
             // ->limit(1)
             ->get();
 
+
+            // return dump($invoices->count());
+
         if ($invoices->count() == 0) return $this->success('Not exists invoices for create');
 
         $options = $settings->toArray();
@@ -166,6 +169,8 @@ class InvoiceCommand extends BaseCommand
                 );
                 // dump($e->getMessage());
             }
+
+            usleep(200000);
         }
 
         return 0;

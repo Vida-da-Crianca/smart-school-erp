@@ -42,6 +42,8 @@ class BilletOld extends BaseCommand
         $timeStart = Carbon::create(date('Y'), date('m'), date('d'), 8, 0);
         $timeEnd = Carbon::create(date('Y'), date('m'), date('d'), 21, 0);
 
+        dump(\FeeReminder::isBankAfter()->isActive()->count());
+
         if(\FeeReminder::isBankAfter()->isActive()->count() == 0) {
             if(\FeeReminder::isBankAfter()->count() == 0){
                 dump('creating reminder type');

@@ -30,11 +30,12 @@ if (!function_exists('discord_log')) {
   {
     $env =  sprintf('DISCORD_LOGS_%s', strtoupper(getenv('ENVIRONMENT')));
     if (!$env) return;
-    (new DiscordMsg(
-      sprintf('**%s** %s``` %s ```', $title, PHP_EOL, $message), // message
-      getenv($env),
-      ''
-    ))->send();
+    log_message('debug', sprintf('**%s** %s``` %s ```', $title, PHP_EOL, $message) );
+    // (new DiscordMsg(
+    //   sprintf('**%s** %s``` %s ```', $title, PHP_EOL, $message), // message
+    //   getenv($env),
+    //   ''
+    // ))->send();
   }
 }
 
@@ -44,11 +45,12 @@ if (!function_exists('discord_exception')) {
   {
     $env =  sprintf('DISCORD_EXCEPTIONS_%s', strtoupper(getenv('ENVIRONMENT')));
     if (!$env) return;
-    (new DiscordMsg(
-      sprintf('**%s** %s``` %s ```', $title, PHP_EOL, $message), // message
-      getenv($env),
-      ''
-    ))->send();
+    log_message('error', sprintf('**%s** %s``` %s ```', $title, PHP_EOL, $message) );
+    // (new DiscordMsg(
+    //   sprintf('**%s** %s``` %s ```', $title, PHP_EOL, $message), // message
+    //   getenv($env),
+    //   ''
+    // ))->send();
   }
 }
 
