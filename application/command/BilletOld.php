@@ -70,7 +70,7 @@ class BilletOld extends BaseCommand
                     $q->whereNotBetween('sended_mail_at', [Carbon::now()->format('Y-m-d 00:00:00'), Carbon::now()->format('Y-m-d 23:59:59')])
                         ->orWhereRaw('sended_mail_at IS NULL');
                 })
-                ->with(['feeItems', 'student'])->limit(5)->get();
+                ->with(['feeItems', 'student'])->get();
          
             $listOfGroup = $billets->groupBy('bank_bullet_id');
             
