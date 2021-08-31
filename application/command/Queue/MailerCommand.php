@@ -37,11 +37,12 @@ class MailerCommand extends BaseCommand
         $this->CI->load->library('mailer', null, 'LMailer');
         $data =  \MailerEloquent::whereNull('sended_at')->get();
         // dump($data->count());
+        
         foreach ($data as $row) {
-            usleep(200000);
+            usleep(20000);
             try {
                 $status = $this->CI->LMailer->send_mail(
-                    getenv('ENVIRONMENT') == 'development' ?  'quenduk@yahoo.com.br' : $row->to,
+                    $row->to,
                     $row->subject,
                     $row->message /**/
                 );

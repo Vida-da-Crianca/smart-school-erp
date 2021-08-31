@@ -13,7 +13,9 @@ use Symfony\Component\Console\Input\ArrayInput;
 // use Symfony\Component\Process\Process;
 use Amp\Loop;
 use Amp\Process\Process;
+use Carbon\Carbon;
 use Funcionario;
+use Amp\ByteStream;
 
 use function Amp\Promise\all;
 
@@ -54,72 +56,65 @@ class ScheduleCommand extends BaseCommand
             'billet:cancel' => 10 * (60),
             'clean:directory' => 2 * (60 * 60),
             'invoice:billet-check' => 10 * 60,
-            'billet:old' => 60,
+            'billet:old' => ['at' => '08:00', 'timezone' => 'America/Sao_Paulo', 'interval' => 60],
             'queue:mailer' => 60
 
         ];
+        $runningProcess = [];
         foreach ($comandList as $name => $interval) {
-            Loop::repeat(($interval * 1000), function ()  use ($name) {
-                $process = $this->makeCommand($name);
-                dump($name);
-                yield $process->start();
-                $stream = $process->getStdout();
-                while (null !== $chunk = yield $stream->read()) {
-                    // echo $chunk;
+            $data = [];
+            if (is_array($interval)) {
+                $data =  $interval;
+                $interval =  $interval['interval'];
+            }
+            Loop::repeat(($interval * 1000), function ($row)  use ($name, $data, &$runningProcess) {
+               
+                if (!$data) {
+                    $this->consoleLog($name, 1);
+                    $runningProcess[] = $name;
+                    $process = $this->makeCommand($name);
+                    yield $process->start();
+                    $stream =  yield ByteStream\buffer($process->getStdout());
+                    $this->text($stream);
+                    $code = yield $process->join();
+                    $pid = $process->getPid();
+                    
+                    $this->consoleLog($name, 0);
+
+                } else {
+
+                    $dt = Carbon::now();
+                    $dt->tz = $data['timezone'];
+                    $dt->format('H:i');
+                    // $this->text('schedule running at ==> ' .  $dt->format('H:i'));
+                    if ($data['at'] !== $dt->format('H:i')) {
+                        return;
+                    }
+                    $this->consoleLog($name, 1);
+                    $process = $this->makeCommand($name);
+                    yield $process->start();
+                    $stream = $process->getStdout();
+                    // while (null !== $chunk = yield $stream->read()) {
+                    //     $this->text('stream: --- ' . $chunk);
+                    // }
+                    $code = yield $process->join();
+                    $pid = $process->getPid();
+
+                    $this->consoleLog($name, 0);
                 }
-                $code = yield $process->join();
-                $pid = $process->getPid();
             });
         }
-
         Loop::run();
 
-        // Loop::run(function()  {
-        //     $comandList = [
-        //         // 'invoice:cancel',
-        //         // 'invoice:create',
-        //         // 'invoice:tribute',
-        //         // 'billet:generate',
-        //         // 'billet:paid',
-        //         // 'billet:cancel',
-        //         // 'clean:directory',
-        //         'invoice:billet-check && sleep 10'
-
-        //     ];
-        //     Loop::repeat( 1000 , function() use($comandList){
-        //         $promises = [];
-        //         foreach ($comandList as $name) {
-        //             $command = sprintf('/usr/local/bin/php /app/man %s ', $name);
-        //             $process = new Process($command);
-        //             $promises[] = new \Amp\Coroutine(watch_live($process));
-        //         }
-
-        //         yield all($promises);
-        //     });
-
-
-        // });
-
-        // while (true) {
-        //     $options = [];
-        //     foreach ($comandList as $command) {
-        //         $result = null;
-        //         exec(sprintf('/usr/local/bin/php /app/man %s &', $command), $result);
-        //         $c = collect($result)->filter( function($row){  return !empty($row); });
-        //         if ($c->count() > 0)
-        //             $options[$command][] = implode(PHP_EOL,$c->toArray());
-        //     }
-        //     if (count($options) > 0) {
-        //         discord_schedule_log(
-        //             sprintf('%s', json_encode($options, JSON_PRETTY_PRINT))
-        //         );
-        //     }
-        //     sleep(30);
-        // }
         return 0;
     }
 
-
+    public function consoleLog($name, $code = 1)
+    {  
+        $msg =  $code == 1 ? 'iniciado' : 'finalizado';
+        $ts = date('d/m/Y H:i:s'); 
+        $this->text("{$ts} - Processo [{$name}] {$msg} {$code}  ");
+    }
 
     public function makeCommand($name): Process
     {

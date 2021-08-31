@@ -53,12 +53,14 @@ class InvoiceCheckOnBillet extends BaseCommand
             ->get();
         // dump([Carbon::now()->format('Y-m-01'),  Carbon::now()->endOfMonth()->format('Y-m-d')]);
         
-
+            
         $data =  $items->filter(function ($row){
               return $row->invoices->count() == 0;
             })->groupBy('bank_bullet_id');
 
         $i = 0;
+         dump($data->count()s);
+        return;
         foreach ($data as $listOfData) {
 
             $order = collect([]);
