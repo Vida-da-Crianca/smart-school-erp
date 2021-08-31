@@ -59,8 +59,7 @@ class InvoiceCheckOnBillet extends BaseCommand
             })->groupBy('bank_bullet_id');
 
         $i = 0;
-         dump($data->count()s);
-        return;
+       
         foreach ($data as $listOfData) {
 
             $order = collect([]);
