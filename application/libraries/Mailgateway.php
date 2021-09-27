@@ -34,7 +34,7 @@ class Mailgateway {
     public function sentRegisterMail($id, $send_to, $template) {
 
         if (!empty($this->_CI->mail_config) && $send_to != "") {
-            $subject = "Admission Confirm";
+            $subject = "Matrícula Efetivada";
 
             $msg = $this->getStudentRegistrationContent($id, $template);
 
