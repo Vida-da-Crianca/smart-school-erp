@@ -156,8 +156,13 @@
                                 </div>
                             </div>
                         </div>
+                          <div class="col-md-2 form-group">
+                            <label>Tipo Data</label>
+                            <?php echo form_dropdown('tipo_data',[1=>'Vencimento',2=>'Recebimento'], isset($_POST['tipo_data']) ? $_POST['tipo_data'] : '1', "id='' class='form-control'"); ?>
+
+                        </div>
                         <div class="col-md-2 form-group">
-                            <label>Data Venc. Inicial</label>
+                            <label>Data Inicial</label>
                             <div class="input-group date">
                                 <input type="text" class="form-control idate" id="name" name="start" 
                                        value="<?php echo isset($_POST['start']) ? trim($_POST['start']) : date('01-m-Y');  ?>">
@@ -166,8 +171,9 @@
                                 </div>
                             </div>
                         </div>
+                       
                         <div class="col-md-2 form-group">
-                            <label>Data Venc. Final</label>
+                            <label>Data Final</label>
                             <div class="input-group date">
                                 <input type="text" class="form-control idate" id="date_end" name="end" 
                                        value="<?php echo isset($_POST['end']) ? trim($_POST['end']) : date('t-m-Y');  ?>">
@@ -176,11 +182,12 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-2 form-group">
+                        
+                        <div class="col-md-1 form-group">
                             <label>Boleto?</label>
                             <?php echo form_dropdown('with_billet',[99=>'Todos',1=>'Apenas COM Boleto',2=>'Apenas SEM Boleto'], isset($_POST['with_billet']) ? $_POST['with_billet'] : 99, "id='' class='form-control'"); ?>
                         </div>
-                         <div class="col-md-2 form-group">
+                         <div class="col-md-1 form-group">
                             <label>Status</label>
                             <?php echo form_dropdown('status',[99=>'Todos',1=>'Apenas RECEBIDOS',2=>'Apenas EM ABERTO'], isset($_POST['status']) ? $_POST['status'] : 99, "id='' class='form-control'"); ?>
                         </div>
@@ -213,7 +220,7 @@
                                     <th>Item</th>
                                     
                                     <th>nº Boleto</th>
-                                    <th>nº Nota</th>
+                                    <th class="text-center">nº Nota</th>
                                     
                                     <th>Vencimento</th>
                                     
@@ -223,6 +230,8 @@
                                     
                                     <th class="text-right">Valor Recebido</th>
                                     <th class="text-right">Valor à Receber</th>
+                                    
+                                     <th class="text-center">Data Recebimento</th>
                                     
                                     <th>Status</th>
                                     
@@ -246,7 +255,7 @@
                                         <td>
                                             <?php echo $row->boletoNumero == 0 ? '---' : $row->boletoNumero; ?>
                                         </td>
-                                        <td>
+                                        <td class="text-center">
                                             <?php echo $row->notaNumero == 0 ? '---' : $row->notaNumero; ?>
                                         </td>
                                         <td>
@@ -277,6 +286,9 @@
                                          <td class="text-right">
                                             <span class="small">R$</span> 
                                             <?php echo number_format($row->balanco, 2, ',', '.'); $receber += $row->balanco; ?>
+                                         </td>
+                                         <td class="text-center"> 
+                                            <?php echo $row->pago ? $this->tools->formatarData($row->dataPagamento,'us','br') : '---'; ?>
                                          </td>
                                          <td class="text-right small">
                                              &nbsp;
@@ -463,6 +475,7 @@ $(document).ready(function(){
                 null,
                 null,
                 null,
+                { "sType": "date-uk" },
                 null
             ],
             language: {
@@ -586,9 +599,6 @@ jQuery.extend( jQuery.fn.dataTableExt.oSort, {
         .control-checkbox input:disabled~.control_indicator:after {
             border-color: #7b7b7b;
         }
-        
-        
-        
 
         .control-checkbox .control_indicator::before {
             content: '';
