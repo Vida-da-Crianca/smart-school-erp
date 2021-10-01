@@ -470,25 +470,29 @@ class Report extends Admin_Controller
                 LEFT JOIN student_session ON student_session.id = student_fee_items.student_session_id 
                 LEFT JOIN students ON students.id = student_session.student_id 
                 WHERE student_fee_items.id > 0 
-                AND student_session.session_id = $option_session_id 
+                AND student_session.session_id = $option_session_id  
                 AND student_fee_items.deleted_at IS NULL ";
-                    
             
             //Filtro por datas
-            $dst = str_replace(' ', '', $_POST['start']);	
-            $den = str_replace(' ', '', $_POST['end']);
+            $dst = str_replace(' ', '', $_POST['start']).' 00:00:00';	
+            $den = str_replace(' ', '', $_POST['end']).' 23:59:59';
+            $tipo_data = (int) $_POST['tipo_data'];
             
-            if(!empty($dst) && !empty($dst)){
-                $dats = new DateTime($dst);
-                $start = $dats->format('Y-m-d');
-                $date = new DateTime($den);
-                $end = $date->format('Y-m-d');
+            $dats = new DateTime($dst);
+            $start = $dats->format('Y-m-d');
+            $date = new DateTime($den);
+            $end = $date->format('Y-m-d');
+            
+            if($tipo_data == 1){
+                if(!empty($dst) && !empty($dst)){
+                    
+                }
+                else{
+                    $start = date('Y-m-01');
+                    $end = date('Y-m-t');
+                }
+                $sql .= " AND student_fee_items.due_date BETWEEN '$start' AND '$end' ";
             }
-            else{
-                $start = date('Y-m-01');
-                $end = date('Y-m-t');
-            }
-            $sql .= " AND student_fee_items.due_date BETWEEN '$start' AND '$end' ";
             
             //Filtro Boleto
             $with_billet = (int) $this->input->post('with_billet');
@@ -507,6 +511,8 @@ class Report extends Admin_Controller
             //student_fee_items.id = 12103
             
             $results = $this->db->query($sql)->result();
+            
+           // echo $this->db->last_query();
             
             //Vamos pegar os IDs dos financeirtos(student_fee_items)
             //pois vamos precisar deles la embaixo
@@ -549,6 +555,8 @@ class Report extends Admin_Controller
                     $row->valorRecebido = 0; //criamos esse campo zerado
                     $row->totalDesconto = 0;
                     $row->totalMulta = 0;
+                    
+                    $row->dataPagamento = '3000-01-01';
 
                     if(isset($depositosPorFinanceiro[(int)$row->idFinanceiro])){ //tem depositos para esse financeiro
 
@@ -560,6 +568,8 @@ class Report extends Admin_Controller
                                $row->valorRecebido += ($fee_deposits_value->amount - $fee_deposits_value->amount_discount) + $fee_deposits_value->amount_fine;
                                $row->totalDesconto +=  $fee_deposits_value->amount_discount;
                                $row->totalMulta +=  $fee_deposits_value->amount_fine;
+                               
+                               $row->dataPagamento = $fee_deposits_value->date;
                            }
 
 
@@ -568,8 +578,6 @@ class Report extends Admin_Controller
                     }//tem depositos para esse financeiro
 
 
-                    
-                    
                     //calcular o BALANCO
                     $row->balanco = (($row->recebimentoValor + $row->totalMulta) - $row->totalDesconto) - ($row->valorRecebido) ;
 
@@ -578,6 +586,14 @@ class Report extends Admin_Controller
                     
                     if($status == 1 && !$row->pago){$contabilizar = false;}
                     if($status == 2 && $row->pago){$contabilizar = false;}
+                    
+                    if($tipo_data == 2){
+                        $dtPagamento = new DateTime($row->dataPagamento.' 00:00:00');
+                        if($dtPagamento < $dats  || $dtPagamento > $date){
+                            $contabilizar = false;
+                        }
+                    }
+                    
                     
                     if($contabilizar){
                         $resultsFinal[] = $row;
