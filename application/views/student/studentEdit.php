@@ -54,7 +54,7 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                                 </div>
                                             </div>
                                         <?php } ?>
-
+                                        
                                          <div class="col-md-3">
                                             <div class="form-group">
                                                 <label for="exampleInputEmail1"><?php echo $this->lang->line('first_name'); ?></label><small class="req"> *</small>
@@ -92,15 +92,15 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                                 <span class="text-danger"><?php echo form_error('gender'); ?></span>
                                             </div>
                                         </div>
-
+                                       
                                     </div>
-
+                                    
                                     <div class = "row">
                                           <div class="col-md-3">
                                             <div class="form-group">
                                                 <label for="exampleInputEmail1"><?php echo $this->lang->line('date_of_birth'); ?></label><small class="req"> *</small>
-                                                <input id="dob" name="dob" placeholder="" type="text" class="form-control"
-                                                       value="<?php
+                                                <input id="dob" name="dob" placeholder="" type="text" class="form-control" 
+                                                       value="<?php 
                                                        $dob = new DateTime($student['dob']);
                                                        echo set_value('dob', $dob->format('d/m/Y'));//date($this->customlib->getSchoolDateFormat(), $this->customlib->dateyyyymmddTodateformat($student['dob']))); ?>" />
                                                 <span class="text-danger"><?php echo form_error('dob'); ?></span>
@@ -141,8 +141,8 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
 
                                     </div>
 
-
-
+                                    
+                                    
                                     <div class="row">
                                         <?php if ($sch_setting->category) {
                                         ?>
@@ -294,7 +294,7 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                         if ($sch_setting->measurement_date) { ?>
                                             <div class="col-md-3 col-xs-12">
                                                 <div class="form-group">
-                                                    <label for="exampleInputEmail1"><?php echo $this->lang->line('measurement_date'); ?></label>
+                                                    <label for="exampleInputEmail1"><?php echo $this->lang->line('measurement_date'); ?></label> 
 
                                                     <input id="measure_date" name="measure_date" placeholder="" type="text" class="form-control date" value="<?php //echo set_value('measure_date', date($this->customlib->getSchoolDateFormat(), $this->customlib->dateyyyymmddTodateformat($student['measurement_date']))); ?>" readonly="readonly" />
                                                     <span class="text-danger"><?php echo form_error('measure_date'); ?></span>
@@ -504,11 +504,11 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
 													$nf = str_replace("-","", $nf);
 													$nf = str_replace("(","", $nf);
 													$nf = str_replace(")","", $nf);
-
+													
 													?>
-
+													
 													<i class="fab fa-whatsapp" style="color: #25D366; cursor: pointer;" onclick="callwz(<?php echo $nf; ?>);"></i>
-
+													
 													<?php echo $this->lang->line('phone'); ?> <?php echo $this->lang->line('no'); ?></label>
                                                     <input id="father_phone" name="father_phone" placeholder="" type="text" class="form-control" value="<?php echo set_value('father_phone', $student['father_phone']); ?>" />
                                                     <span class="text-danger"><?php echo form_error('father_phone'); ?></span>
@@ -556,11 +556,11 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
 													$nf = str_replace("-","", $nf);
 													$nf = str_replace("(","", $nf);
 													$nf = str_replace(")","", $nf);
-
+													
 													?>
-
+													
 													<i class="fab fa-whatsapp" style="color: #25D366; cursor: pointer;" onclick="callwz(<?php echo $nf; ?>);"></i>
-
+													
 													<?php echo $this->lang->line('mother_phone'); ?></label>
                                                     <input id="mother_phone" name="mother_phone" placeholder="" type="text" class="form-control" value="<?php echo set_value('mother_phone', $student['mother_phone']); ?>" />
                                                     <span class="text-danger"><?php echo form_error('mother_phone'); ?></span>
@@ -642,11 +642,11 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
 															$nf = str_replace("-","", $nf);
 															$nf = str_replace("(","", $nf);
 															$nf = str_replace(")","", $nf);
-
+															
 														?>
-
+														
 														<i class="fab fa-whatsapp" style="color: #25D366; cursor: pointer;" onclick="callwz(<?php echo $nf; ?>);"></i>
-
+														
                                                         <label for="exampleInputEmail1"><?php echo $this->lang->line('guardian_phone'); ?></label><small class="req"> *</small>
                                                         <input id="guardian_phone" name="guardian_phone" placeholder="" type="text" class="form-control" value="<?php echo set_value('guardian_phone', $student['guardian_phone']); ?>" />
                                                         <span class="text-danger"><?php echo form_error('guardian_phone'); ?></span>
@@ -704,7 +704,7 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                                   margin-top:22.8px;
                                                 ">
                                                 <label for="exampleInputEmail1">&nbsp;</label>
-                                                    <button
+                                                    <button 
                                                     data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> Processing"
                                                     id="trigger-cep" data-target="guardian_postal_code"  style="padding: 3.8px 15px;" type="button" class="btn btn-primary">Pesquisar endereco</button>
                                                 </div>
@@ -726,8 +726,8 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                             </div>
                                         <?php } ?>
 
-
-
+                                       
+                                       
                                         <?php
                                         if ($sch_setting->guardian_district) { ?>
                                             <div class="col-md-3">
@@ -1188,9 +1188,9 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
 
 <script>
 function callwz(telefone){
-
+	
 	window.open('https://wa.me/55'+telefone);
-
+	
 }
 </script>
 
@@ -1309,13 +1309,13 @@ function callwz(telefone){
 
 
 
-
+    
 </script>
 
 <script type='text/javascript'>
 $(document).ready(function(){
 
-
+             
    /*TURMA E PERIODO ---------------------------------------------------------*/
     /*Carrega o combobox de periodos*/
     $.fn.comboBoxPeriodo = function(){
@@ -1325,10 +1325,10 @@ $(document).ready(function(){
             combobox : '#section_id',
             selected: '<?php echo set_value('section_id',$student['section_id']); ?>',
             callback: {function(){} }
-        });
-
+        }); 
+       
     };
-
+    
     /*Verificar a turma com base na data de nascimento*/
     $.fn.carregarComboBoxTurmasDisponiveis = function(dataNascimento){
         $(this).comboBox({
@@ -1336,15 +1336,15 @@ $(document).ready(function(){
             data: { dataNascimento : dataNascimento },
             combobox : '#class_id',
             selected: '<?php echo set_value('class_id',$student['class_id']); ?>',
-            callback: function(){
-                $(this).comboBoxPeriodo();
-            }
-        });
+            callback: function(){ 
+                $(this).comboBoxPeriodo(); 
+            } 
+        });     
     };
     $(this).carregarComboBoxTurmasDisponiveis('<?php echo set_value('dob',$dob->format('d/m/Y')); ?>');
-
-
-    $('#dob').mask('99/99/9999');
+    
+  
+    $('#dob').mask('99/99/9999');    
         let typingTimer;                //timer identifier
         let doneTypingInterval = 1000;  //time in ms (5 seconds)
         let myInput = document.getElementById('dob');
@@ -1359,7 +1359,7 @@ $(document).ready(function(){
             }
         });
 
-
+    
     /*TURMA E PERIODO ---------------------------------------------------------*/
 
 });

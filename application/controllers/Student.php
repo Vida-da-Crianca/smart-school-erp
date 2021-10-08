@@ -12,7 +12,7 @@ class Student extends Admin_Controller
     public function __construct()
     {
         parent::__construct();
-
+        
         $this->config->load('app-config');
         $this->load->library('smsgateway');
         $this->load->library('mailsmsconf');
@@ -106,7 +106,7 @@ class Student extends Admin_Controller
 
         $data['listOfClassId'] = $this->input->post('class_id_option') ? $this->input->post('class_id_option') : [];
         $data['class_id_option'] = $this->input->post('class_id_option') ? $this->input->post('class_id_option') : [];
-
+      
         if ($this->input->server('REQUEST_METHOD') == "GET") {
             $this->load->view('layout/header', $data);
             $this->load->view('student/studentReport', $data);
@@ -114,9 +114,9 @@ class Student extends Admin_Controller
         } else {
             $this->form_validation->set_rules('class_id_option[]', $this->lang->line('class'), 'trim|required|xss_clean');
 
-
+            
             if ($this->form_validation->run() == false) {
-
+            
                 $this->load->view('layout/header', $data);
                 $this->load->view('student/studentReport', $data);
                 $this->load->view('layout/footer', $data);
@@ -127,9 +127,9 @@ class Student extends Admin_Controller
                 $gender      = $this->input->post('gender');
                 $rte         = $this->input->post('rte');
                 $search      = $this->input->post('search');
-
+               
                 if (isset($search)) {
-
+                  
                     if ($search == 'search_filter') {
                         $resultlist         = $this->student_model->searchByClassSectionCategoryGenderRte($class, $section, $category_id, $gender, $rte);
                         $data['resultlist'] = $resultlist;
@@ -252,11 +252,11 @@ class Student extends Admin_Controller
         redirect('student/view/' . $student_id);
     }
 
-    public function create()
+   /* public function create()
     {
-
-
-
+        
+        
+       
         if (!$this->rbac->hasPrivilege('student', 'can_add')) {
             access_denied();
         }
@@ -362,7 +362,7 @@ class Student extends Admin_Controller
             if (empty($hostel_room_id)) {
                 $hostel_room_id = 0;
             }
-
+            
             $dob = $this->tools->formatarData($this->input->post('dob'),'br','us');
 
             $data_insert = array(
@@ -390,14 +390,14 @@ class Student extends Admin_Controller
                 'guardian_name'       => $this->input->post('guardian_name'),
                 'guardian_relation'   => $this->input->post('guardian_relation'),
                 'guardian_phone'      => $this->input->post('guardian_phone'),
-
+				
 				'guardian_postal_code'      => only_numeric($this->input->post('guardian_postal_code')),
                 'guardian_address'    => $this->input->post('guardian_address'),
                 'guardian_address_number'    => $this->input->post('guardian_address_number'),
-				'guardian_district'    => $this->input->post('guardian_district'),
-				'guardian_city'    => $this->input->post('guardian_city'),
+				'guardian_district'    => $this->input->post('guardian_district'), 
+				'guardian_city'    => $this->input->post('guardian_city'), 
 				'guardian_state'    => $this->input->post('guardian_state'),
-
+				
                 'vehroute_id'         => $vehroute_id,
                 'hostel_room_id'      => $hostel_room_id,
                 'note'                => $this->input->post('note'),
@@ -490,13 +490,13 @@ class Student extends Admin_Controller
 
                 $data_insert['father_name'] = $this->input->post('father_name');
             }
-
-
+			
+			
 			if (isset($father_name)) {
 
                 $data_insert['father_name'] = $this->input->post('father_name');
             }
-
+			
 
             if (isset($father_phone)) {
 
@@ -720,8 +720,621 @@ class Student extends Admin_Controller
                 $this->load->view('layout/footer', $data);
             }
         }
+    }*/
+
+    public function create()
+    {
+        if (!$this->rbac->hasPrivilege('student', 'can_add')) {
+            access_denied();
+        }
+        
+          $session  = $this->setting_model->getCurrentSession();
+          $action =  $this->input->post('action');
+          
+         
+        
+          if($this->checkAjaxSubmit()){
+            
+            try{
+                
+                $this->modelTransStart();
+                
+                $this->config->set_item('language', 'Portugues_Brazil'); 
+                
+                $id = (int) $this->input->post('id');
+                
+                $this->form_validation->set_rules('firstname', 'Nome Completo', 'trim|required|xss_clean');
+                $this->form_validation->set_rules('guardian_is', $this->lang->line('guardian'), 'trim|required|xss_clean');
+                $this->form_validation->set_rules('gender', 'Sexo', 'trim|required|xss_clean');
+                $this->form_validation->set_rules('dob', 'Data de Nascimento', 'trim|required|xss_clean');
+                $this->form_validation->set_rules('class_id', 'Turma', 'trim|required|xss_clean');
+                $this->form_validation->set_rules('section_id', 'Período', 'trim|required|xss_clean');
+
+                $this->form_validation->set_rules('guardian_is', 'Responsável Financeiro', 'trim|required|xss_clean');
+           
+                $guardian_is = trim($this->input->post('guardian_is'));
+            
+                if($guardian_is == 'father'){
+                    $this->form_validation->set_rules('father_name', 'Nome do Pai', 'trim|required|xss_clean');
+                    $this->form_validation->set_rules('father_phone', 'Telefone do Pai', 'trim|required|xss_clean|min_length[13]');
+                }
+                if($guardian_is == 'mother'){
+                    $this->form_validation->set_rules('mother_name', 'Nome da Mãe', 'trim|required|xss_clean');
+                    $this->form_validation->set_rules('mother_phone', 'Telefone da Mãe', 'trim|required|xss_clean');
+                }
+                
+                $this->form_validation->set_rules('guardian_relation', 'Relação com o Aluno', 'trim|required|xss_clean');
+                $this->form_validation->set_rules('guardian_name', 'Nome do Responsável Financeiro', 'trim|required|xss_clean');
+                $this->form_validation->set_rules('guardian_document', 'CPF do Responsável ', 'trim|required|xss_clean|exact_length[14]');
+                $this->form_validation->set_rules('guardian_phone', 'Telefone do Responsável', 'trim|required|xss_clean|min_length[13]');
+                $this->form_validation->set_rules('guardian_email', 'Email do Responsável', 'trim|required|xss_clean|valid_email');
+
+
+                $this->form_validation->set_rules('guardian_postal_code', 'CEP', 'trim|required|xss_clean');
+                $this->form_validation->set_rules('guardian_address_number', 'nº', 'trim|required|xss_clean');
+                $this->form_validation->set_rules('guardian_address', 'Endereço', 'trim|required|xss_clean');
+                $this->form_validation->set_rules('guardian_district', 'Bairro', 'trim|required|xss_clean');
+                $this->form_validation->set_rules('guardian_state', 'UF', 'trim|required|xss_clean');
+                $this->form_validation->set_rules('guardian_city', 'Cidade', 'trim|required|xss_clean');
+                
+                 $this->form_validation->set_rules(
+                    'roll_no',
+                    'RA',
+                    array(
+                        'trim',
+                        array('check_exists', array($this->student_model, 'valid_student_roll')),
+                    )
+                );
+                 
+                  $custom_fields              = $this->customfield_model->getByBelong('students');
+
+                foreach ($custom_fields as $custom_fields_key => $custom_fields_value) {
+                    if ($custom_fields_value['validation']) {
+                        $custom_fields_id   = $custom_fields_value['id'];
+                        $custom_fields_name = $custom_fields_value['name'];
+                        $this->form_validation->set_rules("custom_fields[students][" . $custom_fields_id . "]", $custom_fields_name, 'trim|required');
+                    }
+                }
+                 
+                $documentos = [
+                      'certidao_nascimento'=>'Certidão de Nascimento',
+                      'carteira_vacinacao'=>'Carteira de Vacinação',
+                      'cnh_responsavel'=>'CNH do Responsável',
+                      'comprovante_residencia'=>'Comprovante de Residência',
+                ];
+                 
+                $this->form_validation->set_rules('image', 'Foto do Aluno', 'trim|required|xss_clean');
+                foreach($documentos as $campo => $label){
+                  $this->form_validation->set_rules($campo, $label, 'trim|required|xss_clean');
+                }
+                
+                $this->checkFormValidationErrors();
+                
+                
+                if($guardian_is == 'other'){
+                    $father_name = trim($this->input->post('father_name'));
+                    $mother_name = trim($this->input->post('mother_name'));
+                    if(empty($father_name) && empty($mother_name)){
+                        throw new Exception('Informe o Nome do Pai ou o Nome da Mãe');                      
+                    }
+                }
+                
+                //Validar uploads
+                $dir = FCPATH.'pre_upload/';    
+               // if($ok){
+                     if(!file_exists($dir.$this->input->post('image'))){
+                            throw new Exception('Arquivo de Foto do Aluno não encontrado! Faça o upload novamente.');
+                     }
+                        
+                    foreach($documentos as $campo => $label){
+                        if(!file_exists($dir.$this->input->post($campo))){
+                            throw new Exception('Arquivo: ['.$label.'] não encontrado! Faça o upload novamente.');
+                        }
+                    }
+               // }
+                
+                    
+                $custom_field_post  = $this->input->post("custom_fields[students]");
+                $custom_value_array = array();
+                if (!empty($custom_field_post)) {
+
+                    foreach ($custom_field_post as $key => $value) {
+                        $check_field_type = $this->input->post("custom_fields[students][" . $key . "]");
+                        $field_value      = is_array($check_field_type) ? implode(",", $check_field_type) : $check_field_type;
+                        $array_custom     = array(
+                            'belong_table_id' => $action == 'add' ? 0 : $id,
+                            'custom_field_id' => $key,
+                            'field_value'     => $field_value,
+                        );
+                        $custom_value_array[] = $array_custom;
+                    }
+                }
+
+                
+                
+                $class_id   = (int) $this->input->post('class_id');
+                $section_id = (int) $this->input->post('section_id');                
+                $fees_discount = 0;//$this->input->post('fees_discount');                
+                $vehroute_id    = $this->input->post('vehroute_id');
+                $hostel_room_id = $this->input->post('hostel_room_id');
+                if (empty($vehroute_id)) {$vehroute_id = 0;}
+                if (empty($hostel_room_id)) {$hostel_room_id = 0;}
+
+                $dob = $this->tools->formatarData($this->input->post('dob'),'br','us');
+                $admission_date = $this->tools->formatarData($this->input->post('admission_date'),'br','us');
+
+
+                $full_name = $this->input->post('firstname');
+                $name_parts = explode(' ', $full_name);
+                $fistname = ucfirst($name_parts[0]);
+                $lastname = '';
+                if(count($name_parts)>1){
+                    $index = 0;
+                    foreach ($name_parts as $partName){
+                        if($index++>0){
+                            $lastname .= ucfirst($partName).' ';
+                        }
+                    }
+                }
+
+                //Dados a serem cadastrados
+                $data_insert = array(
+                    'firstname'           => $fistname,
+                    'lastname'           => $lastname,
+                    'rte'                 => $this->input->post('rte'),
+                    'state'               => $this->input->post('state'),
+                    'city'                => $this->input->post('city'),
+                    'guardian_is'         => $this->input->post('guardian_is'),
+                    'pincode'             => $this->input->post('pincode'),
+                    'cast'                => $this->input->post('cast'),
+                    'previous_school'     => $this->input->post('previous_school'),
+                    'dob'                 => $dob,//date('Y-m-d', $this->customlib->datetostrtotime($this->input->post('dob'))),
+                    'current_address'     => $this->input->post('current_address'),
+                    'permanent_address'   => $this->input->post('permanent_address'),
+
+                    'adhar_no'            => $this->input->post('adhar_no'),
+                    'samagra_id'          => $this->input->post('samagra_id'),
+                    'bank_account_no'     => $this->input->post('bank_account_no'),
+                    'bank_name'           => $this->input->post('bank_name'),
+                    'ifsc_code'           => $this->input->post('ifsc_code'),
+                    'guardian_occupation' => $this->input->post('guardian_occupation'),
+                    'guardian_email'      => $this->input->post('guardian_email'),
+                    'guardian_document'      => only_numeric($this->input->post('guardian_document')),
+                    'gender'              => $this->input->post('gender'),
+                    'guardian_name'       => $this->input->post('guardian_name'),
+                    'guardian_relation'   => $this->input->post('guardian_relation'),
+                    'guardian_phone'      => $this->input->post('guardian_phone'),
+
+                    'guardian_postal_code'      => only_numeric($this->input->post('guardian_postal_code')),
+                    'guardian_address'    => $this->input->post('guardian_address'),
+                    'guardian_address_number'    => $this->input->post('guardian_address_number'),
+                    'guardian_district'    => $this->input->post('guardian_district'), 
+                    'guardian_city'    => $this->input->post('guardian_city'), 
+                    'guardian_state'    => $this->input->post('guardian_state'),
+
+                    'vehroute_id'         => $vehroute_id,
+                    'hostel_room_id'      => $hostel_room_id,
+                    'note'                => $this->input->post('note'),
+                    'is_active'           => 'yes',
+
+
+                    'admission_date' => $admission_date,
+
+                    'roll_no' => $this->input->post('roll_no'),
+                    'father_name' => $this->input->post('father_name'),
+                    'father_phone' => $this->input->post('father_phone'),
+                    'father_occupation' => $this->input->post('father_occupation'),
+                    'mother_name' => $this->input->post('mother_name'),
+                    'mother_phone' => $this->input->post('mother_phone'),
+                    'mother_occupation' => $this->input->post('mother_occupation'),
+                    'image' => 'uploads/student_images/'.$this->input->post('image')
+                );
+
+                $insert   = true;
+                $data_setting                      = array();
+                $data_setting['id']                = $this->sch_setting_detail->id;
+                $data_setting['adm_auto_insert']   = $this->sch_setting_detail->adm_auto_insert;
+                $data_setting['adm_update_status'] = $this->sch_setting_detail->adm_update_status;
+                $admission_no                      = 0;
+
+                if ($this->sch_setting_detail->adm_auto_insert && $action == 'add') {
+                    if ($this->sch_setting_detail->adm_update_status) {
+
+                        $admission_no = $this->sch_setting_detail->adm_prefix . $this->sch_setting_detail->adm_start_from;
+
+                        $last_student         = $this->student_model->lastRecord();
+                        $last_admission_digit = str_replace($this->sch_setting_detail->adm_prefix, "", $last_student->admission_no);
+
+                        $admission_no                = $this->sch_setting_detail->adm_prefix . sprintf("%0" . $this->sch_setting_detail->adm_no_digit . "d", $last_admission_digit + 1);
+                        $data_insert['admission_no'] = $admission_no;
+                    } else {
+                        $admission_no                = $this->sch_setting_detail->adm_prefix . $this->sch_setting_detail->adm_start_from;
+                        $data_insert['admission_no'] = $admission_no;
+                    }
+
+                    $admission_no_exists = $this->student_model->check_adm_exists($admission_no);
+                    if ($admission_no_exists) {
+                        $insert = false;
+                    }
+                } else {
+                    $data_insert['admission_no'] = $this->input->post('admission_no');
+                }
+
+                //Cadastrar aluno
+                if (!$insert) {
+                    throw new Exception($this->lang->line('admission_no') . ' ' . $admission_no . ' ' . $this->lang->line('already_exists'));
+                }
+                
+                if($action == 'add'){
+                    $insert_id = $this->student_model->add($data_insert, $data_setting);
+                    if (!empty($custom_value_array)) {
+                        $this->customfield_model->insertRecord($custom_value_array, $insert_id);
+                    }
+                    
+                }else{
+                    $data_insert['id'] = $id;
+                    $this->student_model->add($data_insert);
+                    $insert_id = $id;
+                    
+                    $this->customfield_model->updateRecord($custom_value_array, $id, 'students');
+                }                
+                
+                /*Matricular aluno*/
+                $data_new = array(
+                    'student_id'    => $insert_id,
+                    'class_id'      => $class_id,
+                    'section_id'    => $section_id,
+                    'session_id'    => $session,
+                    'fees_discount' => $fees_discount,
+                );         
+                $this->student_model->add_student_session($data_new);
+                
+                if($action == 'add'){
+                        $user_password = $this->role->get_random_password($chars_min = 6, $chars_max = 6, $use_upper_case = false, $include_numbers = true, $include_special_chars = false);
+
+                        $sibling_id         = $this->input->post('sibling_id');
+                        $data_student_login = array(
+                            'username' => $this->student_login_prefix . $insert_id,
+                            'password' => $user_password,
+                            'user_id'  => $insert_id,
+                            'role'     => 'student',
+                        );
+
+                        $this->user_model->add($data_student_login);
+
+
+                        if ($sibling_id > 0) {
+                            $student_sibling = $this->student_model->get($sibling_id);
+                            $update_student  = array(
+                                'id'        => $insert_id,
+                                'parent_id' => $student_sibling['parent_id'],
+                            );
+                            $student_sibling = $this->student_model->add($update_student);
+                        } else {
+                            $parent_password   = $this->role->get_random_password($chars_min = 6, $chars_max = 6, $use_upper_case = false, $include_numbers = true, $include_special_chars = false);
+                            $temp              = $insert_id;
+                            $data_parent_login = array(
+                                'username' => $this->parent_login_prefix . $insert_id,
+                                'password' => $parent_password,
+                                'user_id'  => 0,
+                                'role'     => 'parent',
+                                'childs'   => $temp,
+                            );
+                            $ins_parent_id  = $this->user_model->add($data_parent_login);
+                            $update_student = array(
+                                'id'        => $insert_id,
+                                'parent_id' => $ins_parent_id,
+                            );
+                            $this->student_model->add($update_student);
+                        }
+                }
+                 $uploaddir = FCPATH.'uploads/student_documents/' . $insert_id . '/';
+                if($action == 'add'){
+                    //copiar os documentos do preupload
+                    //e gravar no banco
+                   
+                    if (!is_dir($uploaddir) && !mkdir($uploaddir)) {
+                        throw new Exception("Erro ao criar diretório de documentos: $uploaddir");
+                    }
+
+                    foreach($documentos as $campo => $label){
+
+                        copy($dir.$this->input->post($campo), $uploaddir.$this->input->post($campo));
+                        $data_img = array('student_id' => $insert_id, 'title' => $label, 'doc' => $this->input->post($campo));
+                        $this->student_model->adddoc($data_img);
+                    }
+
+                    //Copiar foto
+                    copy(FCPATH.'pre_upload/'.$this->input->post('image'), FCPATH.'uploads/student_images/'.$this->input->post('image'));
+                
+                    
+                    //Documentos extras...
+                    for($i = 1; $i <= 4; $i++){
+                        $doc_titulo = trim($this->input->post('doc_titulo_'.$i));
+                        $doc_arquivo = trim($this->input->post('doc_arquivo_'.$i));
+                        if(!empty($doc_arquivo)){
+                            
+                            
+                            copy($dir.$doc_arquivo, $uploaddir.$doc_arquivo);
+                            $data_img = array('student_id' => $insert_id, 'title' => (!empty($doc_titulo) ? $doc_titulo : 'Arquivo '.$i), 'doc' => $doc_arquivo,'numero'=>$i);
+                            $this->student_model->adddoc($data_img);
+                            
+                            
+                            
+                        }
+                    }
+                    
+                    
+                }else{
+                    
+                    //Trocar documentos enviados, se teve alteracao
+                    
+                    $documentosEnviados = $this->db->where('student_id',(int)$id)->get('student_doc')->result();
+                   
+                    foreach($documentos as $campo => $label){
+                        
+                        $doc = $this->input->post($campo);
+                        
+                        foreach ($documentosEnviados as $docEnviado){
+                            if(mb_strtolower($docEnviado->title,'UTF-8') == mb_strtolower($label,'UTF-8')){
+                                if($docEnviado->doc != $doc){
+                                    
+                                    //Trocar o doc enviado
+                                    copy($dir.$doc, $uploaddir.$doc);
+                                    
+                                    //Update na base
+                                    $this->db->where('id',(int)$docEnviado->id);
+                                    $this->db->update('student_doc',['doc'=>$doc]);
+                       
+                                    
+                                }
+                            }
+                        }//foreach ($documentosEnviados as $docEnviado){
+                        
+                    }// foreach($documentos as $campo => $label){
+                    
+                    
+                    //Documentos extras enviados
+                    $documentosExtrasEnviados = [];
+                    foreach($documentosEnviados as $docEnviado){
+                        if((int) $docEnviado->numero > 0){
+                            $documentosExtrasEnviados[(int) $docEnviado->numero] = ['doc'=>mb_strtolower($docEnviado->doc,'UTF-8'),'id'=>$docEnviado->id];
+                        }
+                    }
+                    
+                  
+                    for($i = 1; $i <= 4; $i++){
+                        
+                        $doc_titulo = trim($this->input->post('doc_titulo_'.$i));
+                        $doc_arquivo = trim($this->input->post('doc_arquivo_'.$i));
+                        
+                        if(!empty($doc_arquivo)){
+                            
+                            if(mb_strtolower($doc_arquivo,'UTF-8') != $documentosExtrasEnviados[(int) $i]['doc'])
+                            {
+                                 //Trocar o doc enviado
+                                 copy($dir.$doc_arquivo, $uploaddir.$doc_arquivo);
+                                    
+                                 //Update na base
+                                 $this->db->where('id',(int)$documentosExtrasEnviados[(int) $i]['id']);
+                                 $this->db->update('student_doc',[
+                                     'doc'=>$doc,
+                                     'title' => (!empty($doc_titulo) ? $doc_titulo : 'Arquivo '.$i)
+                                 ]);
+                            }                            
+                            
+                        }else{
+                            //quando NAO enviou um arquivo extra.... removemos ele da relacao de docs do aluno
+                            $res = $this->db->where('student_id',(int)$id)->where('numero',$i)->get('student_doc')->result();
+                            if(count($res)>0){
+                                $this->db->where('id',$res[0]->id);
+                                $this->db->delete('student_doc');
+                            }
+                        }
+                        
+                    }
+                    
+                                        
+                    
+                    //A foto foi trocada?
+                    $imageAtual = $this->db->select('image')->from('students')->where('id',$id)->get()->result();
+                    $imageAtual = count($imageAtual)>0?$imageAtual[0]->image:'';
+                    if($imageAtual != $this->input->post('image')){
+                        copy(FCPATH.'pre_upload/'.$this->input->post('image'), FCPATH.'uploads/student_images/'.$this->input->post('image'));
+                    }
+                    
+                }
+                
+                
+                if($action == 'add'){
+
+                    //Enviar emails...
+                    $sender_details = array('student_id' => $insert_id, 'contact_no' => $this->input->post('guardian_phone'), 'email' => $this->input->post('guardian_email'));
+                    $this->mailsmsconf->mailsms('student_admission', $sender_details);
+
+                    $student_login_detail = array('id' => $insert_id, 'credential_for' => 'student', 'username' => $this->student_login_prefix . $insert_id, 'password' => $user_password, 'contact_no' => $this->input->post('mobileno'), 'email' => $this->input->post('email'));
+                    $this->mailsmsconf->mailsms('login_credential', $student_login_detail);
+
+                    if ($sibling_id > 0) {
+                    } else {
+                        $parent_login_detail = array('id' => $insert_id, 'credential_for' => 'parent', 'username' => $this->parent_login_prefix . $insert_id, 'password' => $parent_password, 'contact_no' => $this->input->post('guardian_phone'), 'email' => $this->input->post('guardian_email'));
+                        $this->mailsmsconf->mailsms('login_credential', $parent_login_detail);
+                    }
+                }
+
+                $this->session->set_flashdata('msg', '<div class="alert alert-success">' . $this->lang->line('success_message') . '</div>');
+                   // redirect('student/create');
+                        
+                
+                
+                
+                $this->modelTransEnd();
+                  
+                $this->resp_status  =true;
+                $this->resp_msg = '';
+                
+            } catch (\Exception $e){
+                $this->resp_status  =false;
+                $this->resp_msg = $e->getMessage();
+            }
+            
+            $this->showJSONResp();
+            
+            
+        }
+        
+        
+        //Dados para a view
+        $this->session->set_userdata('top_menu', 'Student Information');
+        $this->session->set_userdata('sub_menu', 'student/create');
+        $data['genderList'] = $this->customlib->getGender();
+        $data['sch_setting']        = $this->sch_setting_detail;
+        $data['title']              = 'Matricular Aluno';
+        $data['title_list']         = 'Recently Added Student';
+        $data['adm_auto_insert']    = $this->sch_setting_detail->adm_auto_insert;
+        $data["student_categorize"] = 'class';
+        
+        $obj = new Student_model();
+        
+        $data['obj'] = $obj;
+        $obj->dob = date('Y-m-d');
+        $obj->admission_date = date('Y-m-d');
+        $data['action'] = 'add';
+        
+        $data['documentosEnviados'] = [];
+        
+        //$data['error_message'] = $this->lang->line('admission_no') . ' ' . $admission_no . ' ' . $this->lang->line('already_exists');
+        $this->load->view('layout/header', $data);
+        $this->load->view('student/studentCreate', $data);
+        $this->load->view('layout/footer', $data);
+        
+    }
+    
+    public function _uploadImage(){
+         try
+            {
+                //$this->modelTransStart();
+                
+                $dir = FCPATH.'/uploads/student_images/';
+                throw new Exception($dir);
+                if(!is_dir($dir)){
+                    //mkdir($dir);
+                }
+                
+                $img = isset($_FILES['arquivo']) ? $_FILES['arquivo'] : null;                
+                
+                if($img && !empty($img['name'])){
+                    
+                    $ext = pathinfo($img['name'], PATHINFO_EXTENSION);
+                    $imagemNome = uniqid().uniqid().uniqid().uniqid().'.'.$ext;
+                    
+                    $config = array(
+                        'upload_path'   => $dir,
+                        'allowed_types' => 'png|jpg|jpeg',
+                        'max_size'      => 6048,//2MB
+                        //'min_width'     => 100,
+                       // 'min_height'    => 100,
+                       // 'max_width'     => 2000,
+                       // 'max_height'    => 2000,
+                        'overwrite'     => true,
+                        'encrypt_name'  => false,
+                        'file_name'     => $imagemNome
+                    );   
+                    
+                    $this->load->library('upload', $config);
+                    
+                    if (!$this->upload->do_upload('arquivo')){
+                        throw new Exception('Erro ao Enviar Imagem: '.  $this->upload->display_errors('',''));
+                    }
+                    
+                    $dadosUpload = $this->upload->data();
+                    
+                    $fixRatioW = $this->_post('fixRatioW');
+                    
+                    if($fixRatioW == 'S'){//largura deve ser maior que altura
+                        if((int) $dadosUpload['image_width'] <= (int) $dadosUpload['image_height']){
+                            throw new Exception('A Largura da Imagem Deve Ser Maior que a Altura!');
+                        }
+                    }
+                    
+                    if((int) $this->_post('min_w') > 0){
+                        if((int) $dadosUpload['image_width'] < (int) $this->_post('min_w')){
+                            throw new Exception('A Imagem Deve Ter No Mínimo: '.(int) $this->_post('min_w').'px');
+                        }
+                    }
+                    
+                    $file_ext = trim($this->_post('file_ext'));
+                    if(!empty($file_ext) && $dadosUpload['image_type'] != trim($this->_post('file_ext'))){
+                        throw new Exception('Formato da Imagem Não Permitido!');
+                    }
+                    
+                    
+                }else{
+                    throw new Exception('Defina a Imagem');
+                }
+                
+                
+               // $this->modelTransEnd();
+                
+                $resp_status = true;
+                $resp_msg = array('ext'=>$ext, 'name'=>$imagemNome,'base64'=> base64_encode(file_get_contents($dir.$imagemNome)));
+                
+            } catch (Exception $ex) {
+                $resp_status = false;
+                $resp_msg = $ex->getMessage();
+            }
+            
+            echo json_encode(array('status' => $this->resp_status, 'msg' => $this->resp_msg));
+            exit;
     }
 
+    
+
+    private function _validarUploadDocumentoAluno($arquivo,$campo,$image_validate){
+        $document_validate = true;
+        $file_type         = $_FILES[$arquivo]['type'];
+        $file_size         = $_FILES[$arquivo]["size"];
+        $file_name         = $_FILES[$arquivo]["name"];
+        $allowed_extension = $image_validate['allowed_extension'];
+        $ext               = pathinfo($file_name, PATHINFO_EXTENSION);
+        $allowed_mime_type = $image_validate['allowed_mime_type'];
+        if ($files = filesize($_FILES[$arquivo]['tmp_name'])) {
+
+            if (!in_array($file_type, $allowed_mime_type)) {
+                throw new Exception('O tipo do arquivo de '.$campo.' não é válido! Selecione outro arquivo.');
+                $document_validate           = false;
+            }
+
+            if (!in_array($ext, $allowed_extension) || !in_array($file_type, $allowed_mime_type)) {
+                throw new Exception('Extensão do arquivo de '.$campo.' não permitida.');
+                $document_validate           = false;
+            }
+            if ($file_size > $image_validate['upload_size']) {
+                throw new Exception('O arquivo de '.$campo.' deve ser menor que:' . number_format($image_validate['upload_size'] / 1048576, 2) . " MB");
+                $document_validate           = false;
+            }
+        }
+        return $document_validate;
+    }
+    
+    private function _uploadDocumentoAluno($arquivo,$titulo,$insert_id){
+        if (isset($_FILES[$arquivo]) && !empty($_FILES[$arquivo]['name'])) {
+            $uploaddir = './uploads/admission/' . $insert_id . '/';
+            if (!is_dir($uploaddir) && !mkdir($uploaddir)) {
+                die("Error creating folder $uploaddir");
+            }           
+            $file_name   = $_FILES[$arquivo]['name'];
+            $exp         = explode(' ', $file_name);
+            $imp         = implode('_', $exp);
+            $img_name    = $uploaddir . uniqid().strtr($imp,'àáâãäçèéêëìíîïñòóôõöùúûüýÿÀÁÂÃÄÇÈÉÊËÌÍÎÏÑÒÓÔÕÖÙÚÛÜÝ','aaaaaceeeeiiiinooooouuuuyyAAAAACEEEEIIIINOOOOOUUUUY');
+            return move_uploaded_file($_FILES[$arquivo]["tmp_name"], $img_name);
+            //$data_img = array('student_id' => $insert_id, 'title' => $first_title, 'doc' => $imp);
+            //return $this->student_model->adddoc($data_img);
+        }
+        return false;
+    }
+
+    
     public function create_doc()
     {
 
@@ -1170,7 +1783,7 @@ class Student extends Admin_Controller
         }
     }
 
-    public function edit($id)
+   /* public function edit($id)
     {
         if (!$this->rbac->hasPrivilege('student', 'can_edit')) {
             access_denied();
@@ -1294,7 +1907,7 @@ class Student extends Admin_Controller
             }
 
             $dob = $this->tools->formatarData($this->input->post('dob'),'br','us');
-
+            
             $data = array(
                 'id'                  	 => $id,
                 'firstname'           	 => $this->input->post('firstname'),
@@ -1525,6 +2138,65 @@ class Student extends Admin_Controller
             redirect('student/search');
         }
     }
+
+    */
+    
+    public function edit($id){
+         if (!$this->rbac->hasPrivilege('student', 'can_edit')) {
+            access_denied();
+        }
+        $data['title']   = 'Edit Student';
+        $data['id']      = $id;
+        $student         = $this->student_model->get($id);
+        $genderList      = $this->customlib->getGender();
+        $data['obj'] = (object) $student;
+        $data['action'] = 'update';
+
+        $data['adm_auto_insert'] = $this->sch_setting_detail->adm_auto_insert;
+        $data['genderList']      = $genderList;
+        $session                 = $this->setting_model->getCurrentSession();
+        $vehroute_result         = $this->vehroute_model->get();
+        $data['vehroutelist']    = $vehroute_result;
+        $class                   = $this->class_model->get();
+        $setting_result          = $this->setting_model->get();
+
+        $data["student_categorize"] = 'class';
+        $data['classlist']          = $class;
+        $category                   = $this->category_model->get();
+        $data['categorylist']       = $category;
+        $hostelList                 = $this->hostel_model->get();
+        $data['hostelList']         = $hostelList;
+        $houses                     = $this->student_model->gethouselist();
+        $data['houses']             = $houses;
+        $data["bloodgroup"]         = $this->blood_group;
+        $siblings                   = $this->student_model->getMySiblings($student['parent_id'], $student['id']);
+        $data['siblings']           = $siblings;
+        $data['siblings_counts']    = count($siblings);
+        $custom_fields              = $this->customfield_model->getByBelong('students');
+        $data['sch_setting']        = $this->sch_setting_detail;
+        
+        //carregar os documentos enviados desse aluno
+        $res = $this->db->where('student_id',(int)$id)->get('student_doc')->result();
+        $documentosEnviados = [];
+        foreach ($res as $row){
+            $documentosEnviados[$row->title] = $row->doc;
+        }
+        $data['documentosEnviados'] = $documentosEnviados;
+        
+        $documentosEnviadosExtraEnviados = [];
+        foreach ($res as $row){
+            if((int)$row->numero > 0){
+                $documentosEnviadosExtraEnviados[(int)$row->numero] = $row;
+            }
+        }
+        $data['documentosEnviadosExtraEnviados'] = $documentosEnviadosExtraEnviados;
+        
+         $this->load->view('layout/header', $data);
+         $this->load->view('student/studentCreate', $data);
+        $this->load->view('layout/footer', $data);
+        
+    }
+
 
     public function bulkdelete()
     {

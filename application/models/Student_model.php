@@ -7,6 +7,78 @@ if (!defined('BASEPATH')) {
 class Student_model extends MY_Model
 {
 
+    var $id;
+    var $parent_id;
+    var $admission_no;
+    var $roll_no;
+    var $admission_date;
+    var $firstname;
+    var $lastname;
+    var $rte;
+    var $image;
+    var $mobileno;
+    var $email;
+    var $state;
+    var $city;
+    var $pincode;
+    var $religion;
+    var $cast;
+    var $dob;
+    var $gender;
+    var $current_address;
+    var $permanent_address;
+    var $category_id;
+    var $route_id;
+    var $school_house_id;
+    var $blood_group;
+    var $vehroute_id;
+    var $hostel_room_id;
+    var $adhar_no;
+    var $samagra_id;
+    var $bank_account_no;
+    var $bank_name;
+    var $ifsc_code;
+    var $guardian_is;
+    var $father_name;
+    var $father_document;
+    var $father_phone;
+    var $father_occupation;
+    var $mother_name;
+    var $mother_document;
+    var $mother_phone;
+    var $mother_occupation;
+    var $guardian_name;
+    var $guardian_relation;
+    var $guardian_phone;
+    var $guardian_occupation;
+    var $guardian_address;
+    var $guardian_address_number;
+    var $guardian_email;
+    var $guardian_document;
+    var $guardian_state;
+    var $guardian_city;
+    var $guardian_district;
+    var $guardian_postal_code;
+    var $father_pic;
+    var $mother_pic;
+    var $guardian_pic;
+    var $is_active;
+    var $previous_school;
+    var $height;
+    var $weight;
+    var $measurement_date;
+    var $dis_reason;
+    var $note;
+    var $dis_note;
+    var $app_key;
+    var $parent_app_key;
+    var $disable_at;
+    var $created_at;
+    var $updated_at;
+    
+    
+    
+    
     public function __construct()
     {
         parent::__construct();
@@ -171,7 +243,8 @@ class Student_model extends MY_Model
              students.guardian_city,
              students.guardian_postal_code,
              students.is_active ,
-             students.created_at ,students.updated_at,students.father_name,students.father_phone,students.blood_group,students.school_house_id,students.father_occupation,students.mother_name,students.mother_phone,students.mother_occupation,students.guardian_occupation,students.gender,students.guardian_is,students.rte,students.guardian_email, users.username,users.password,students.dis_reason,students.dis_note,students.app_key,students.parent_app_key')->from('students');
+             students.created_at ,students.updated_at,students.father_name,students.father_phone,students.blood_group,students.school_house_id,students.father_occupation,students.mother_name,students.mother_phone,students.mother_occupation,students.guardian_occupation,students.gender,students.guardian_is,students.rte,students.guardian_email, users.username,users.password,students.dis_reason,students.dis_note,students.app_key,students.parent_app_key')
+                ->from('students');
         $this->db->join('student_session', 'student_session.student_id = students.id');
         $this->db->join('classes', 'student_session.class_id = classes.id');
         $this->db->join('sections', 'sections.id = student_session.section_id');
@@ -503,7 +576,7 @@ class Student_model extends MY_Model
         if ($rte != null) {
             $this->db->where('students.rte', $rte);
         }
-         $this->db->order_by('classes.id','ASC');
+        $this->db->order_by('classes.id','ASC');
         $this->db->order_by('sections.id','ASC');
         $this->db->order_by('students.firstname','ASC');
         $query = $this->db->get();

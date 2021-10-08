@@ -52,6 +52,33 @@
                                                 <span class="text-danger"><?php echo form_error('roll_no'); ?></span>
                                             </div>
                                         </div>
+                                        <div class="col-md-3">
+                                            <div class="form-group">
+                                                <label for="exampleInputEmail1"><?php echo $this->lang->line('class'); ?></label><small class="req"> *</small>
+                                                <select  id="class_id" name="class_id" class="form-control" >
+                                                    <option value=""><?php echo $this->lang->line('select'); ?></option>
+                                                    <?php
+                                                    foreach ($classlist as $class) {
+                                                        ?>
+                                                        <option value="<?php echo $class['id'] ?>" <?php
+                                                        if ($student['class_id'] == $class['id']) {
+                                                            echo "selected =selected";
+                                                        }
+                                                        ?>><?php echo $class['class'] ?></option>
+<?php } ?>
+                                                </select>
+                                                <span class="text-danger"><?php echo form_error('class_id'); ?></span>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <div class="form-group">
+                                                <label for="exampleInputEmail1"><?php echo $this->lang->line('section'); ?></label><small class="req"> *</small>
+                                                <select  id="section_id" name="section_id" class="form-control" >
+                                                    <option value=""><?php echo $this->lang->line('select'); ?></option>
+                                                </select>
+                                                <span class="text-danger"><?php echo form_error('section_id'); ?></span>
+                                            </div>
+                                        </div>
                                     </div>
                                     
                                     
@@ -64,9 +91,32 @@
                                             <span class="text-danger"><?php echo form_error('first_name'); ?></span>
                                       
                                         </div> 
-                                        <div class = "col-md-2 col-xs-12 col-sm-2">
+                                        <div class = "col-md-4 col-xs-12 col-sm-4">
                                             <label>Sexo</label><br />
-                                            <select class="form-control" name="gender">
+                                            <input id="firstname" name="firstname" placeholder="" type="text" class="form-control"  value="<?php echo set_value('firstname', $student['firstname']); ?>" />
+                                            <input type="hidden" name="studentid" value="<?php echo $student["id"] ?>">
+                                            <span class="text-danger"><?php echo form_error('first_name'); ?></span>
+                                      
+                                        </div> 
+                                    </div>
+                                    
+                                    
+                                    
+                                    
+
+                                    <div class="row">
+                                        <div class="col-md-3">
+                                            <div class="form-group">
+                                                <label for="exampleInputEmail1"><?php echo $this->lang->line('first_name'); ?></label><small class="req"> *</small>
+                                                     </div>
+                                        </div>
+                                        <div class="col-md-3">
+                                           
+                                        </div>
+                                        <div class="col-md-3">
+                                            <div class="form-group">
+                                                <label for="exampleInputFile"> <?php echo $this->lang->line('gender'); ?> </label><small class="req"> *</small>
+                                                <select class="form-control" name="gender">
                                                     <option value=""><?php echo $this->lang->line('select'); ?></option>
                                                     <?php
                                                     foreach ($genderList as $key => $value) {
@@ -81,44 +131,17 @@
                                                              ?>
                                                 </select>
                                                 <span class="text-danger"><?php echo form_error('gender'); ?></span>
-                                      
-                                        </div> 
-                                        <div class = "col-md-2 col-xs-12 col-sm-2">
-                                            <label>Data de Nascimento</label><br />
-                                            <input id="dob" name="dob" placeholder="" type="text"
-                                                   class="form-control"  
-                                                   value="<?php echo set_value('dob', $this->tools->formatarData($student['dob'],'us','br')); ?>" />
-                                            <span class="text-danger"><?php echo form_error('dob'); ?></span>
+                                            </div>
                                         </div>
-                                        <div class = "col-md-2 col-xs-12 col-sm-2">
-                                            <label>Turma</label><br />
-                                             <select  id="class_id" name="class_id" class="form-control" >
-                                                    <option value=""><?php echo $this->lang->line('select'); ?></option>
-                                                    <?php
-                                                    foreach ($classlist as $class) {
-                                                        ?>
-                                                        <option value="<?php echo $class['id'] ?>" <?php
-                                                        if ($student['class_id'] == $class['id']) {
-                                                            echo "selected =selected";
-                                                        }
-                                                        ?>><?php echo $class['class'] ?></option>
-<?php } ?>
-                                                </select>
-                                                <span class="text-danger"><?php echo form_error('class_id'); ?></span>
-                                        
+                                        <div class="col-md-3">
+                                            <div class="form-group">
+
+                                                <label for="exampleInputEmail1"><?php echo $this->lang->line('date_of_birth'); ?></label><small class="req"> *</small>
+                                                <input id="dob" name="dob" placeholder="" type="text" class="form-control date"  value="<?php echo set_value('dob', $this->customlib->dateformat(($student['dob']))); ?>" readonly="readonly"/>
+                                                <span class="text-danger"><?php echo form_error('dob'); ?></span>
+                                            </div>
                                         </div>
-                                          <div class = "col-md-2 col-xs-12 col-sm-2">
-                                            <label>Período</label><br />
-                                             <select  id="section_id" name="section_id" class="form-control" >
-                                                    <option value=""><?php echo $this->lang->line('select'); ?></option>
-                                                </select>
-                                                <span class="text-danger"><?php echo form_error('section_id'); ?></span>
-                                            
-                                          </div>
                                     </div>
-                                    
-                                  <br />
-                                  
                                     <div class="row">
                                         <div class="col-md-2">
                                             <div class="form-group">
@@ -720,37 +743,33 @@
                                         <label>Foto do Aluno</label><br />
                                         <img src="<?php echo base_url('uploads/admission/').$student["image"]; ?>" style="max-width: 90%;">
                                     </div> 
-                                    <div class="col-md-10 col-xs-12 col-sm-10">
-                                        <div class = "row">
-                                            <div class = "col-md-6 col-xs-12 col-sm-6">
-                                                <input type="hidden" name="carteira_vacinacao" value="<?php echo $student["carteira_vacinacao"]; ?>" />
-                                               <label>Carteira vacinação</label><br />
-                                               <a href="<?php echo base_url('pre_upload/').$student['carteira_vacinacao']; ?>" target="_blank">
-                                                   <?php echo $student['carteira_vacinacao']; ?>
-                                               </a>
-                                           </div> 
-                                            <div class = "col-md-6 col-xs-12 col-sm-6">
-                                                 <input type="hidden" name="certidao_nascimento" value="<?php echo $student["certidao_nascimento"]; ?>" />
-                                               <label>Certidão Nascimento</label><br />
-                                               <a href="<?php echo base_url('pre_upload/').$student['certidao_nascimento']; ?>" target="_blank">
-                                                   <?php echo $student['certidao_nascimento']; ?>
-                                               </a>
-                                           </div> 
-                                            <div class = "col-md-6 col-xs-12 col-sm-6">
-                                                 <input type="hidden" name="comprovante_residencia" value="<?php echo $student["comprovante_residencia"]; ?>" />
-                                               <label>Comp. Residência</label><br />
-                                               <a href="<?php echo base_url('pre_upload/').$student['comprovante_residencia']; ?>" target="_blank">
-                                                   <?php echo $student['comprovante_residencia']; ?>
-                                               </a>
-                                           </div>
-                                            <div class = "col-md-6 col-xs-12 col-sm-6">
-                                                 <input type="hidden" name="cnh_responsavel" value="<?php echo $student["cnh_responsavel"]; ?>" />
-                                               <label>CNH</label><br />
-                                               <a href="<?php echo base_url('pre_upload/').$student['cnh_responsavel']; ?>" target="_blank">
-                                                   <?php echo $student['cnh_responsavel']; ?>
-                                               </a>
-                                           </div>
-                                        </div>
+                                    <div class = "col-md-2 col-xs-12 col-sm-2">
+                                         <input type="hidden" name="carteira_vacinacao" value="<?php echo $student["carteira_vacinacao"]; ?>" />
+                                        <label>Carteira vacinação</label><br />
+                                        <a href="<?php echo base_url('pre_upload/').$student['carteira_vacinacao']; ?>" target="_blank">
+                                            <?php echo $student['carteira_vacinacao']; ?>
+                                        </a>
+                                    </div> 
+                                     <div class = "col-md-3 col-xs-12 col-sm-3">
+                                          <input type="hidden" name="certidao_nascimento" value="<?php echo $student["certidao_nascimento"]; ?>" />
+                                        <label>Certidão Nascimento</label><br />
+                                        <a href="<?php echo base_url('pre_upload/').$student['certidao_nascimento']; ?>" target="_blank">
+                                            <?php echo $student['certidao_nascimento']; ?>
+                                        </a>
+                                    </div> 
+                                     <div class = "col-md-2 col-xs-12 col-sm-2">
+                                          <input type="hidden" name="comprovante_residencia" value="<?php echo $student["comprovante_residencia"]; ?>" />
+                                        <label>Comp. Residência</label><br />
+                                        <a href="<?php echo base_url('pre_upload/').$student['comprovante_residencia']; ?>" target="_blank">
+                                            <?php echo $student['comprovante_residencia']; ?>
+                                        </a>
+                                    </div>
+                                     <div class = "col-md-2 col-xs-12 col-sm-2">
+                                          <input type="hidden" name="cnh_responsavel" value="<?php echo $student["cnh_responsavel"]; ?>" />
+                                        <label>CNH</label><br />
+                                        <a href="<?php echo base_url('pre_upload/').$student['cnh_responsavel']; ?>" target="_blank">
+                                            <?php echo $student['cnh_responsavel']; ?>
+                                        </a>
                                     </div>
                                 </div>
                                 
@@ -794,11 +813,11 @@ function callwz(telefone){
         getHostel(hostel_id, hostel_room_id);
         getSectionByClass(class_id, section_id, 'section_id');
 
-       /* $(document).on('change', '#class_id', function (e) {
+        $(document).on('change', '#class_id', function (e) {
             $('#section_id').html("");
             var class_id = $(this).val();
             getSectionByClass(class_id, 0, 'section_id');
-        });*/
+        });
 
 
 
@@ -965,54 +984,6 @@ function callwz(telefone){
                 }
             });
 
-</script>
-<script type='text/javascript'>
-$(document).ready(function(){
-
-
-    $.fn.comboBoxPeriodo = function(){
-        $(this).comboBox({
-            url : '<?php echo base_url(); ?>welcome/getListaPeriodosPorTurma',
-            data: { class_id : $('#class_id').val() },
-            combobox : '#section_id',
-            selected: '<?php echo $student['section_id']; ?>',
-            callback: {function(){} }
-        }); 
-       
-    };
-
- /*Verificar a turma com base na data de nascimento*/
-    $.fn.carregarComboBoxTurmasDisponiveis = function(dataNascimento){
-        $(this).comboBox({
-            url : '<?php echo base_url(); ?>welcome/getListaTurmasPorDataNascimento',
-            data: { dataNascimento : dataNascimento },
-            combobox : '#class_id',
-            selected: '<?php echo $student['class_id']; ?>',
-            callback: function(){ 
-                $(this).comboBoxPeriodo(); 
-            } 
-        });     
-    };
-    $(this).carregarComboBoxTurmasDisponiveis('<?php echo $this->tools->formatarData($student['dob'],'us','br'); ?>');
-             
-   $('#dob').mask('99/99/9999');  
-    let typingTimer;                //timer identifier
-    let doneTypingInterval = 1000;  //time in ms (5 seconds)
-    let myInput = document.getElementById('dob');
-
-    //on keyup, start the countdown
-    $('#dob').keyup(function(){
-        clearTimeout(typingTimer);
-        if ($('#dob').val()) {
-            typingTimer = setTimeout(function(){
-                $(this).carregarComboBoxTurmasDisponiveis($('#dob').val());
-            }, doneTypingInterval);
-        }
-    });
-   
-   
-
-});
 </script>
 
 

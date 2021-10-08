@@ -14,8 +14,13 @@
         <link href="<?php echo $base_assets_url; ?>css/font-awesome.min.css" rel="stylesheet">
         <link href="<?php echo $base_assets_url; ?>css/style.css" rel="stylesheet">
         <link rel="stylesheet" href="<?php echo $base_assets_url; ?>datepicker/bootstrap-datepicker3.css"/>
-        <script src="<?php echo $base_assets_url; ?>js/jquery.min.js"></script>
+        <!--<script src="<?php echo $base_assets_url; ?>js/jquery.min.js"></script> -->
+             <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
 
+             
+
+         <script src="<?php echo base_url() ?>backend/plugins/jquery.mask.min.js"></script>
+        
         <script type="text/javascript">
             var base_url = "<?php echo base_url() ?>";
         </script>

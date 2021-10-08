@@ -66,9 +66,15 @@
         <link rel="stylesheet" href="<?php echo base_url() ?>backend/fullcalendar/dist/fullcalendar.min.css">
         <link rel="stylesheet" href="<?php echo base_url() ?>backend/fullcalendar/dist/fullcalendar.print.min.css" media="print">
 
+        
+        <script src="<?php echo base_url() ?>backend/plugins/jquery.mask.min.js"></script>
+ <!-- jS FileUpload -->
+        
         <script type="text/javascript">
             var baseurl = "<?php echo base_url(); ?>";
         </script>
+        
+        
 
     </head>
     <body class="hold-transition skin-blue fixed sidebar-mini">
