@@ -820,7 +820,7 @@ class Student extends Admin_Controller
                 }
                 
                 //Validar uploads
-                $dir = FCPATH.'pre_upload/';    
+                $dir = FCPATH.'uploads/pre_upload/';    
                // if($ok){
                      if(!file_exists($dir.$this->input->post('image'))){
                             throw new Exception('Arquivo de Foto do Aluno não encontrado! Faça o upload novamente.');
@@ -1045,7 +1045,7 @@ class Student extends Admin_Controller
                     }
 
                     //Copiar foto
-                    copy(FCPATH.'pre_upload/'.$this->input->post('image'), FCPATH.'uploads/student_images/'.$this->input->post('image'));
+                    copy(FCPATH.'uploads/pre_upload/'.$this->input->post('image'), FCPATH.'uploads/student_images/'.$this->input->post('image'));
                 
                     
                     //Documentos extras...
@@ -1140,7 +1140,7 @@ class Student extends Admin_Controller
                     $imageAtual = $this->db->select('image')->from('students')->where('id',$id)->get()->result();
                     $imageAtual = count($imageAtual)>0?$imageAtual[0]->image:'';
                     if($imageAtual != $this->input->post('image')){
-                        copy(FCPATH.'pre_upload/'.$this->input->post('image'), FCPATH.'uploads/student_images/'.$this->input->post('image'));
+                        copy(FCPATH.'uploads/pre_upload/'.$this->input->post('image'), FCPATH.'uploads/student_images/'.$this->input->post('image'));
                     }
                     
                 }

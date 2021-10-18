@@ -725,28 +725,28 @@
                                             <div class = "col-md-6 col-xs-12 col-sm-6">
                                                 <input type="hidden" name="carteira_vacinacao" value="<?php echo $student["carteira_vacinacao"]; ?>" />
                                                <label>Carteira vacinação</label><br />
-                                               <a href="<?php echo base_url('pre_upload/').$student['carteira_vacinacao']; ?>" target="_blank">
+                                               <a href="<?php echo base_url('uploads/pre_upload/').$student['carteira_vacinacao']; ?>" target="_blank">
                                                    <?php echo $student['carteira_vacinacao']; ?>
                                                </a>
                                            </div> 
                                             <div class = "col-md-6 col-xs-12 col-sm-6">
                                                  <input type="hidden" name="certidao_nascimento" value="<?php echo $student["certidao_nascimento"]; ?>" />
                                                <label>Certidão Nascimento</label><br />
-                                               <a href="<?php echo base_url('pre_upload/').$student['certidao_nascimento']; ?>" target="_blank">
+                                               <a href="<?php echo base_url('uploads/pre_upload/').$student['certidao_nascimento']; ?>" target="_blank">
                                                    <?php echo $student['certidao_nascimento']; ?>
                                                </a>
                                            </div> 
                                             <div class = "col-md-6 col-xs-12 col-sm-6">
                                                  <input type="hidden" name="comprovante_residencia" value="<?php echo $student["comprovante_residencia"]; ?>" />
                                                <label>Comp. Residência</label><br />
-                                               <a href="<?php echo base_url('pre_upload/').$student['comprovante_residencia']; ?>" target="_blank">
+                                               <a href="<?php echo base_url('uploads/pre_upload/').$student['comprovante_residencia']; ?>" target="_blank">
                                                    <?php echo $student['comprovante_residencia']; ?>
                                                </a>
                                            </div>
                                             <div class = "col-md-6 col-xs-12 col-sm-6">
                                                  <input type="hidden" name="cnh_responsavel" value="<?php echo $student["cnh_responsavel"]; ?>" />
                                                <label>CNH</label><br />
-                                               <a href="<?php echo base_url('pre_upload/').$student['cnh_responsavel']; ?>" target="_blank">
+                                               <a href="<?php echo base_url('uploads/pre_upload/').$student['cnh_responsavel']; ?>" target="_blank">
                                                    <?php echo $student['cnh_responsavel']; ?>
                                                </a>
                                            </div>

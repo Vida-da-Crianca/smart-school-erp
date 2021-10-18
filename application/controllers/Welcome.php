@@ -466,7 +466,7 @@ class Welcome extends Front_Controller
 
                     }*/
                     
-                    $dir = FCPATH.'pre_upload/';   
+                    $dir = FCPATH.'uploads/pre_upload/';   
                     if(!file_exists($dir.$this->input->post('image'))){
                         throw new Exception('Foto do Aluno não encontrada! Faça o upload novamente.');
                     }

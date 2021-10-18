@@ -235,7 +235,7 @@ class Onlinestudent extends Admin_Controller {
                     }
                     
                     
-                    $dir = FCPATH.'pre_upload/';  
+                    $dir = FCPATH.'uploads/pre_upload/';  
                     
                     $campo = 'certidao_nascimento';
                     $label = 'Certidão de Nascimento';

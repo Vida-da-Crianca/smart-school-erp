@@ -116,7 +116,7 @@ class Uploader extends CI_Controller {
         {
             try
             {
-                $dir = FCPATH.'pre_upload/';    
+                $dir = FCPATH.'uploads/pre_upload/';    
                 $campo = trim($this->input->post('campo'));
                 $img = isset($_FILES[$campo]) ? $_FILES[$campo] : null;                
                 

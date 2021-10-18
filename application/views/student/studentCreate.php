@@ -163,7 +163,7 @@
                                                     value="<?php echo str_replace('uploads/student_images/','',$obj->image); ?>" />  
                                             
                                             
-                                             <img src="<?php $img = $obj->image; echo empty($img) ?  'https://via.placeholder.com/100x110' : base_url(($action == 'add' ? 'pre_upload/'.$img : $img)); ?>" 
+                                             <img src="<?php $img = $obj->image; echo empty($img) ?  'https://via.placeholder.com/100x110' : base_url(($action == 'add' ? 'uploads/pre_upload/'.$img : $img)); ?>" 
                                                      id="foto-aluno" 
                                                      style="width: 100px; height: 110px;" />
                                             
