@@ -211,12 +211,17 @@ class Onlinestudent extends Admin_Controller {
                 
                 'image'=>'uploads/student_images/'.$this->input->post('image')
             );
+<<<<<<< HEAD
             
             //var_dump($section_id);
             
            
         
            
+=======
+
+
+>>>>>>> f46a6e2da32c4bbfa88a5f73c0a93da399ed9e20
             // var_dump($this->input->post('save'));
            // $this->pre($this->input->post('enroll'));
           //  die('');
