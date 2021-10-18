@@ -219,8 +219,8 @@ class Onlinestudent extends Admin_Controller {
 
             $response = $this->onlinestudent_model->update($data, $this->input->post('save'));
 
-             // var_dump($response);
-              //  die('');
+              var_dump($response);
+                die('response');
 
             if ($response) {
                 $response = json_decode($response);
