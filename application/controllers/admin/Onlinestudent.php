@@ -67,8 +67,8 @@ class Onlinestudent extends Admin_Controller {
             access_denied();
         }
         $data['adm_auto_insert'] = $this->sch_setting_detail->adm_auto_insert;
-     
-       
+
+
         //var_dump($this->sch_setting_detail->adm_auto_insert);
         $data['title'] = 'Edit Student';
         $data['id'] = $id;
@@ -102,12 +102,12 @@ class Onlinestudent extends Admin_Controller {
         $this->form_validation->set_rules('guardian_name', $this->lang->line('guardian_name'), 'trim|required|xss_clean');
 	$this->form_validation->set_rules('guardian_postal_code', $this->lang->line('guardian_postal_code'), 'trim|required|xss_clean');
 	$this->form_validation->set_rules('guardian_address_number', $this->lang->line('guardian_address_number'), 'trim|required|xss_clean');
-		
+
 	$this->form_validation->set_rules('guardian_district', $this->lang->line('guardian_district'), 'trim|required|xss_clean');
 	$this->form_validation->set_rules('guardian_city', $this->lang->line('guardian_city'), 'trim|required|xss_clean');
 	$this->form_validation->set_rules('guardian_state', $this->lang->line('guardian_state'), 'trim|required|xss_clean');
-		
-		
+
+
         $this->form_validation->set_rules('guardian_document', $this->lang->line('guardian_document'), 'trim|required|xss_clean');
         $this->form_validation->set_rules('rte', $this->lang->line('rtl'), 'trim|required|xss_clean');
         $this->form_validation->set_rules('guardian_phone', $this->lang->line('guardian_phone'), 'trim|required|xss_clean');
@@ -129,7 +129,7 @@ class Onlinestudent extends Admin_Controller {
             if (empty($hostel_room_id)) {
                 $hostel_room_id = 0;
             }
-            
+
             $full_name = $this->input->post('firstname');
             $name_parts = explode(' ', $full_name);
             $fistname = ucfirst($name_parts[0]);
@@ -142,15 +142,15 @@ class Onlinestudent extends Admin_Controller {
                     }
                 }
             }
-            
+
             $dob = explode('/',$this->input->post('dob'));
                         if(is_array($dob) && count($dob) == 3){
                             $dob = $dob[2].'-'.$dob[1].'-'.$dob[0];
                         }else{
                             $dob = date('Y-m-d');
                         }
-                        
-                        
+
+
             $data = array(
                 'id' => $student_id,
                 'admission_no' => $this->input->post('admission_no'),
@@ -205,32 +205,23 @@ class Onlinestudent extends Admin_Controller {
                 'weight' => $this->input->post('weight'),
                 'note' => $this->input->post('note'),
                 'class_section_id' => $section_id,
-                
+
                 'class_id' => $class_id,
                 'class_id' => $section_id,
-                
+
                 'image'=>'uploads/student_images/'.$this->input->post('image')
             );
-<<<<<<< HEAD
-            
-            //var_dump($section_id);
-            
-           
-        
-           
-=======
 
 
->>>>>>> f46a6e2da32c4bbfa88a5f73c0a93da399ed9e20
             // var_dump($this->input->post('save'));
            // $this->pre($this->input->post('enroll'));
           //  die('');
-            
+
             $response = $this->onlinestudent_model->update($data, $this->input->post('save'));
 
              // var_dump($response);
               //  die('');
-            
+
             if ($response) {
                 $response = json_decode($response);
 
@@ -238,45 +229,45 @@ class Onlinestudent extends Admin_Controller {
 
                     //gravar os documentos associados ao aluno
                     $uploaddir = FCPATH.'uploads/student_documents/' . ($response->student_id) . '/';
-                    
+
                     if (!is_dir($uploaddir) && !mkdir($uploaddir)) {
                     //    throw new Exception("Erro ao criar diretório de documentos: $uploaddir");
                     }
-                    
-                    
-                    $dir = FCPATH.'uploads/pre_upload/';  
-                    
+
+
+                    $dir = FCPATH.'uploads/pre_upload/';
+
                     $campo = 'certidao_nascimento';
                     $label = 'Certidão de Nascimento';
                     copy($dir.$this->input->post($campo), $uploaddir.$this->input->post($campo));
                     $data_img = array('student_id' => ($response->student_id), 'title' => $label, 'doc' => $this->input->post($campo));
                     $this->student_model->adddoc($data_img);
-                    
+
                     $campo = 'comprovante_residencia';
                     $label = 'Comprovante de Residência';
                     copy($dir.$this->input->post($campo), $uploaddir.$this->input->post($campo));
                     $data_img = array('student_id' => ($response->student_id), 'title' => $label, 'doc' => $this->input->post($campo));
                     $this->student_model->adddoc($data_img);
-                    
+
                     $campo = 'cnh_responsavel';
                     $label = 'CNH do Responsável';
                     copy($dir.$this->input->post($campo), $uploaddir.$this->input->post($campo));
                     $data_img = array('student_id' => ($response->student_id), 'title' => $label, 'doc' => $this->input->post($campo));
                     $this->student_model->adddoc($data_img);
-                    
+
                     $campo = 'carteira_vacinacao';
                     $label = 'Carteira de Vacinação';
                     copy($dir.$this->input->post($campo), $uploaddir.$this->input->post($campo));
                     $data_img = array('student_id' => ($response->student_id), 'title' => $label, 'doc' => $this->input->post($campo));
                     $this->student_model->adddoc($data_img);
-                    
-                    
+
+
                      //Copiar foto
                     copy(FCPATH.'uploads/admission/'.$this->input->post('image'), FCPATH.'uploads/student_images/'.$this->input->post('image'));
-                
+
                     $this->db->where('id',$response->student_id);
                     $this->db->update('online_admissions',['image'=>'uploads/student_images/'.$this->input->post('image')]);
-                    
+
                     $sender_details = array('student_id' => $response->student_id, 'contact_no' => $this->input->post('guardian_phone'), 'email' => $this->input->post('guardian_email'));
                     $this->mailsmsconf->mailsms('student_admission', $sender_details);
 
@@ -295,7 +286,7 @@ class Onlinestudent extends Admin_Controller {
             }
         }
     }
- 
+
     public function getByClass() {
         $class_id = $this->input->post('class_id');
         $data = $this->section_model->getClassBySection($class_id);
