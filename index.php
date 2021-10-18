@@ -62,21 +62,22 @@ $dotenv->load();
  * NOTE: If you change these, also change the error_reporting() code below
  */
     ini_set('max_execution_time', 300); // 0 = Unlimited
- 
+
 	ini_set('memory_limit', '128M');
 	ini_set('upload_max_filesize', '128M');
 	ini_set('post_max_size', '128M');
 	ini_set('file_uploads', 'On');
 	ini_set('file_uploads', 'On');
- 
+
 
 	define('ENVIRONMENT', 'production');
-	
-	
+	//alterado
+
+
 	if( ! ini_get('date.timezone') )
 	{
 	   date_default_timezone_set('GMT');
-	} 	
+	}
 
 /*
  *---------------------------------------------------------------
