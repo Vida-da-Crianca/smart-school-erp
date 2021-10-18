@@ -210,7 +210,8 @@ class Onlinestudent extends Admin_Controller {
             );
 
 
-
+var_dump($section_id);
+		die('xxx');
 
 
             // var_dump($this->input->post('save'));
