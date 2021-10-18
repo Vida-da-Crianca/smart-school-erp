@@ -207,7 +207,7 @@ class Onlinestudent extends Admin_Controller {
                 'class_section_id' => $section_id,
 
                 'class_id' => $class_id,
-                'class_id' => $section_id,
+                'section_id' => $section_id,
 
                 'image'=>'uploads/student_images/'.$this->input->post('image')
             );
