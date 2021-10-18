@@ -210,7 +210,7 @@ class Onlinestudent extends Admin_Controller {
             );
 
 
-var_dump($section_id);
+var_dump($data);
 		die('xxx');
 
 
