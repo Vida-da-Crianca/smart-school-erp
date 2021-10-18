@@ -271,10 +271,10 @@ class Onlinestudent extends Admin_Controller {
                     $sender_details = array('student_id' => $response->student_id, 'contact_no' => $this->input->post('guardian_phone'), 'email' => $this->input->post('guardian_email'));
                     $this->mailsmsconf->mailsms('student_admission', $sender_details);
 
-                    $student_login_detail = array('id' => $response->student_id, 'credential_for' => 'student', 'username' => $this->student_login_prefix . $response->student_id, 'password' => isset($user_password) ? $user_password : '', 'contact_no' => $this->input->post('mobileno'), 'email' => $this->input->post('email'));
+                    $student_login_detail = array('id' => $response->student_id, 'credential_for' => 'student', 'username' => $this->student_login_prefix . $response->student_id, 'password' => isset($user_password) ? $user_password : '---', 'contact_no' => $this->input->post('mobileno'), 'email' => $this->input->post('email'));
                     $this->mailsmsconf->mailsms('login_credential', $student_login_detail);
 
-                    $parent_login_detail = array('id' => $response->student_id, 'credential_for' => 'parent', 'username' => $this->parent_login_prefix . $response->student_id, 'password' =>  isset($parent_password) ? $parent_password : '', 'contact_no' => $this->input->post('guardian_phone'), 'email' => $this->input->post('guardian_email'));
+                    $parent_login_detail = array('id' => $response->student_id, 'credential_for' => 'parent', 'username' => $this->parent_login_prefix . $response->student_id, 'password' =>  isset($parent_password) ? $parent_password : '123', 'contact_no' => $this->input->post('guardian_phone'), 'email' => $this->input->post('guardian_email'));
                     $this->mailsmsconf->mailsms('login_credential', $parent_login_detail);
                  }
 
