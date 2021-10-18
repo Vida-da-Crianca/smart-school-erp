@@ -148,11 +148,14 @@ class Onlinestudent_model extends MY_Model {
                 //============================
                 if ($insert) {
                     $this->db->select('class_sections.*')->from('class_sections');
-                    $this->db->where('class_sections.id', $data['class_section_id']);
+                    $this->db->where('class_sections.class_id', $data['class_id']);
+                    $this->db->where('class_sections.section_id', $data['section_id']);
                     $query = $this->db->get();
                     $classs_section_result = $query->row();
                     unset($data['class_section_id']);
                     unset($data['id']);
+                     unset($data['class_id']);
+                      unset($data['section_id']);
                   //  var_dump($data);
                     $this->db->insert('students', $data);
                     $student_id = $this->db->insert_id();
