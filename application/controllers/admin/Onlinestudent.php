@@ -210,10 +210,6 @@ class Onlinestudent extends Admin_Controller {
             );
 
 
-var_dump($data);
-		die('xxx');
-
-
             // var_dump($this->input->post('save'));
            // $this->pre($this->input->post('enroll'));
           //  die('');
