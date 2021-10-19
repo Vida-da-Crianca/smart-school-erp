@@ -92,7 +92,7 @@
                                         </div>
                                         <div class = "col-md-2 col-xs-12 col-sm-2">
                                             <label>Turma</label><br />
-                                             <select  id="class_id" name="class_id" class="form-control" >
+                                             <select  id="class_id" name="class_id_cadastro" class="form-control" >
                                                     <option value=""><?php echo $this->lang->line('select'); ?></option>
                                                     <?php
                                                     foreach ($classlist as $class) {
@@ -109,7 +109,7 @@
                                         </div>
                                           <div class = "col-md-2 col-xs-12 col-sm-2">
                                             <label>Período</label><br />
-                                             <select  id="section_id" name="section_id" class="form-control" >
+                                             <select  id="section_id_cadastro" name="section_id_cadastro" class="form-control" >
                                                     <option value=""><?php echo $this->lang->line('select'); ?></option>
                                                 </select>
                                                 <span class="text-danger"><?php echo form_error('section_id'); ?></span>
@@ -974,7 +974,7 @@ $(document).ready(function(){
         $(this).comboBox({
             url : '<?php echo base_url(); ?>welcome/getListaPeriodosPorTurma',
             data: { class_id : $('#class_id').val() },
-            combobox : '#section_id',
+            combobox : '#section_id_cadastro',
             selected: '<?php echo $student['section_id']; ?>',
             callback: {function(){} }
         }); 

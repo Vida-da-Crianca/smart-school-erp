@@ -63,10 +63,6 @@ class Onlinestudent extends Admin_Controller {
     }
 
     public function edit($id) {
-	    
-	    error_reporting(E_ERROR);
-	ini_set('display_errors', 0);
-	    
         if (!$this->rbac->hasPrivilege('online_admission', 'can_edit')) {
             access_denied();
         }
@@ -100,8 +96,8 @@ class Onlinestudent extends Admin_Controller {
         $this->form_validation->set_rules('firstname', $this->lang->line('first_name'), 'trim|required|xss_clean');
         $this->form_validation->set_rules('guardian_is', $this->lang->line('guardian'), 'trim|required|xss_clean');
         $this->form_validation->set_rules('dob', $this->lang->line('date_of_birth'), 'trim|required|xss_clean');
-        $this->form_validation->set_rules('class_id', $this->lang->line('class'), 'trim|required|xss_clean');
-        $this->form_validation->set_rules('section_id', $this->lang->line('section'), 'trim|required|xss_clean');
+        $this->form_validation->set_rules('class_id_cadastro', $this->lang->line('class'), 'trim|required|xss_clean');
+        $this->form_validation->set_rules('section_id_cadastro', $this->lang->line('section'), 'trim|required|xss_clean');
         $this->form_validation->set_rules('gender', $this->lang->line('gender'), 'trim|required|xss_clean');
         $this->form_validation->set_rules('guardian_name', $this->lang->line('guardian_name'), 'trim|required|xss_clean');
 	$this->form_validation->set_rules('guardian_postal_code', $this->lang->line('guardian_postal_code'), 'trim|required|xss_clean');
@@ -127,8 +123,9 @@ class Onlinestudent extends Admin_Controller {
             $this->load->view('layout/footer', $data);
         } else {
             $student_id = $this->input->post('student_id');
-            $class_id = $this->input->post('class_id');
-            $section_id = $this->input->post('section_id');
+            $class_id = $this->input->post('class_id_cadastro');
+            $section_id = $this->input->post('section_id_cadastro');
+           
             $hostel_room_id = $this->input->post('hostel_room_id');
             $fees_discount = $this->input->post('fees_discount');
             $vehroute_id = $this->input->post('vehroute_id');
@@ -158,144 +155,152 @@ class Onlinestudent extends Admin_Controller {
                         }else{
                             $dob = date('Y-m-d');
                         }
-                        
-                        
-            $data = array(
-                'id' => $student_id,
-                'admission_no' => $this->input->post('admission_no'),
-                'roll_no' => $this->input->post('roll_no'),
-                'firstname' => $fistname,
-                'lastname' => $lastname,
-                'rte' => $this->input->post('rte'),
-                'mobileno' => $this->input->post('mobileno'),
-                'email' => $this->input->post('email'),
-                'state' => $this->input->post('state'),
-                'city' => $this->input->post('city'),
-                'previous_school' => $this->input->post('previous_school'),
-                'guardian_is' => $this->input->post('guardian_is'),
-                'pincode' => $this->input->post('pincode'),
-                'measurement_date' => $this->customlib->dateFormatToYYYYMMDD($this->input->post('measure_date')),
-                'religion' => $this->input->post('religion'),
-                'dob' => $dob,//$this->customlib->dateFormatToYYYYMMDD($this->input->post('dob')),
-                'admission_date' => $this->customlib->dateFormatToYYYYMMDD($this->input->post('admission_date')),
-                'current_address' => $this->input->post('current_address'),
-                'permanent_address' => $this->input->post('permanent_address'),
-                'category_id' => $this->input->post('category_id'),
-                'adhar_no' => $this->input->post('adhar_no'),
-                'samagra_id' => $this->input->post('samagra_id'),
-                'bank_account_no' => $this->input->post('bank_account_no'),
-                'bank_name' => $this->input->post('bank_name'),
-                'ifsc_code' => $this->input->post('ifsc_code'),
-                'cast' => $this->input->post('cast'),
-                'father_name' => $this->input->post('father_name'),
-                'father_phone' => $this->input->post('father_phone'),
-                'father_occupation' => $this->input->post('father_occupation'),
-                'mother_name' => $this->input->post('mother_name'),
-                'mother_phone' => $this->input->post('mother_phone'),
-                'mother_occupation' => $this->input->post('mother_occupation'),
-                'guardian_occupation' => $this->input->post('guardian_occupation'),
-                'guardian_email' => $this->input->post('guardian_email'),
-                'gender' => $this->input->post('gender'),
-                'guardian_name' => $this->input->post('guardian_name'),
-                'guardian_document' => $this->input->post('guardian_document'),
-                'guardian_relation' => $this->input->post('guardian_relation'),
-                'guardian_phone' => $this->input->post('guardian_phone'),
-                'guardian_address' => $this->input->post('guardian_address'),
-		'guardian_address_number' => $this->input->post('guardian_address_number'),
-		'guardian_postal_code' => str_replace("-","", $this->input->post('guardian_postal_code')),
-		'guardian_district' => $this->input->post('guardian_district'),
-		'guardian_city' => $this->input->post('guardian_city'),
-		'guardian_state' => $this->input->post('guardian_state'),
-                'vehroute_id' => $vehroute_id,
-                'hostel_room_id' => $hostel_room_id,
-                'school_house_id' => $this->input->post('house'),
-                'blood_group' => $this->input->post('blood_group'),
-                'height' => $this->input->post('height'),
-                'weight' => $this->input->post('weight'),
-                'note' => $this->input->post('note'),
-                'class_section_id' => $section_id,
-                
-                'class_id' => $class_id,
-                 'section_id' => $section_id,
-                
-                'image'=>'uploads/student_images/'.$this->input->post('image')
-            );
             
-            //var_dump($section_id);
-            
-           
+          //validar class_sections
+          $this->db->where('class_id', $class_id);
+          $this->db->where('section_id', $section_id);
+          $res = $this->db->get('class_sections')->result();
         
-           
-            // var_dump($this->input->post('save'));
-           // $this->pre($this->input->post('enroll'));
-          //  die('');
-            
-            $response = $this->onlinestudent_model->update($data, $this->input->post('save'));
-
+          if(count($res)<=0){
              
-            
-            if ($response) {
-                $response = json_decode($response);
-
-                if ($response->student_id != "") {
-
-                    //gravar os documentos associados ao aluno
-                    $uploaddir = FCPATH.'uploads/student_documents/' . ($response->student_id) . '/';
-                    
-                    if (!is_dir($uploaddir) && !mkdir($uploaddir)) {
-                    //    throw new Exception("Erro ao criar diretório de documentos: $uploaddir");
-                    }
-                    
-                    
-                    $dir = FCPATH.'uploads/pre_upload/';  
-                    
-                    $campo = 'certidao_nascimento';
-                    $label = 'Certidão de Nascimento';
-                    copy($dir.$this->input->post($campo), $uploaddir.$this->input->post($campo));
-                    $data_img = array('student_id' => ($response->student_id), 'title' => $label, 'doc' => $this->input->post($campo));
-                    $this->student_model->adddoc($data_img);
-                    
-                    $campo = 'comprovante_residencia';
-                    $label = 'Comprovante de Residência';
-                    copy($dir.$this->input->post($campo), $uploaddir.$this->input->post($campo));
-                    $data_img = array('student_id' => ($response->student_id), 'title' => $label, 'doc' => $this->input->post($campo));
-                    $this->student_model->adddoc($data_img);
-                    
-                    $campo = 'cnh_responsavel';
-                    $label = 'CNH do Responsável';
-                    copy($dir.$this->input->post($campo), $uploaddir.$this->input->post($campo));
-                    $data_img = array('student_id' => ($response->student_id), 'title' => $label, 'doc' => $this->input->post($campo));
-                    $this->student_model->adddoc($data_img);
-                    
-                    $campo = 'carteira_vacinacao';
-                    $label = 'Carteira de Vacinação';
-                    copy($dir.$this->input->post($campo), $uploaddir.$this->input->post($campo));
-                    $data_img = array('student_id' => ($response->student_id), 'title' => $label, 'doc' => $this->input->post($campo));
-                    $this->student_model->adddoc($data_img);
-                    
-                    
-                     //Copiar foto
-                    copy(FCPATH.'uploads/admission/'.$this->input->post('image'), FCPATH.'uploads/student_images/'.$this->input->post('image'));
-                
-                    $this->db->where('id',$response->student_id);
-                    $this->db->update('online_admissions',['image'=>'uploads/student_images/'.$this->input->post('image')]);
-                    
-                    $sender_details = array('student_id' => $response->student_id, 'contact_no' => $this->input->post('guardian_phone'), 'email' => $this->input->post('guardian_email'));
-                    $this->mailsmsconf->mailsms('student_admission', $sender_details);
-
-                    $student_login_detail = array('id' => $response->student_id, 'credential_for' => 'student', 'username' => $this->student_login_prefix . $response->student_id, 'password' => isset($user_password) ? $user_password : '', 'contact_no' => $this->input->post('mobileno'), 'email' => $this->input->post('email'));
-                    $this->mailsmsconf->mailsms('login_credential', $student_login_detail);
-
-                    $parent_login_detail = array('id' => $response->student_id, 'credential_for' => 'parent', 'username' => $this->parent_login_prefix . $response->student_id, 'password' =>  isset($parent_password) ? $parent_password : '', 'contact_no' => $this->input->post('guardian_phone'), 'email' => $this->input->post('guardian_email'));
-                    $this->mailsmsconf->mailsms('login_credential', $parent_login_detail);
-                }
-
-                $this->session->set_flashdata('msg', '<div class="alert alert-success text-left">' . $this->lang->line('update_message') . '</div>');
-                redirect('admin/onlinestudent');
-            } else {
-                $this->session->set_flashdata('msg', '<div class="alert alert-danger text-left">' . $this->lang->line('please_check_student_admission_no') . '</div>');
+               $this->session->set_flashdata('msg', '<div class="alert alert-danger text-left">Turma/Período não catalogado!</div>');
                 redirect('admin/onlinestudent/edit/'.$id);
-            }
+          }else{
+                        
+                     
+                        $data = array(
+                            'id' => $student_id,
+                            'admission_no' => $this->input->post('admission_no'),
+                            'roll_no' => $this->input->post('roll_no'),
+                            'firstname' => $fistname,
+                            'lastname' => $lastname,
+                            'rte' => $this->input->post('rte'),
+                            'mobileno' => $this->input->post('mobileno'),
+                            'email' => $this->input->post('email'),
+                            'state' => $this->input->post('state'),
+                            'city' => $this->input->post('city'),
+                            'previous_school' => $this->input->post('previous_school'),
+                            'guardian_is' => $this->input->post('guardian_is'),
+                            'pincode' => $this->input->post('pincode'),
+                            'measurement_date' => $this->customlib->dateFormatToYYYYMMDD($this->input->post('measure_date')),
+                            'religion' => $this->input->post('religion'),
+                            'dob' => $dob,//$this->customlib->dateFormatToYYYYMMDD($this->input->post('dob')),
+                            'admission_date' => $this->customlib->dateFormatToYYYYMMDD($this->input->post('admission_date')),
+                            'current_address' => $this->input->post('current_address'),
+                            'permanent_address' => $this->input->post('permanent_address'),
+                            'category_id' => $this->input->post('category_id'),
+                            'adhar_no' => $this->input->post('adhar_no'),
+                            'samagra_id' => $this->input->post('samagra_id'),
+                            'bank_account_no' => $this->input->post('bank_account_no'),
+                            'bank_name' => $this->input->post('bank_name'),
+                            'ifsc_code' => $this->input->post('ifsc_code'),
+                            'cast' => $this->input->post('cast'),
+                            'father_name' => $this->input->post('father_name'),
+                            'father_phone' => $this->input->post('father_phone'),
+                            'father_occupation' => $this->input->post('father_occupation'),
+                            'mother_name' => $this->input->post('mother_name'),
+                            'mother_phone' => $this->input->post('mother_phone'),
+                            'mother_occupation' => $this->input->post('mother_occupation'),
+                            'guardian_occupation' => $this->input->post('guardian_occupation'),
+                            'guardian_email' => $this->input->post('guardian_email'),
+                            'gender' => $this->input->post('gender'),
+                            'guardian_name' => $this->input->post('guardian_name'),
+                            'guardian_document' => $this->input->post('guardian_document'),
+                            'guardian_relation' => $this->input->post('guardian_relation'),
+                            'guardian_phone' => $this->input->post('guardian_phone'),
+                            'guardian_address' => $this->input->post('guardian_address'),
+                            'guardian_address_number' => $this->input->post('guardian_address_number'),
+                            'guardian_postal_code' => str_replace("-","", $this->input->post('guardian_postal_code')),
+                            'guardian_district' => $this->input->post('guardian_district'),
+                            'guardian_city' => $this->input->post('guardian_city'),
+                            'guardian_state' => $this->input->post('guardian_state'),
+                            'vehroute_id' => $vehroute_id,
+                            'hostel_room_id' => $hostel_room_id,
+                            'school_house_id' => $this->input->post('house'),
+                            'blood_group' => $this->input->post('blood_group'),
+                            'height' => $this->input->post('height'),
+                            'weight' => $this->input->post('weight'),
+                            'note' => $this->input->post('note'),
+                            'class_section_id' => $student['class_section_id'],
+
+                            'class_id' => $class_id,
+                             'section_id' => $section_id,
+
+                            'image'=>'uploads/student_images/'.$this->input->post('image')
+                        );
+
+                        $response = $this->onlinestudent_model->update($data, $this->input->post('save'));
+
+                       // var_dump($this->db->last_query());
+                       // die('asdassdfsd');
+                        
+                        
+                        if ($response) {
+                            $response = json_decode($response);
+
+                            if ($response->student_id != "") {
+
+                                //gravar os documentos associados ao aluno
+                                $uploaddir = FCPATH.'uploads/student_documents/' . ($response->student_id) . '/';
+
+                                if (!is_dir($uploaddir) && !mkdir($uploaddir)) {
+                                //    throw new Exception("Erro ao criar diretório de documentos: $uploaddir");
+                                }
+
+
+                                $dir = FCPATH.'uploads/pre_upload/';  
+
+                                $campo = 'certidao_nascimento';
+                                $label = 'Certidão de Nascimento';
+                                copy($dir.$this->input->post($campo), $uploaddir.$this->input->post($campo));
+                                $data_img = array('student_id' => ($response->student_id), 'title' => $label, 'doc' => $this->input->post($campo));
+                                $this->student_model->adddoc($data_img);
+
+                                $campo = 'comprovante_residencia';
+                                $label = 'Comprovante de Residência';
+                                copy($dir.$this->input->post($campo), $uploaddir.$this->input->post($campo));
+                                $data_img = array('student_id' => ($response->student_id), 'title' => $label, 'doc' => $this->input->post($campo));
+                                $this->student_model->adddoc($data_img);
+
+                                $campo = 'cnh_responsavel';
+                                $label = 'CNH do Responsável';
+                                copy($dir.$this->input->post($campo), $uploaddir.$this->input->post($campo));
+                                $data_img = array('student_id' => ($response->student_id), 'title' => $label, 'doc' => $this->input->post($campo));
+                                $this->student_model->adddoc($data_img);
+
+                                $campo = 'carteira_vacinacao';
+                                $label = 'Carteira de Vacinação';
+                                copy($dir.$this->input->post($campo), $uploaddir.$this->input->post($campo));
+                                $data_img = array('student_id' => ($response->student_id), 'title' => $label, 'doc' => $this->input->post($campo));
+                                $this->student_model->adddoc($data_img);
+
+
+                                 //Copiar foto
+                                copy(FCPATH.'uploads/admission/'.$this->input->post('image'), FCPATH.'uploads/student_images/'.$this->input->post('image'));
+
+                                //$this->db->where('id',$response->student_id);
+                               // $this->db->update('online_admissions',['image'=>$this->input->post('image')]);
+
+                                $sender_details = array('student_id' => $response->student_id, 'contact_no' => $this->input->post('guardian_phone'), 'email' => $this->input->post('guardian_email'));
+                                $this->mailsmsconf->mailsms('student_admission', $sender_details);
+
+                                $student_login_detail = array('id' => $response->student_id, 'credential_for' => 'student', 'username' => $this->student_login_prefix . $response->student_id, 'password' => isset($user_password) ? $user_password : '---', 'contact_no' => $this->input->post('mobileno'), 'email' => $this->input->post('email'));
+                                $this->mailsmsconf->mailsms('login_credential', $student_login_detail);
+
+                                $parent_login_detail = array('id' => $response->student_id, 'credential_for' => 'parent', 'username' => $this->parent_login_prefix . $response->student_id, 'password' =>  isset($parent_password) ? $parent_password : '---', 'contact_no' => $this->input->post('guardian_phone'), 'email' => $this->input->post('guardian_email'));
+                                $this->mailsmsconf->mailsms('login_credential', $parent_login_detail);
+                            }
+
+                            $this->session->set_flashdata('msg', '<div class="alert alert-success text-left">' . $this->lang->line('update_message') . '</div>');
+                            redirect('admin/onlinestudent');
+                        } else {
+                            $this->session->set_flashdata('msg', '<div class="alert alert-danger text-left">' . $this->lang->line('please_check_student_admission_no') . '</div>');
+                            redirect('admin/onlinestudent/edit/'.$id);
+                        }
+            
+          }
+            
+            
         }
     }
  

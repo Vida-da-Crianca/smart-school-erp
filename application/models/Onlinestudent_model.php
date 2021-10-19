@@ -104,19 +104,28 @@ class Onlinestudent_model extends MY_Model {
                 if ($sch_setting_detail->adm_auto_insert) {
                     if ($sch_setting_detail->adm_update_status) {
 
-                        
 
+           
                         $admission_no = $sch_setting_detail->adm_prefix . $sch_setting_detail->adm_start_from;
 
                         $last_student = $this->student_model->lastRecord();
 
                         $last_admission_digit = str_replace($sch_setting_detail->adm_prefix, "", $last_student->admission_no);
+                      
+                        
+                       
+                        $incremento = 1;
+                        while(true){
+                            $admission_no = $sch_setting_detail->adm_prefix . sprintf("%0" . $sch_setting_detail->adm_no_digit . "d", $last_admission_digit + ($incremento++));
 
-                        $admission_no = $sch_setting_detail->adm_prefix . sprintf("%0" . $sch_setting_detail->adm_no_digit . "d", $last_admission_digit + 1);
-
+                            if(count($this->db->where('admission_no',$admission_no)->get('students')->result())<=0){
+                                break;
+                            }
+                        
+                        }
+                     
                         $data['admission_no'] = $admission_no;
 
-                      
                     
 
                     } else {
@@ -133,14 +142,14 @@ class Onlinestudent_model extends MY_Model {
                 
                 $admission_no_exists = $this->student_model->check_adm_exists($data['admission_no']);
                 
-                 //var_dump($admission_no_exists);
-                
+            
                 if ($admission_no_exists) {
                     $insert = false;
                     $record_update_status = false;
                 }
                 
-                //var_dump($insert);
+            
+                
                 
                // var_dump($data['class_section_id']);
               //  die($admission_no_exists);
@@ -154,8 +163,8 @@ class Onlinestudent_model extends MY_Model {
                     $classs_section_result = $query->row();
                     unset($data['class_section_id']);
                     unset($data['id']);
-                     unset($data['class_id']);
-                      unset($data['section_id']);
+                    unset($data['class_id']);
+                    unset($data['section_id']);
                   //  var_dump($data);
                     $this->db->insert('students', $data);
                     $student_id = $this->db->insert_id();
@@ -216,9 +225,19 @@ class Onlinestudent_model extends MY_Model {
 
                     
                 }
+                
+                if(isset($data['class_id'])){
+                    unset($data['class_id']);
+                }
+                if(isset($data['section_id'])){
+                    unset($data['section_id']);
+                }
+                
             }
 
-            
+            if(isset($data['image'])){
+                $data['image'] = str_replace('uploads/student_images/', '', $data['image']);
+            }
           
 
             $this->db->where('id', $data_id);
@@ -231,7 +250,7 @@ class Onlinestudent_model extends MY_Model {
             
          
             if ($this->db->trans_status() === false) {
-                $this->db->trans_rollback();
+                $this->db->trans_rollback();               
             } else {
                 $this->db->trans_commit();
             }
