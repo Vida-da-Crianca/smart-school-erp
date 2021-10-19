@@ -239,10 +239,7 @@ class Onlinestudent_model extends MY_Model {
 
 
             if ($this->db->trans_status() === false) {
-		    var_dump( $this->db->error());
-		   
-                $this->db->trans_rollback();
-		    die('roolback');
+		  $this->db->trans_rollback();
             } else {
                 $this->db->trans_commit();
             }
