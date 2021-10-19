@@ -26,7 +26,7 @@ class Onlinestudent_model extends MY_Model {
         $this->db->select('online_admissions.vehroute_id,vehicle_routes.route_id,vehicle_routes.vehicle_id,transport_route.route_title,vehicles.vehicle_no,hostel_rooms.room_no,vehicles.driver_name,vehicles.driver_contact,hostel.id as `hostel_id`,hostel.hostel_name,room_types.id as `room_type_id`,room_types.room_type ,online_admissions.hostel_room_id,class_sections.id as class_section_id,classes.id AS `class_id`,classes.class,sections.id AS `section_id`,sections.section,online_admissions.id,online_admissions.admission_no , online_admissions.roll_no,online_admissions.admission_date,online_admissions.firstname,  online_admissions.lastname,online_admissions.image,    online_admissions.mobileno, online_admissions.email ,online_admissions.guardian_postal_code, online_admissions.state ,   online_admissions.city , online_admissions.pincode , online_admissions.note, online_admissions.religion, online_admissions.cast, school_houses.house_name,   online_admissions.dob ,online_admissions.current_address, online_admissions.previous_school,
             online_admissions.guardian_is,
             online_admissions.permanent_address,
-
+            
             online_admissions.certidao_nascimento,
             online_admissions.comprovante_residencia,
             online_admissions.cnh_responsavel,
@@ -36,12 +36,12 @@ class Onlinestudent_model extends MY_Model {
 			online_admissions.adhar_no,
 			online_admissions.samagra_id,
 			online_admissions.bank_account_no,
-			online_admissions.bank_name, online_admissions.ifsc_code ,
-			online_admissions.guardian_name , online_admissions.father_pic ,online_admissions.height,
-			online_admissions.weight,online_admissions.measurement_date, online_admissions.mother_pic ,
+			online_admissions.bank_name, online_admissions.ifsc_code , 
+			online_admissions.guardian_name , online_admissions.father_pic ,online_admissions.height, 
+			online_admissions.weight,online_admissions.measurement_date, online_admissions.mother_pic , 
 			online_admissions.guardian_pic , online_admissions.guardian_relation,online_admissions.guardian_phone,
-			online_admissions.guardian_address, online_admissions.guardian_address_number,
-			online_admissions.guardian_district, online_admissions.guardian_city,
+			online_admissions.guardian_address, online_admissions.guardian_address_number, 
+			online_admissions.guardian_district, online_admissions.guardian_city, 
 			online_admissions.guardian_state,online_admissions.is_enroll ,
 			online_admissions.created_at,online_admissions.document ,
 			online_admissions.updated_at,online_admissions.father_name,
@@ -84,19 +84,19 @@ class Onlinestudent_model extends MY_Model {
 
         $record_update_status = true;
         $student_id = "";
-
-
+        
+      
         if (isset($data['id'])) {
             $this->db->trans_begin();
             $data_id = $data['id'];
             $class_section_id = $data['class_section_id'];
 
-
-
-
-
+             
+      
+        
+            
             if ($action == "enroll") {
-
+                
                 //==========================
                 $insert = true;
                 $sch_setting_detail = $this->setting_model->getSetting();
@@ -104,7 +104,7 @@ class Onlinestudent_model extends MY_Model {
                 if ($sch_setting_detail->adm_auto_insert) {
                     if ($sch_setting_detail->adm_update_status) {
 
-
+                        
 
                         $admission_no = $sch_setting_detail->adm_prefix . $sch_setting_detail->adm_start_from;
 
@@ -116,32 +116,32 @@ class Onlinestudent_model extends MY_Model {
 
                         $data['admission_no'] = $admission_no;
 
-
-
+                      
+                    
 
                     } else {
-
+                        
                         $admission_no = $sch_setting_detail->adm_prefix . $sch_setting_detail->adm_start_from;
                         $data['admission_no'] = $admission_no;
-
-
+                        
+                        
                     }
                 }
 
-
-
-
+                
+                 
+                
                 $admission_no_exists = $this->student_model->check_adm_exists($data['admission_no']);
-
+                
                  //var_dump($admission_no_exists);
-
+                
                 if ($admission_no_exists) {
                     $insert = false;
                     $record_update_status = false;
                 }
-
+                
                 //var_dump($insert);
-
+                
                // var_dump($data['class_section_id']);
               //  die($admission_no_exists);
 
@@ -152,19 +152,11 @@ class Onlinestudent_model extends MY_Model {
                     $this->db->where('class_sections.section_id', $data['section_id']);
                     $query = $this->db->get();
                     $classs_section_result = $query->row();
-
-			//var_dump($data['class_section_id']);
-			//echo $this->db->last_query();
-			//var_dump($classs_section_result);
-
                     unset($data['class_section_id']);
                     unset($data['id']);
-                     unset($data['section_id']);
-                      unset($data['class_id']);
-                 //   var_dump($data);
-
-		//	die('123');
-
+                     unset($data['class_id']);
+                      unset($data['section_id']);
+                  //  var_dump($data);
                     $this->db->insert('students', $data);
                     $student_id = $this->db->insert_id();
                     $data_new = array(
@@ -222,12 +214,12 @@ class Onlinestudent_model extends MY_Model {
                     $data['is_enroll'] = 1;
                     $data['class_section_id'] = $class_section_id;
 
-
+                    
                 }
             }
 
-
-
+            
+          
 
             $this->db->where('id', $data_id);
             $this->db->update('online_admissions', $data);
@@ -236,17 +228,17 @@ class Onlinestudent_model extends MY_Model {
             $action = "Update";
             $record_id = $data_id;
             $this->log($message, $record_id, $action);
-
-
+            
+         
             if ($this->db->trans_status() === false) {
-		  $this->db->trans_rollback();
+                $this->db->trans_rollback();
             } else {
                 $this->db->trans_commit();
             }
         }
-
-
-
+        
+        
+        
         return json_encode(array('record_update_status' => $record_update_status, 'student_id' => $student_id));
     }
 
