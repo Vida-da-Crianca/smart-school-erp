@@ -20,6 +20,8 @@ class Sections extends Admin_Controller {
         $section_result = $this->section_model->get();
         $data['sectionlist'] = $section_result;
         $this->form_validation->set_rules('section', $this->lang->line('section'), 'trim|required|xss_clean');
+        $this->form_validation->set_rules('full_time', 'Período Integral', 'trim|required|xss_clean|in_list[0,1]');
+        
         if ($this->form_validation->run() == FALSE) {
             $this->load->view('layout/header', $data);
             $this->load->view('section/sectionList', $data);
@@ -27,6 +29,7 @@ class Sections extends Admin_Controller {
         } else {
             $data = array(
                 'section' => $this->input->post('section'),
+                'full_time' => (int) $this->input->post('full_time')
             );
             $this->section_model->add($data);
             $this->session->set_flashdata('msg', '<div class="alert alert-success text-left">'.$this->lang->line('success_message').'</div>');
@@ -100,6 +103,9 @@ class Sections extends Admin_Controller {
         $section = $this->section_model->get($id);
         $data['section'] = $section;
         $this->form_validation->set_rules('section', $this->lang->line('section'), 'trim|required|xss_clean');
+         $this->form_validation->set_rules('full_time', 'Período Integral', 'trim|required|xss_clean|in_list[0,1]');
+        
+        
         if ($this->form_validation->run() == FALSE) {
             $this->load->view('layout/header', $data);
             $this->load->view('section/sectionEdit', $data);
@@ -108,6 +114,7 @@ class Sections extends Admin_Controller {
             $data = array(
                 'id' => $id,
                 'section' => $this->input->post('section'),
+                'full_time' => (int) $this->input->post('full_time')
             );
             $this->section_model->add($data);
             $this->session->set_flashdata('msg', '<div class="alert alert-success text-left">'.$this->lang->line('update_message').'</div>');

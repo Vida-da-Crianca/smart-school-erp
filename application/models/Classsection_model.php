@@ -152,6 +152,7 @@ class Classsection_model extends MY_Model
                     $vec_route->id = $vehicle_value['id'];
 
                     $vec_route->route_id = $vehicle_value['class'];
+                    $vec_route->limit = $vehicle_value['limit'];
                     $vec_route->vehicles = $this->getVechileByRoute($vehicle_value['id']);
                     $array[]             = $vec_route;
                 }
@@ -166,6 +167,7 @@ class Classsection_model extends MY_Model
                     $vec_route        = new stdClass();
                     $vec_route->id    = $vehicle_value['id'];
                     $vec_route->class = $vehicle_value['class'];
+                    $vec_route->limit = $vehicle_value['limit'];
 
                     $vec_route->vehicles = $this->getVechileByRoute($vehicle_value['id']);
                     $array[]             = $vec_route;

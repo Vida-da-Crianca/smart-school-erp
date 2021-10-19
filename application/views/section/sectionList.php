@@ -25,6 +25,12 @@
                                     <input autofocus="" id="section" name="section" placeholder="" type="text" class="form-control"  value="<?php echo set_value('section'); ?>" />
                                     <span class="text-danger"><?php echo form_error('section'); ?></span>
                                 </div>
+                                <div class="form-group">
+                                    <label for="exampleInputEmail1">Período Integral?</label><small class="req"> *</small>
+                                        <?php echo form_dropdown('full_time',[0=>'Não',1=>'Sim'], set_value('full_time'), "id='full_time' class='form-control'"); ?>
+
+                                    <span class="text-danger"><?php echo form_error('full_time'); ?></span>
+                                </div>
                             </div>
                             <div class="box-footer">
                                 <button type="submit" class="btn btn-info pull-right"><?php echo $this->lang->line('save'); ?></button>
@@ -51,6 +57,7 @@
                                 <thead>
                                     <tr>
                                         <th><?php echo $this->lang->line('section'); ?></th>
+                                        <th>Período Integral?</th>
                                         <th class="text-right"><?php echo $this->lang->line('action'); ?></th>
                                     </tr>
                                 </thead>
@@ -62,6 +69,9 @@
                                         ?>
                                         <tr>
                                             <td class="mailbox-name"> <?php echo $section['section'] ?></td>
+                                            <td>
+                                                <?php echo (int) $section['full_time'] == 1 ? 'Sim' : 'Não'; ?>
+                                            </td>
                                             <td class="mailbox-date pull-right">
                                                 <?php
                                                 if ($this->rbac->hasPrivilege('section', 'can_edit')) {

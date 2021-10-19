@@ -26,12 +26,16 @@ class Classes extends Admin_Controller {
         );
         $this->form_validation->set_rules('sections[]', $this->lang->line('section'), 'trim|required|xss_clean');
 
+        $this->form_validation->set_rules(
+                'limit', 'Limite de Alunos', 'trim|greater_than[0]');
+        
         if ($this->form_validation->run() == FALSE) {
             
         } else {
             $class = $this->input->post('class');
             $class_array = array(
-                'class' => $this->input->post('class')
+                'class' => $this->input->post('class'),
+                'limit' => (int) $this->input->post('limit')
             );
             $sections = $this->input->post('sections');
             $this->classsection_model->add($class_array, $sections);
@@ -78,7 +82,8 @@ class Classes extends Admin_Controller {
                 )
         );
         $this->form_validation->set_rules('sections[]', $this->lang->line('sections'), 'trim|required|xss_clean');
-
+ $this->form_validation->set_rules(
+                'limit', 'Limite de Alunos', 'trim|greater_than[0]');
 
         if ($this->form_validation->run() == FALSE) {
             $vehicle_result = $this->section_model->get();
@@ -107,7 +112,8 @@ class Classes extends Admin_Controller {
                 $vehicle_batch_array = array();
                 $class_array = array(
                     'id' => $class_id,
-                    'class' => $this->input->post('class')
+                    'class' => $this->input->post('class'),
+                     'limit' => (int) $this->input->post('limit')
                 );
                 foreach ($add_result as $vec_add_key => $vec_add_value) {
 
@@ -117,7 +123,8 @@ class Classes extends Admin_Controller {
             } else {
                 $class_array = array(
                     'id' => $class_id,
-                    'class' => $this->input->post('class')
+                    'class' => $this->input->post('class'),
+                    'limit' => (int) $this->input->post('limit')
                 );
                 $this->classsection_model->update($class_array);
             }

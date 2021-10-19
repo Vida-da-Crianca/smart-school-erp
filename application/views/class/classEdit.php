@@ -45,8 +45,18 @@
 
                                 <div class="form-group">
                                     <label for="exampleInputEmail1"><?php echo $this->lang->line('class'); ?></label><small class="req"> *</small>
-                                    <input autofocus="" id="class" name="class" placeholder="" type="text" class="form-control"  value="<?php echo set_value('class', $vehroute[0]->route_id); ?>" />
+                                    <input autofocus="" id="class" name="class" placeholder="" 
+                                           type="text" class="form-control"  
+                                           value="<?php echo set_value('class', $vehroute[0]->route_id); ?>" />
                                     <span class="text-danger"><?php echo form_error('class'); ?></span>
+                                </div>
+                                <div class="form-group">
+                                    <label for="exampleInputEmail1">Limite de Alunos</label><small class="req"> *</small>
+                                    <input autofocus="" id="limit" name="limit" 
+                                           placeholder="" type="number" class="form-control"  
+                                           min="1"
+                                           value="<?php echo set_value('limit',$vehroute[0]->limit); ?>" />
+                                    <span class="text-danger"><?php echo form_error('limit'); ?></span>
                                 </div>
                                 <div class="form-group">
                                     <label for="exampleInputEmail1"><?php echo $this->lang->line('sections'); ?></label><small class="req"> *</small>
@@ -104,7 +114,7 @@
                                         </th>
                                         <th><?php echo $this->lang->line('sections'); ?>
                                         </th>
-
+ <th>Limite Alunos</th>
                                         <th class="text-right"><?php echo $this->lang->line('action'); ?></th>
                                     </tr>
                                 </thead>
@@ -133,6 +143,9 @@
                                                 }
                                                 ?>
 
+                                            </td>
+                                             <td>
+                                                    <?php echo $vehroute->limit; ?>
                                             </td>
                                             <td class="mailbox-date pull-right">
                                                 <?php
