@@ -63,6 +63,10 @@ class Onlinestudent extends Admin_Controller {
     }
 
     public function edit($id) {
+	    
+	    error_reporting(E_ERROR);
+	ini_set('display_errors', 0);
+	    
         if (!$this->rbac->hasPrivilege('online_admission', 'can_edit')) {
             access_denied();
         }
