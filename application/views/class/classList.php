@@ -36,31 +36,54 @@
                                     <span class="text-danger"><?php echo form_error('class'); ?></span>
                                 </div>
                                 
-                                <div class="form-group">
+                               <!-- <div class="form-group">
                                     <label for="exampleInputEmail1">Limite de Alunos</label><small class="req"> *</small>
                                     <input autofocus="" id="limit" name="limit" 
                                            placeholder="" type="number" class="form-control"  
                                            min="1"
                                            value="<?php echo set_value('limit',100); ?>" />
                                     <span class="text-danger"><?php echo form_error('limit'); ?></span>
-                                </div>
+                                </div> -->
 
                                 <div class="form-group">
                                     <label for="exampleInputEmail1"><?php echo $this->lang->line('sections'); ?></label><small class="req"> *</small>
 
+                                    <div class="table table-responsive">
 
-                                    <?php
-                                    foreach ($vehiclelist as $vehicle) {
-                                        ?>
-                                        <div class="checkbox">
-                                            <label>
-                                                <input type="checkbox" name="sections[]" value="<?php echo $vehicle['id'] ?>" <?php echo set_checkbox('sections[]', $vehicle['id']); ?> ><?php echo $vehicle['section'] ?>
-                                            </label>
+                                            <table class="table table-bordered table-hover table-striped">
+
+                                                <thead>
+                                                    <tr>
+                                                        <th></th>
+                                                        <th>Período</th>
+                                                        <th>Limite de alunos</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <?php foreach ($vehiclelist as $vehicle): ?>
+                                                        <tr>
+                                                            <td>
+                                                                <input type="checkbox" name="sections[]" value="<?php echo $vehicle['id'] ?>" <?php echo set_checkbox('sections[]', $vehicle['id']); ?> >
+                                                            </td>
+                                                            <td>
+                                                                <?php echo $vehicle['section'] ?>
+                                                            </td>
+                                                            <td>
+                                                                <input type="number" 
+                                                                               name="limit_<?php echo $vehicle['id'] ?>" 
+                                                                               id="" 
+                                                                               value="<?php echo set_value('limit_'.$vehicle['id'],10); ?>"
+                                                                               placeholder=""
+                                                                               min="1"
+                                                                               class="form-control"/>
+                                                            </td>
+                                                        </tr>
+                                                    <?php endforeach; ?>
+                                                </tbody>
+                                               
+                                            </table>
+
                                         </div>
-                                        <?php
-                                    }
-                                    ?>
-
                                     <span class="text-danger"><?php echo form_error('sections[]'); ?></span>
                                 </div>
 
@@ -98,10 +121,10 @@
 
                                         <th><?php echo $this->lang->line('class'); ?>
                                         </th>
-                                        <th><?php echo $this->lang->line('sections'); ?>
+                                        <th>Períodos
                                         </th>
-                                        <th>Limite Alunos</th>
-
+                                       
+                                       
                                         <th class="text-right"><?php echo $this->lang->line('action'); ?></th>
                                     </tr>
                                 </thead>
@@ -118,22 +141,22 @@
 
                                             <td>
                                                 <?php
+                                                $limit = 0;
                                                 $vehicles = $vehroute->vehicles;
                                                 if (!empty($vehicles)) {
 
 
-                                                    foreach ($vehicles as $key => $value) {
+                                                    foreach ($vehicles as $key => $value) { $limit += $value->limit;
 
 
-                                                        echo "<div>" . $value->section . "</div>";
+                                                        echo "<div>" . $value->section . " | <span class='small'>Limite: ".$value->limit."</span></div>";
                                                     }
                                                 }
                                                 ?>
 
                                             </td>
-                                            <td>
-                                                    <?php echo $vehroute->limit; ?>
-                                            </td>
+                                          
+                                           
                                             <td class="mailbox-date pull-right">
                                                 <?php
                                                 if ($this->rbac->hasPrivilege('class', 'can_edit')) {

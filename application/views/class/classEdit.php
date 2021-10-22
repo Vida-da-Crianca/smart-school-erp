@@ -39,6 +39,8 @@
                                 foreach ($vehroute[0]->vehicles as $v_key => $v_value) {
                                     ?>
                                     <input type="hidden" name="prev_sections[]" value="<?php echo $v_value->id; ?>">
+                                    <input type="hidden" name="prev_limit_<?php echo $v_value->id; ?>" 
+                                           value="<?php echo $v_value->limit; ?>">
                                     <?php
                                 }
                                 ?>
@@ -50,29 +52,51 @@
                                            value="<?php echo set_value('class', $vehroute[0]->route_id); ?>" />
                                     <span class="text-danger"><?php echo form_error('class'); ?></span>
                                 </div>
+                               
                                 <div class="form-group">
-                                    <label for="exampleInputEmail1">Limite de Alunos</label><small class="req"> *</small>
-                                    <input autofocus="" id="limit" name="limit" 
-                                           placeholder="" type="number" class="form-control"  
-                                           min="1"
-                                           value="<?php echo set_value('limit',$vehroute[0]->limit); ?>" />
-                                    <span class="text-danger"><?php echo form_error('limit'); ?></span>
-                                </div>
-                                <div class="form-group">
-                                    <label for="exampleInputEmail1"><?php echo $this->lang->line('sections'); ?></label><small class="req"> *</small>
+                                    <label for="exampleInputEmail1">Períodos:</label><small class="req"> *</small>
 
+                                      <div class="table table-responsive">
 
-                                    <?php
-                                    foreach ($vehiclelist as $vehicle) {
-                                        ?>
-                                        <div class="checkbox">
-                                            <label>
-                                                <input type="checkbox" name="sections[]" value="<?php echo $vehicle['id'] ?>" <?php echo set_checkbox('sections[]', $vehicle['id'], check_in_array($vehicle['id'], $vehroute[0]->vehicles)); ?> ><?php echo $vehicle['section'] ?>
-                                            </label>
+                                            <table class="table table-bordered table-hover table-striped">
+
+                                                <thead>
+                                                    <tr>
+                                                        <th></th>
+                                                        <th>Período</th>
+                                                        <th>Limite de alunos</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <?php foreach ($vehiclelist as $vehicle): ?>
+                                                        <tr>
+                                                            <td>
+                                                             
+                                                             <input type="checkbox" name="sections[]" 
+                                                       value="<?php echo $vehicle['id'] ?>" 
+                                                           <?php echo set_checkbox('sections[]', $vehicle['id'], 
+                                                                   check_in_array($vehicle['id'], $vehroute[0]->vehicles)); ?> >
+                                                            
+                                                            </td>
+                                                            <td>
+                                                                <?php echo $vehicle['section'] ?>
+                                                            </td>
+                                                            <td>
+                                                                <input type="number" 
+                                                                               name="limit_<?php echo $vehicle['id'] ?>" 
+                                                                               id="" 
+                                                                               value="<?php echo set_value('limit_'.$vehicle['id'],get_limit_section($vehicle['id'], $vehroute[0]->vehicles)); ?>"
+                                                                               placeholder=""
+                                                                               min="1"
+                                                                               class="form-control"/>
+                                                            </td>
+                                                        </tr>
+                                                    <?php endforeach; ?>
+                                                </tbody>
+                                               
+                                            </table>
+
                                         </div>
-                                        <?php
-                                    }
-                                    ?>
 
                                     <span class="text-danger"><?php echo form_error('sections[]'); ?></span>
                                 </div>
@@ -112,9 +136,9 @@
 
                                         <th><?php echo $this->lang->line('class'); ?>
                                         </th>
-                                        <th><?php echo $this->lang->line('sections'); ?>
+                                        <th>Períodos
                                         </th>
- <th>Limite Alunos</th>
+
                                         <th class="text-right"><?php echo $this->lang->line('action'); ?></th>
                                     </tr>
                                 </thead>
@@ -137,16 +161,13 @@
 
                                                     foreach ($vehicles as $key => $value) {
 
-
-                                                        echo "<div>" . $value->section . "</div>";
-                                                    }
+                                                        echo "<div>" . $value->section . " | <span class='small'>Limite: ".$value->limit."</span></div>";
+                                                         }
                                                 }
                                                 ?>
 
                                             </td>
-                                             <td>
-                                                    <?php echo $vehroute->limit; ?>
-                                            </td>
+                                            
                                             <td class="mailbox-date pull-right">
                                                 <?php
                                                 if ($this->rbac->hasPrivilege('class', 'can_edit')) {
@@ -201,5 +222,15 @@ function check_in_array($find, $array) {
         }
     }
     return FALSE;
+}
+
+function get_limit_section($find, $array) {
+
+    foreach ($array as $element) {
+        if ($find == $element->id) {
+            return $element->limit;
+        }
+    }
+    return 10;
 }
 ?>

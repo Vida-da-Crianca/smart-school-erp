@@ -26,21 +26,46 @@ class Classes extends Admin_Controller {
         );
         $this->form_validation->set_rules('sections[]', $this->lang->line('section'), 'trim|required|xss_clean');
 
-        $this->form_validation->set_rules(
-                'limit', 'Limite de Alunos', 'trim|greater_than[0]');
+        /*$this->form_validation->set_rules(
+                'limit', 'Limite de Alunos', 'trim|greater_than[0]');*/
         
         if ($this->form_validation->run() == FALSE) {
             
         } else {
-            $class = $this->input->post('class');
-            $class_array = array(
-                'class' => $this->input->post('class'),
-                'limit' => (int) $this->input->post('limit')
-            );
+            
+            
+            
+            $sectionsOk = true;
+            
             $sections = $this->input->post('sections');
-            $this->classsection_model->add($class_array, $sections);
-            $this->session->set_flashdata('msg', '<div class="alert alert-success text-left">'.$this->lang->line('success_message').'</div>');
-            redirect('classes');
+            $sectionsToSave = [];
+            if(!is_array($sections)|| count($sections)<=0){
+               $sectionsOk = false;
+               $this->session->set_flashdata('msg', '<div class="alert alert-danger text-left">Marque Pelo Menos 1 Período!</div>');
+            }else{
+                foreach ($sections as $section){
+                    $limit = (int) $this->input->post('limit_'.$section);
+                    if($limit<=0){
+                        $sectionsOk = false;
+                        $this->session->set_flashdata('msg', '<div class="alert alert-danger text-left">Limite de Alunos Inválida!</div>');
+                        break;
+                    }
+                    $sectionsToSave[] = ['value'=>$section,'limit'=>(int) $limit];
+                }
+                
+            }
+            
+            if($sectionsOk){
+                $class = $this->input->post('class');
+                $class_array = array(
+                    'class' => $this->input->post('class'),
+                    'limit' => (int) $this->input->post('limit')
+                );
+
+                $this->classsection_model->add($class_array, $sectionsToSave);
+                $this->session->set_flashdata('msg', '<div class="alert alert-success text-left">'.$this->lang->line('success_message').'</div>');
+                redirect('classes');
+            }
         }
         $vehicle_result = $this->section_model->get();
         $data['vehiclelist'] = $vehicle_result;
@@ -82,8 +107,7 @@ class Classes extends Admin_Controller {
                 )
         );
         $this->form_validation->set_rules('sections[]', $this->lang->line('sections'), 'trim|required|xss_clean');
- $this->form_validation->set_rules(
-                'limit', 'Limite de Alunos', 'trim|greater_than[0]');
+        
 
         if ($this->form_validation->run() == FALSE) {
             $vehicle_result = $this->section_model->get();
@@ -98,49 +122,87 @@ class Classes extends Admin_Controller {
             $this->load->view('layout/footer', $data);
         } else {
 
+            $sectionsOk = true;
             $sections = $this->input->post('sections');
             $prev_sections = $this->input->post('prev_sections');
             $route_id = $this->input->post('route_id');
             $class_id = $this->input->post('pre_class_id');
-            if (!isset($prev_sections)) {
-                $prev_sections = array();
-            }
-            $add_result = array_diff($sections, $prev_sections);
-            $delete_result = array_diff($prev_sections, $sections);
-
-            if (!empty($add_result)) {
-                $vehicle_batch_array = array();
-                $class_array = array(
-                    'id' => $class_id,
-                    'class' => $this->input->post('class'),
-                     'limit' => (int) $this->input->post('limit')
-                );
-                foreach ($add_result as $vec_add_key => $vec_add_value) {
-
-                    $vehicle_batch_array[] = $vec_add_value;
+            
+            $sectionsToSave = [];
+            if(!is_array($sections)|| count($sections)<=0){
+               $sectionsOk = false;
+               $this->session->set_flashdata('msg', '<div class="alert alert-danger text-left">Marque Pelo Menos 1 Período!</div>');
+            }else{
+                foreach ($sections as $section){
+                    $limit = (int) $this->input->post('limit_'.$section);
+                    if($limit<=0){
+                        $sectionsOk = false;
+                        $this->session->set_flashdata('msg', '<div class="alert alert-danger text-left">Limite de Alunos Inválida!</div>');
+                        break;
+                    }
+                    $sectionsToSave[] = ['value'=>$section,'limit'=>(int) $limit];
                 }
-                $this->classsection_model->add($class_array, $vehicle_batch_array);
-            } else {
-                $class_array = array(
-                    'id' => $class_id,
-                    'class' => $this->input->post('class'),
-                    'limit' => (int) $this->input->post('limit')
-                );
-                $this->classsection_model->update($class_array);
+                
             }
+            
+            if($sectionsOk){
+            
+                    if (!isset($prev_sections)) {
+                        $prev_sections = array();
+                    }
+                    $add_result = array_diff($sections, $prev_sections);
+                    $delete_result = array_diff($prev_sections, $sections);
 
-            if (!empty($delete_result)) {
-                $classsection_delete_array = array();
-                foreach ($delete_result as $vec_delete_key => $vec_delete_value) {
+                    if (!empty($add_result)) {
+                        $vehicle_batch_array = array();
+                        $class_array = array(
+                            'id' => $class_id,
+                            'class' => $this->input->post('class'),
+                             'limit' => (int) $this->input->post('limit')
+                        );
+                        foreach ($add_result as $vec_add_key => $vec_add_value) {
 
-                    $classsection_delete_array[] = $vec_delete_value;
-                }
+                            $vehicle_batch_array[] = ['value'=>$vec_add_value,'limit'=>(int) $this->input->post('limit_'.$vec_add_value)];
+                        }
+                        $this->classsection_model->add($class_array, $vehicle_batch_array);
+                    } else {
+                        $class_array = array(
+                            'id' => $class_id,
+                            'class' => $this->input->post('class'),
+                            'limit' => (int) $this->input->post('limit')
+                        );
+                        $this->classsection_model->update($class_array);
+                    }
+                    
+                    //mesmo tendo um arrray de add novos
+                    //temos que fazer o processo para os ja relacionados
+                    //pois pode ter sido alterado o limite de alunos
+                    $class_array = array(
+                        'id' => $class_id,
+                        'class' => $this->input->post('class'),
+                        'limit' => (int) $this->input->post('limit')
+                    );
+                    $vehicle_batch_array = [];
+                    foreach ($sections as $vec_add_value) {
 
-                $this->classsection_model->remove($class_id, $classsection_delete_array);
+                        $vehicle_batch_array[] = ['value'=>$vec_add_value,'limit'=>(int) $this->input->post('limit_'.$vec_add_value)];
+                    }
+                   
+                    $this->classsection_model->add($class_array, $vehicle_batch_array);
+
+                    if (!empty($delete_result)) {
+                        $classsection_delete_array = array();
+                        foreach ($delete_result as $vec_delete_key => $vec_delete_value) {
+
+                            $classsection_delete_array[] = $vec_delete_value;
+                        }
+
+                        $this->classsection_model->remove($class_id, $classsection_delete_array);
+                    }
+
+                    $this->session->set_flashdata('msg', '<div class="alert alert-success text-left">'.$this->lang->line('update_message').'</div>');
+                    redirect('classes/index');
             }
-
-            $this->session->set_flashdata('msg', '<div class="alert alert-success text-left">'.$this->lang->line('update_message').'</div>');
-            redirect('classes/index');
         }
     }
 

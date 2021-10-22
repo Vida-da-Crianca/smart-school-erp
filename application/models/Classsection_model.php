@@ -41,7 +41,7 @@ class Classsection_model extends MY_Model
     public function add($data, $sections)
     {
 		
-		$this->db->trans_start(); # Starting Transaction
+        $this->db->trans_start(); # Starting Transaction
         $this->db->trans_strict(false); # See Note 01. If you wish can remove as well
         //=======================Code Start===========================
         if (isset($data['id'])) {
@@ -89,21 +89,39 @@ class Classsection_model extends MY_Model
         }
 
         $sections_array = array();
-        foreach ($sections as $vec_key => $vec_value) {
+        foreach ($sections as $vec_value) {
 
-            $vehicle_array = array(
-                'class_id'   => $class_id,
-                'section_id' => $vec_value,
-            );
+            //verificar se essa associacao ja esta cadastrada
+            //se sim, entao damos um update ao inves do add
+            if(!$this->_classSectionExists($class_id, $vec_value['value'])){
+                $vehicle_array = array(
+                    'class_id'   => $class_id,
+                    'section_id' => $vec_value['value'],
+                    'limit' => (int)$vec_value['limit'],
+                );
+                $sections_array[] = $vehicle_array;
+            }else{
+                //update no limit de alunos
+                $this->db->where('class_id',$class_id);
+                $this->db->where('section_id',(int)$vec_value['value']);
+                $this->db->update('class_sections',['limit'=>(int)$vec_value['limit']]);
+            }
 
-            $sections_array[] = $vehicle_array;
+            
         }
-        $this->db->insert_batch('class_sections', $sections_array);
+       
+        if(count($sections_array)>0){
+            $this->db->insert_batch('class_sections', $sections_array);
+        }
         if ($this->db->trans_status() === false) {
             $this->db->trans_rollback();
         } else {
             $this->db->trans_commit();
         }
+    }
+    
+    private function _classSectionExists($class_id,$section_id){
+       return count($this->db->where('class_id',$class_id)->where('section_id',$section_id)->get('class_sections')->result())> 0; 
     }
 
     public function getDetailbyClassSection($class_id, $section_id)
@@ -179,7 +197,12 @@ class Classsection_model extends MY_Model
 
     public function getVechileByRoute($route_id)
     {
-        $this->db->select('class_sections.id as class_section_id,class_sections.class_id,class_sections.section_id,sections.*')->from('class_sections');
+        $this->db->select(''
+                . 'class_sections.id as class_section_id,'
+                . 'class_sections.class_id,'
+                . 'class_sections.section_id,'
+                . 'class_sections.limit, '
+                . 'sections.*')->from('class_sections');
         $this->db->join('sections', 'sections.id = class_sections.section_id');
 
         $this->db->where('class_sections.class_id', $route_id);
