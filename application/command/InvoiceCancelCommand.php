@@ -90,14 +90,15 @@ class InvoiceCancelCommand extends BaseCommand
                 $item->status =  \Invoice_eloquent::DELETED;
                 $item->deleted_at = date('Y-m-d H:i:s');
                 $item->save();
-                discord_log(sprintf('%s', json_encode($response->DescricaoErros, JSON_PRETTY_PRINT)) , 'Cancelamento de Nota Fiscal');
+                // discord_log(sprintf('%s', json_encode($response->DescricaoErros, JSON_PRETTY_PRINT)) , 'Cancelamento de Nota Fiscal');
                  
                 (new ComputeTributeService)->handle();
                
             } catch (\Exception $e) {
-                discord_exception(
-                    sprintf('%s %s----%s', json_encode($service->getBody(), JSON_PRETTY_PRINT), PHP_EOL, $e->getMessage())
-                );
+                $this->error($e->getMessage());
+                // discord_exception(
+                //     sprintf('%s %s----%s', json_encode($service->getBody(), JSON_PRETTY_PRINT), PHP_EOL, $e->getMessage())
+                // );
 
             }
         }
@@ -127,12 +128,13 @@ class InvoiceCancelCommand extends BaseCommand
                 $service->params($data)->cancel();
                 $response = $service->fire();
                 // dump($response);
-                discord_log(sprintf('%s', json_encode($response->DescricaoErros, JSON_PRETTY_PRINT)), 'Cancelamento de Nota Fiscal');
+                // discord_log(sprintf('%s', json_encode($response->DescricaoErros, JSON_PRETTY_PRINT)), 'Cancelamento de Nota Fiscal');
             }
         } catch (\Exception $e) {
-            discord_exception(
-                sprintf('%s %s----%s', json_encode($service->getBody(), JSON_PRETTY_PRINT), PHP_EOL, $e->getMessage())
-            );
+            $this->error($e->getMessage());
+            // discord_exception(
+            //     sprintf('%s %s----%s', json_encode($service->getBody(), JSON_PRETTY_PRINT), PHP_EOL, $e->getMessage())
+            // );
         }
     }
 }

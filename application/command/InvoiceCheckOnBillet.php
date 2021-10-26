@@ -107,7 +107,7 @@ class InvoiceCheckOnBillet extends BaseCommand
                 $billet->invoices()->attach([$invoice->id]);
             });
             
-
+            
             $i += 1;
         }
 

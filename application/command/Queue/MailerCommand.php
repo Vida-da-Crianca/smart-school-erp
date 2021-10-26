@@ -39,7 +39,8 @@ class MailerCommand extends BaseCommand
         // dump($data->count());
         
         foreach ($data as $row) {
-            usleep(20000);
+           
+            
             try {
                 $status = $this->CI->LMailer->send_mail(
                     $row->to,
@@ -77,6 +78,8 @@ class MailerCommand extends BaseCommand
 
                 $this->logFailure($row, $e->getMessage());
             }
+
+            sleep(3);
         }
     }
 

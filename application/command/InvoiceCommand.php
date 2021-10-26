@@ -170,7 +170,7 @@ class InvoiceCommand extends BaseCommand
                 // dump($e->getMessage());
             }
 
-            usleep(200000);
+            sleep(2);
         }
 
         return 0;
