@@ -47,10 +47,10 @@ class MY_Controller extends CI_Controller {
 class Admin_Controller extends MY_Controller {
 
     protected $aaaa = false;
-    
+
     protected $resp_status;
     protected $resp_msg;
-    
+
     protected $post_filters;
 
     protected $estados;
@@ -58,8 +58,8 @@ class Admin_Controller extends MY_Controller {
 
     public function __construct() {
         parent::__construct();
-       
-        
+
+
         $this->auth->is_logged_in();
         $this->check_license();
         $this->load->library('rbac');
@@ -68,7 +68,7 @@ class Admin_Controller extends MY_Controller {
 
         $this->config->load('ci-blog');
         $this->config->load('custom_filed-config');
-        
+
         $this->estados['AC'] = 'AC';
         $this->estados['AL'] = 'AL';
         $this->estados['AP'] = 'AP';
@@ -96,12 +96,12 @@ class Admin_Controller extends MY_Controller {
         $this->estados['SP'] = 'SP';
         $this->estados['SE'] = 'SE';
         $this->estados['TO'] = 'TO';
-       
+
     }
-    
-     
+
+
     public function _validarClassSectionVagas($class_id,$section_id){
-         //Verficar se o section em questao é integral               
+         //Verficar se o section em questao é integral
         $resSection = $this->db->where('id',$section_id)->get('sections')->result();
         $peridoSelecionadoIntegral = (count($resSection)>0 ? ((int)$resSection[0]->full_time == 1) : false);
 
@@ -116,7 +116,7 @@ class Admin_Controller extends MY_Controller {
         $periodosNome = [];
         foreach ($alunosMatriculados as $aluno){
 
-           $periodo = (int)$aluno['section_id'];                    
+           $periodo = (int)$aluno['section_id'];
            if(!isset($quantidadeAlunosMatriculadosPorPeriodo[$periodo])){
                 $quantidadeAlunosMatriculadosPorPeriodo[$periodo] = 0;
            }
@@ -145,9 +145,11 @@ class Admin_Controller extends MY_Controller {
 
 
 
-        //Agora de acordo com o tipo do periodo selecionado calculamos de uma maneira:                
-        if(($quantidadeAlunosMatriculadosPorPeriodo[$section_id] + (!$peridoSelecionadoIntegral ? $quantidadeAlunosMatriculadosPeriodoIntegral :  0) + 1 ) > $vagasPorPeriodo[$section_id]){
-            throw new Exception('Não Há Mais Vagas Disponíveis Nessa Turma/Período!');
+        //Agora de acordo com o tipo do periodo selecionado calculamos de uma maneira:
+        if(isset($quantidadeAlunosMatriculadosPorPeriodo[$section_id]) && isset($vagasPorPeriodo[$section_id])){
+            if(($quantidadeAlunosMatriculadosPorPeriodo[$section_id] + (!$peridoSelecionadoIntegral ? $quantidadeAlunosMatriculadosPeriodoIntegral :  0) + 1 ) > $vagasPorPeriodo[$section_id]){
+                throw new Exception('Não Há Mais Vagas Disponíveis Nessa Turma/Período!');
+            }
         }
 
 
@@ -159,8 +161,10 @@ class Admin_Controller extends MY_Controller {
             foreach ($quantidadeAlunosMatriculadosPorPeriodo as $periodo => $qtd){
                 if($periodo != $section_id){
 
-                    if(($qtd+1) > $vagasPorPeriodo[$periodo]){
-                        throw new Exception('Um dos períodos['.($periodosNome[$periodo]).'] da turma não tem mais vagas disponíveis! Como esta é uma matrícula integral, deve haver pelo menos uma vaga disponível em todos os outros períodos da turma.');
+                    if(isset($vagasPorPeriodo[$periodo])){
+                        if(($qtd+1) > $vagasPorPeriodo[$periodo]){
+                            throw new Exception('Um dos períodos['.(isset($periodosNome[$periodo]) ? $periodosNome[$periodo] : '').'] da turma não tem mais vagas disponíveis! Como esta é uma matrícula integral, deve haver pelo menos uma vaga disponível em todos os outros períodos da turma.');
+                        }
                     }
                 }
             }
@@ -193,17 +197,17 @@ class Admin_Controller extends MY_Controller {
     }
 
     public function update_ss_routine() {
-       
+
         // $license = $this->config->item('SSLK');
         // $fname = APPPATH . 'config/license.php';
         // $update_handle = fopen($fname, "r");
         // $content = fread($update_handle, filesize($fname));
         // $file_contents = str_replace('$config[\'SSLK\'] = \'' . $license . '\'', '$config[\'SSLK\'] = \'\'', $content);
         // $update_handle = fopen($fname, 'w') or die("can't open file");
-        
+
 
         // if (fwrite($update_handle, $file_contents)) {
-            
+
         // }
         // fclose($update_handle);
 
@@ -226,11 +230,11 @@ class Admin_Controller extends MY_Controller {
         print_r($var);
         echo '</pre>';
     }
-    
+
     protected function checkAjaxSubmit()
     {
         $this->resp_status = false;
-      
+
         return $this->input->is_ajax_request() && $this->input->post('_submit') == 'yeap';
     }
 
@@ -269,12 +273,12 @@ class Admin_Controller extends MY_Controller {
             }
         }
     }
-    
+
     protected function parseFloat($str)
     {
         return (float) str_replace(array('.', ','), array('', '.'), $str);
     }
-    
+
     protected function modelTransStart()
     {
         $this->db->trans_begin();
@@ -287,7 +291,7 @@ class Admin_Controller extends MY_Controller {
         else
             $this->db->trans_commit();
     }
-    
+
     protected function formatarData($data)
     {
         if (!empty($data))
@@ -311,7 +315,7 @@ class Admin_Controller extends MY_Controller {
             throw new Exception('Erro ao formatar FILTROS de DATAS');
         }
     }
-    
+
     protected function extractFieldFromArray($arr, $field)
     {
         try
@@ -332,7 +336,7 @@ class Admin_Controller extends MY_Controller {
             throw new Exception('Erro ao extrair IDs do Array');
         }
     }
-    
+
      public function _classToArray($objClass, $exclude = null)
     {
         $results = array();
@@ -363,16 +367,16 @@ class Admin_Controller extends MY_Controller {
 
         return $results;
     }
-    
+
     protected function soNumeros($str){
         return preg_replace('/[^0-9]/', '', $str);
     }
-    
+
     function CPFValido($cpf)
 	{
 		// Verifiva se o número digitado contém todos os digitos
 		$cpf = str_pad(preg_replace('/[^0-9]/', '', $cpf), 11, '0', STR_PAD_LEFT);
-	
+
 		// Verifica se nenhuma das sequências abaixo foi digitada, caso seja, retorna falso
 		if (strlen($cpf) != 11 ||
 				$cpf == '00000000000' ||
@@ -392,7 +396,7 @@ class Admin_Controller extends MY_Controller {
 				for ($d = 0, $c = 0; $c < $t; $c++) {
 					$d += $cpf{$c} * (($t + 1) - $c);
 				}
-	
+
 				$d = ((10 * $d) % 11) % 10;
 				if ($cpf{$c} != $d) {
 					return FALSE;
@@ -401,8 +405,8 @@ class Admin_Controller extends MY_Controller {
 			return TRUE;
 		}
 	}
-       
-        
+
+
     protected function checkFormValidationErrors()
     {
         $this->form_validation->set_error_delimiters('', '');
@@ -410,12 +414,12 @@ class Admin_Controller extends MY_Controller {
         if ($this->form_validation->run() == FALSE)
             throw new Exception(validation_errors());
     }
-  
 
 
 
-    
-    
+
+
+
 }
 
 class Student_Controller extends MY_Controller {
@@ -580,5 +584,5 @@ class Front_Controller extends CI_Controller {
             }
         }
     }
-   
+
 }
