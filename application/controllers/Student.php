@@ -786,7 +786,7 @@ class Student extends Admin_Controller
                     )
                 );
 
-                  $custom_fields              = $this->customfield_model->getByBelong('students');
+                $custom_fields = $this->customfield_model->getByBelong('students');
 
                 foreach ($custom_fields as $custom_fields_key => $custom_fields_value) {
                     if ($custom_fields_value['validation']) {
@@ -863,7 +863,15 @@ class Student extends Admin_Controller
                 $dob = $this->tools->formatarData($this->input->post('dob'),'br','us');
                 $admission_date = $this->tools->formatarData($this->input->post('admission_date'),'br','us');
 
+                //validar class and section
+                
+                
 
+               $this->_validarClassSectionVagas($class_id,$section_id);
+                
+                
+               // throw new Exception('asdasdasdasdasdasdasd');
+              
                 $full_name = $this->input->post('firstname');
                 $name_parts = explode(' ', $full_name);
                 $fistname = ucfirst($name_parts[0]);

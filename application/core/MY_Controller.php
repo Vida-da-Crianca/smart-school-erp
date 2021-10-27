@@ -98,6 +98,75 @@ class Admin_Controller extends MY_Controller {
         $this->estados['TO'] = 'TO';
        
     }
+    
+     
+    public function _validarClassSectionVagas($class_id,$section_id){
+         //Verficar se o section em questao é integral               
+        $resSection = $this->db->where('id',$section_id)->get('sections')->result();
+        $peridoSelecionadoIntegral = (count($resSection)>0 ? ((int)$resSection[0]->full_time == 1) : false);
+
+        //Carregar todos alunos matriculas na TURMA... sem especificar o PERIODO
+        $alunosMatriculados = $this->student_model->searchByClassSection($class_id);
+
+        //1º - verificar quantos alunos ja tem matriculados no periodo selecionado
+        //sendo que contabilizamos tambems as matriculas de periodo INTEGRAL
+
+        $quantidadeAlunosMatriculadosPorPeriodo = [];
+        $quantidadeAlunosMatriculadosPeriodoIntegral = 0;
+        $periodosNome = [];
+        foreach ($alunosMatriculados as $aluno){
+
+           $periodo = (int)$aluno['section_id'];                    
+           if(!isset($quantidadeAlunosMatriculadosPorPeriodo[$periodo])){
+                $quantidadeAlunosMatriculadosPorPeriodo[$periodo] = 0;
+           }
+           $quantidadeAlunosMatriculadosPorPeriodo[$periodo]++;
+
+           if((int)$aluno['full_time'] == 1){
+               $quantidadeAlunosMatriculadosPeriodoIntegral++;
+           }
+
+           $periodosNome[$periodo] = $aluno['section'];
+
+        }
+
+         //Quantidade de vagas disponiveis por PERIODO e na classe toda
+        $vagasPorPeriodo = [];
+        $vagasTotalTurma = 0;
+        $res = $this->db->where('class_id',$class_id)->get('class_sections')->result();
+        foreach ($res as $row){
+
+            if(!isset($vagasPorPeriodo[$row->section_id])){
+                $vagasPorPeriodo[$row->section_id] = (int)$row->limit;
+            }
+
+            $vagasTotalTurma += $row->limit;
+        }
+
+
+
+        //Agora de acordo com o tipo do periodo selecionado calculamos de uma maneira:                
+        if(($quantidadeAlunosMatriculadosPorPeriodo[$section_id] + (!$peridoSelecionadoIntegral ? $quantidadeAlunosMatriculadosPeriodoIntegral :  0) + 1 ) > $vagasPorPeriodo[$section_id]){
+            throw new Exception('Não Há Mais Vagas Disponíveis Nessa Turma/Período!');
+        }
+
+
+        if($peridoSelecionadoIntegral){
+
+            //Se o periodo selecionado FOR INTEGRAL
+            //temos que validar tambem se nos outros periodos
+            //tem vagas disponiveis
+            foreach ($quantidadeAlunosMatriculadosPorPeriodo as $periodo => $qtd){
+                if($periodo != $section_id){
+
+                    if(($qtd+1) > $vagasPorPeriodo[$periodo]){
+                        throw new Exception('Um dos períodos['.($periodosNome[$periodo]).'] da turma não tem mais vagas disponíveis! Como esta é uma matrícula integral, deve haver pelo menos uma vaga disponível em todos os outros períodos da turma.');
+                    }
+                }
+            }
+        }
+    }
+
 
     public function check_license() {
 
@@ -511,5 +580,5 @@ class Front_Controller extends CI_Controller {
             }
         }
     }
-
+   
 }

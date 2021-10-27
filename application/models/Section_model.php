@@ -54,7 +54,7 @@ class Section_model extends MY_Model
     public function getClassBySectionAll($classid)
     {
 
-        $this->db->select('class_sections.id,class_sections.section_id,sections.section');
+        $this->db->select('class_sections.id,class_sections.section_id,sections.section,sections.full_time');
         $this->db->from('class_sections');
         $this->db->join('sections', 'sections.id = class_sections.section_id');
         $this->db->where('class_sections.class_id', $classid);

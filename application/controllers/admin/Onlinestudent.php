@@ -162,10 +162,16 @@ class Onlinestudent extends Admin_Controller {
           $res = $this->db->get('class_sections')->result();
         
           if(count($res)<=0){
-             
-               $this->session->set_flashdata('msg', '<div class="alert alert-danger text-left">Turma/Período não catalogado!</div>');
+                $this->session->set_flashdata('msg', '<div class="alert alert-danger text-left">Turma/Período não catalogado!</div>');
                 redirect('admin/onlinestudent/edit/'.$id);
           }else{
+              
+              try{
+                  $this->_validarClassSectionVagas($class_id,$section_id);
+              } catch (\Exception $e){
+                  $this->session->set_flashdata('msg', '<div class="alert alert-danger text-left">'.($e->getMessage()).'</div>');
+                  redirect('admin/onlinestudent/edit/'.$id);
+              }
                         
                      
                         $data = array(
