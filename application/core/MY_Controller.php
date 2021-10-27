@@ -112,8 +112,15 @@ class Admin_Controller extends MY_Controller {
         //sendo que contabilizamos tambems as matriculas de periodo INTEGRAL
 
         $quantidadeAlunosMatriculadosPorPeriodo = [];
+        $periodosTurma = $this->section_model->getClassBySectionAll($class_id);
+        foreach ($periodosTurma as $periodo){
+            $quantidadeAlunosMatriculadosPorPeriodo[$periodo['section_id']] = 0;
+            $periodosNome[$periodo['section_id']] = $periodo['section'];
+        }
+
+
         $quantidadeAlunosMatriculadosPeriodoIntegral = 0;
-        $periodosNome = [];
+
         foreach ($alunosMatriculados as $aluno){
 
            $periodo = (int)$aluno['section_id'];
@@ -126,7 +133,7 @@ class Admin_Controller extends MY_Controller {
                $quantidadeAlunosMatriculadosPeriodoIntegral++;
            }
 
-           $periodosNome[$periodo] = $aluno['section'];
+
 
         }
 
@@ -143,14 +150,14 @@ class Admin_Controller extends MY_Controller {
             $vagasTotalTurma += $row->limit;
         }
 
-
+       //throw new Exception(var_export($quantidadeAlunosMatriculadosPorPeriodo,true));
 
         //Agora de acordo com o tipo do periodo selecionado calculamos de uma maneira:
-        if(isset($quantidadeAlunosMatriculadosPorPeriodo[$section_id]) && isset($vagasPorPeriodo[$section_id])){
+        //if(isset($quantidadeAlunosMatriculadosPorPeriodo[$section_id]) && isset($vagasPorPeriodo[$section_id])){
             if(($quantidadeAlunosMatriculadosPorPeriodo[$section_id] + (!$peridoSelecionadoIntegral ? $quantidadeAlunosMatriculadosPeriodoIntegral :  0) + 1 ) > $vagasPorPeriodo[$section_id]){
                 throw new Exception('Não Há Mais Vagas Disponíveis Nessa Turma/Período!');
             }
-        }
+       // }
 
 
         if($peridoSelecionadoIntegral){
@@ -161,11 +168,11 @@ class Admin_Controller extends MY_Controller {
             foreach ($quantidadeAlunosMatriculadosPorPeriodo as $periodo => $qtd){
                 if($periodo != $section_id){
 
-                    if(isset($vagasPorPeriodo[$periodo])){
+                   // if(isset($vagasPorPeriodo[$periodo])){
                         if(($qtd+1) > $vagasPorPeriodo[$periodo]){
                             throw new Exception('Um dos períodos['.(isset($periodosNome[$periodo]) ? $periodosNome[$periodo] : '').'] da turma não tem mais vagas disponíveis! Como esta é uma matrícula integral, deve haver pelo menos uma vaga disponível em todos os outros períodos da turma.');
                         }
-                    }
+                   // }
                 }
             }
         }
