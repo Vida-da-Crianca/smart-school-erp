@@ -192,6 +192,50 @@
                             <?php echo form_dropdown('status',[99=>'Todos',1=>'Apenas RECEBIDOS',2=>'Apenas EM ABERTO'], isset($_POST['status']) ? $_POST['status'] : 99, "id='' class='form-control'"); ?>
                         </div>
                     </div>
+                   
+                    <div class = "row">
+                        <div class="col-md-4 form-group">
+                        <label>Status do Boleto no Banco</label>
+
+
+                         <div class="row">
+                                <div class="col-xs-12 dropdown" id="classDropdown">
+                                    <div class="button-group w-full" data-toggle="dropdown">
+                                        <button type="button" class="btn btn-default btn-sm">
+                                            <span data-default="Selecione um status" class="dropdown-label">Selecione um status</span> <span class="caret"></span>
+                                        </button>
+                                    </div>
+                                    <ul class="dropdown-menu">
+                                        <?php
+                                        $status_boleto_banco = (isset($_POST['status_boleto_banco']) ? $_POST['status_boleto_banco'] : []);
+             
+                                        $statusList = $this->db->group_by('status')->order_by('status')->get('billets')->result();
+                                        foreach ($statusList as $boleto) { if(!empty($boleto->status)){
+                                        ?>
+                                            <li class="ui-checkbox">
+                                                <label class="small control control-checkbox" data-value="<?php $boleto->status ?>">
+                                                    <input type="checkbox" 
+                                                           data-value="<?php echo $boleto->status ?>" 
+                                                           data-label="<?php echo $boleto->status ?>" 
+                                                               <?php if (in_array($boleto->status, $status_boleto_banco)) echo "checked" ?> 
+                                                           name="status_boleto_banco[]" value="<?php echo $boleto->status; ?>" />
+                                                    &nbsp;<?php echo $boleto->status ?>
+                                                    <div class="control_indicator"></div>
+                                                </label>
+                                            </li>
+
+                                        <?php
+
+                                        }}
+                                        ?>
+
+
+                                    </ul>
+                                </div>
+
+                                <span class="text-danger"><?php echo form_error('class_id_option[]'); ?></span>
+                            </div> 
+                    </div>
                     
                     
                 </div>
@@ -234,6 +278,7 @@
                                      <th class="text-center">Data Recebimento</th>
                                     
                                     <th>Status</th>
+                                    <th>Status Boleto</th>
                                     
                                 </tr>
                             </thead>
@@ -294,6 +339,9 @@
                                              &nbsp;
                                               <?php echo $row->pago ? '<b class="text-success">RECEBIDO</b>' : '<b class="text-danger">EM ABERTO</b>'; ?>
                                          </td>
+                                         <td class="text-center small">
+                                            <?php echo $row->status_boleto_banco; ?>
+                                        </td>
                                     </tr>
                                 <?php endif; endforeach; ?>
                             </tbody>
@@ -476,6 +524,7 @@ $(document).ready(function(){
                 null,
                 null,
                 { "sType": "date-uk" },
+                null,
                 null
             ],
             language: {

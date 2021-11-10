@@ -15,7 +15,15 @@ class Report extends Admin_Controller
         $this->payment_mode = $this->customlib->payment_mode();
         $this->search_type = $this->customlib->get_searchtype();
         $this->sch_setting_detail = $this->setting_model->getSetting();
+        
+        
+       /* $string = 'ZZZZçççàéíÌ )()*(*(&(*(&%!123456asasÀÁ';
+        var_dump(preg_replace("/[^A-Za-z0-9.!?]/",'',$string));
+        die('asd');*/
     }
+    
+    
+    
 
     function pdfStudentFeeRecord()
     {
@@ -384,7 +392,7 @@ class Report extends Admin_Controller
     }
 	
 	
-	function recebimentos_previstos()
+    function recebimentos_previstos()
     {
 
         $this->session->set_userdata('top_menu', 'Reports');
@@ -536,6 +544,8 @@ class Report extends Admin_Controller
                 $depositosPorFinanceiro[(int)$deposito->student_fees_id][] = $deposito->amount_detail;// --> isso é um JSON 
              }
             
+             $status_boleto_banco = (isset($_POST['status_boleto_banco']) ? $_POST['status_boleto_banco'] : []);
+             
              
              $resultsFinal = [];
              //Agora para cada registro financeiro, vamos calcular o total já recebido
@@ -549,7 +559,28 @@ class Report extends Admin_Controller
                      if($with_billet == 2 && (int)$row->boletoNumero > 0){$contabilizar = false;}
                  }
                  
-                 
+                 $row->status_boleto_banco = '';
+                // var_dump($status_boleto_banco);
+                // die('');
+                 //se tiver filtro por boleto.. e se tiver filtro pelo STATUS do boleto no banco
+                 if((int)$row->boletoNumero > 0 && $contabilizar){
+                     
+                     $fee_item_id = (int)$row->idFinanceiro;
+                     $sql = "SELECT status FROM billets "
+                             . "WHERE bank_bullet_id = ".($row->boletoNumero)." "
+                             . "AND body LIKE '%\"fee_item_id\":$fee_item_id%' LIMIT 1";
+                     //echo $sql.'<br />';
+                     $billetRow = $this->db->query($sql)->result();
+                     if(count($billetRow)>0){
+                         $statusBoleto = $billetRow[0]->status;
+                         
+                         if(is_array($status_boleto_banco) && count($status_boleto_banco) > 0 ){//tem filtro
+                            $contabilizar = in_array($statusBoleto, $status_boleto_banco);
+                         }
+                         
+                         $row->status_boleto_banco = $statusBoleto;
+                     }
+                 }
                  
                  if($contabilizar){
                     $row->valorRecebido = 0; //criamos esse campo zerado
@@ -2359,9 +2390,6 @@ class Report extends Admin_Controller
             return 0;
         }
     }
-
-    
-    
     
     function lista_de_documentos(){
         
@@ -2451,5 +2479,123 @@ class Report extends Admin_Controller
         
         
     }
-}
+    
+    
+    
+    
+    function limite_alunos(){
+        
+        
+         if (!$this->rbac->hasPrivilege('student_report', 'can_view')) {
+            access_denied();
+        }
 
+        $this->session->set_userdata('top_menu', 'Reports');
+        $this->session->set_userdata('sub_menu', 'Reports/student_information');
+        $this->session->set_userdata('subsub_menu', 'Reports/student_information/student_report');
+
+        $data['title']           = 'student fee';
+        $data['title']           = 'student fee';
+        $genderList              = $this->customlib->getGender();
+        $data['genderList']      = $genderList;
+        $RTEstatusList           = $this->customlib->getRteStatus();
+        $data['RTEstatusList']   = $RTEstatusList;
+        $class                   = $this->class_model->get();
+        $data['classlist']       = $class;
+        $data['sch_setting']     = $this->sch_setting_detail;
+        $data['adm_auto_insert'] = $this->sch_setting_detail->adm_auto_insert;
+        $userdata                = $this->customlib->getUserData();
+        $carray                  = array();
+
+          $this->load->model('eloquent/Document');
+            $data['documents'] =  Document::orderBy('title', 'asc')->get();
+            
+
+
+        if (!empty($data["classlist"])) {
+            foreach ($data["classlist"] as $ckey => $cvalue) {
+
+                $carray[] = $cvalue["id"];
+            }
+        }
+
+        $category             = $this->category_model->get();
+        $data['categorylist'] = $category;
+
+        $data['listOfClassId'] = $this->input->post('class_id_option') ? $this->input->post('class_id_option') : [];
+        $data['class_id_option'] = $this->input->post('class_id_option') ? $this->input->post('class_id_option') : [];
+      
+        
+        $data['document_id'] = (int) $this->input->post('document');
+        
+        if ($this->input->server('REQUEST_METHOD') == "GET") {
+           
+            $this->load->view('layout/header', $data);
+             $this->load->view('reports/limite_alunos', $data);
+            $this->load->view('layout/footer', $data);
+        } else {
+            $this->form_validation->set_rules('class_id_option[]', $this->lang->line('class'), 'trim|required|xss_clean');
+
+            
+            if ($this->form_validation->run() == false) {
+            
+                $this->load->view('layout/header', $data);
+                $this->load->view('reports/lista_de_documentos', $data);
+                $this->load->view('layout/footer', $data);
+            } else {
+                $class       = $this->input->post('class_id_option') ? $this->input->post('class_id_option') : [];
+                $section     = $this->input->post('section_id');
+                $category_id = $this->input->post('category_id');
+                $gender      = $this->input->post('gender');
+                $rte         = $this->input->post('rte');
+                $search      = $this->input->post('search');
+               
+                if(!is_array($class) || count($class)<=0){
+                    $class[] = 8989898989;
+                }
+                
+                if (isset($search)) {
+                  
+                    $session = $this->setting_model->getCurrentSession();
+                   
+                    $this->db->select("classes.class AS className,"
+                            . "IFNULL((SELECT SUM(class_sections.limit) FROM class_sections JOIN sections ON sections.id = class_sections.section_id WHERE class_sections.class_id = classes.id AND IFNULL(sections.full_time,0) = 1 LIMIT 1), 0) AS quantidadeVagas,"
+                            . "IFNULL( (SELECT count(1) FROM student_session JOIN sections ON sections.id = student_session.section_id JOIN students ON students.id = student_session.student_id WHERE student_session.class_id = classes.id AND IFNULL(sections.full_time,0) = 0 AND students.is_active = 'yes' AND student_session.session_id = $session LIMIT 1), 0) AS alunosNaoIntegral,"
+                            . "IFNULL( (SELECT count(1) FROM student_session JOIN sections ON sections.id = student_session.section_id JOIN students ON students.id = student_session.student_id WHERE student_session.class_id = classes.id AND IFNULL(sections.full_time,0) = 1 AND students.is_active = 'yes' AND student_session.session_id = $session LIMIT 1), 0) AS alunosIntegral");
+                    $this->db->from('classes');
+                    $this->db->where_in('classes.id', $class);
+                    $this->db->order_by('classes.class','ASC');
+                    $resultlist = $this->db->get()->result();
+                    
+                    $data['resultlist'] = $resultlist;
+                    
+                    
+                   /* $this->db->select(''
+                            . 'classes.class AS className,'
+                            . 'COUNT(1) AS ')->from('students');
+                    $this->db->join('student_session', 'student_session.student_id = students.id');
+                    $this->db->join('classes', 'student_session.class_id = classes.id');
+                    $this->db->join('sections', 'sections.id = student_session.section_id');
+                    $this->db->join('categories', 'students.category_id = categories.id', 'left');
+                    $this->db->where('student_session.session_id', $this->current_session);
+                    $this->db->where('students.is_active', "yes");
+                    $this->db->where_in('student_session.class_id', $class);
+                    $this->db->group_by('student_session.class_id');
+                    */
+                    
+                    $data['class_id_option']    = $class;
+                    $data['section_id']  = $section;
+                    $data['category_id'] = $category_id;
+                    $data['gender']      = $gender;
+                    $data['rte_status']  = $rte;
+                    $this->load->view('layout/header', $data);
+                     $this->load->view('reports/limite_alunos', $data);
+                    $this->load->view('layout/footer', $data);
+                }
+            }
+        }
+        
+        
+        
+    }
+}
