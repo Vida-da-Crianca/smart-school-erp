@@ -199,7 +199,7 @@
 
 
                          <div class="row">
-                                <div class="col-xs-12 dropdown" id="classDropdown">
+                                <div class="col-xs-12 dropdown" id="statusBoletoDropdown">
                                     <div class="button-group w-full" data-toggle="dropdown">
                                         <button type="button" class="btn btn-default btn-sm">
                                             <span data-default="Selecione um status" class="dropdown-label">Selecione um status</span> <span class="caret"></span>
@@ -209,7 +209,7 @@
                                         <?php
                                         $status_boleto_banco = (isset($_POST['status_boleto_banco']) ? $_POST['status_boleto_banco'] : []);
              
-                                        $statusList = $this->db->group_by('status')->order_by('status')->get('billets')->result();
+                                        $statusList = $this->db->where_in('status',['PAGO','AGUARDANDO PAGAMENTO'])->group_by('status')->order_by('status')->get('billets')->result();
                                         foreach ($statusList as $boleto) { if(!empty($boleto->status)){
                                         ?>
                                             <li class="ui-checkbox">
@@ -405,6 +405,31 @@ $(document).ready(function(){
                 var checkedIdOptions = [];
                 var label = $element.data('default')
                 $('#classDropdown input:checked').each(function(e) {
+
+                    checkedOptions.push($(this).data('label'));
+                    checkedIdOptions.push($(this).data('value'));
+                })
+
+                if (checkedOptions.length > 0) {
+                    label = checkedOptions.slice(0, 2).join(', ');
+                    if (checkedOptions.length > 2) {
+                        label = `${label} <b> (+${checkedOptions.length - 2})</b>`
+                    }
+
+                    //getSectionByClass(checkedIdOptions);
+                }
+
+                $element.html(label);
+                initializeObserveDropdown();
+            }
+            dropdownLabel();
+            
+            function dropdownLabel2() {
+                var $element = $('#statusBoletoDropdown .dropdown-label');
+                var checkedOptions = [];
+                var checkedIdOptions = [];
+                var label = $element.data('default')
+                $('#statusBoleto input:checked').each(function(e) {
 
                     checkedOptions.push($(this).data('label'));
                     checkedIdOptions.push($(this).data('value'));

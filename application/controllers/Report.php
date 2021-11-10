@@ -458,7 +458,9 @@ class Report extends Admin_Controller
                              SELECT billets.bank_bullet_id  
                              FROM billet_student_fee_item 
                              LEFT JOIN  billets ON billets.id = billet_student_fee_item.billet_id 
-                             WHERE billet_student_fee_item.fee_item_id = student_fee_items.id LIMIT 1
+                             WHERE billet_student_fee_item.fee_item_id = student_fee_items.id 
+                             AND billets.status IN ('PAGO','AGUARDANDO PAGAMENTO') 
+                             LIMIT 1
                                   )
                         , 0) AS boletoNumero,
                     IFNULL( 
