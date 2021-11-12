@@ -67,6 +67,12 @@
                                         <a href="<?php echo base_url(); ?>report/recebimentos_previstos"><i class="fa fa-file-text-o"></i> 
                                         Recebimentos previstos
                                         </a>
+                                            
+                                                  
+                                        <a href="<?php echo base_url(); ?>report/custo_turma_aluno"><i class="fa fa-file-text-o"></i> 
+					 Custos por turma/aluno
+					</a>
+					
 
                                         <a href="<?php echo base_url(); ?>report/lista_de_documentos"><i class="fa fa-file-text-o"></i> 
                                         Lista de documentos
@@ -231,17 +237,15 @@
                                class="btn btn-lg btn-primary"
                                style="color: #fff;"
                                >
-                                    <?php echo count($resultlist); ?> Documentos Processados!<br />
-                                    Clique Para Gerar o PDF <i class="fa fa-file-pdf-o"></i>
+                                    <?php echo count($resultlist); ?> Documentos Processados, Clique Para Gerar o PDF <i class="fa fa-file-pdf-o"></i>
                             </a>  
                         </div>
                         
                         <?php endif; ?>
-                           
-                        
                          
+                        
                         <br />&nbsp;<br />&nbsp;<br />&nbsp;<br />&nbsp;<br />&nbsp;<br />&nbsp;<br />&nbsp;<br />&nbsp;
-                       
+                        
                     </div>
                     <!--./box box-primary -->
 

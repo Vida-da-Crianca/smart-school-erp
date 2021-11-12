@@ -159,6 +159,7 @@
                             <li class="<?php echo set_Submenu('student/disable_reason'); ?>"><a href="<?php echo base_url(); ?>admin/disable_reason"><i class="fa fa-angle-double-right"></i> <?php echo $this->lang->line('disable') . " " . $this->lang->line('reason'); ?></a></li>
                             <li class="<?php echo set_Submenu('student/orcamento'); ?>"><a href="<?php echo site_url('admin/orcamento'); ?>"><i class="fa fa-angle-double-right"></i> Orçamentos</a></li><?php #alterado; ?>
                            
+                               
                                 <?php
                         }
                         ?>
@@ -266,7 +267,7 @@
                             if ($this->rbac->hasPrivilege('fees_reminder', 'can_view')) {
                             ?>
                                 <li class="<?php echo set_Submenu('feereminder/setting'); ?>"><a href="<?php echo site_url('admin/feereminder/setting'); ?>"><i class="fa fa-angle-double-right"></i> <?php echo $this->lang->line('fees') . " " . $this->lang->line('reminder'); ?></a></li>
-                            <?php
+                                   <?php
                             }
                             ?>
 
@@ -559,12 +560,11 @@
                             <?php
                             }
 
-                            if ($this->rbac->hasPrivilege('section', 'can_view')) {
+                            if ($this->rbac->hasPrivilege('section', 'can_view')) {#alterado
                             ?>
                                 <li class="<?php echo set_Submenu('sections/index'); ?>"><a href="<?php echo base_url(); ?>sections"><i class="fa fa-angle-double-right"></i> <?php echo $this->lang->line('sections'); ?></a></li>
-                           <li class="<?php echo set_Submenu('data_corte/index'); ?>"><a href="<?php echo base_url(); ?>admin/data_corte"><i class="fa fa-angle-double-right"></i> Datas de Corte</a></li>
-                        
- <?php
+                                 <li class="<?php echo set_Submenu('data_corte/index'); ?>"><a href="<?php echo base_url(); ?>admin/data_corte"><i class="fa fa-angle-double-right"></i> Datas de Corte</a></li>
+                            <?php
                             }
                             ?>
 
@@ -1247,6 +1247,15 @@
                             <?php
                             }
                             ?>
+                                
+                                
+                           <li class="<?php echo set_Submenu('audit/index'); ?>">
+                               <a href="<?php echo base_url(); ?>report/limite_alunos">
+                                   <i class="fa fa-angle-double-right"></i>
+                                   Limites de Alunos
+                               </a>
+                           </li>
+                       
 
 
                         </ul>

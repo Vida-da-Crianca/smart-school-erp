@@ -71,6 +71,12 @@
                                         <a href="<?php echo base_url(); ?>report/recebimentos_previstos"><i class="fa fa-file-text-o"></i> 
                                         Recebimentos previstos
                                         </a>
+                                            
+                                                  
+                                        <a href="<?php echo base_url(); ?>report/custo_turma_aluno"><i class="fa fa-file-text-o"></i> 
+					 Custos por turma/aluno
+					</a>
+					
 
                                         <a href="<?php echo base_url(); ?>report/lista_de_documentos"><i class="fa fa-file-text-o"></i> 
                                         Lista de documentos

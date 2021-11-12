@@ -78,6 +78,12 @@
 					<a href="<?php echo base_url(); ?>report/recebimentos_previstos"><i class="fa fa-file-text-o"></i> 
 					Recebimentos previstos
 					</a>
+                                            
+                                                  
+                                        <a href="<?php echo base_url(); ?>report/custo_turma_aluno"><i class="fa fa-file-text-o"></i> 
+					 Custos por turma/aluno
+					</a>
+					
 					
 					<a href="<?php echo base_url(); ?>report/lista_de_documentos"><i class="fa fa-file-text-o"></i> 
 					Lista de documentos
@@ -208,7 +214,7 @@
                                         <label>Status</label>
                                         
                                         
-                                        <div class="row">
+                                         <div class="row">
                                                 <div class="col-xs-12 dropdown" id="classDropdown">
                                                     <div class="button-group w-full" data-toggle="dropdown">
                                                         <button type="button" class="btn btn-default btn-sm">
@@ -244,6 +250,48 @@
                                                 <span class="text-danger"><?php echo form_error('class_id_option[]'); ?></span>
                                             </div>
                                         
+                                        
+                                        <!--
+                                        
+                                        <div class="row">
+                                                <div class="col-xs-12 dropdown" id="classDropdown">
+                                                    <div class="button-group w-full" data-toggle="dropdown">
+                                                        <button type="button" class="btn btn-default btn-sm">
+                                                            <span data-default="Selecione um Status" 
+                                                                  class="dropdown-label">Selecione um Status</span> 
+                                                                  <span class="caret"></span>
+                                                        </button>
+                                                    </div>
+                                                    <ul class="dropdown-menu">
+                                                        <?php
+                                                        $statusList = $this->db->group_by('status')->order_by('status')->get('billets')->result();
+                                                        foreach ($statusList as $boleto) { if(!empty($boleto->status)){
+                                                        ?>
+                                                            <li class="ui-checkbox">
+                                                                <label class="small control control-checkbox" data-value="<?php echo $boleto->status ?>">
+                                                                    <input type="checkbox" 
+                                                                           data-value="<?php echo $boleto->status ?>" 
+                                                                           data-label="<?php echo $boleto->status ?>" 
+                                                                               <?php echo (in_array($boleto->status, $status)) ? "checked" : ''; ?> name="status[]" 
+                                                                               value="<?php echo $boleto->status; ?>" />&nbsp;<?php echo $boleto->status ?>
+                                                                    <div class="control_indicator"></div>
+                                                                </label>
+                                                            </li>
+
+                                                        <?php
+
+                                                        }}
+                                                        ?>
+
+
+                                                    </ul>
+                                                </div>
+
+                                                <span class="text-danger"><?php //echo form_error('class_id_option[]'); ?></span>
+                                            </div>
+                                    
+                                    -->
+                                    
                                     </div>
                                 </div>
                                 
@@ -311,7 +359,6 @@
 										{
 											
                                                                                         if(!empty($row->bank_bullet_id)){//quando NAO tem o numero do boleto no banco.. significa que boleto nao foi enviado para o banco, foi baixado ANTEs de ser enviado, nesse caso nao tem nota assiciada
-                                                                                       
                                                                                                 //verificamos se tem nota.
                                                                                                 $this->db->select("invoice_id FROM invoice_billet where billet_id = ".$row->id ."", FALSE);
                                                                                                 $query2 = $this->db->get();	
@@ -341,6 +388,7 @@
                                                                                         }else{
                                                                                             $ninvoice = "Sem Nota associada.";
                                                                                         }
+												
 											
 											
 											
@@ -429,22 +477,7 @@
 <script src="https://cdn.datatables.net/1.10.23/js/jquery.dataTables.min.js"></script>
 <script src="https://cdn.datatables.net/plug-ins/1.10.16/sorting/datetime-moment.js"></script>-->
 <style>
-    .dataTables_wrapper,
-    .dataTables_filter {
-        text-align: right;
-        float: left !important;
-    }
-
-    .dataTables_wrapper {
-        position: relative;
-        clear: both;
-        *zoom: 1;
-        zoom: 1;
-        width: 100%;
-        text-align: left;
-    }
-    
-    .w-full {
+        .w-full {
             width: 100% !important;
         }
 
@@ -599,7 +632,7 @@
 
             overflow-y: auto;
         }
-</style>
+    </style>
 <script type="text/javascript">
     $(document).ready(function() {
         var date_format = '<?php echo $result = strtr($this->customlib->getSchoolDateFormat(), ['d' => 'dd', 'm' => 'mm', 'Y' => 'yyyy',]) ?>';
@@ -753,10 +786,13 @@
         });
         
 	$("#totalValor").html("R$ <?php echo number_format($total, 2, ',', '.'); ?>");
+        
         <?php endif; ?>
         
         
-         function dropdownLabel() {
+         var options = [];
+
+            function dropdownLabel() {
                 var $element = $('#classDropdown .dropdown-label');
                 var checkedOptions = [];
                 var checkedIdOptions = [];
@@ -796,6 +832,8 @@
                 });
             }
 
+        
+        
 	
 });
 	
@@ -817,4 +855,5 @@
 	
 	
 </script>
+
 
