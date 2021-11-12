@@ -69,7 +69,7 @@ Relatório de Custo por Turma/Aluno</h3>
                                         <label>Data Inicial<small class="req"> *</small></label>
                                         <div class="input-group date">
                                             <input type="text" class="form-control idate" id="name" name="start" value="<?php
-                                                                                                                        echo set_value('start',date('01/m/Y'))
+                                                                                                                        echo set_value('start',date('01-m-Y'))
                                                                                                                         ?>">
                                             <div class="input-group-addon">
                                                 <span class="glyphicon glyphicon-th"></span>
@@ -80,7 +80,7 @@ Relatório de Custo por Turma/Aluno</h3>
                                         <label>Data Final</label>
                                         <div class="input-group date">
                                             <input type="text" class="form-control idate" id="date_end" name="end" value="<?php
-                                                                                                                        echo set_value('end',date('01/m/Y'))
+                                                                                                                        echo set_value('end',date('01-m-Y'))
                                                                                                                         ?>">
                                             <div class="input-group-addon">
                                                 <span class="glyphicon glyphicon-th"></span>
@@ -202,12 +202,14 @@ Relatório de Custo por Turma/Aluno</h3>
                                                             <td class="text-center"><?php echo ($row->alunosNaoIntegral/2) + $row->alunosIntegral; $o += (($row->alunosNaoIntegral/2) + $row->alunosIntegral);?></td>
                                                             <td class="text-right">
                                                                 <span class="small">R$</span> 
-                                                                <?php echo number_format($totalDespesas / (($row->alunosNaoIntegral/2) + $row->alunosIntegral), 2, ',', '.'); $t2 += ($totalDespesas / (($row->alunosNaoIntegral/2) + $row->alunosIntegral));?>
+                                                                <?php  $v1 = (($row->alunosNaoIntegral/2) + $row->alunosIntegral); ?>
+                                                                <?php echo number_format($totalDespesas / ($v1 > 0 ? $v1 : 1), 2, ',', '.'); $t2 += ($totalDespesas / ($v1 > 0 ? $v1 : 1));?>
                                                             </td>
                                                             <td class="text-center"><?php echo $row->quantidadeVagas - (($row->alunosNaoIntegral/2) + $row->alunosIntegral); $d += ($row->quantidadeVagas - (($row->alunosNaoIntegral/2) + $row->alunosIntegral)); ?></td>
                                                             <td class="text-right">
                                                                 <span class="small">R$</span> 
-                                                                <?php echo number_format($totalDespesas / ($row->quantidadeVagas - (($row->alunosNaoIntegral/2) + $row->alunosIntegral)), 2, ',', '.'); $t3 += ($totalDespesas / ($row->quantidadeVagas - (($row->alunosNaoIntegral/2) + $row->alunosIntegral)));?>
+                                                                <?php $v1 = ($row->quantidadeVagas - (($row->alunosNaoIntegral/2) + $row->alunosIntegral)); ?>
+                                                                <?php echo number_format($totalDespesas / ($v1 > 0 ? $v1 : 1), 2, ',', '.'); $t3 += ($totalDespesas / ($v1 > 0 ? $v1 : 1));?>
                                                             </td>
                                                         </tr>
                                                     <?php endforeach; ?>
@@ -288,3 +290,206 @@ Relatório de Custo por Turma/Aluno</h3>
             </div>
         </section>
     </div>
+<script type='text/javascript'>
+$(document).ready(function(){
+
+             
+   function dropdownLabel() {
+                var $element = $('#classDropdown .dropdown-label');
+                var checkedOptions = [];
+                var checkedIdOptions = [];
+                var label = $element.data('default')
+                $('#classDropdown input:checked').each(function(e) {
+
+                    checkedOptions.push($(this).data('label'));
+                    checkedIdOptions.push($(this).data('value'));
+                })
+
+                if (checkedOptions.length > 0) {
+                    label = checkedOptions.slice(0, 2).join(', ');
+                    if (checkedOptions.length > 2) {
+                        label = `${label} <b> (+${checkedOptions.length - 2})</b>`
+                    }
+
+                    //getSectionByClass(checkedIdOptions);
+                }
+
+                $element.html(label);
+                initializeObserveDropdown();
+            }
+            dropdownLabel();
+            
+            
+             function initializeObserveDropdown() {
+                $('.control').off('click.classID').on('click.classID', function(event) {
+                    var $element = $(this).find('input');
+                    var checked = $element.prop('checked');
+                    $element.prop('checked', !checked);
+                    // $(event.target).blur();
+                    setTimeout(function() {
+                        dropdownLabel();
+                    }, 50)
+                    // event.preventDefault();
+                    return false;
+                });
+            };
+
+});
+</script>
+<style>
+        .w-full {
+            width: 100% !important;
+        }
+
+        .w-full button {
+            width: 100% !important;
+            text-align: left;
+            display: flex !important;
+            justify-content: space-between !important;
+            align-items: center !important;
+            border-radius: 0 !important;
+            background: transparent !important;
+        }
+
+        .ui-checkbox {
+            padding: 0px 5px;
+            
+        }
+
+        .control {
+            font-family: arial;
+            display: block;
+            position: relative;
+            padding-left: 25px;
+            margin-bottom: 3px;
+            padding-top: 1px;
+            cursor: pointer;
+            font-size: 13px;
+        }
+
+        .control input {
+            position: absolute;
+            z-index: -1;
+            opacity: 0;
+        }
+
+        .control_indicator {
+            position: absolute;
+            top: 1px;
+            left: 0;
+            height: 15px;
+            width: 15px;
+            background: #e6e6e6;
+            border: 0px solid #000000;
+            border-radius: 0px;
+        }
+
+        .control:hover input~.control_indicator,
+        .control input:focus~.control_indicator {
+            background: #cccccc;
+        }
+
+        .control input:checked~.control_indicator {
+            background: #2a6a7b;
+        }
+
+        .control:hover input:not([disabled]):checked~.control_indicator,
+        .control input:checked:focus~.control_indicator {
+            background: '#0e6647d';
+        }
+
+        .control input:disabled~.control_indicator {
+            background: #e6e6e6;
+            opacity: 0.6;
+            pointer-events: none;
+        }
+
+        .control_indicator:after {
+            box-sizing: unset;
+            content: '';
+            position: absolute;
+            display: none;
+        }
+
+        .control input:checked~.control_indicator:after {
+            display: block;
+        }
+
+        .control-checkbox .control_indicator:after {
+            left: 5px;
+            top: 2px;
+            width: 3px;
+            height: 8px;
+            border: solid #ffffff;
+            border-width: 0 2px 2px 0;
+            transform: rotate(45deg);
+        }
+
+        .control-checkbox input:disabled~.control_indicator:after {
+            border-color: #7b7b7b;
+        }
+
+        .control-checkbox .control_indicator::before {
+            content: '';
+            display: block;
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 4.5rem;
+            height: 4.5rem;
+            margin-left: -1.3rem;
+            margin-top: -1.3rem;
+            background: #2aa1c0;
+            border-radius: 3rem;
+            opacity: 0.6;
+            z-index: 99999;
+            transform: scale(0);
+        }
+
+        @keyframes s-ripple {
+            0% {
+                transform: scale(0);
+            }
+
+            20% {
+                transform: scale(1);
+            }
+
+            100% {
+                opacity: 0;
+                transform: scale(1);
+            }
+        }
+
+        @keyframes s-ripple-dup {
+            0% {
+                transform: scale(0);
+            }
+
+            30% {
+                transform: scale(1);
+            }
+
+            60% {
+                transform: scale(1);
+            }
+
+            100% {
+                opacity: 0;
+                transform: scale(1);
+            }
+        }
+
+        .control-checkbox input+.control_indicator::before {
+            animation: s-ripple 250ms ease-out;
+        }
+
+        .control-checkbox input:checked+.control_indicator::before {
+            animation-name: s-ripple-dup;
+        }
+
+        .dropdown-menu{
+
+            overflow-y: auto;
+        }
+    </style>
