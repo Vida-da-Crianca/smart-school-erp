@@ -197,19 +197,21 @@ Relatório de Custo por Turma/Aluno</h3>
                                                             <td class="text-center"><?php echo $row->quantidadeVagas; $v+= $row->quantidadeVagas; ?></td>
                                                             <td class="text-right">
                                                                 <span class="small">R$</span> 
+                                                                <?php $custoTotal = ($row->quantidadeVagas > 0 ? $row->quantidadeVagas :  1); ?>
                                                                 <?php echo number_format($totalDespesas  / ($row->quantidadeVagas > 0 ? $row->quantidadeVagas :  1), 2, ',', '.');  $t1 += ($totalDespesas  / ($row->quantidadeVagas > 0 ? $row->quantidadeVagas :  1));?>
                                                             </td>
                                                             <td class="text-center"><?php echo ($row->alunosNaoIntegral/2) + $row->alunosIntegral; $o += (($row->alunosNaoIntegral/2) + $row->alunosIntegral);?></td>
                                                             <td class="text-right">
                                                                 <span class="small">R$</span> 
                                                                 <?php  $v1 = (($row->alunosNaoIntegral/2) + $row->alunosIntegral); ?>
+                                                                <?php  $custoOcupado = ($v1 > 0 ? $v1 : 1); ?>
                                                                 <?php echo number_format($totalDespesas / ($v1 > 0 ? $v1 : 1), 2, ',', '.'); $t2 += ($totalDespesas / ($v1 > 0 ? $v1 : 1));?>
                                                             </td>
                                                             <td class="text-center"><?php echo $row->quantidadeVagas - (($row->alunosNaoIntegral/2) + $row->alunosIntegral); $d += ($row->quantidadeVagas - (($row->alunosNaoIntegral/2) + $row->alunosIntegral)); ?></td>
                                                             <td class="text-right">
                                                                 <span class="small">R$</span> 
                                                                 <?php $v1 = ($row->quantidadeVagas - (($row->alunosNaoIntegral/2) + $row->alunosIntegral)); ?>
-                                                                <?php echo number_format($totalDespesas / ($v1 > 0 ? $v1 : 1), 2, ',', '.'); $t3 += ($totalDespesas / ($v1 > 0 ? $v1 : 1));?>
+                                                                <?php echo number_format((  $custoTotal - $custoOcupado  ), 2, ',', '.'); $t3 += (  $custoTotal - $custoOcupado  );?>
                                                             </td>
                                                         </tr>
                                                     <?php endforeach; ?>
@@ -249,7 +251,7 @@ Relatório de Custo por Turma/Aluno</h3>
                                                             <b>
                                                                 <span class="small">R$</span> 
                                                                     <?php //echo number_format($t3, 2, ',', '.'); ?>
-                                                                  <?php echo number_format($totalDespesas / ($d > 0 ? $d : 1), 2, ',', '.'); ?>
+                                                                  <?php echo number_format($t3 / ($d > 0 ? $d : 1), 2, ',', '.'); ?>
                                                             </b>
                                                         </td>
                                                     </tr>
