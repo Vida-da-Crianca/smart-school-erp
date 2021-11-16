@@ -2678,10 +2678,10 @@ class Report extends Admin_Controller
                     $session = $this->setting_model->getCurrentSession();
                    
                     $this->db->select("classes.class AS className,"
-                            . "IFNULL((SELECT SUM(class_sections.limit) FROM class_sections JOIN sections ON sections.id = class_sections.section_id WHERE class_sections.class_id = classes.id AND IFNULL(sections.full_time,0) = 1 LIMIT 1), 0) AS quantidadeVagas,"
+                            . "IFNULL((SELECT SUM(class_sections.limit) FROM class_sections JOIN sections ON sections.id = class_sections.section_id WHERE class_sections.class_id = classes.id LIMIT 1), 0) AS quantidadeVagas,"
                             . "IFNULL( (SELECT count(1) FROM student_session JOIN sections ON sections.id = student_session.section_id JOIN students ON students.id = student_session.student_id WHERE student_session.class_id = classes.id AND IFNULL(sections.full_time,0) = 0 AND students.is_active = 'yes' AND student_session.session_id = $session LIMIT 1), 0) AS alunosNaoIntegral,"
                             . "IFNULL( (SELECT count(1) FROM student_session JOIN sections ON sections.id = student_session.section_id JOIN students ON students.id = student_session.student_id WHERE student_session.class_id = classes.id AND IFNULL(sections.full_time,0) = 1 AND students.is_active = 'yes' AND student_session.session_id = $session LIMIT 1), 0) AS alunosIntegral");
-                    $this->db->from('classes');
+                    $this->db->from('classes'); // AND IFNULL(sections.full_time,0) = 1
                     $this->db->where_in('classes.id', $class);
                     $this->db->order_by('classes.class','ASC');
                     $vagasTurmas = $this->db->get()->result();

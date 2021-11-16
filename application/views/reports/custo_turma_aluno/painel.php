@@ -225,7 +225,7 @@ Relatório de Custo por Turma/Aluno</h3>
                                                          <td class="bg-info text-right">
                                                             <b>
                                                                 <span class="small">R$</span> 
-                                                                    <?php echo number_format($t1, 2, ',', '.'); ?>
+                                                                    <?php echo number_format($totalDespesas / ($v > 0 ? $v : 1), 2, ',', '.'); ?>
                                                             </b>
                                                         </td>
                                                         <td class="bg-info text-center">
@@ -236,7 +236,8 @@ Relatório de Custo por Turma/Aluno</h3>
                                                          <td class="bg-info text-right">
                                                             <b>
                                                                 <span class="small">R$</span> 
-                                                                    <?php echo number_format($t2, 2, ',', '.'); ?>
+                                                                    <?php //echo number_format($t2, 2, ',', '.'); ?>
+                                                                 <?php echo number_format($totalDespesas / ($o > 0 ? $o : 1), 2, ',', '.'); ?>
                                                             </b>
                                                         </td>
                                                         <td class="bg-info text-center">
@@ -247,7 +248,8 @@ Relatório de Custo por Turma/Aluno</h3>
                                                          <td class="bg-info text-right">
                                                             <b>
                                                                 <span class="small">R$</span> 
-                                                                    <?php echo number_format($t3, 2, ',', '.'); ?>
+                                                                    <?php //echo number_format($t3, 2, ',', '.'); ?>
+                                                                  <?php echo number_format($totalDespesas / ($d > 0 ? $d : 1), 2, ',', '.'); ?>
                                                             </b>
                                                         </td>
                                                     </tr>
