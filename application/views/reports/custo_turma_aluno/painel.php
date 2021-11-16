@@ -223,7 +223,7 @@ Relatório de Custo por Turma/Aluno</h3>
                                                             <td class="text-right">
                                                                 <span class="small">R$</span> 
                                                                 <?php $v1 = ($row->quantidadeVagas - (($row->alunosNaoIntegral/2) + $row->alunosIntegral)); ?>
-                                                                <?php echo number_format((  $custoTotal - $custoOcupado  ), 2, ',', '.'); $t3 += (  $custoTotal - $custoOcupado  );?>
+                                                                <?php echo number_format((  $custoOcupado - $custoTotal ), 2, ',', '.'); $t3 += (  $custoTotal - $custoOcupado  );?>
                                                             </td>
                                                         </tr>
                                                     <?php endforeach; ?>
