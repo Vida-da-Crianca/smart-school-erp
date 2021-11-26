@@ -433,6 +433,7 @@ class Studentfee extends Admin_Controller
         foreach ($options->toArray() as $v) {
             $years[$v] = $v;
         }
+	sort($years);
         $data['optionsYear'] = $years;
         $data['current_year'] = $due_date;
       
