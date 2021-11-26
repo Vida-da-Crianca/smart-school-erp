@@ -438,7 +438,7 @@ class Studentfee extends Admin_Controller
       
         foreach ($student_due_fee as $row) {
             $row->fees = Student_fee_item_eloquent::where('student_session_id', $row->student_session_id)
-                // ->whereYear('due_date', $due_date)
+                 ->whereYear('due_date', $due_date)
                 ->with(['deposite', 'billet'])
                 ->orderBy('due_date','ASC')
                 ->get();
