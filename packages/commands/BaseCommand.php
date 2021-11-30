@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace Packages\Commands;
 
@@ -21,7 +21,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
  * @version     1.0.0
  */
 abstract class BaseCommand extends Command
-{   
+{
     /**
      * Console command name
      * @var string
@@ -45,6 +45,8 @@ abstract class BaseCommand extends Command
      * @var object
      */
     protected $_output;
+
+    protected $exceptions = ['migrate', 'migrate:rollback'];
 
     /**
      * Style instance
@@ -83,22 +85,41 @@ abstract class BaseCommand extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        try 
-        {
-            if (method_exists($this, 'start')) 
-            {
-                $this->start(); 
-            }
-            else
-            {
+        try {
+            $this->CI->load->model('eloquent/ProcessControl');
+
+        
+
+
+            if (method_exists($this, 'start')) {
+                $isRunning =  in_array($this->name, $this->exceptions) ? false : true;
+                $locked = !$isRunning  ? 0 : \ProcessControl::where('name', $this->name)->count();
+
+                if ($locked > 0) {
+                    dump($this->name .' is running...');
+                    return 0;
+                }
+                if ($isRunning){
+                    \ProcessControl::create(['name' => $this->name, 'status' => 'running']);
+                }
+                   
+                $this->start();
+
+                if ($isRunning) {
+                    sleep(3);
+                    \ProcessControl::where('name', $this->name)->delete();
+                }
+            } else {
                 throw new \RuntimeException("Command is not set correctly.");
             }
-        } 
-        catch (\Exception $e)
-        {
+        } catch (\Exception $e) {
             $this->error($e->getMessage());
         }
-        return 0;      
+        return 0;
+    }
+
+    public function runnerWithControl()
+    {
     }
 
     /**
@@ -109,8 +130,7 @@ abstract class BaseCommand extends Command
      */
     public function __call($name = '', $arguments = NULL)
     {
-        switch ($name) 
-        {
+        switch ($name) {
             case 'title':
             case 'section':
             case 'text':
@@ -133,7 +153,7 @@ abstract class BaseCommand extends Command
                 return call_user_func_array(array($this->_style, $name), $arguments);
 
             case 'getArgument':
-                return call_user_func_array(array($this->_input,'getArgument'), $arguments);
+                return call_user_func_array(array($this->_input, 'getArgument'), $arguments);
 
             case 'getOption':
                 return call_user_func_array(array($this->_input, 'getOption'), $arguments);

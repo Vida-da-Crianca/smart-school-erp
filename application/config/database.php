@@ -114,16 +114,16 @@ $capsule->addConnection([
 ]);
 
 
-$capsule->addConnection([
-    'driver'    => 'mysql',
-    'host'      => getenv('DB_HOST_2', 'db'),
-    'database'  => getenv('DB_NAME_2', 'db'),
-    'username'  => $db['default']['username'],
-    'password'  => $db['default']['password'],
-    'charset'   => $db['default']['char_set'],
-    'collation' => $db['default']['dbcollat'],
-    'prefix'    => $db['default']['dbprefix'],
-], 'mysql_2');
+// $capsule->addConnection([
+//     'driver'    => 'mysql',
+//     'host'      => getenv('DB_HOST_2', 'db'),
+//     'database'  => getenv('DB_NAME_2', 'db'),
+//     'username'  => $db['default']['username'],
+//     'password'  => $db['default']['password'],
+//     'charset'   => $db['default']['char_set'],
+//     'collation' => $db['default']['dbcollat'],
+//     'prefix'    => $db['default']['dbprefix'],
+// ], 'mysql_2');
 
 $capsule->setAsGlobal();
 $capsule->bootEloquent();

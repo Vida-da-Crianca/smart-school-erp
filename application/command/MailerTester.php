@@ -39,6 +39,7 @@ class MailerTester extends BaseCommand
 
 
         try {
+           
             $this->CI->load->library(['mailer']);
             $options = (object) [
                 'email' => 'contato@carlosocarvalho.com.br',
