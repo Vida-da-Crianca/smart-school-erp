@@ -94,6 +94,7 @@ class InvoiceCancelCommand extends BaseCommand
 
                 (new ComputeTributeService)->handle();
             } catch (\Exception $e) {
+                dump($e->getMessage());
                 $this->error($e->getMessage());
                 // discord_exception(
                 //     sprintf('%s %s----%s', json_encode($service->getBody(), JSON_PRETTY_PRINT), PHP_EOL, $e->getMessage())
@@ -115,41 +116,43 @@ class InvoiceCancelCommand extends BaseCommand
 
         $provider = new Provider(new Barretos($options));
         $service  =  new SigissService($provider);
+        dump($id);
 
         try {
             foreach (preg_split('#,#', $id) as $v) {
 
-                $item = \Invoice_eloquent::where('invoice_number', $v)->first();
+                // $item = \Invoice_eloquent::where('invoice_number', $v)->first();
 
-                if(!$item) {
-                    dump('has deleted');
-                    continue;
-                }
+                // if(!$item) {
+                //     dump('has deleted');
+                //     continue;
+                // }
                 $data  = [
                     'nota' => $v,
                     'email' => 'contato@carlosocarvalho.com.br',
-                    'motivo' => 'Nota cancelada'
+                    'motivo' => 'Nota duplicada'
                 ];
 
                 $service->params($data)->cancel();
                 $response = $service->fire();
-               
+                sleep(1);
 
-                $item->delete();
+                // $item->delete();
 
                 // dump($response);
 
                 \LogEloquent::create(
                     [
                         'logger' => json_encode($response, JSON_PRETTY_PRINT),
-                        'register_id' => $item->id,
+                        'register_id' =>$v,
                         'table' => 'invoices',  'action' => 'delete'
                     ]
                 );
                 // log_message('info', sprintf('%s', json_encode($response, JSON_PRETTY_PRINT)), 'Cancelamento de Nota Fiscal');
             }
         } catch (\Exception $e) {
-            $this->error($e->getMessage());
+            //$this->error($e->getMessage());
+
             dump($service->getBody());
             // discord_exception(
             //     sprintf('%s %s----%s', json_encode($service->getBody(), JSON_PRETTY_PRINT), PHP_EOL, $e->getMessage())

@@ -3,7 +3,9 @@
 //Register your commands
 
 use Application\Command\AppImport;
+use Application\Command\BankTestCommand;
 use Application\Command\BilletOld;
+
 use Application\Command\CategoryExpenseMigration;
 use Application\Command\CleanDirectoryTemp;
 use Application\Command\Normalize\DepositePaidBillet;
@@ -49,4 +51,5 @@ return [
     'fake:invoice:create' => FakeInvoiceCommand::class,
     'queue:mailer' => MailerCommand::class,
     'fake:billet:create' => BilletFakeCommand::class,
+    'billet:test' => BankTestCommand::class
 ];

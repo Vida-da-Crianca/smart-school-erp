@@ -48,7 +48,7 @@ class ScheduleCommand extends BaseCommand
         $this->title('Schedule running');
 
         $comandList = [
-            'invoice:cancel' => 120,
+            // 'invoice:cancel' => 120,
             'invoice:create' => 120,
             'invoice:tribute' => (60 * 60),
             'billet:generate' =>  60,

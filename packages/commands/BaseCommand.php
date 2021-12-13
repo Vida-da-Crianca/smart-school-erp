@@ -89,12 +89,12 @@ abstract class BaseCommand extends Command
             $this->CI->load->model('eloquent/ProcessControl');
 
         
-
+           
 
             if (method_exists($this, 'start')) {
                 $isRunning =  in_array($this->name, $this->exceptions) ? false : true;
                 $locked = !$isRunning  ? 0 : \ProcessControl::where('name', $this->name)->count();
-
+                
                 if ($locked > 0) {
                     dump($this->name .' is running...');
                     return 0;
@@ -113,6 +113,7 @@ abstract class BaseCommand extends Command
                 throw new \RuntimeException("Command is not set correctly.");
             }
         } catch (\Exception $e) {
+            \ProcessControl::where('name', $this->name)->delete();
             $this->error($e->getMessage());
         }
         return 0;
