@@ -99,7 +99,7 @@ class ScheduleCommand extends BaseCommand
                     // }
                     $code = yield $process->join();
                     $pid = $process->getPid();
-
+                     
                     $this->consoleLog($name, 0);
                 }
             });
@@ -114,6 +114,9 @@ class ScheduleCommand extends BaseCommand
         $msg =  $code == 1 ? 'iniciado' : 'finalizado';
         $ts = date('d/m/Y H:i:s'); 
         $this->text("{$ts} - Processo [{$name}] {$msg} {$code}  ");
+
+        if($code == 1) 
+          \ProcessControl::where('name', $name)->delete();
     }
 
     public function makeCommand($name): Process
