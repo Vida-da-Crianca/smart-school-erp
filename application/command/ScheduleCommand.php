@@ -115,7 +115,7 @@ class ScheduleCommand extends BaseCommand
         $ts = date('d/m/Y H:i:s'); 
         $this->text("{$ts} - Processo [{$name}] {$msg} {$code}  ");
 
-        if($code == 1) 
+        if($code == 0) 
           \ProcessControl::where('name', $name)->delete();
     }
 
