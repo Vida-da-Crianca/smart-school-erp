@@ -63,9 +63,7 @@ class BilletGenerateCommand extends BaseCommand
                 $this->buildByOnDueDate($group);
             }
         } catch (\Exception $e) {
-            discord_exception(
-                sprintf('%s----%s', PHP_EOL, $e->getMessage())
-            );
+           log_message('error', $e->getMessage());
         }
 
 
