@@ -49,7 +49,7 @@ class Migration_Create_process_control extends CI_Migration
            
         ));
         $this->dbforge->add_key('id', TRUE);
-        $this->dbforge->create_table('schedule_controls');
+        $this->dbforge->create_table('schedule_controls', TRUE);
     }
 
     public function down()
