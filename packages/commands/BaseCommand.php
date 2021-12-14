@@ -46,7 +46,7 @@ abstract class BaseCommand extends Command
      */
     protected $_output;
 
-    protected $exceptions = ['migrate', 'migrate:rollback'];
+    protected $exceptions = ['migrate', 'migrate:rollback', 'schedule:run'];
 
     /**
      * Style instance
