@@ -555,7 +555,8 @@ class Welcome extends Front_Controller
                                 'carteira_vacinacao' => $this->input->post('carteira_vacinacao'),
                                 'cnh_responsavel' => $this->input->post('cnh_responsavel'),
                                 'comprovante_residencia' => $this->input->post('comprovante_residencia'),
-                                
+                                'session_id' => (int) $this->input->post('session_id')
+                            
                                 //'student_categorize' => 'class'
 
                             );
@@ -688,6 +689,14 @@ class Welcome extends Front_Controller
         $this->data['genderList'] = $genderList;
         $category = $this->category_model->get();
         $this->data['categorylist'] = $category;
+        $this->data['sessions'] = [];
+        $res = $this->db->get('sessions')->result();
+        foreach ($res as $row){
+            $ano = explode('-', $row->session);
+            if((int) $ano[0] == (int)date('Y') || (int) $ano[0] == ((int)date('Y')+1)){
+                $this->data['sessions'][$row->id] = (int) $ano[0];
+            }
+        }
         
        
         $this->load_theme('pages/admission');
@@ -746,9 +755,11 @@ class Welcome extends Front_Controller
 			
             $dataNascimento = $this->tools->formatarData($this->input->post('dataNascimento'), 'br', 'us');
             $dtNascimento = new DateTime($dataNascimento .' 00:00:00'); 
+            $session_id = (int) $this->input->post('session_id');
             
-            $config = $this->db->select('session_id')->from('sch_settings')->get()->result();
-            $datasCorte = $this->data_corte_model->getAll(['session_id'=>count($config)>0?$config[0]->session_id : 0 ]); 
+           //$config = $this->db->select('session_id')->from('sch_settings')->get()->result();
+            //$datasCorte = $this->data_corte_model->getAll(['session_id'=>count($config)>0?$config[0]->session_id : 0 ]); 
+            $datasCorte = $this->data_corte_model->getAll(['session_id'=>$session_id]); 
             //$this->pre($dtNascimento);
             //$this->pre($datasCorte);
             $dados = array();

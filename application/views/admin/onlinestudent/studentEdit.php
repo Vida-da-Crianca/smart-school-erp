@@ -57,13 +57,14 @@
                                     
                                     
                                     <div class = "row">
-                                        <div class = "col-md-4 col-xs-12 col-sm-4">
+                                        <div class = "col-md-10 col-xs-12 col-sm-10">
                                             <label>Nome completo</label><br />
                                             <input id="firstname" name="firstname" placeholder="" type="text" class="form-control"  value="<?php echo set_value('firstname', $student['firstname']); ?>" />
                                             <input type="hidden" name="studentid" value="<?php echo $student["id"] ?>">
                                             <span class="text-danger"><?php echo form_error('first_name'); ?></span>
                                       
                                         </div> 
+                                  
                                         <div class = "col-md-2 col-xs-12 col-sm-2">
                                             <label>Sexo</label><br />
                                             <select class="form-control" name="gender">
@@ -82,15 +83,24 @@
                                                 </select>
                                                 <span class="text-danger"><?php echo form_error('gender'); ?></span>
                                       
-                                        </div> 
-                                        <div class = "col-md-2 col-xs-12 col-sm-2">
+                                        </div>
+                                        
+                                      </div>
+                                    <br />
+                                    <div class = "row">    
+                                        <div class = "col-md-3 col-xs-12 col-sm-3">
                                             <label>Data de Nascimento</label><br />
                                             <input id="dob" name="dob" placeholder="" type="text"
                                                    class="form-control"  
                                                    value="<?php echo set_value('dob', $this->tools->formatarData($student['dob'],'us','br')); ?>" />
                                             <span class="text-danger"><?php echo form_error('dob'); ?></span>
                                         </div>
-                                        <div class = "col-md-2 col-xs-12 col-sm-2">
+                                        <div class = "col-md-3 col-xs-12 col-sm-3">
+                                            <label>Ano da Matrícula</label><br />
+                                            <?php echo form_dropdown('session_id',$sessions, $student['session_id'], "id='session_id' class='form-control'"); ?>
+         
+                                        </div>
+                                        <div class = "col-md-3 col-xs-12 col-sm-3">
                                             <label>Turma</label><br />
                                              <select  id="class_id" name="class_id_cadastro" class="form-control" >
                                                     <option value=""><?php echo $this->lang->line('select'); ?></option>
@@ -107,7 +117,7 @@
                                                 <span class="text-danger"><?php echo form_error('class_id'); ?></span>
                                         
                                         </div>
-                                          <div class = "col-md-2 col-xs-12 col-sm-2">
+                                          <div class = "col-md-3 col-xs-12 col-sm-3">
                                             <label>Período</label><br />
                                              <select  id="section_id_cadastro" name="section_id_cadastro" class="form-control" >
                                                     <option value=""><?php echo $this->lang->line('select'); ?></option>
@@ -985,7 +995,7 @@ $(document).ready(function(){
     $.fn.carregarComboBoxTurmasDisponiveis = function(dataNascimento){
         $(this).comboBox({
             url : '<?php echo base_url(); ?>welcome/getListaTurmasPorDataNascimento',
-            data: { dataNascimento : dataNascimento },
+            data: { dataNascimento : dataNascimento, session_id : $('#session_id').val() },
             combobox : '#class_id',
             selected: '<?php echo $student['class_id']; ?>',
             callback: function(){ 
@@ -994,6 +1004,11 @@ $(document).ready(function(){
         });     
     };
     $(this).carregarComboBoxTurmasDisponiveis('<?php echo $this->tools->formatarData($student['dob'],'us','br'); ?>');
+             
+    $('#session_id').change(function(){
+         $(this).carregarComboBoxTurmasDisponiveis('<?php echo $this->tools->formatarData($student['dob'],'us','br'); ?>');
+     
+    });         
              
    $('#dob').mask('99/99/9999');  
     let typingTimer;                //timer identifier

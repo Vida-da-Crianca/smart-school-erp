@@ -115,6 +115,12 @@
                                   
                                     <div class = "row">
                                         
+                                         <div class = "col-md-2 col-xs-12 col-sm-2">
+                                                <label>Ano da Matrícula</label><small class="req"> *</small><br />
+                                                <?php echo form_dropdown('session_id',$sessions, '', "id='session_id' class='form-control'"); ?>
+                                                <span class="text-danger"><?php echo form_error('session_id'); ?></span>           
+                                            </div>
+                                        
                                         <div class="col-md-3">
                                             <div class="form-group">
                                                 <label for="exampleInputEmail1"><?php echo $this->lang->line('class'); ?></label><small class="req"> *</small>
@@ -671,7 +677,7 @@ $(document).ready(function(){
     $.fn.carregarComboBoxTurmasDisponiveis = function(dataNascimento){
         $(this).comboBox({
             url : '<?php echo base_url(); ?>welcome/getListaTurmasPorDataNascimento',
-            data: { dataNascimento : dataNascimento },
+            data: { dataNascimento : dataNascimento, session_id : $('#session_id').val() },
             combobox : '#class_id',
             selected: '<?php echo isset($obj->class_id) ? $obj->class_id : 0; ?>',
             callback: function(){ 
@@ -680,6 +686,10 @@ $(document).ready(function(){
         });     
     };
     $(this).carregarComboBoxTurmasDisponiveis('<?php echo $action == 'add' ? '01/01/2050' : $this->tools->formatarData($obj->dob,'us','br'); ?>');
+    
+    $('#session_id').change(function(){
+         $(this).carregarComboBoxTurmasDisponiveis($('#dob').val());
+    });  
     
         $('#father_phone').mask('(99) 999999999');
         $('#mother_phone').mask('(99) 999999999');

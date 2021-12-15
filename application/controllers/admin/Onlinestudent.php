@@ -115,6 +115,14 @@ class Onlinestudent extends Admin_Controller {
         
         //Campos obrigatorios na tabela STUDENTS
         
+        $data['sessions'] = [];
+        $res = $this->db->get('sessions')->result();
+        foreach ($res as $row){
+            $ano = explode('-', $row->session);
+            if((int) $ano[0] == (int)date('Y') || (int) $ano[0] == ((int)date('Y')+1)){
+                $data['sessions'][$row->id] = $row->session;
+            }
+        }
         
         
         if ($this->form_validation->run() == false) {
@@ -125,6 +133,7 @@ class Onlinestudent extends Admin_Controller {
             $student_id = $this->input->post('student_id');
             $class_id = $this->input->post('class_id_cadastro');
             $section_id = $this->input->post('section_id_cadastro');
+            $session_id = (int)$this->input->post('session_id');
            
             $hostel_room_id = $this->input->post('hostel_room_id');
             $fees_discount = $this->input->post('fees_discount');
@@ -230,7 +239,8 @@ class Onlinestudent extends Admin_Controller {
                             'class_section_id' => $student['class_section_id'],
 
                             'class_id' => $class_id,
-                             'section_id' => $section_id,
+                            'section_id' => $section_id,
+                            'session_id' => $session_id,
 
                             'image'=>'uploads/student_images/'.$this->input->post('image')
                         );

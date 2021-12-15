@@ -749,7 +749,8 @@ class Student extends Admin_Controller
                 $this->form_validation->set_rules('dob', 'Data de Nascimento', 'trim|required|xss_clean');
                 $this->form_validation->set_rules('class_id', 'Turma', 'trim|required|xss_clean');
                 $this->form_validation->set_rules('section_id', 'Período', 'trim|required|xss_clean');
-
+                $this->form_validation->set_rules('session_id', 'Ano da Matrícula', 'trim|required|xss_clean');
+                
                 $this->form_validation->set_rules('guardian_is', 'Responsável Financeiro', 'trim|required|xss_clean');
 
                 $guardian_is = trim($this->input->post('guardian_is'));
@@ -854,6 +855,7 @@ class Student extends Admin_Controller
 
                 $class_id   = (int) $this->input->post('class_id');
                 $section_id = (int) $this->input->post('section_id');
+                $session_id = (int) $this->input->post('session_id');
                 $fees_discount = 0;//$this->input->post('fees_discount');
                 $vehroute_id    = $this->input->post('vehroute_id');
                 $hostel_room_id = $this->input->post('hostel_room_id');
@@ -992,7 +994,7 @@ class Student extends Admin_Controller
                     'student_id'    => $insert_id,
                     'class_id'      => $class_id,
                     'section_id'    => $section_id,
-                    'session_id'    => $session,
+                    'session_id'    => $session_id > 0 ? $session_id : $session,
                     'fees_discount' => $fees_discount,
                 );
                 $this->student_model->add_student_session($data_new);
@@ -1210,6 +1212,15 @@ class Student extends Admin_Controller
         $data['action'] = 'add';
 
         $data['documentosEnviados'] = [];
+        
+        $data['sessions'] = [];
+        $res = $this->db->get('sessions')->result();
+        foreach ($res as $row){
+            $ano = explode('-', $row->session);
+            if((int) $ano[0] == (int)date('Y') || (int) $ano[0] == ((int)date('Y')+1)){
+                $data['sessions'][$row->id] = $row->session;
+            }
+        }
 
         //$data['error_message'] = $this->lang->line('admission_no') . ' ' . $admission_no . ' ' . $this->lang->line('already_exists');
         $this->load->view('layout/header', $data);

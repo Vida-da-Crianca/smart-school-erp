@@ -31,6 +31,7 @@ class Onlinestudent_model extends MY_Model {
             online_admissions.comprovante_residencia,
             online_admissions.cnh_responsavel,
             online_admissions.carteira_vacinacao,
+            online_admissions.session_id, 
 
 			IFNULL(online_admissions.category_id, 0) as `category_id`,IFNULL(categories.category, "") as `category`,
 			online_admissions.adhar_no,
@@ -90,10 +91,6 @@ class Onlinestudent_model extends MY_Model {
             $this->db->trans_begin();
             $data_id = $data['id'];
             $class_section_id = $data['class_section_id'];
-
-             
-      
-        
             
             if ($action == "enroll") {
                 
@@ -154,6 +151,8 @@ class Onlinestudent_model extends MY_Model {
                // var_dump($data['class_section_id']);
               //  die($admission_no_exists);
 
+                $session_id = isset($data['session_id']) ? $data['session_id'] : $this->current_session;
+                unset($data['session_id']);
                 //============================
                 if ($insert) {
                     $this->db->select('class_sections.*')->from('class_sections');
@@ -172,7 +171,7 @@ class Onlinestudent_model extends MY_Model {
                         'student_id' => $student_id,
                         'class_id' => $classs_section_result->class_id,
                         'section_id' => $classs_section_result->section_id,
-                        'session_id' => $this->current_session,
+                        'session_id' => $session_id,
                     );
                     $this->db->insert('student_session', $data_new);
 
