@@ -79,9 +79,9 @@
                                         <form action="<?php echo site_url('site/login') ?>" method="post">
                                             <?php echo $this->customlib->getCSRF(); ?>
                                             <div class="form-group has-feedback">                                            
-                                                <input type="text" name="username" placeholder="<?php echo $this->lang->line('username'); ?>" value="" class="form-username form-control" id="form-username">
+                                                <input type="text" name="employee_id" placeholder="<?php echo $this->lang->line('employee_id'); ?>" value="" class="form-employee_id form-control" id="form-employee_id">
                                                 <span class="fa fa-envelope form-control-feedback"></span>
-                                                <span class="text-danger"><?php echo form_error('username'); ?></span>
+                                                <span class="text-danger"><?php echo form_error('employee_id'); ?></span>
                                             </div>
                                             <div class="form-group has-feedback">                                           
                                                 <input type="password" value="" name="password" placeholder="<?php echo $this->lang->line('password'); ?>" class="form-password form-control" id="form-password">
