@@ -195,6 +195,29 @@
                 <?php
             endif;
 
+            if ($this->module_lib->hasActive('snack')  && $this->rbac->hasPrivilege('snack')) : ?>
+
+
+                <li class="treeview <?php echo set_Topmenu('snacks'); ?>">
+                    <a href="#">
+                        <i class="fa fa-cutlery ftlayer"></i> <span> <?php echo $this->lang->line('snack_generate_collection'); ?></span> <i class="fa fa-angle-left pull-right"></i>
+                    </a>
+                    <ul class="treeview-menu">
+                        <?php if ($this->rbac->hasPrivilege('snack', 'can_view')) : ?>
+                            <li class="<?php echo set_Submenu('admin/snack'); ?>"><a href="<?php echo base_url(); ?>admin/snack"><i class="fa fa-angle-double-right"></i> <?php echo $this->lang->line('snack_generate_collection_list'); ?></a></li>
+                        <?php endif; ?>
+
+
+                        <?php if ($this->rbac->hasPrivilege('snack', 'can_add')) : ?>
+                            <li class="<?php echo set_Submenu('admin/snack/create'); ?>"><a href="<?php echo base_url(); ?>admin/snack/create"><i class="fa fa-angle-double-right"></i> <?php echo $this->lang->line('snack_generate_create'); ?></a></li>
+                        <?php endif; ?>
+
+                    </ul>
+                </li>
+
+            <?php
+            endif;
+
             if ($this->module_lib->hasActive('fees_collection')) {
                 if (($this->rbac->hasPrivilege('collect_fees', 'can_view') ||
                     $this->rbac->hasPrivilege('search_fees_payment', 'can_view') ||
@@ -1305,8 +1328,6 @@
                                 <li class="<?php echo set_Submenu('notification/setting'); ?>"><a href="<?php echo base_url(); ?>admin/notification/setting"><i class="fa fa-angle-double-right"></i> <?php echo $this->lang->line('notification_setting'); ?></a></li>
                             <?php
                             }
-
-
 
                             if ($this->rbac->hasPrivilege('sms_setting', 'can_view')) {
                             ?>

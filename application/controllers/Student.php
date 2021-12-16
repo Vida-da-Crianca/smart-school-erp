@@ -18,6 +18,7 @@ class Student extends Admin_Controller
         $this->load->library('mailsmsconf');
         $this->load->library('encoding_lib');
         $this->load->model("classteacher_model");
+        $this->load->model("snack_model");
         $this->load->model(array("timeline_model", "student_edit_field_model"));
         $this->blood_group        = $this->config->item('bloodgroup');
         $this->sch_setting_detail = $this->setting_model->getSetting();
@@ -985,9 +986,11 @@ class Student extends Admin_Controller
                     $data_insert['id'] = $id;
                     $this->student_model->add($data_insert);
                     $insert_id = $id;
-
                     $this->customfield_model->updateRecord($custom_value_array, $id, 'students');
                 }
+
+                $this->student_model->addSnacks($insert_id, $this->input->post('snacks'));
+
 
                 /*Matricular aluno*/
                 $data_new = array(
@@ -2194,7 +2197,10 @@ class Student extends Admin_Controller
         $data['siblings']           = $siblings;
         $data['siblings_counts']    = count($siblings);
         $custom_fields              = $this->customfield_model->getByBelong('students');
-        $data['sch_setting']        = $this->sch_setting_detail;
+        $data['sch_settiteming']        = $this->sch_setting_detail;
+        $data['snacks']             = array_map(function ($item){
+            return $item['id'];
+        },$this->student_model->snacks($student['id']));
 
         //carregar os documentos enviados desse aluno
         $res = $this->db->where('student_id',(int)$id)->get('student_doc')->result();

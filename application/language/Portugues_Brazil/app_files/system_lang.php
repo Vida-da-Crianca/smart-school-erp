@@ -1527,3 +1527,10 @@ $lang['notification_billet_old'] = 'Aviso débitos pendentes';
 $lang['notification_billet_old_text_header'] = 'Sr. {guardian_name}, <br /> Segue(m) o(s) boleto(s) que consta (m) em aberto (s)';
 
 $lang['after_bank'] = 'Banco Depois <small class="text-danger">(Dias úteis)</small>';
+
+$lang['snack_generate_collection'] = 'Tipo Refeições';
+$lang['snack_generate_collection_list'] = 'Lista de Refeições';
+$lang['snack_generate_create'] = 'Cadastrar';
+$lang['snack_frm_create'] = 'Novo Tipo de Refeição';
+$lang['snack_frm_update'] = 'Editar Tipo de Refeição';
+$lang['snack_name'] = 'Nome';

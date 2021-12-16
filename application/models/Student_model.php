@@ -75,10 +75,8 @@ class Student_model extends MY_Model
     var $disable_at;
     var $created_at;
     var $updated_at;
-    
-    
-    
-    
+
+
     public function __construct()
     {
         parent::__construct();
@@ -244,7 +242,7 @@ class Student_model extends MY_Model
              students.guardian_postal_code,
              students.is_active ,
              students.created_at ,students.updated_at,students.father_name,students.father_phone,students.blood_group,students.school_house_id,students.father_occupation,students.mother_name,students.mother_phone,students.mother_occupation,students.guardian_occupation,students.gender,students.guardian_is,students.rte,students.guardian_email, users.username,users.password,students.dis_reason,students.dis_note,students.app_key,students.parent_app_key')
-                ->from('students');
+            ->from('students');
         $this->db->join('student_session', 'student_session.student_id = students.id');
         $this->db->join('classes', 'student_session.class_id = classes.id');
         $this->db->join('sections', 'sections.id = student_session.section_id');
@@ -341,7 +339,6 @@ class Student_model extends MY_Model
         $this->db->where('users.role', 'student');
         $this->db->where('students.is_active', 'yes');
         $this->db->where('students.admission_no', $admission_no);
-
 
 
         $query = $this->db->get();
@@ -502,8 +499,8 @@ class Student_model extends MY_Model
         $field_variable = implode(',', $field_var_array);
 
         $this->db->select('classes.id AS `class_id`,'
-                . 'student_session.id as student_session_id,'
-                . 'students.id,classes.class,sections.id AS `section_id`,sections.section,students.id,students.admission_no , students.roll_no,students.admission_date,students.firstname,  students.lastname,students.image,    students.mobileno, students.email ,students.state ,   students.city , students.pincode ,     students.religion,     students.dob ,students.current_address,    students.permanent_address,IFNULL(students.category_id, 0) as `category_id`,IFNULL(categories.category, "") as `category`,students.adhar_no,students.samagra_id,students.bank_account_no,students.bank_name, students.ifsc_code , students.guardian_name , students.guardian_relation,students.guardian_phone,students.guardian_address, students.guardian_address_number, students.guardian_district, students.guardian_city, students.guardian_state,students.is_active ,students.created_at ,students.updated_at,students.father_name,students.app_key,students.parent_app_key,students.rte,students.gender, sections.full_time, ' . $field_variable)->from('students');
+            . 'student_session.id as student_session_id,'
+            . 'students.id,classes.class,sections.id AS `section_id`,sections.section,students.id,students.admission_no , students.roll_no,students.admission_date,students.firstname,  students.lastname,students.image,    students.mobileno, students.email ,students.state ,   students.city , students.pincode ,     students.religion,     students.dob ,students.current_address,    students.permanent_address,IFNULL(students.category_id, 0) as `category_id`,IFNULL(categories.category, "") as `category`,students.adhar_no,students.samagra_id,students.bank_account_no,students.bank_name, students.ifsc_code , students.guardian_name , students.guardian_relation,students.guardian_phone,students.guardian_address, students.guardian_address_number, students.guardian_district, students.guardian_city, students.guardian_state,students.is_active ,students.created_at ,students.updated_at,students.father_name,students.app_key,students.parent_app_key,students.rte,students.gender, sections.full_time, ' . $field_variable)->from('students');
         $this->db->join('student_session', 'student_session.student_id = students.id');
         $this->db->join('classes', 'student_session.class_id = classes.id');
         $this->db->join('sections', 'sections.id = student_session.section_id');
@@ -524,7 +521,7 @@ class Student_model extends MY_Model
         return $query->result_array();
     }
 
-    
+
     public function searchByClassSectionWithoutCurrent($class_id = null, $section_id = null, $student_id = null)
     {
         $this->db->select('classes.id AS `class_id`,student_session.id as student_session_id,students.id,classes.class,sections.id AS `section_id`,sections.section,students.id,students.admission_no , students.roll_no,students.admission_date,students.firstname,  students.lastname,students.image,    students.mobileno, students.email ,students.state ,   students.city , students.pincode ,     students.religion,     students.dob ,students.current_address,    students.permanent_address,IFNULL(students.category_id, 0) as `category_id`,IFNULL(categories.category, "") as `category`,students.adhar_no,students.samagra_id,students.bank_account_no,students.bank_name, students.ifsc_code , students.guardian_name , students.guardian_relation,students.guardian_phone,students.guardian_address, students.guardian_address_number, students.guardian_district, students.guardian_city, students.guardian_state,students.is_active ,students.created_at ,students.updated_at,students.father_name,students.rte,students.gender')->from('students');
@@ -554,7 +551,8 @@ class Student_model extends MY_Model
         $category = null,
         $gender = null,
         $rte = null
-    ) {
+    )
+    {
         $this->db->select('classes.id AS `class_id`,student_session.id as student_session_id,students.id,classes.class,sections.id AS `section_id`,sections.section,students.id,students.admission_no ,
          students.roll_no,students.admission_date,students.firstname,  students.lastname,students.image,    students.mobileno, students.email ,students.state ,   students.city , students.pincode ,     students.religion,     students.dob ,students.current_address,    students.permanent_address,students.category_id, categories.category,   students.adhar_no,students.samagra_id,students.bank_account_no,students.bank_name, students.ifsc_code , students.guardian_name , students.guardian_relation,students.guardian_phone,students.guardian_address, students.guardian_address_number, students.guardian_district, students.guardian_city, students.guardian_state,students.is_active ,students.created_at ,students.updated_at,students.father_name,students.rte,students.gender')->from('students');
         $this->db->join('student_session', 'student_session.student_id = students.id');
@@ -579,9 +577,9 @@ class Student_model extends MY_Model
         if ($rte != null) {
             $this->db->where('students.rte', $rte);
         }
-        $this->db->order_by('classes.id','ASC');
-        $this->db->order_by('sections.id','ASC');
-        $this->db->order_by('students.firstname','ASC');
+        $this->db->order_by('classes.id', 'ASC');
+        $this->db->order_by('sections.id', 'ASC');
+        $this->db->order_by('students.firstname', 'ASC');
         $query = $this->db->get();
         return $query->result_array();
     }
@@ -698,7 +696,6 @@ class Student_model extends MY_Model
     {
 
 
-
         $i = 1;
         $custom_fields = $this->customfield_model->get_custom_fields('students', 1);
         $field_var_array = array();
@@ -731,7 +728,6 @@ class Student_model extends MY_Model
     public function sibling_report($searchterm, $carray = null, $condition = null)
     {
         $userdata = $this->customlib->getUserData();
-
 
 
         $i = 1;
@@ -1650,9 +1646,6 @@ class Student_model extends MY_Model
         $staff_id = $userdata['id'];
 
 
-
-
-
         if (($userdata["role_id"] == 2) && ($userdata["class_teacher"] == "yes")) {
             if (!empty($carray)) {
 
@@ -1719,5 +1712,29 @@ class Student_model extends MY_Model
 
         return count($teacher);
         die;
+    }
+
+    function addSnacks($id, $snacks)
+    {
+        if (is_array($snacks)) {
+            $this->db->where('student_id', $id);
+            $this->db->delete('student_snacks');
+            foreach ($snacks as $snack) {
+                $data = [
+                    "student_id" => intval($id),
+                    "snack_id" => intval($snack),
+                ];
+                $this->db->insert('student_snacks', $data);
+            }
+        }
+    }
+
+    function snacks($id)
+    {
+        $this->db->select('snacks.*')->from('student_snacks');
+        $this->db->join('snacks', 'snacks.id = student_snacks.snack_id');
+        $this->db->where('student_id', $id);
+        $query = $this->db->get();
+        return $query->result_array();
     }
 }
