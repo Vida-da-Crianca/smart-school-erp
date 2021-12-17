@@ -114,7 +114,7 @@ switch (ENVIRONMENT)
 		exit(1); // EXIT_ERROR
 }
 
-error_reporting(E_ERROR);
+error_reporting(E_ERROR); 
 
 /*
  *---------------------------------------------------------------
