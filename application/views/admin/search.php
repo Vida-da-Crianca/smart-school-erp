@@ -99,8 +99,8 @@ if (isset($resultlist)) {
                                             <th><?php echo $this->lang->line('admission_no'); ?></th>
                                             <th><?php echo $this->lang->line('student_name'); ?></th>
                                             <th><?php echo $this->lang->line('class'); ?></th>
-                                            <?php if ($sch_setting->guardian_name) {?>
-                                            <th><?php echo $this->lang->line('guardian_name'); ?></th>
+                                            <?php if ($sch_setting->father_name) {?>
+                                            <th><?php echo $this->lang->line('father_name'); ?></th>
                                             <?php }?>
                                             <th><?php echo $this->lang->line('date_of_birth'); ?></th>
                                             <th><?php echo $this->lang->line('gender'); ?></th>
@@ -138,8 +138,8 @@ if (!empty($fields)) {
                                                         </a>
                                                     </td>
                                                     <td><?php echo $student['class'] . "(" . $student['section'] . ")" ?></td>
-                                                    <?php if ($sch_setting->guardian_name) {?>
-                                                    <td><?php echo $student['guardian_name']; ?></td>
+                                                    <?php if ($sch_setting->father_name) {?>
+                                                    <td><?php echo $student['father_name']; ?></td>
                                                     <?php }?>
                                                     <td><?php
 if (!empty($student['dob'])) {
