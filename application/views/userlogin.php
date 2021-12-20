@@ -97,11 +97,11 @@ if(empty($notice)){
                                 <form action="<?php echo base_url('site/userlogin') ?>" method="post">
                                     <?php echo $this->customlib->getCSRF(); ?>
                                     <div class="form-group has-feedback">
-                                        <label class="sr-only" for="form-employee_id">
-                                            <?php echo $this->lang->line('employee_id'); ?></label>
-                                        <input type="text" name="employee_id" placeholder="<?php echo $this->lang->line('employee_id'); ?>" class="form-employee_id form-control" id="employee_id"> 
+                                        <label class="sr-only" for="form-user_login">
+                                            <?php echo $this->lang->line('user_login'); ?></label>
+                                        <input type="text" name="user_login" placeholder="<?php echo $this->lang->line('user_login'); ?>" class="form-user_login form-control" id="user_login"> 
                                         <span class="fa fa-envelope form-control-feedback"></span>
-                                        <span class="text-danger"><?php echo form_error('employee_id'); ?></span>
+                                        <span class="text-danger"><?php echo form_error('user_login'); ?></span>
                                     </div>
                                     <div class="form-group has-feedback">                                        
                                         <input type="password" name="password" placeholder="<?php echo $this->lang->line('password'); ?>" class="form-password form-control" id="password"> 
