@@ -38,3 +38,11 @@ $route['admin/documents/previewMultiple/(:any)/(:any)']['get'] = 'admin/Document
 $route['admin/documents/(:any)']['get'] = 'admin/DocumentController/show/$1';
 $route['admin/documents/(:any)']['post'] = 'admin/DocumentController/update/$1';
 $route['admin/documents/(:any)']['delete'] = 'admin/DocumentController/destroy/$1';
+
+
+
+
+
+// CODELABS CODES
+
+$route['admin/curriculos'] = 'admin/Staff/curriculos';

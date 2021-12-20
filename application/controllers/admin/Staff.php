@@ -27,6 +27,34 @@ class Staff extends Admin_Controller {
         $this->sch_setting_detail = $this->setting_model->getSetting();
     }
 
+
+    public function curriculos(){
+        if (!$this->rbac->hasPrivilege('staff', 'can_view')) {
+            access_denied();
+        }
+
+        $this->db->from('cl_curriculos');
+        $this->db->where('status',1);
+        $this->db->order_by('id','desc');
+        $get = $this->db->get();
+
+        $count = $get->num_rows();
+
+        if($count > 0):
+        $curriculos = $get->result_array();
+
+        $datas['curriculos'] = $curriculos;
+
+        endif;
+        $this->load->view('layout/header');
+        $this->load->view('admin/staff/curriculos',$datas);
+        $this->load->view('layout/footer');
+
+
+    }
+
+
+
     public function index() {
         if (!$this->rbac->hasPrivilege('staff', 'can_view')) {
             access_denied();
@@ -496,7 +524,11 @@ class Staff extends Admin_Controller {
             if (isset($surname)) {
 
                 $data_insert['surname'] = $surname;
-            }if (isset($department)) {
+            }
+
+
+
+            if (isset($department)) {
 
                 $data_insert['department'] = $department;
             }

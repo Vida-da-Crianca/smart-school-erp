@@ -97,21 +97,21 @@
                                     </div>
                                     <div class="row">
 
-                                        <div class="col-md-3">
+                                        <div class="col-md-6">
                                             <div class="form-group">
-                                                <label for="exampleInputEmail1"><?php echo $this->lang->line('first_name'); ?></label><small class="req"> *</small>
+                                                <label for="exampleInputEmail1">Nome Completo</label><small class="req"> *</small>
                                                 <input id="name" name="name" placeholder="" type="text" class="form-control"  value="<?php echo set_value('name') ?>" />
                                                 <span class="text-danger"><?php echo form_error('name'); ?></span>
                                             </div>
                                         </div>
-                                        <?php if ($sch_setting->staff_last_name) { ?>
+                                 <!--       <?php if ($sch_setting->staff_last_name) { ?>
                                             <div class="col-md-3">
                                                 <div class="form-group">
                                                     <label for="exampleInputEmail1"><?php echo $this->lang->line('last_name'); ?></label>
                                                     <input id="surname" name="surname" placeholder="" type="text" class="form-control"  value="<?php echo set_value('surname') ?>" />
                                                     <span class="text-danger"><?php echo form_error('surname'); ?></span>
                                                 </div>
-                                            </div>
+                                            </div>-->
                                         <?php } if ($sch_setting->staff_father_name) { ?>
                                             <div class="col-md-3">
                                                 <div class="form-group">
@@ -218,11 +218,91 @@
                                         <?php } ?>
                                     </div>
                                     <div class="row">
+
+
+
                                         <?php if ($sch_setting->staff_current_address) { ?>
+
+                                            <script>
+
+                                                function limpa_formulário_cep() {
+                                                    //Limpa valores do formulário de cep.
+                                                    document.getElementsByClassName('address-complete').value="...";
+
+                                                }
+
+                                                function meu_callback(conteudo) {
+                                                    if (!("erro" in conteudo)) {
+                                                        //Atualiza os campos com os valores.
+
+                                                        var dados_endereco = conteudo.logradouro+' '+' '+conteudo.bairro+' '+' '+conteudo.localidade+' '+' '+conteudo.uf;
+
+
+                                                        alert(dados_endereco);
+                                                        document.getElementById('address-complete').value=(dados_endereco);
+                                                        document.getElementById('address-complete1').value=(dados_endereco);
+
+                                                    } //end if.
+                                                    else {
+                                                        //CEP não Encontrado.
+                                                        limpa_formulário_cep();
+                                                        alert("CEP não encontrado.");
+                                                    }
+                                                }
+
+                                                function pesquisacep(valor) {
+
+                                                    //Nova variável "cep" somente com dígitos.
+                                                    var cep = valor.replace(/\D/g, '');
+
+                                                    //Verifica se campo cep possui valor informado.
+                                                    if (cep != "") {
+
+                                                        //Expressão regular para validar o CEP.
+                                                        var validacep = /^[0-9]{8}$/;
+
+                                                        //Valida o formato do CEP.
+                                                        if(validacep.test(cep)) {
+
+                                                            //Preenche os campos com "..." enquanto consulta webservice.
+                                                            document.getElementsByClassName('address-complete').value="...";
+
+
+                                                            //Cria um elemento javascript.
+                                                            var script = document.createElement('script');
+
+                                                            //Sincroniza com o callback.
+                                                            script.src = 'https://viacep.com.br/ws/'+ cep + '/json/?callback=meu_callback';
+
+                                                            //Insere script no documento e carrega o conteúdo.
+                                                            document.body.appendChild(script);
+
+                                                        } //end if.
+                                                        else {
+                                                            //cep é inválido.
+                                                            limpa_formulário_cep();
+                                                            alert("Formato de CEP inválido.");
+                                                        }
+                                                    } //end if.
+                                                    else {
+                                                        //cep sem valor, limpa formulário.
+                                                        limpa_formulário_cep();
+                                                    }
+                                                };
+
+                                            </script>
+
+
+                                            <div class="col-md-12 form-group">
+                                                <label for="exampleInputEmail1">CEP</label> <small class="req"> *</small>
+                                                <input maxlength="9" id="guardian_postal_code" name="guardian_postal_code" placeholder=""  onblur="pesquisacep(this.value);"  class="form-control" value="" autocomplete="off">
+                                            </div>
+
+
                                             <div class="col-md-6">
                                                 <div class="form-group">
                                                     <label for="exampleInputFile"><?php echo $this->lang->line('current'); ?> <?php echo $this->lang->line('address'); ?></label>
-                                                    <div><textarea name="address" class="form-control"><?php echo set_value('address'); ?></textarea>
+                                                    <div><textarea name="address" id="address-complete" class="form-control "><?php echo set_value('address'); ?></textarea>
                                                     </div>
                                                     <span class="text-danger"></span></div>
                                             </div>
@@ -230,7 +310,7 @@
                                             <div class="col-md-6">
                                                 <div class="form-group">
                                                     <label for="exampleInputFile"><?php echo $this->lang->line('permanent_address'); ?></label>
-                                                    <div><textarea name="permanent_address" class="form-control"><?php echo set_value('permanent_address'); ?></textarea>
+                                                    <div><textarea name="permanent_address"  id="address-complete1" class="form-control address-complete"><?php echo set_value('permanent_address'); ?></textarea>
                                                     </div>
                                                     <span class="text-danger"></span></div>
                                             </div> 

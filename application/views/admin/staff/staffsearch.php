@@ -26,9 +26,18 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                         <h3 class="box-title"><i class="fa fa-search"></i> <?php echo $this->lang->line('select_criteria'); ?></h3>
                         <div class="box-tools pull-right">
                             <small class="pull-right">
-                                <?php if ($this->rbac->hasPrivilege('staff', 'can_add')) { ?> <a href="<?php echo base_url(); ?>admin/staff/create" class="btn btn-primary btn-sm"   >
+                                <?php if ($this->rbac->hasPrivilege('staff', 'can_add')) { ?>
+
+                                    <a href="<?php echo base_url(); ?>admin/staff/create" class="btn btn-primary btn-sm"   >
                         <i class="fa fa-plus"></i> <?php echo $this->lang->line('add_staff'); ?>
-                            </a><?php } ?>
+                            </a>
+
+                                    <a href="<?php echo base_url(); ?>admin/curriculos" class="btn btn-primary btn-sm"   >
+                                        <i class="fa fa-file"></i> Currículos
+                                    </a>
+
+
+                                <?php } ?>
                         </small>
                        </div>
                     </div>
