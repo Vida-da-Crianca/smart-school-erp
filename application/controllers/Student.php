@@ -2197,7 +2197,7 @@ class Student extends Admin_Controller
         $data['siblings']           = $siblings;
         $data['siblings_counts']    = count($siblings);
         $custom_fields              = $this->customfield_model->getByBelong('students');
-        $data['sch_settiteming']        = $this->sch_setting_detail;
+        $data['sch_setting']        = $this->sch_setting_detail;
         $data['snacks']             = array_map(function ($item){
             return $item['id'];
         },$this->student_model->snacks($student['id']));

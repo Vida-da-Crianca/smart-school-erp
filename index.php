@@ -70,8 +70,8 @@ $dotenv->load();
 	ini_set('file_uploads', 'On');
 
 
-	define('ENVIRONMENT', 'production');
-	//alterado
+define('ENVIRONMENT', getenv('ENVIRONMENT', 'production'));
+//alterado
 
 
 	if( ! ini_get('date.timezone') )

@@ -1534,3 +1534,10 @@ $lang['snack_generate_create'] = 'Cadastrar';
 $lang['snack_frm_create'] = 'Novo Tipo de Refeição';
 $lang['snack_frm_update'] = 'Editar Tipo de Refeição';
 $lang['snack_name'] = 'Nome';
+
+
+$lang['schedule_collection'] = 'Agendas';
+$lang['schedule_collection_list'] = 'Lista de Agendas';
+$lang['schedule_create'] = 'Cadastrar Agenda';
+$lang['schedule_frm_create'] = 'Nova Agenda';
+$lang['schedule_frm_update'] = 'Editar Agenda';

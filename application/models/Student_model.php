@@ -1737,4 +1737,17 @@ class Student_model extends MY_Model
         $query = $this->db->get();
         return $query->result_array();
     }
+
+    function bySnack($snackId, $classId, $sectionId, $sessionId)
+    {
+        $this->db->select('students.*')->from('students');
+        $this->db->join('student_snacks', 'students.id = student_snacks.student_id', 'left');
+        $this->db->join('student_session', 'students.id = student_session.student_id', 'left');
+        $this->db->where('snack_id', $snackId);
+        $this->db->where('section_id', $sectionId);
+        $this->db->where('class_id', $classId);
+        $this->db->where('student_session.session_id', $sessionId);
+        $query = $this->db->get();
+        return $query->result_array();
+    }
 }

@@ -11,7 +11,7 @@ class Classteacher_model extends MY_Model {
 
         if (!empty($id)) {
 
-            $query = $this->db->select('staff.*,class_teacher.id as ctid,class_teacher.class_id,class_teacher.section_id,classes.class,sections.section')->join("staff", "class_teacher.staff_id = staff.id")->join("classes", "class_teacher.class_id = classes.id")->join("sections", "class_teacher.section_id = sections.id")->where("class_teacher.id", $id)->get("class_teacher");
+            $query = $this->db->select('staff.*,class_teacher.id as ctid,class_teacher.class_id,class_teacher.section_id,classes.class,sections.section, class_teacher.session_id')->join("staff", "class_teacher.staff_id = staff.id")->join("classes", "class_teacher.class_id = classes.id")->join("sections", "class_teacher.section_id = sections.id")->where("class_teacher.id", $id)->get("class_teacher");
 
             return $query->row_array();
         } else {
@@ -84,6 +84,16 @@ class Classteacher_model extends MY_Model {
     public function getclassbyuser($id) {
 
         $query = $this->db->select("classes.*")->join("classes", "class_teacher.class_id = classes.id")->where("class_teacher.staff_id", $id)->get("class_teacher");
+
+        return $query->result_array();
+    }
+    public function getClassFullByUser($id) {
+
+        $query = $this->db->select("classes.*, section, section_id, class_teacher.id as class_id")
+            ->join("classes", "class_teacher.class_id = classes.id")
+            ->join("sections", "class_teacher.section_id = sections.id")
+            ->where("class_teacher.staff_id", $id)
+            ->get("class_teacher");
 
         return $query->result_array();
     }
