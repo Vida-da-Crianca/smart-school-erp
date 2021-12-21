@@ -19,6 +19,8 @@ class User extends Student_Controller
         $this->sch_setting_detail = $this->setting_model->getSetting();
         $this->load->model("student_edit_field_model");
         $this->config->load('mailsms');
+        $this->load->model('schedule_model');
+        $this->load->model('snack_model');
     }
 
     public function unauthorized()
@@ -773,6 +775,52 @@ class User extends Student_Controller
             return true;
         }
         return true;
+    }
+
+    function schedule(){
+        $sessionData   = $this->session->userdata('student');
+
+        $student =  $this->student_model->get($sessionData['student_id']);
+
+        $this->data['id']       = $sessionData['id'];
+        $this->data['username'] = $sessionData['username'];
+        $this->data['student'] = $student;
+        $filters = $this->input->get();
+        $filters['student_id'] = $student['id'];
+        $this->data['agendas'] = count($filters) ? $this->schedule_model->list($filters, 'student, agendas.date') : [];
+        $this->load->view('layout/student/header', $this->data);
+        $this->load->view('user/schedule_list', $this->data);
+        $this->load->view('layout/student/footer', $this->data);
+    }
+
+    public function scheduleShow($agendaId, $studentId)
+    {
+        $agenda = $this->schedule_model->get($agendaId);
+        $student = $this->student_model->get($studentId);
+        $content =  array();
+        $data = array();
+        foreach (Snack_model::$tipos as $key => $tipo) {
+            $items = $this->schedule_model->getAgendaOldData($studentId, $agendaId, 'agenda_' . $key);
+            if (count($items)) {
+                $content[$key] = $items;
+            }
+        }
+        $agenda["content"] =  $content;
+        $data["agenda"] = $agenda;
+        $data["student"] = $student;
+        $this->load->view('layout/student/header', $data);
+        $this->load->view('user/schedule_show', $data);
+        $this->load->view('layout/student/footer', $data);
+
+
+    }
+
+    function updateAgenda()
+    {
+        $data = json_decode(file_get_contents('php://input'));
+        $table = "agenda_" . $data->snack_code;
+        $result = $this->schedule_model->updateAgendaOld($table, $data->item);
+        echo json_encode($result);
     }
 
 }

@@ -31,14 +31,13 @@ class Schedule extends Admin_Controller
         $this->session->set_userdata('top_menu', 'schedule');
         $this->session->set_userdata('sub_menu', 'admin/schedule');
 
-
-
         $data['classes'] = $this->classteacher_model->getClassFullByUser($this->session->userdata('admin')["id"]);
+        $data['students'] = $this->student_model->getStudentsByTeacher($this->session->userdata('admin')["id"]);
         $data['snacks'] = array_map(function ($item) {
             return (object)$item;
         }, $this->snack_model->all());
-        $filters =  $this->input->get();
-        $data['agendas'] =  count($filters) ? $this->schedule_model->list($filters) : [];
+        $filters = $this->input->get();
+        $data['agendas'] = count($filters) ? $this->schedule_model->list($filters) : [];
 
         $this->load->view('layout/header', $data);
         $this->load->view('admin/schedule/schedule_list', $data);
@@ -65,11 +64,27 @@ class Schedule extends Admin_Controller
         $this->load->view('layout/footer', $data);
     }
 
-    public function view($id)
+    public function view($agendaId, $studentId)
     {
         if (!$this->rbac->hasPrivilege('schedule', 'can_view')) {
             access_denied();
         }
+        $agenda = $this->schedule_model->get($agendaId);
+        $student = $this->student_model->get($studentId);
+        $content =  array();
+        $data = array();
+        foreach (Snack_model::$tipos as $key => $tipo) {
+            $items = $this->schedule_model->getAgendaOldData($studentId, $agendaId, 'agenda_' . $key);
+            if (count($items)) {
+                $content[$key] = $items;
+            }
+        }
+        $agenda["content"] =  $content;
+        $data["agenda"] = $agenda;
+        $data["student"] = $student;
+        $this->load->view('layout/header', $data);
+        $this->load->view('admin/schedule/schedule_view', $data);
+        $this->load->view('layout/footer', $data);
 
     }
 
@@ -125,14 +140,21 @@ class Schedule extends Admin_Controller
         } elseif ($snack->code == "evacuacao") {
             $payload = [
                 "textura" => $agenda->evacuacao->textura,
-                "banho" => $agenda->evacuacao->banho,
-                "disposicao" => $agenda->evacuacao->disposicao,
                 "agenda_id" => $student->agenda_id,
                 "snack_id" => $snack->id,
                 "student_id" => $student->id,
                 "created_by" => $this->session->userdata('admin')["id"],
             ];
             $result = $this->schedule_model->createAgendaBySnack("agenda_evacuacao", $payload);
+        } elseif ($snack->code == "banho") {
+            $payload = [
+                "value" => $agenda->banho->value,
+                "agenda_id" => $student->agenda_id,
+                "snack_id" => $snack->id,
+                "student_id" => $student->id,
+                "created_by" => $this->session->userdata('admin')["id"],
+            ];
+            $result = $this->schedule_model->createAgendaBySnack("agenda_banho", $payload);
         }
 
         echo json_encode($result);
@@ -141,7 +163,7 @@ class Schedule extends Admin_Controller
     function updateAgenda()
     {
         $data = json_decode(file_get_contents('php://input'));
-        $table  = "agenda_".$data->snack_code;
+        $table = "agenda_" . $data->snack_code;
         $result = $this->schedule_model->updateAgendaOld($table, $data->data);
         echo json_encode($result);
     }
@@ -152,8 +174,8 @@ class Schedule extends Admin_Controller
         $studentId = $data->student_id;
         $agendaId = $data->agenda_id;
         $snackId = $data->snack_id;
-        $table = 'agenda_'.$data->snack_code;
-        $result = $this->schedule_model->getAgendaOldData($studentId, $agendaId, $snackId, $table);
+        $table = 'agenda_' . $data->snack_code;
+        $result = $this->schedule_model->getAgendaOldData($studentId, $agendaId, $table, $snackId,);
 
         echo json_encode($result);
     }

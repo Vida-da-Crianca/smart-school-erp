@@ -32,7 +32,8 @@ class Schedule_model extends CI_Model
 
     public function createAgendaBySnack($table, $data)
     {
-        return $this->db->insert($table, $data);
+        $this->db->insert($table, $data);
+        return $this->db->insert_id();
     }
 
     public function updateAgendaBySnack($id, $table, $data)
@@ -63,27 +64,52 @@ class Schedule_model extends CI_Model
 
     }
 
-    public function list($filters)
+    public function list($filters, $groupBy = null)
     {
-        $this->db->select("agendas.*, students.firstname, students.lastname, snacks.name as snack, snacks.id as snack_id")
+        $groupBy = $groupBy ?: 'student, snack_id, agendas.date';
+
+        $this->db->query("SET sql_mode=(SELECT REPLACE(@@sql_mode, 'ONLY_FULL_GROUP_BY', ''));");
+        $this->db->select("agendas.*, students.firstname, students.lastname, snacks.name as snack, snacks.id as snack_id, COALESCE(agenda_alimentacao.student_id, agenda_evacuacao.student_id, agenda_sono.student_id) as student")
             ->from('agendas')
             ->join('agenda_alimentacao', 'agendas.id = agenda_alimentacao.agenda_id', 'left')
             ->join('agenda_evacuacao', 'agendas.id = agenda_evacuacao.agenda_id', 'left')
             ->join('agenda_sono', 'agendas.id = agenda_sono.agenda_id', 'left')
             ->join('students', 'students.id = COALESCE(agenda_alimentacao.student_id, agenda_evacuacao.student_id, agenda_sono.student_id)', 'left')
-            ->join('snacks', 'snacks.id = COALESCE(agenda_alimentacao.snack_id, agenda_evacuacao.snack_id, agenda_sono.snack_id)', 'left');
+            ->join('snacks', 'snacks.id = COALESCE(agenda_alimentacao.snack_id, agenda_evacuacao.snack_id, agenda_sono.snack_id)', 'left')
+            ->group_by($groupBy);
+
+        if (isset($filters['class_id']) && $filters['class_id']) {
+            $this->db->where('agendas.class_teacher_id', $filters['class_id']);
+        }
+        if (isset($filters['date_start']) && $filters['date_start']) {
+            $this->db->where('agendas.date >=', $filters['date_start']);
+        }
+        if (isset($filters['date_end']) && $filters['date_end']) {
+            $this->db->where('agendas.date <=', $filters['date_end']);
+        }
+        if (isset($filters['snack_id']) && $filters['snack_id']) {
+            $this->db->where('snacks.id', $filters['snack_id']);
+        }
+
+        if (isset($filters['student_id']) && $filters['student_id']) {
+            $this->db->where('students.id', $filters['student_id']);
+        }
+
+
         $query = $this->db->get();
         $item = $query->result_array();
         return $item;
     }
 
-    public function getAgendaOldData($studentId, $agendaId, $snackId, $table)
+    public function getAgendaOldData($studentId, $agendaId, $table, $snackId = null)
     {
-        $this->db->select($table.'.*')
+        $query = $this->db->select($table . '.*')
             ->from($table)
-            ->where("student_id", $studentId)
-            ->where("snack_id", $snackId)
-            ->where("agenda_id", $agendaId);
+            ->where("student_id", $studentId);
+        if ($snackId) {
+            $query->where("snack_id", $snackId);
+        }
+        $query->where("agenda_id", $agendaId);
         $query = $this->db->get();
         return $query->result_array();
     }

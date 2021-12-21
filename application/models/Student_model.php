@@ -1750,4 +1750,19 @@ class Student_model extends MY_Model
         $query = $this->db->get();
         return $query->result_array();
     }
+
+    function getStudentsByTeacher($teatcherId)
+    {
+
+        $query = $this->db->select("students.*")->from('students')
+            ->join('student_session as ss', 'ss.student_id = students.id')
+            ->join("classes", "ss.class_id = classes.id")
+            ->join("sections", "ss.section_id = sections.id")
+            ->join("class_teacher", "class_teacher.session_id = ss.session_id AND class_teacher.class_id = classes.id AND class_teacher.section_id = sections.id")
+            ->where("class_teacher.staff_id", $teatcherId)
+            ->order_by("students.firstname", 'asc')
+            ->get();
+
+        return $query->result_array();
+    }
 }

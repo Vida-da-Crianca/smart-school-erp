@@ -114,9 +114,9 @@
                                             <select v-model="agenda.class_id" class="form-control"
                                                     required="required">
                                                 <?php
-                                                foreach ($classes as $key=>$class) {
+                                                foreach ($classes as $key => $class) {
                                                     ?>
-                                                    <option  value="<?= $class['class_id'] ?>"><?= $class['class'] ?>
+                                                    <option value="<?= $class['class_id'] ?>"><?= $class['class'] ?>
                                                         - <?= $class['section'] ?></option>
                                                     <?php
                                                 }
@@ -168,23 +168,102 @@
                                                 <?php } ?>
                                             </div>
                                         </div>
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label>Recado</label>
+                                                <input @change="update(agendaOld)"
+                                                       v-model="agendaOld.message"
+                                                       class="form-control"
+                                                       type="text">
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-12 row">
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label>Horário</label>
+                                                <input @change="save(student)"
+                                                       v-model="student.agenda.alimentacao.horario"
+                                                       class="form-control"
+                                                       type="time">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label>Comportamento</label><br>
+                                                <?php
+                                                foreach (Schedule_model::$comportamento as $key => $item) { ?>
+                                                    <label class="radio-inline">
+                                                        <input @change="save(student)"
+                                                               v-model="student.agenda.alimentacao.comportamento"
+                                                               type="radio"
+                                                               :name="'comportamento_'+student.id"
+                                                               value="<?= $key ?>"> <?= $item ?>
+                                                    </label>
+                                                <?php } ?>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label>Recado</label>
+                                                    <input @change="save(student)"
+                                                           v-model="student.agenda.alimentacao.message"
+                                                           class="form-control"
+                                                           type="text">
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="col-md-9 row" v-if="snackData.code==='sono'">
                                     <div v-for="(agendaOld, index) in student.old_agendas" class="col-md-12 row"
                                          :style="!newRecord || index !== student.old_agendas.length-1 ? 'background: #c0c0c0; border-bottom: 1px; solid #fff' : ''">
-                                        <div class="col-md-6">
+                                        <div class="col-md-4">
                                             <div class="form-group">
                                                 <label>Dormiu</label>
                                                 <input @change="update(agendaOld)" v-model="agendaOld.dormiu"
                                                        class="form-control" type="time">
                                             </div>
                                         </div>
-                                        <div class="col-md-6">
+                                        <div class="col-md-4">
                                             <div class="form-group">
                                                 <label>Acordou</label>
                                                 <input @change="update(agendaOld)" v-model="agendaOld.acordou"
                                                        class="form-control" type="time">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label>Recado</label>
+                                                <input @change="update(agendaOld)"
+                                                       v-model="agendaOld.message"
+                                                       class="form-control"
+                                                       type="text">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12 row">
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label>Dormiu</label>
+                                                <input @change="save(student)" v-model="student.agenda.sono.dormiu"
+                                                       class="form-control" type="time">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label>Acordou</label>
+                                                <input @change="save(student)" v-model="student.agenda.sono.acordou"
+                                                       class="form-control" type="time">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label>Recado</label>
+                                                <input @change="save(student)"
+                                                       v-model="student.agenda.sono.message"
+                                                       class="form-control"
+                                                       type="text">
                                             </div>
                                         </div>
                                     </div>
@@ -205,28 +284,86 @@
                                                 </label>
                                             <?php } ?>
                                         </div>
-                                        <div class="col-md-3 item-line">
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label>Recado</label>
+                                                <input @change="update(agendaOld)"
+                                                       v-model="agendaOld.message"
+                                                       class="form-control"
+                                                       type="text">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12 row">
+                                        <div class="col-md-6 item-line">
+                                            <label>Textura</label><br>
+                                            <?php
+                                            foreach (Schedule_model::$evacuacao as $key => $evacuacao) { ?>
+                                                <label class="radio-inline">
+                                                    <input @change="save(student)"
+                                                           v-model="student.agenda.evacuacao.value" type="radio"
+                                                           :name="'evacuacao_'+student.id"
+                                                           value="<?= $key ?>"> <?= $evacuacao ?>
+                                                </label>
+                                            <?php } ?>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label>Recado</label>
+                                                <input @change="save(student)"
+                                                       v-model="student.agenda.evacuacao.message"
+                                                       class="form-control"
+                                                       type="text">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-9 row" v-if="snackData.code==='banho'">
+                                    <div v-for="(agendaOld, index) in student.old_agendas" class="col-md-12 row"
+                                         :style="!newRecord || index !== student.old_agendas.length-1 ? 'background: #c0c0c0; border-bottom: 1px; solid #fff' : ''">
+                                        <div class="col-md-4 item-line">
                                             <label>Banho</label><br>
                                             <?php
                                             foreach (Schedule_model::$boolean as $key => $item) { ?>
                                                 <label class="radio-inline">
-                                                    <input @change="update(agendaOld)" v-model="agendaOld.banho"
+                                                    <input @change="update(agendaOld)" v-model="agendaOld.value"
                                                            type="radio" :name="'banho_ag'+agendaOld.id"
                                                            value="<?= $key ?>"> <?= $item ?>
                                                 </label>
                                             <?php } ?>
                                         </div>
-                                        <div class="col-md-3 item-line">
-                                            <label>Disposição</label><br>
-                                            <?php
-                                            foreach (Schedule_model::$disposicao as $key => $disposicao) { ?>
-                                                <label class="radio-inline">
-                                                    <input @change="update(agendaOld)"
-                                                           v-model="agendaOld.disposicao" type="radio"
-                                                           :name="'disposicao_ag_'+agendaOld.id"
-                                                           value="<?= $key ?>"> <?= $disposicao ?>
-                                                </label>
-                                            <?php } ?>
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label>Recado</label>
+                                                <input @change="update(agendaOld)"
+                                                       v-model="agendaOld.message"
+                                                       class="form-control"
+                                                       type="text">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12 row">
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label>Banho</label><br>
+                                                <?php
+                                                foreach (Schedule_model::$boolean as $key => $item) { ?>
+                                                    <label class="radio-inline">
+                                                        <input @change="save(student)" v-model="student.agenda.banho.value"
+                                                               type="radio" :name="'banho_'+student.id"
+                                                               value="<?= $key ?>"> <?= $item ?>
+                                                    </label>
+                                                <?php } ?>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label>Recado</label>
+                                                <input @change="save(student)"
+                                                       v-model="student.agenda.banho.message"
+                                                       class="form-control"
+                                                       type="text">
+                                            </div>
                                         </div>
                                     </div>
 
@@ -310,9 +447,15 @@
                 }
                 return this.getMinutes();
             };
+            Date.prototype.getFullHours = function () {
+                if (this.getHours() < 10) {
+                    return '0' + this.getHours();
+                }
+                return this.getHours();
+            };
             var day = new Date();
             this.agenda.date = day.getFullYear() + '-' + (day.getMonth() + 1) + '-' + day.getDate();
-            this.agenda.class_id =  this.classes.length > 0 ?  this.classes[0].class_id : null
+            this.agenda.class_id = this.classes.length > 0 ? this.classes[0].class_id : null
         },
         mounted() {
             let app = this;
@@ -327,29 +470,29 @@
             async getStudentsBySnackId() {
                 if (!this.isValidSchedule()) return;
                 let app = this
-                app.newRecord  = confirm("Criar novo registro?")
                 await axios.post('/admin/schedule/studentsBySnackId/' + this.agenda.snack_id, {
                     ...this.agenda
                 })
                     .then(function (response) {
                         let day = new Date();
-                        let minutes = day.getMinutes();
-                        let hour = day.getHours();
+                        let minutes = day.getFullMinutes();
+                        let hour = day.getFullHours();
                         app.students = response.data.map((student) => {
                             student['agenda'] = {}
                             student['agenda']['alimentacao'] = {
                                 id: null,
                                 horario: hour + ':' + minutes,
-                                comportamento: 1
+                                comportamento: null
                             }
                             student['agenda']['sono'] = {
                                 id: null,
                             }
+                            student['agenda']['banho'] = {
+                                id: null,
+                            }
                             student['agenda']['evacuacao'] = {
                                 id: null,
-                                textura: 1,
-                                banho: 1,
-                                disposicao: 1,
+                                textura: null,
                             }
                             student['old_agendas'] = []
                             return student;
@@ -360,11 +503,8 @@
                         console.error(error)
                         alert('Erro ao carregar os alunos')
                     })
-                if (this.students.length > 0 ) {
+                if (this.students.length > 0) {
                     for (let i = 0; i < app.students.length; i++) {
-                        if (app.newRecord){
-                            app.save(app.students[i])
-                        }
                         app.students[i].old_agendas = await app.getAgendaData(app.students[i])
                     }
                 }
@@ -384,6 +524,10 @@
             save(student) {
                 if (this.students.length > 0) {
                     let app = this;
+                    if (student.agenda[app.snackData.code].id){
+                        this.update(student.agenda[app.snackData.code])
+                        return;
+                    }
                     axios.post('/admin/schedule/saveAgenda/', {
                         student: {
                             agenda: student.agenda,
@@ -392,6 +536,7 @@
                             agenda_id: app.schedule.id
                         }
                     }).then(function (response) {
+                        student.agenda[app.snackData.code].id = response.data
                         showMessage('s', 'Salvo com sucesso!')
                     }).catch(function (error) {
                         console.error(error)

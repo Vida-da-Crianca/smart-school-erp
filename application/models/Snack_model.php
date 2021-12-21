@@ -3,6 +3,15 @@
 class Snack_model extends CI_Model
 {
 
+    public static $tipos = [
+        'alimentacao' => "Alimentação",
+        'sono' => "Sono",
+        'evacuacao' => "Evacuação",
+        'banho' => "Banho",
+
+    ];
+
+
     public function add($data)
     {
         $this->db->insert('snacks', $data);
@@ -30,11 +39,17 @@ class Snack_model extends CI_Model
 
     }
 
-    public function all(){
+    public function all()
+    {
         $this->db->select('snacks.*')
             ->from('snacks');
         $query = $this->db->get();
         return $query->result_array();
+    }
+
+    public function nameById($snack_id)
+    {
+        return ($this->get($snack_id)['name']);
     }
 
 }
