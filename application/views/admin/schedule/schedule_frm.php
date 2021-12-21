@@ -301,7 +301,7 @@
                                             foreach (Schedule_model::$evacuacao as $key => $evacuacao) { ?>
                                                 <label class="radio-inline">
                                                     <input @change="save(student)"
-                                                           v-model="student.agenda.evacuacao.value" type="radio"
+                                                           v-model="student.agenda.evacuacao.textura" type="radio"
                                                            :name="'evacuacao_'+student.id"
                                                            value="<?= $key ?>"> <?= $evacuacao ?>
                                                 </label>
@@ -339,6 +339,12 @@
                                                        v-model="agendaOld.message"
                                                        class="form-control"
                                                        type="text">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label>Horário</label>
+                                                <input class="form-control" type="time" readonly disabled :value="agendaOld.created_at.substring(11)">
                                             </div>
                                         </div>
                                     </div>
