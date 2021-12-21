@@ -23,7 +23,7 @@
                     <div class="box box-primary">
                         <div class="box-header with-border">
                             <h3 class="box-title"><?php echo $title; ?></h3>
-                        </div> 
+                        </div>
                         <form id="form1" action="<?php echo site_url('admin/department/department') ?>"  id="employeeform" name="employeeform" method="post" accept-charset="utf-8"  enctype="multipart/form-data">
                             <div class="box-body">
                                 <?php if ($this->session->flashdata('msg')) { ?>

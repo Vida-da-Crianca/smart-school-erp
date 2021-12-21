@@ -196,7 +196,8 @@ $language_name = $language["short_code"];
                                         <!-- <th align="left"><?php echo $this->lang->line('fees_code'); ?></th> -->
                                         <th align="left" class="text text-left"><?php $this->lang->line('due_date'); ?></th>
                                         <th align="left" class="text text-left"><?php echo $this->lang->line('status'); ?></th>
-                                        <th class="text text-right"><?php echo $this->lang->line('amount') ?> <span><?php echo "(" . $currency_symbol . ")"; ?></span></th>
+                                        <th class="text text-right"><?php echo $this->lang->line('amount') ?>
+                                            <span><?php echo "(" . $currency_symbol . ")"; ?></span></th>
                                         <!-- <th class="text text-left"><?php echo $this->lang->line('payment_id'); ?></th> -->
                                         <th class="text text-left"><?php echo $this->lang->line('mode'); ?></th>
                                         <th class="text text-left"><?php echo $this->lang->line('date'); ?></th>
@@ -216,6 +217,9 @@ $language_name = $language["short_code"];
                                     $total_discount_amount = 0;
                                     $total_balance_amount = 0;
                                     $alot_fee_discount = 0;
+                                    
+                                    $uuid = uniqid();
+                                    $contaLinhaOculta = 0;
 
                                     foreach ($student_due_fee as $key => $fee) {
 
@@ -290,11 +294,33 @@ $language_name = $language["short_code"];
                                                     <?php
                                                    
                                                     if ($feetype_balance == 0) {
-                                                    ?><span class="label label-success"><?php echo $this->lang->line('paid'); ?>
-                                                        </span>
+                                                    ?><span class="label label-success" 
+                                                          onclick="$('.linha-oculta-<?php echo $uuid; ?>-<?php echo $contaLinhaOculta; ?>').toggle();
+                                                          $('.sinal-mais-<?php echo $uuid; ?>-<?php echo $contaLinhaOculta; ?>').toggle();
+                                                          $('.sinal-menos-<?php echo $uuid; ?>-<?php echo $contaLinhaOculta; ?>').toggle();">
+                                                        <?php echo $this->lang->line('paid'); ?> 
+                                                        <b class='sinal-mais-<?php echo $uuid; ?>-<?php echo $contaLinhaOculta; ?>'>
+                                                            +
+                                                        </b> 
+                                                        <b class='sinal-menos-<?php echo $uuid; ?>-<?php echo $contaLinhaOculta; ?>' style="display: none;">
+                                                            -
+                                                        </b>
+                                                    
+                                                    </span>
                                                     <?php } else if (!empty($fee_value->deposite)) { ?>
-                                                        <span class="label label-warning">
-                                                            <?php echo $this->lang->line('partial'); ?></span>
+                                                        <span class="label label-warning" 
+                                                               onclick="$('.linha-oculta-<?php echo $uuid; ?>-<?php echo $contaLinhaOculta; ?>').toggle();
+                                                          $('.sinal-mais-<?php echo $uuid; ?>-<?php echo $contaLinhaOculta; ?>').toggle();
+                                                          $('.sinal-menos-<?php echo $uuid; ?>-<?php echo $contaLinhaOculta; ?>').toggle();">
+                                                            <?php echo $this->lang->line('partial'); ?> 
+                                                            <b class='sinal-mais-<?php echo $uuid; ?>-<?php echo $contaLinhaOculta; ?>'>
+                                                            +
+                                                            </b> 
+                                                            <b class='sinal-menos-<?php echo $uuid; ?>-<?php echo $contaLinhaOculta; ?>' style="display: none;">
+                                                                -
+                                                            </b>
+                                                        </span>
+                                                    
                                                     <?php
                                                     } else { ?>
                                                         <span class="label label-danger">
@@ -349,9 +375,7 @@ $language_name = $language["short_code"];
                                                             <button type="button" data-student_session_id="<?php echo $fee->student_session_id; ?>" data-student_fees_master_id="<?php echo $fee->id; ?>" data-fee_groups_feetype_id="<?php echo $fee_value->feetype_id; ?>" data-group="<?php echo $fee_value->name; ?>" data-type="<?php echo $fee_value->code; ?>" class="btn btn-xs btn-default myCollectFeeBtn <?php echo $display_none; ?>" title="<?php echo $this->lang->line('add_fees'); ?>" data-toggle="modal" data-target="#myFeesModal"><i class="fa fa-plus"></i></button>
 
 
-                                                            <button class="btn btn-xs btn-default printInv" 
-                                                                    data-fee_master_id="<?php echo $fee_value->id ?>" 
-                                                                    data-fee_session_group_id="<?php echo $fee_value->fee_session_group_id ?>" data-fee_groups_feetype_id="<?php echo $fee_value->feetype_id ?>" title="<?php echo $this->lang->line('print'); ?>"><i class="fa fa-print"></i> </button>
+                                                            <button class="btn btn-xs btn-default printInv" data-fee_master_id="<?php echo $fee_value->id ?>" data-fee_session_group_id="<?php echo $fee_value->fee_session_group_id ?>" data-fee_groups_feetype_id="<?php echo $fee_value->feetype_id ?>" title="<?php echo $this->lang->line('print'); ?>"><i class="fa fa-print"></i> </button>
                                                         <?php endif; ?>
                                                     </div>
                                                 </td>
@@ -366,6 +390,7 @@ $language_name = $language["short_code"];
 
 
                                                 <?php
+                                                  
                                                 if (($fee_value->deposite)) {
 
                                                     $fee_deposits = json_decode(($fee_value->deposite->amount_detail));
@@ -373,7 +398,7 @@ $language_name = $language["short_code"];
 
                                                     foreach ($fee_deposits as $fee_deposits_key => $fee_deposits_value) {
                                                 ?>
-                                                        <tr class="white-td">
+                                                <tr class="white-td linha-oculta-<?php echo $uuid; ?>-<?php echo $contaLinhaOculta++; ?>" style="display: none;">
 
                                                             <td align="left"></td>
                                                             <td align="left"></td>
@@ -425,8 +450,7 @@ $language_name = $language["short_code"];
                                                                     <button class="btn btn-xs btn-default printDoc" 
                                                                             data-feed_id="<?php echo $fee_value->id ?>" 
                                                                             data-main_invoice="<?php echo $fee_value->student_fees_deposite_id ?>" 
-                                                                            data-sub_invoice="<?php echo $fee_deposits_value->inv_no ?>" 
-                                                                            title="<?php echo $this->lang->line('print'); ?>"><i class="fa fa-print"></i> </button>
+                                                                            data-sub_invoice="<?php echo $fee_deposits_value->inv_no ?>" title="<?php echo $this->lang->line('print'); ?>"><i class="fa fa-print"></i> </button>
                                                                 </div>
                                                             </td>
                                                         </tr>
@@ -954,7 +978,7 @@ $language_name = $language["short_code"];
         })
 
         $(document).on('click', '.printDoc', function() {
-             var feed_id = $(this).data('feed_id');
+            var feed_id = $(this).data('feed_id');
             var main_invoice = $(this).data('main_invoice');
             var sub_invoice = $(this).data('sub_invoice');
             var student_session_id = '<?php echo $student['student_session_id'] ?>';
@@ -969,6 +993,7 @@ $language_name = $language["short_code"];
                 },
                 success: function(response) {
                     Popup(response);
+                    
                 }
             });
         });

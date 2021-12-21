@@ -2218,8 +2218,17 @@ class Student extends Admin_Controller
         }
         $data['documentosEnviadosExtraEnviados'] = $documentosEnviadosExtraEnviados;
 
-         $this->load->view('layout/header', $data);
-         $this->load->view('student/studentCreate', $data);
+        $data['sessions'] = [];
+        $res = $this->db->get('sessions')->result();
+        foreach ($res as $row){
+            $ano = explode('-', $row->session);
+            if((int) $ano[0] == (int)date('Y') || (int) $ano[0] == ((int)date('Y')+1)){
+                $data['sessions'][$row->id] = $row->session;
+            }
+        }
+        
+        $this->load->view('layout/header', $data);
+        $this->load->view('student/studentCreate', $data);
         $this->load->view('layout/footer', $data);
 
     }
