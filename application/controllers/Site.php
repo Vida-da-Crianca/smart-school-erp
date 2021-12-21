@@ -61,7 +61,7 @@ class Site extends Public_Controller {
         $notices = $this->cms_program_model->getByCategory($notice_content, array('start' => 0, 'limit' => 5));
         $data['notice'] = $notices;
         $data['school'] = $school[0];
-        $this->form_validation->set_rules('employee_id', $this->lang->line('employee_id'), 'trim|required|xss_clean');
+        $this->form_validation->set_rules('username', $this->lang->line('username'), 'trim|required|xss_clean');
         $this->form_validation->set_rules('password', $this->lang->line('password'), 'trim|required|xss_clean');
         if ($this->form_validation->run() == FALSE) {
             $data['name'] = $app_name;
@@ -74,7 +74,7 @@ class Site extends Public_Controller {
             echo "</pre>";
         } else {
             $login_post = array(
-                'email' => $this->input->post('employee_id'),
+                'email' => $this->input->post('username'),
                 'password' => $this->input->post('password')
             );
             $setting_result = $this->setting_model->get();
