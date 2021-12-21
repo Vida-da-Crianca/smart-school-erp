@@ -46,7 +46,7 @@ class Snack extends Admin_Controller
         $this->session->set_userdata('top_menu', 'snacks');
         $this->session->set_userdata('sub_menu', 'admin/snack/create');
         $data = array();
-        $data['snack'] = (object)['id' => 0, 'name' => null];
+        $data['snack'] = (object)['id' => null, 'name' => null, 'code' => null];
         $this->load->view('layout/header', $data);
         $this->load->view('admin/snack/snack_frm', $data);
         $this->load->view('layout/footer', $data);
@@ -58,7 +58,7 @@ class Snack extends Admin_Controller
             access_denied();
         }
 
-        $model = $this->snack_model->get($id);
+        $model = (object)$this->snack_model->get($id);
 
         $this->session->set_userdata('top_menu', 'admin/snacks');
         $data = array();

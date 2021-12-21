@@ -9,9 +9,10 @@ class Schedule_model extends CI_Model
     ];
 
     public static $comportamento = [
-        1 => "Regular",
-        2 => "Ótimo",
-        3 => "Recusou",
+        1 => "Ótimo",
+        2 => "Bom",
+        3 => "Regular",
+        4 => "Rejeitou",
     ];
 
     public static $disposicao = [
