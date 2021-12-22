@@ -74,11 +74,11 @@ define('ENVIRONMENT', getenv('ENVIRONMENT', 'production'));
 //alterado
 
 
-	if( ! ini_get('date.timezone') )
+	/*if( ! ini_get('date.timezone') )
 	{
 	   date_default_timezone_set('GMT');
-	}
-
+	}*/
+ date_default_timezone_set('America/Sao_Paulo');
 /*
  *---------------------------------------------------------------
  * ERROR REPORTING

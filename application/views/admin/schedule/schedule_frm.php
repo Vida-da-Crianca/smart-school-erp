@@ -116,22 +116,6 @@
                                                    class="form-control disabled"
                                                    placeholder="Data" readonly="readonly">
                                         </div>
-
-                                        <div class="col-xs-12 col-sm-5 col-md-5 no-padding-right margin-bottom">
-                                            <label>Turma</label>
-                                            <select v-model="agenda.class_id" class="form-control" style="padding-top: 10px;"
-                                                    required="required" multiple>
-                                                <?php
-                                                foreach ($classes as $key => $class) {
-                                                    ?>
-                                                    <option selected
-                                                            value="<?= $class['class_id'] ?>"><?= $class['class'] ?>
-                                                        - <?= $class['section'] ?></option>
-                                                    <?php
-                                                }
-                                                ?>
-                                            </select>
-                                        </div>
                                         <div class="col-xs-12 col-sm-5 col-md-5 no-padding-right margin-bottom">
                                             <label>Tipo de Refeição</label>
                                             <select class="form-control" required="required" v-model="snack_id">
@@ -141,6 +125,23 @@
 
                                             </select>
                                         </div>
+                                        <div class="col-xs-12 col-sm-5 col-md-5 no-padding-right margin-bottom">
+                                            <label>Turma</label>
+                                                <?php
+                                                foreach ($classes as $key => $class) {
+                                                    ?>
+                                                    <div class="checkbox" style="margin-top: -4px;">
+                                                        <label>
+                                                            <input type="checkbox" value="<?= $class['class_id'] ?>" v-model="agenda.class_id">
+                                                            <?= $class['class'] ?>
+                                                            - <?= $class['section'] ?>
+                                                        </label>
+                                                    </div>
+                                                    <?php
+                                                }
+                                                ?>
+                                        </div>
+
                                         <div class="clearfix"></div>
 
                                     </div>
@@ -452,7 +453,8 @@
             },
             'agenda.class_id'(val) {
                 if (val) {
-                    this.snack_id = null
+                    //this.snack_id = null
+                    this.getStudentsBySnackId();
                     this.getSchedule();
                 }
             }
