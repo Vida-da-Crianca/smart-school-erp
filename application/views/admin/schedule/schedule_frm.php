@@ -125,7 +125,7 @@
 
                                             </select>
                                         </div>
-                                        <div class="col-xs-12 col-sm-5 col-md-5 no-padding-right margin-bottom" style="overflow-y: scroll">
+                                        <div class="col-xs-12 col-sm-5 col-md-5 no-padding-right margin-bottom"  style="max-height: 100px; overflow-y: scroll">
                                             <label>Turma</label>
                                                 <?php
                                                 foreach ($classes as $key => $class) {
