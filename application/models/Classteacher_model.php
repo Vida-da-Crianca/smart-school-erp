@@ -93,6 +93,7 @@ class Classteacher_model extends MY_Model {
             ->join("classes", "class_teacher.class_id = classes.id")
             ->join("sections", "class_teacher.section_id = sections.id")
             ->where("class_teacher.staff_id", $id)
+            ->order_by("classes.class", 'asc')
             ->get("class_teacher");
 
         return $query->result_array();

@@ -132,6 +132,8 @@ class Schedule extends Admin_Controller
                 "snack_id" => $snack->id,
                 "student_id" => $student->id,
                 "created_by" => $this->session->userdata('admin')["id"],
+                "created_at" => date('Y-m-d H:i:s'),
+
             ];
             $result = $this->schedule_model->createAgendaBySnack("agenda_alimentacao", $payload);
         } elseif ($snack->code == "sono") {
@@ -142,6 +144,7 @@ class Schedule extends Admin_Controller
                 "snack_id" => $snack->id,
                 "student_id" => $student->id,
                 "created_by" => $this->session->userdata('admin')["id"],
+                "created_at" => date('Y-m-d H:i:s'),
             ];
             $result = $this->schedule_model->createAgendaBySnack("agenda_sono", $payload);
         } elseif ($snack->code == "evacuacao") {
@@ -151,6 +154,7 @@ class Schedule extends Admin_Controller
                 "snack_id" => $snack->id,
                 "student_id" => $student->id,
                 "created_by" => $this->session->userdata('admin')["id"],
+                "created_at" => date('Y-m-d H:i:s'),
             ];
             $result = $this->schedule_model->createAgendaBySnack("agenda_evacuacao", $payload);
         } elseif ($snack->code == "banho") {
@@ -160,6 +164,7 @@ class Schedule extends Admin_Controller
                 "snack_id" => $snack->id,
                 "student_id" => $student->id,
                 "created_by" => $this->session->userdata('admin')["id"],
+                "created_at" => date('Y-m-d H:i:s'),
             ];
             $result = $this->schedule_model->createAgendaBySnack("agenda_banho", $payload);
         }
