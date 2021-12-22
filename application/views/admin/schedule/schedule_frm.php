@@ -19,6 +19,14 @@
         min-height: 80px;
     }
 
+    .select2-container--default .select2-selection--multiple .select2-selection__choice {
+        color: #222533;
+    }
+
+    select[multiple]:focus option:checked {
+        background: red linear-gradient(0deg, red 0%, red 100%);
+    }
+
     #snackbar {
         visibility: hidden; /* Hidden by default. Visible on click */
         min-width: 250px; /* Set a default minimum width */
@@ -111,12 +119,13 @@
 
                                         <div class="col-xs-12 col-sm-5 col-md-5 no-padding-right margin-bottom">
                                             <label>Turma</label>
-                                            <select v-model="agenda.class_id" class="form-control"
-                                                    required="required">
+                                            <select v-model="agenda.class_id" class="form-control" style="padding-top: 10px;"
+                                                    required="required" multiple>
                                                 <?php
                                                 foreach ($classes as $key => $class) {
                                                     ?>
-                                                    <option value="<?= $class['class_id'] ?>"><?= $class['class'] ?>
+                                                    <option selected
+                                                            value="<?= $class['class_id'] ?>"><?= $class['class'] ?>
                                                         - <?= $class['section'] ?></option>
                                                     <?php
                                                 }
@@ -207,10 +216,10 @@
                                         <div class="col-md-4">
                                             <div class="form-group">
                                                 <label>Recado</label>
-                                                    <input @change="save(student)"
-                                                           v-model="student.agenda.alimentacao.message"
-                                                           class="form-control"
-                                                           type="text">
+                                                <input @change="save(student)"
+                                                       v-model="student.agenda.alimentacao.message"
+                                                       class="form-control"
+                                                       type="text">
                                             </div>
                                         </div>
                                     </div>
@@ -344,7 +353,8 @@
                                         <div class="col-md-4">
                                             <div class="form-group">
                                                 <label>Horário</label>
-                                                <input class="form-control" type="time" readonly disabled :value="agendaOld.created_at.substring(11)">
+                                                <input class="form-control" type="time" readonly disabled
+                                                       :value="agendaOld.created_at.substring(11)">
                                             </div>
                                         </div>
                                     </div>
@@ -355,7 +365,8 @@
                                                 <?php
                                                 foreach (Schedule_model::$boolean as $key => $item) { ?>
                                                     <label class="radio-inline">
-                                                        <input @change="save(student)" v-model="student.agenda.banho.value"
+                                                        <input @change="save(student)"
+                                                               v-model="student.agenda.banho.value"
                                                                type="radio" :name="'banho_'+student.id"
                                                                value="<?= $key ?>"> <?= $item ?>
                                                     </label>
@@ -461,7 +472,9 @@
             };
             var day = new Date();
             this.agenda.date = day.getFullYear() + '-' + (day.getMonth() + 1) + '-' + day.getDate();
-            this.agenda.class_id = this.classes.length > 0 ? this.classes[0].class_id : null
+            this.agenda.class_id = this.classes.map((classe) => {
+                return classe.class_id
+            })
         },
         mounted() {
             let app = this;
@@ -530,7 +543,7 @@
             save(student) {
                 if (this.students.length > 0) {
                     let app = this;
-                    if (student.agenda[app.snackData.code].id){
+                    if (student.agenda[app.snackData.code].id) {
                         this.update(student.agenda[app.snackData.code])
                         return;
                     }

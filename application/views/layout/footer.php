@@ -65,6 +65,8 @@ $language_name = $language["short_code"];
             theme: "minimal"
         });
 
+        $('.select2').select2()
+
         $('.studentsideclose, .overlay').on('click', function() {
             $('.studentsidebar').removeClass('active');
             $('.overlay').fadeOut();

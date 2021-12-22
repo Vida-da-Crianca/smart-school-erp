@@ -92,19 +92,16 @@ class Schedule extends Admin_Controller
     {
         $snackId = $id;
         $data = json_decode(file_get_contents('php://input'));
-
-        $classTeach = (object)$this->classteacher_model->getClassTeacher($data->class_id);
-        $result = $this->student_model->bySnack($snackId, $classTeach->class_id, $classTeach->section_id, $classTeach->session_id);
+        $result = $this->student_model->bySnackTeacher($snackId, $this->session->userdata('admin')["id"]);
         echo json_encode($result);
     }
 
     function getScheduleOrCreate()
     {
         $data = json_decode(file_get_contents('php://input'));
-        $classId = $data->class_id;
         $date = $data->date;
         $userId = $this->session->userdata('admin')["id"];
-        $result = $this->schedule_model->getScheduleOrCreate($classId, $date, $userId);
+        $result = $this->schedule_model->getScheduleOrCreate($date, $userId);
 
 
         echo json_encode($result);

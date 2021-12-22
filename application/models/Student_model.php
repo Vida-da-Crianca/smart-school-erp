@@ -1738,16 +1738,18 @@ class Student_model extends MY_Model
         return $query->result_array();
     }
 
-    function bySnack($snackId, $classId, $sectionId, $sessionId)
+    function bySnackTeacher($snackId, $teatcherId)
     {
-        $this->db->select('students.*')->from('students');
-        $this->db->join('student_snacks', 'students.id = student_snacks.student_id', 'left');
-        $this->db->join('student_session', 'students.id = student_session.student_id', 'left');
-        $this->db->where('snack_id', $snackId);
-        $this->db->where('section_id', $sectionId);
-        $this->db->where('class_id', $classId);
-        $this->db->where('student_session.session_id', $sessionId);
-        $query = $this->db->get();
+        $query = $this->db->select("students.*")->from('students')
+            ->join('student_session as ss', 'ss.student_id = students.id')
+            ->join("classes", "ss.class_id = classes.id")
+            ->join("sections", "ss.section_id = sections.id")
+            ->join("class_teacher", "class_teacher.session_id = ss.session_id AND class_teacher.class_id = classes.id AND class_teacher.section_id = sections.id")
+            ->join('student_snacks', 'students.id = student_snacks.student_id')
+            ->where("class_teacher.staff_id", $teatcherId)
+            ->where('snack_id', $snackId)
+            ->order_by("students.firstname", 'asc')
+            ->get();
         return $query->result_array();
     }
 

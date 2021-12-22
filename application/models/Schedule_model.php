@@ -121,11 +121,10 @@ class Schedule_model extends CI_Model
         return $this->db->update($table, (array)$data);
     }
 
-    public function getScheduleOrCreate($classTeacherId, $date, $staffId)
+    public function getScheduleOrCreate($date, $staffId)
     {
         $this->db->select('agendas.*')
             ->from('agendas')
-            ->where("class_teacher_id", $classTeacherId)
             ->where("date", $date)
             ->where("created_by", $staffId);
         $query = $this->db->get();
@@ -134,7 +133,6 @@ class Schedule_model extends CI_Model
             $lastId = $this->add([
                 "date" => $date,
                 "created_by" => $staffId,
-                "class_teacher_id" => $classTeacherId,
             ]);
             $data = $this->get($lastId);
         }

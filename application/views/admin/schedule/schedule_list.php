@@ -30,9 +30,10 @@
                         </div>
                         <div class="col-md-4">
                             <div class="form-group">
-                                <label>Turma</label> <small class="req"> *</small>
-                                <select autofocus="" id="class_id" required name="class_id" class="form-control"
+                                <label>Turma</label>
+                                <select autofocus="" id="class_id"  name="class_id" class="form-control"
                                         autocomplete="off">
+                                    <option value=""></option>
                                     <?php
                                     foreach ($classes as $key=>$class) {
                                         ?>
@@ -65,8 +66,9 @@
                         <div class="col-md-4">
                             <div class="form-group">
                                 <label>Tipo de Refeição</label> <small class="req"> *</small>
-                                <select required autofocus="" id="snack_id" name="snack_id" class="form-control select2"
+                                <select  autofocus="" id="snack_id" name="snack_id" class="form-control select2"
                                         autocomplete="off">
+                                    <option value=""></option>
                                     <?php
                                     foreach ($snacks as $snack) {
                                         ?>
