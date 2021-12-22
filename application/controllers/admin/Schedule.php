@@ -19,6 +19,7 @@ class Schedule extends Admin_Controller
         $this->load->model('student_model');
         $this->load->model("classteacher_model");
         $this->role;
+        date_default_timezone_set('America/Sao_Paulo');
     }
 
     public function index()
