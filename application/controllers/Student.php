@@ -1105,6 +1105,26 @@ class Student extends Admin_Controller
                         }//foreach ($documentosEnviados as $docEnviado){
 
                     }// foreach($documentos as $campo => $label){
+                    
+                    
+                     if(count($documentosEnviados)<=0){
+                        //registros antigos quando nao tinha esse esquema
+                        //entao temos que fazer assim agora...
+                        
+                        if (!is_dir($uploaddir) && !mkdir($uploaddir)) {
+                            throw new Exception("Erro ao criar diretório de documentos: $uploaddir");
+                        }
+                        
+                        foreach($documentos as $campo => $label){
+
+                            copy($dir.$this->input->post($campo), $uploaddir.$this->input->post($campo));
+                            $data_img = array('student_id' => $insert_id, 'title' => $label, 'doc' => $this->input->post($campo));
+                            $this->student_model->adddoc($data_img);
+                        }
+                    }
+                    
+                    
+                    
 
 
                     //Documentos extras enviados
