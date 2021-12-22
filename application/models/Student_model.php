@@ -1738,7 +1738,7 @@ class Student_model extends MY_Model
         return $query->result_array();
     }
 
-    function bySnackTeacher($snackId, $teatcherId)
+    function bySnackTeacher($snackId, $teatcherId, $classIds = null, $sectionIds = null, $sessionIds = null)
     {
         $query = $this->db->select("students.*")->from('students')
             ->join('student_session as ss', 'ss.student_id = students.id')
@@ -1747,8 +1747,18 @@ class Student_model extends MY_Model
             ->join("class_teacher", "class_teacher.session_id = ss.session_id AND class_teacher.class_id = classes.id AND class_teacher.section_id = sections.id")
             ->join('student_snacks', 'students.id = student_snacks.student_id')
             ->where("class_teacher.staff_id", $teatcherId)
-            ->where('snack_id', $snackId)
-            ->order_by("students.firstname", 'asc')
+            ->where('snack_id', $snackId);
+        if ($classIds) {
+            $query->where_in('class_teacher.class_id', $classIds);
+        }
+        if ($sectionIds) {
+            $query->where_in('class_teacher.section_id', $sectionIds);
+        }
+        if ($sessionIds) {
+            $query->where_in('class_teacher.session_id', $sessionIds);
+        }
+
+        $query = $query->order_by("students.firstname", 'asc')
             ->get();
         return $query->result_array();
     }

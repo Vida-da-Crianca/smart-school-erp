@@ -92,7 +92,16 @@ class Schedule extends Admin_Controller
     {
         $snackId = $id;
         $data = json_decode(file_get_contents('php://input'));
-        $result = $this->student_model->bySnackTeacher($snackId, $this->session->userdata('admin')["id"]);
+        $classIds = [];
+        $sectionIds =  [];
+        $sessionIds = [];
+        foreach ($data->class_id as $classId){
+            $classTeacher = (object)$this->classteacher_model->getClassTeacher($classId);
+            $classIds[] =  $classTeacher->class_id;
+            $sectionIds[] =  $classTeacher->section_id;
+            $sessionIds[] =  $classTeacher->session_id;
+        }
+        $result = $this->student_model->bySnackTeacher($snackId, $this->session->userdata('admin')["id"], $classIds, $sectionIds, $sessionIds);
         echo json_encode($result);
     }
 
