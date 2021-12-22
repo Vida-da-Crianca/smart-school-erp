@@ -18,6 +18,7 @@ class Student extends Admin_Controller
         $this->load->library('mailsmsconf');
         $this->load->library('encoding_lib');
         $this->load->model("classteacher_model");
+        $this->load->model("snack_model");
         $this->load->model(array("timeline_model", "student_edit_field_model"));
         $this->blood_group        = $this->config->item('bloodgroup');
         $this->sch_setting_detail = $this->setting_model->getSetting();
@@ -985,9 +986,11 @@ class Student extends Admin_Controller
                     $data_insert['id'] = $id;
                     $this->student_model->add($data_insert);
                     $insert_id = $id;
-
                     $this->customfield_model->updateRecord($custom_value_array, $id, 'students');
                 }
+
+                $this->student_model->addSnacks($insert_id, $this->input->post('snacks'));
+
 
                 /*Matricular aluno*/
                 $data_new = array(
@@ -1038,8 +1041,7 @@ class Student extends Admin_Controller
                             $this->student_model->add($update_student);
                         }
                 }
-                $uploaddir = FCPATH.'uploads/student_documents/' . $insert_id . '/';
-                
+                 $uploaddir = FCPATH.'uploads/student_documents/' . $insert_id . '/';
                 if($action == 'add'){
                     //copiar os documentos do preupload
                     //e gravar no banco
@@ -1104,22 +1106,6 @@ class Student extends Admin_Controller
 
                     }// foreach($documentos as $campo => $label){
 
-                    
-                    if(count($documentosEnviados)<=0){
-                        //registros antigos quando nao tinha esse esquema
-                        //entao temos que fazer assim agora...
-                        
-                        if (!is_dir($uploaddir) && !mkdir($uploaddir)) {
-                        throw new Exception("Erro ao criar diretório de documentos: $uploaddir");
-                    }
-                        
-                        foreach($documentos as $campo => $label){
-
-                            copy($dir.$this->input->post($campo), $uploaddir.$this->input->post($campo));
-                            $data_img = array('student_id' => $insert_id, 'title' => $label, 'doc' => $this->input->post($campo));
-                            $this->student_model->adddoc($data_img);
-                        }
-                    }
 
                     //Documentos extras enviados
                     $documentosExtrasEnviados = [];
@@ -2212,6 +2198,9 @@ class Student extends Admin_Controller
         $data['siblings_counts']    = count($siblings);
         $custom_fields              = $this->customfield_model->getByBelong('students');
         $data['sch_setting']        = $this->sch_setting_detail;
+        $data['snacks']             = array_map(function ($item){
+            return $item['id'];
+        },$this->student_model->snacks($student['id']));
 
         //carregar os documentos enviados desse aluno
         $res = $this->db->where('student_id',(int)$id)->get('student_doc')->result();
