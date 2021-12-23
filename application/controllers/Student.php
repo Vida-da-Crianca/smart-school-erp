@@ -751,7 +751,7 @@ class Student extends Admin_Controller
                 $this->form_validation->set_rules('class_id', 'Turma', 'trim|required|xss_clean');
                 $this->form_validation->set_rules('section_id', 'Período', 'trim|required|xss_clean');
                 $this->form_validation->set_rules('session_id', 'Ano da Matrícula', 'trim|required|xss_clean');
-                
+
                 $this->form_validation->set_rules('guardian_is', 'Responsável Financeiro', 'trim|required|xss_clean');
 
                 $guardian_is = trim($this->input->post('guardian_is'));
@@ -867,14 +867,14 @@ class Student extends Admin_Controller
                 $admission_date = $this->tools->formatarData($this->input->post('admission_date'),'br','us');
 
                 //validar class and section
-                
-                
+
+
 
                $this->_validarClassSectionVagas($class_id,$section_id);
-                
-                
+
+
                // throw new Exception('asdasdasdasdasdasdasd');
-              
+
                 $full_name = $this->input->post('firstname');
                 $name_parts = explode(' ', $full_name);
                 $fistname = ucfirst($name_parts[0]);
@@ -968,7 +968,7 @@ class Student extends Admin_Controller
                         $insert = false;
                     }
                 } else {
-                    $data_insert['admission_no'] = $this->input->post('admission_no');
+                    //$data_insert['admission_no'] = $this->input->post('admission_no');
                 }
 
                 //Cadastrar aluno
@@ -1105,16 +1105,16 @@ class Student extends Admin_Controller
                         }//foreach ($documentosEnviados as $docEnviado){
 
                     }// foreach($documentos as $campo => $label){
-                    
-                    
+
+
                      if(count($documentosEnviados)<=0){
                         //registros antigos quando nao tinha esse esquema
                         //entao temos que fazer assim agora...
-                        
+
                         if (!is_dir($uploaddir) && !mkdir($uploaddir)) {
                             throw new Exception("Erro ao criar diretório de documentos: $uploaddir");
                         }
-                        
+
                         foreach($documentos as $campo => $label){
 
                             copy($dir.$this->input->post($campo), $uploaddir.$this->input->post($campo));
@@ -1122,9 +1122,9 @@ class Student extends Admin_Controller
                             $this->student_model->adddoc($data_img);
                         }
                     }
-                    
-                    
-                    
+
+
+
 
 
                     //Documentos extras enviados
@@ -1235,7 +1235,7 @@ class Student extends Admin_Controller
         $data['action'] = 'add';
 
         $data['documentosEnviados'] = [];
-        
+
         $data['sessions'] = [];
         $res = $this->db->get('sessions')->result();
         foreach ($res as $row){
@@ -2246,7 +2246,7 @@ class Student extends Admin_Controller
                 $data['sessions'][$row->id] = $row->session;
             }
         }
-        
+
         $this->load->view('layout/header', $data);
         $this->load->view('student/studentCreate', $data);
         $this->load->view('layout/footer', $data);
