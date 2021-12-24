@@ -33,7 +33,10 @@ class Schedule extends Admin_Controller
         $this->session->set_userdata('sub_menu', 'admin/schedule');
 
         $data['classes'] = $this->classteacher_model->getClassFullByUser($this->session->userdata('admin')["id"]);
-        $data['students'] = $this->student_model->getStudentsByTeacher($this->session->userdata('admin')["id"]);
+
+        $teacherIsAdmin = isset($this->session->userdata('admin')['roles']['Super Admin']) ? null : $this->session->userdata('admin')["id"];
+
+        $data['students'] = $this->student_model->getStudentsByTeacher($teacherIsAdmin);
         $data['snacks'] = array_map(function ($item) {
             return (object)$item;
         }, $this->snack_model->all());
