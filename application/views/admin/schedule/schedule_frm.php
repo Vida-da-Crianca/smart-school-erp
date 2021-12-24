@@ -125,21 +125,23 @@
 
                                             </select>
                                         </div>
-                                        <div class="col-xs-12 col-sm-5 col-md-5 no-padding-right margin-bottom"  style="max-height: 100px; overflow-y: scroll">
+                                        <div class="col-xs-12 col-sm-5 col-md-5 no-padding-right margin-bottom"
+                                             style="max-height: 100px; overflow-y: scroll">
                                             <label>Turma</label>
-                                                <?php
-                                                foreach ($classes as $key => $class) {
-                                                    ?>
-                                                    <div class="checkbox" style="margin-top: -4px;">
-                                                        <label>
-                                                            <input type="checkbox" value="<?= $class['class_id'] ?>" v-model="agenda.class_id">
-                                                            <?= $class['class'] ?>
-                                                            - <?= $class['section'] ?>
-                                                        </label>
-                                                    </div>
-                                                    <?php
-                                                }
+                                            <?php
+                                            foreach ($classes as $key => $class) {
                                                 ?>
+                                                <div class="checkbox" style="margin-top: -4px;">
+                                                    <label>
+                                                        <input type="checkbox" value="<?= $class['class_id'] ?>"
+                                                               v-model="agenda.class_id">
+                                                        <?= $class['class'] ?>
+                                                        - <?= $class['section'] ?>
+                                                    </label>
+                                                </div>
+                                                <?php
+                                            }
+                                            ?>
                                         </div>
 
                                         <div class="clearfix"></div>
@@ -438,6 +440,8 @@
             schedule: null,
             form: null,
             newRecord: false,
+            saving: false,
+            interval: null
         },
         watch: {
             snack_id(val) {
@@ -542,14 +546,21 @@
                     alert('Erro ao carregar os agenda')
                 })
             },
-            save(student) {
+            async save(student) {
+                let app = this;
+                if (this.saving) {
+                    app.interval = setTimeout(() => {
+                        app.save(student)
+                    }, 500);
+                    return;
+                }
+                this.saving = true;
                 if (this.students.length > 0) {
-                    let app = this;
                     if (student.agenda[app.snackData.code].id) {
                         this.update(student.agenda[app.snackData.code])
                         return;
                     }
-                    axios.post('/admin/schedule/saveAgenda/', {
+                    await axios.post('/admin/schedule/saveAgenda/', {
                         student: {
                             agenda: student.agenda,
                             id: student.id,
@@ -564,6 +575,7 @@
                         alert('Erro ao carregar os agenda')
                     })
                 }
+                this.saving = false;
             },
             update(agendaOld) {
 
