@@ -54,7 +54,7 @@ jobs:
           docker tag $IMAGE_NAME $IMAGE_ID:$VERSION
           docker push $IMAGE_ID:$VERSION
   deployStaging:
-    runs-on: ubuntu-latest
+    runs-on: "docker-stack"
     needs: [build,deployTest]
     environment:
       name: Staging
@@ -86,7 +86,7 @@ jobs:
           docker stack deploy -c stage-stack.yaml $STACK_NAME_STAGING
           docker system prune --force
   deployTest:
-    runs-on: ubuntu-latest
+    runs-on: "docker-stack"
     needs: [build, ]
     environment:
       name: Staging
@@ -102,7 +102,7 @@ jobs:
       
   deployProduction:
     name: "Deploy Production"
-    runs-on: ubuntu-latest
+    runs-on: "docker-stack"
     needs: [build, deployStaging]
     environment:
       name: Production
