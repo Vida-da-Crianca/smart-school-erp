@@ -64,9 +64,9 @@ jobs:
       - name: Create Folder for Application
       
         run: |
-          mkdir -p -m 777 $DIRECTORY_APPLICATION/$STAGING_PATH/logs
-          mkdir -p -m 777 $DIRECTORY_APPLICATION/$STAGING_PATH/temp
-          rsync -qr -I --ignore-existing  ./uploads/  $DIRECTORY_APPLICATION/$STAGING_PATH/uploads
+          sudo mkdir -p -m 777 $DIRECTORY_APPLICATION/$STAGING_PATH/logs
+          sudo mkdir -p -m 777 $DIRECTORY_APPLICATION/$STAGING_PATH/temp
+          sudo rsync -qr -I --ignore-existing  ./uploads/  $DIRECTORY_APPLICATION/$STAGING_PATH/uploads
       
       - name:  Deploy Stack
         run: |
@@ -111,9 +111,9 @@ jobs:
       - uses: actions/checkout@v2
       - name: Create Folder for Application
         run: |
-          mkdir -p -m 777 $DIRECTORY_APPLICATION/$PRODUCTION_PATH/logs
-          mkdir -p -m 777 $DIRECTORY_APPLICATION/$PRODUCTION_PATH/temp
-          rsync -qr -I --ignore-existing  ./uploads/  $DIRECTORY_APPLICATION/$PRODUCTION_PATH/uploads
+          sudo mkdir -p -m 777 $DIRECTORY_APPLICATION/$PRODUCTION_PATH/logs
+          sudo mkdir -p -m 777 $DIRECTORY_APPLICATION/$PRODUCTION_PATH/temp
+          sudo rsync -qr -I --ignore-existing  ./uploads/  $DIRECTORY_APPLICATION/$PRODUCTION_PATH/uploads
       - name: Deploy Stack
         run: |
           IMAGE_ID=carlosocarvalho/$IMAGE_NAME
