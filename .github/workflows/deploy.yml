@@ -26,7 +26,7 @@ env:
 jobs:
   build:
     # Ensure test job passes before pushing image.
-    runs-on: "docker-stack"
+    runs-on: ubuntu-latest
     name: Build as Docker Image
     if: github.event_name == 'push'
     steps:
@@ -95,10 +95,10 @@ jobs:
      
       - name: Validando testes da aplicação
         run: |
-          echo "Ainda não testes para esse projeto"
+          echo "Ainda não há testes para esse projeto"
       - name:  Test Pass
         run: |
-         echo "Ainda não testes para esse projeto"
+         echo "Ainda não há testes para esse projeto"
       
   deployProduction:
     name: "Deploy Production"
