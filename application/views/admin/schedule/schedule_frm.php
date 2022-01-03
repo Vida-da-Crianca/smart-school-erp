@@ -613,7 +613,7 @@
             }
         }
     })
-
+    //2022
     $(document).ready(function () {
         $('#app').show()
     })
