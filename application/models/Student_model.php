@@ -1763,7 +1763,7 @@ class Student_model extends MY_Model
         return $query->result_array();
     }
 
-    function getStudentsByTeacher($teatcherId=null)
+    function getStudentsByTeacher($teatcherId = null)
     {
 
         if ($teatcherId) {
@@ -1776,12 +1776,22 @@ class Student_model extends MY_Model
                 ->order_by("students.firstname", 'asc')
                 ->get();
 
-        }else {
+        } else {
             $query = $this->db->select("students.*")->from('students')
                 ->order_by("students.firstname", 'asc')
                 ->get();
         }
 
         return $query->result_array();
+    }
+
+    public function getByCpfGuardian($cpf)
+    {
+        $this->db->select('students.*, username')->from('students');;
+        $this->db->join('users', 'users.childs = students.id');
+        $this->db->where('students.guardian_document', "$cpf");
+        $query = $this->db->get();
+        return $query->row_array();
+
     }
 }
