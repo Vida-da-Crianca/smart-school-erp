@@ -476,8 +476,23 @@
                 }
                 return this.getHours();
             };
+
+            Date.prototype.getFullMonth = function () {
+                let month = this.getMonth() + 1;
+                if (month < 10) {
+                    return '0' + month;
+                }
+                return this.getMonth();
+            };
+
+            Date.prototype.getFullDay = function () {
+                if (this.getDate() < 10) {
+                    return '0' + this.getDate();
+                }
+                return this.getDate();
+            };
             var day = new Date();
-            this.agenda.date = day.getFullYear() + '-' + (day.getMonth() + 1) + '-' + day.getDate();
+            this.agenda.date = day.getFullYear() + '-' + day.getFullMonth() + '-' + day.getFullDay();
             this.agenda.class_id = this.classes.map((classe) => {
                 return classe.class_id
             })
