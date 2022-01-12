@@ -81,8 +81,17 @@ class Site extends Public_Controller
 
             echo "</pre>";
         } else {
+
+            $username = $this->input->post('username');
+            if (is_numeric($username)) {
+                $staff = $this->staff_model->getStaffByEmployerId($username);
+                if ($staff){
+                    $username =  $staff['email'];
+                }
+            }
+
             $login_post = array(
-                'email' => $this->input->post('username'),
+                'email' => $username,
                 'password' => $this->input->post('password')
             );
             $setting_result = $this->setting_model->get();
