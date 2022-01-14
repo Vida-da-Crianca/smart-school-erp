@@ -386,7 +386,6 @@
                                             </div>
                                         </div>
                                     </div>
-
                                 </div>
                             </div>
                         </div>
@@ -526,6 +525,9 @@
                             }
                             student['agenda']['sono'] = {
                                 id: null,
+                                dormiu: null,
+                                acordou: null,
+                                message: null,
                             }
                             student['agenda']['banho'] = {
                                 id: null,
@@ -561,13 +563,17 @@
                     alert('Erro ao carregar os agenda')
                 })
             },
+            sleep(milliseconds) {
+                const date = Date.now();
+                let currentDate = null;
+                do {
+                    currentDate = Date.now();
+                } while (currentDate - date < milliseconds);
+            },
             async save(student) {
                 let app = this;
                 if (this.saving) {
-                    app.interval = setTimeout(() => {
-                        app.save(student)
-                    }, 500);
-                    return;
+                    await this.sleep(500)
                 }
                 this.saving = true;
                 if (this.students.length > 0) {
