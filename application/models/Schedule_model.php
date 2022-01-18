@@ -6,6 +6,7 @@ class Schedule_model extends CI_Model
         1 => "Normal",
         2 => "Pastoso",
         3 => "Semipastoso",
+        4 => "Nenhuma",
     ];
 
     public static $comportamento = [
