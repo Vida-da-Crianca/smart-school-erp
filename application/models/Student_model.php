@@ -1756,6 +1756,8 @@ class Student_model extends MY_Model
         }
         if ($sessionIds) {
             $query->where_in('class_teacher.session_id', $sessionIds);
+        }else{
+            $query->where("student_session.session_id", $this->current_session);
         }
 
         $query = $query->order_by("students.firstname", 'asc')
@@ -1772,7 +1774,8 @@ class Student_model extends MY_Model
                 ->join("classes", "ss.class_id = classes.id")
                 ->join("sections", "ss.section_id = sections.id")
                 ->join("class_teacher", "class_teacher.session_id = ss.session_id AND class_teacher.class_id = classes.id AND class_teacher.section_id = sections.id")
-                ->where("class_teacher.staff_id", $teatcherId)
+                ->where("s.staff_id", $teatcherId)
+                ->where("student_session.session_id", $this->current_session)
                 ->order_by("students.firstname", 'asc')
                 ->get();
 
