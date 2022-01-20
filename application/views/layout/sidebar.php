@@ -230,7 +230,7 @@
                             <li class="<?php echo set_Submenu('admin/schedule/create'); ?>"><a href="<?php echo base_url(); ?>admin/schedule/create"><i class="fa fa-angle-double-right"></i> <?php echo $this->lang->line('schedule_create'); ?></a></li>
                         <?php endif; ?>
                         <?php if ($this->rbac->hasPrivilege('schedule', 'can_view')) : ?>
-                            <li class="<?php echo set_Submenu('admin/schedule'); ?>"><a href="<?php echo base_url(); ?>admin/schedule"><i class="fa fa-angle-double-right"></i> <?php echo $this->lang->line('schedule_collection_list'); ?></a></li>
+                            <li class="<?php echo set_Submenu('admin/schedule'); ?>"><a href="<?php echo base_url(); ?>admin/schedule?date_start=<?=date('Y-m-d')?>&end_start=<?=date('Y-m-d')?>"><i class="fa fa-angle-double-right"></i> <?php echo $this->lang->line('schedule_collection_list'); ?></a></li>
                         <?php endif; ?>
 
 
