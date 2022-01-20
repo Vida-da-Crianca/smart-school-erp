@@ -1760,7 +1760,7 @@ class Student_model extends MY_Model
             $query->where("student_session.session_id", $this->current_session);
         }
 
-        $query = $query->order_by("students.firstname", 'asc')
+        $query = $query->order_by("students.firstname", 'asc')->distinct()
             ->get();
         return $query->result_array();
     }
