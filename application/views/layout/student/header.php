@@ -74,6 +74,13 @@
     <script src="<?php echo base_url() ?>backend/plugins/jquery.mask.min.js"></script>
     <!-- jS FileUpload -->
 
+    <!-- Popup's customizadas -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.js"></script>
+
+    <!-- Font awasome - Carregar -->
+    <script src="https://kit.fontawesome.com/0409d33244.js"></script>
+
     <script type="text/javascript">
         var baseurl = "<?php echo base_url(); ?>";
     </script>
@@ -541,4 +548,7 @@ if ($this->config->item('SSLK') == "") {
         }
 
     </script>
+
+
+    UE
 
