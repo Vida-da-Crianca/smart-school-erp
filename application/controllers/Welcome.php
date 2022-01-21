@@ -1,6 +1,4 @@
 <?php
-use Respect\Validation\Exceptions\ExecutableException;
-
 defined('BASEPATH') or exit('No direct script access allowed');
 
 class Welcome extends Front_Controller
