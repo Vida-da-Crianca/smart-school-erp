@@ -313,7 +313,7 @@
 
                                             <div class="col-md-12 form-group">
                                                 <label for="exampleInputEmail1">CEP</label> <small class="req"> *</small>
-                                                <input maxlength="9" id="guardian_postal_code" name="guardian_postal_code" placeholder="" onblur="pesquisacep(this.value);" class="form-control" value="" autocomplete="off">
+                                                <input maxlength="9" id="guardian_postal_code" name="guardian_postal_code" placeholder="" onblur="pesquisacep(this.value);" class="form-control" value="<?=set_value('cep', $staff['cep'])?>" autocomplete="off">
                                             </div>
 
 
@@ -324,6 +324,13 @@
                                                     </div>
                                                     <span class="text-danger"></span></div>
                                             </div>
+                                             <div class="col-md-3">
+                                                    <div class="form-group">
+                                                        <label for="exampleInputFile">Número</label><small class="req"> *</small>
+                                                        <input maxlength="9" id="numero" name="numero" placeholder="" class="form-control" value="<?=set_value('numero', $staff['numero'])?>" autocomplete="off">
+                                                        <span class="text-danger"></span></div>
+                                                </div>
+
                                         <?php } if ($sch_setting->staff_permanent_address) { ?>
                                             <div class="col-md-6">
                                                 <div class="form-group">
