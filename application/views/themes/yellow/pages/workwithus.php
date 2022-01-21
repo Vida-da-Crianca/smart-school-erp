@@ -325,6 +325,7 @@
                         $(this)._modalPopup(resp.msg, true);
                     } else {
                         $(this)._modalPopup(resp.msg, false);
+                        $("#employeeform").trigger("reset");
                     }
                 } catch (e) {
                     $(this)._modalPopup(e, true);
