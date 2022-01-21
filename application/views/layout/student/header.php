@@ -344,7 +344,7 @@ if ($this->config->item('SSLK') == "") {
                 } ?>
 
                 <li><a
-                            href="<?php echo base_url(); ?>user/user/schedule?date_start=<?=date('Y-m-d')?>&end_start=<?=date('Y-m-d')?>"><i
+                            href="<?php echo base_url(); ?>user/user/schedule?date_start=<?=date('Y-m-d')?>&date_end=<?=date('Y-m-d')?>"><i
                                 class="fa fa-calendar-times-o ftlayer"></i>
                         <span>Agenda</span></a></li>
                 <?php

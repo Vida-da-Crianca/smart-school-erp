@@ -398,7 +398,7 @@
 </div>
 <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.blockUI/2.70/jquery.blockUI.min.js" integrity="sha512-eYSzo+20ajZMRsjxB6L7eyqo5kuXuS2+wEbbOkpaur+sA2shQameiJiWEzCIDwJqaB0a4a6tCuEvCOBHUg3Skg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script>
     function showMessage(type, message) {
         var x = document.getElementById("snackbar");
@@ -575,12 +575,12 @@
                 if (this.saving) {
                     await this.sleep(500)
                 }
-                this.saving = true;
                 if (this.students.length > 0) {
                     if (student.agenda[app.snackData.code].id) {
                         this.update(student.agenda[app.snackData.code])
                         return;
                     }
+                    $.blockUI({ message: 'Aguarde...' });
                     await axios.post('/admin/schedule/saveAgenda/', {
                         student: {
                             agenda: student.agenda,
@@ -595,8 +595,8 @@
                         console.error(error)
                         alert('Erro ao carregar os agenda')
                     })
+                    $.unblockUI();
                 }
-                this.saving = false;
             },
             update(agendaOld) {
 
