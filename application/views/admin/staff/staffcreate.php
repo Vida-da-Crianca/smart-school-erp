@@ -306,6 +306,12 @@
                                                     </div>
                                                     <span class="text-danger"></span></div>
                                             </div>
+                                            <div class="col-md-3">
+                                                    <div class="form-group">
+                                                        <label for="exampleInputFile">Número</label><small class="req"> *</small>
+                                                        <input maxlength="9" id="numero" name="numero" placeholder="" class="form-control" value="<?=set_value('numero')?>" autocomplete="off">
+                                                        <span class="text-danger"></span></div>
+                                                </div>
                                         <?php } if ($sch_setting->staff_permanent_address) { ?>
                                             <div class="col-md-6">
                                                 <div class="form-group">

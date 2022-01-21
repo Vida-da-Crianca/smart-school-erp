@@ -39,10 +39,11 @@ $route['admin/documents/(:any)']['get'] = 'admin/DocumentController/show/$1';
 $route['admin/documents/(:any)']['post'] = 'admin/DocumentController/update/$1';
 $route['admin/documents/(:any)']['delete'] = 'admin/DocumentController/destroy/$1';
 
-
-
-
-
-// CODELABS CODES
-
-$route['admin/curriculos'] = 'admin/Staff/curriculos';
+// Curriculos
+$route['workwithus'] = 'welcome/workwithus';
+$route['workwithus/enviar']['post'] = 'welcome/workwithus_ajax';
+$route['admin/curriculos'] = 'admin/Staff/curriculos'; // Lista de curriculos
+$route['admin/curriculos/ver/(:num)']['get'] = 'admin/Staff/curriculos/$1'; // Ver um curriculo
+$route['admin/curriculos/salvar/(:any)']['post'] = 'admin/Staff/salvar_curriculo/$1'; // Salvar um curriculo
+$route['admin/curriculos/deletar/(:num)']['get'] = 'admin/Staff/curriculo_deletar/$1'; // Deletar um cúrriculo do banco de dados
+$route['admin/curriculos/pdf/(:num)']['get'] = 'admin/Staff/cv_pdf/$1';
