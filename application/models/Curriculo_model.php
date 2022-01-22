@@ -4,6 +4,13 @@ class Curriculo_model extends MY_Model
 
     public function __construct()
     {
+        $this->load->dbforge();
+        // Adjust table cl_cv
+        if(!$this->db->field_exists('foto', 'cl_curriculos')){
+            $fields = array('foto' => array('type' => 'TEXT'));
+            $this->dbforge->add_column('cl_curriculos', $fields);
+        }
+
         parent::__construct();
     }
 
@@ -109,7 +116,7 @@ class Curriculo_model extends MY_Model
             return false;
     }
 
-    public function delete($id){
+    public function delete($id, $foto = null){
         $this->db->trans_start();
         $this->db->trans_strict(false);
 
@@ -125,18 +132,30 @@ class Curriculo_model extends MY_Model
             return false;
         }
 
+        if($foto != null){
+            if(file_exists("./uploads/cv_images/{$foto}")){
+                @unlink("./uploads/cv_images/{$foto}");
+            }
+        }
+
         if($query_cv && $query_custom_fields)
             return true;
 
         return false;
 
+    }
 
+    public function getData($data){
+        if(empty($data))
+            return "";
 
-        /*if(!$this->db->delete('cl_curriculos')){
-            $this->session->set_flashdata('msg', '<div class="alert alert-danger">O Cúrriculo não foi excluído. Tente novamente mais tarde.</div>');
-        } else {
-            $this->session->set_flashdata('msg', '<div class="alert alert-success">Curriculo excluido com sucesso.</div>');
-        }*/
+        $datas = explode("/", $data);
+
+        $day = $datas[0];
+        $month = $datas[1];
+        $year = $datas[2];
+
+        return $year.'-'.$month.'-'.$day;
     }
 
 }

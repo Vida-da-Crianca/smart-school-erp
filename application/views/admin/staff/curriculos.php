@@ -1,5 +1,7 @@
 <!-- fontawesome -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.maskedinput/1.4.1/jquery.maskedinput.min.js" integrity="sha512-d4KkQohk+HswGs6A1d6Gak6Bb9rMWtxjOa0IiY49Q3TeFd5xAzjWXDCBW9RS7m86FQ4RzM2BdHmdJnnKRYknxw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<link href="<?=base_url('backend/multiselect/css/multi.select.css')?>" rel="stylesheet" type="text/css">
+<script src="<?=base_url('backend/multiselect/js/multi.select.js')?>"></script>
 
 <div class="content-wrapper" style="min-height: 946px;">
     <section class="content-header">
@@ -9,6 +11,89 @@
     </section>
     <!-- Main content -->
     <section class="content">
+
+        <?php if(!isset($curriculo)) { ?>
+         <div class="row">
+            <div class="col-md-12">
+                <div class="box box-primary">
+                    <div class="box-header with-border">
+                        <h3 class="box-title"><i class="fa fa-search"></i> <?php echo $this->lang->line('select_criteria'); ?></h3>
+                        <div class="box-tools pull-right">
+                            
+                       </div>
+                    </div>
+
+                    <div class="box-body">
+
+                        <div class="row">
+                            <div class="col-md-12">
+                                
+                                <div class="row text-center">
+
+                                    <form role="form" action="<?php echo site_url('admin/curriculos') ?>" method="post" class="">
+                                        <?php echo $this->customlib->getCSRF(); ?>
+                                        <div class="col-sm-3"></div>
+                                        <div class="col-sm-6">
+                                            <div class="form-group"> 
+                                                <label><?php echo $this->lang->line("designation"); ?></label><small class="req"> *</small>
+
+                                                <div class="multi" id="multi"></div>
+                                                <input type="hidden" name="designation" id="designation" value="" />
+
+                                                <script>
+                                                    $('.multi').multi_select({
+                                                      selectColor: 'dark',
+                                                      selectSize: 'small',
+                                                      selectText: 'Selecione um ou mais cargos para procurar',
+                                                      duration: 0,
+                                                      easing: 'slide',
+                                                      listMaxHeight: 300,
+                                                      selectedCount: 4,
+                                                      sortByText: true,
+                                                        fillButton: false,
+                                                        selectedIndexes:
+                                                            <?=$designation_selected?>,
+                                                        
+                                                        data: {
+                                                          <?php 
+                                                          foreach($designation as $value)
+                                                              echo '"' . $value["id"] . '": "' . $value["designation"] . '",';
+                                                          
+                                                          ?>
+             
+                                                      },
+                                                        onSelect: function (values) {
+                                                            
+                                                            $("#designation").attr('value', values);
+
+
+                                                          return true;
+                                                      }
+                                                      });
+                                                    </script>
+
+                                                <span class="text-danger"><?php echo form_error('role'); ?></span>
+                                                <span class="text-danger"><?php if ($this->session->flashdata('msg_find')) { ?>  <?php echo $this->session->flashdata('msg_find') ?> <?php } ?></span>
+                                            </div>  
+                                        </div>
+
+
+                                        <div class="col-sm-12">
+                                            <div class="form-group">
+                                                <button type="submit" name="search" value="search_filter" class="btn btn-primary btn-sm pull-right checkbox-toggle"><i class="fa fa-search"></i> <?php echo $this->lang->line('search'); ?></button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                  </div>  
+                                
+                            </div>
+                        </div>
+                </div>
+            </div>
+         </div>
+         
+             <?php } ?>
+
         <div class="row">
             <div class="col-md-12">
                 <div class="box box-primary">
@@ -47,6 +132,7 @@
                                                         <span class="text-danger"></span>
                                                     </div>
                                                 </div>
+                                                <input type="hidden" name="foto" id="foto" value="<?=$curriculo->foto?>" />
                                                 <div class="col-md-4">
                                                     <div class="form-group">
                                                         <label for="exampleInputEmail1">Cargo</label>
@@ -147,7 +233,7 @@
                                                 <div class="col-md-3">
                                                     <div class="form-group">
                                                         <label for="exampleInputEmail1">Data De Inicío Contrato</label>
-                                                        <input id="date_of_joining" name="date_of_joining" placeholder="" type="text" class="form-control date" value="<?=date('d/m/Y', strtotime($curriculo->contrato_inicio))?>">
+                                                        <input id="date_of_joining" name="date_of_joining" placeholder="" type="text" class="form-control date" value="<?php if($curriculo->contrato_inicio != "") date('d/m/Y', strtotime($curriculo->contrato_inicio));?>">
                                                         <script>
                                                             $("#date_of_joining").datepicker({ showOn: "off" });
                                                             $('#date_of_joining').mask('99/99/9999',{placeholder:"mm/dd/yyyy"});

@@ -161,6 +161,10 @@
                                                 <label for="exampleInputEmail1"><?php echo $this->lang->line('date_of_birth'); ?></label><small class="req"> *</small>
                                                 <input id="dob" name="dob" placeholder="" type="text" class="form-control date"  value="<?php echo set_value('dob') ?>" />
                                                 <span class="text-danger"><?php echo form_error('dob'); ?></span>
+                                                <script>
+                                                            $("#dob").datepicker({ showOn: "off" });
+                                                            $('#dob').mask('99/99/9999',{placeholder:"mm/dd/yyyy"});
+                                                        </script>
                                             </div>
                                         </div>
                                         <?php if ($sch_setting->staff_date_of_joining) { ?>
@@ -169,6 +173,10 @@
                                                     <label for="exampleInputEmail1"><?php echo $this->lang->line('date_of_joining'); ?></label>
                                                     <input id="date_of_joining" name="date_of_joining" placeholder="" type="text" class="form-control date"  value="<?php echo set_value('date_of_joining') ?>" />
                                                     <span class="text-danger"><?php echo form_error('date_of_joining'); ?></span>
+                                                    <script>
+                                                            $("#date_of_joining").datepicker({ showOn: "off" });
+                                                            $('#date_of_joining').mask('99/99/9999',{placeholder:"mm/dd/yyyy"});
+                                                        </script>
                                                 </div>
                                             </div>
                                         <?php } ?>
@@ -349,7 +357,7 @@
                                         <?php } ?>
                                     </div>   
 
-                                    <div class="row">                                     
+                                    <div class="row form-group">                                     
                                         <?php
                                         echo display_custom_fields('staff');
                                         ?>

@@ -36,11 +36,17 @@ class Staff extends Admin_Controller {
 
         $this->db->from('cl_curriculos');
 
-        if(isset($id)):
+        if(isset($id)){
             $this->db->where('id', $id);
-        else:
-            $this->db->order_by('data_envio','asc');
-        endif;
+        } else {
+            if($this->input->post("designation")){
+                $this->db->where_in('cargo', explode(",", $this->input->post("designation")));
+                $designation_selected = json_encode(explode(",", $this->input->post("designation")));
+            }
+        }
+
+        $this->db->order_by('data_envio','asc');
+
 
         $get = $this->db->get();
 
@@ -68,6 +74,8 @@ class Staff extends Admin_Controller {
         $datas["marital_status"] = $this->marital_status;
         // Custom Fields
         $datas["fields"] = $this->customfield_model->getByBelong('staff');
+        // Selecteds
+        $datas["designation_selected"] = (isset($designation_selected)) ? $designation_selected : json_encode(array());
 
 
 
@@ -158,11 +166,11 @@ class Staff extends Admin_Controller {
                     $name = $this->input->post("name");
                     $gender = $this->input->post("gender");
                     $marital_status = $this->input->post("marital_status");
-                    $dob = date('Y-m-d', strtotime($this->input->post("dob")));
+                    $dob = $this->curriculo_model->getData($this->input->post("dob"));
                     $contact_no = preg_replace("/[^0-9]/", "",$this->input->post("contactno"));
                     $emergency_no = preg_replace("/[^0-9]/", "", $this->input->post("emergency_no"));
                     $email = $this->input->post("email");
-                    $date_of_joining = date('Y-m-d', strtotime($this->input->post("date_of_joining")));
+                    $date_of_joining = $this->curriculo_model->getData($this->input->post("date_of_joining"));
                     $address = $this->input->post("address");
                     $qualification = $this->input->post("qualification");
                     $work_exp = $this->input->post("work_exp");
@@ -210,7 +218,6 @@ class Staff extends Admin_Controller {
                         $data['numero'] = $numero;
                         $data['endereco_permanente'] = $permanent_address;
 
-
                         $result_update = $this->curriculo_model->update($id, $data);
 
                         if($result_update){
@@ -233,12 +240,12 @@ class Staff extends Admin_Controller {
                         $role = $this->input->post("role");
                         $gender = $this->input->post("gender");
                         $marital_status = $this->input->post("marital_status");
-                        $dob = date('Y-m-d', strtotime($this->input->post("dob")));
+                        $dob = $this->curriculo_model->getData($this->input->post("dob"));
                         $contact_no = preg_replace("/[^0-9]/", "",$this->input->post("contactno"));
                         $emergency_no = preg_replace("/[^0-9]/", "", $this->input->post("emergency_no"));
                         $email = $this->input->post("email");
-                        $date_of_joining = $this->input->post("date_of_joining");
-                        $date_of_leaving = $this->input->post("date_of_leaving");
+                        $date_of_joining = $this->curriculo_model->getData($this->input->post("date_of_joining"));
+                        $date_of_leaving = $this->curriculo_model->getData($this->input->post("date_of_leaving"));
                         $address = $this->input->post("address");
                         $qualification = $this->input->post("qualification");
                         $work_exp = $this->input->post("work_exp");
@@ -263,6 +270,7 @@ class Staff extends Admin_Controller {
                         $mother_name = $this->input->post("mother_name");
                         $note = $this->input->post("note");
                         $epf_no = $this->input->post("epf_no");
+                        $foto = $this->input->post("foto");
 
                         $password = $this->role->get_random_password($chars_min = 6, $chars_max = 6, $use_upper_case = false, $include_numbers = true, $include_special_chars = false);
 
@@ -271,7 +279,7 @@ class Staff extends Admin_Controller {
                             'employee_id' => $employee_id,
                             'name' => $name,
                             'email' => $email,
-                            'dob' => date('Y-m-d', $this->customlib->datetostrtotime($dob)),
+                            'dob' => $dob,
                             'date_of_leaving' => '',
                             'gender' => $gender,
                             'payscale' => '',
@@ -281,6 +289,12 @@ class Staff extends Admin_Controller {
                         if (isset($surname)) {
 
                             $data_insert['surname'] = $surname;
+                        }
+
+                        if(isset($foto)){
+                            $data_insert['image'] = $foto;
+                            @rename("./uploads/cv_images/" . $foto, "./uploads/staff_images/{$foto}");
+
                         }
 
 
@@ -416,7 +430,7 @@ class Staff extends Admin_Controller {
                         }
 
                         if ($date_of_joining != "") {
-                            $data_insert['date_of_joining'] = date('Y-m-d', strtotime($date_of_joining));
+                            $data_insert['date_of_joining'] = $date_of_joining;
                         }
 
                         if($cep){
@@ -983,12 +997,12 @@ class Staff extends Admin_Controller {
             $name = $this->input->post("name");
             $gender = $this->input->post("gender");
             $marital_status = $this->input->post("marital_status");
-            $dob = $this->input->post("dob");
+            $dob = $this->curriculo_model->getData($this->input->post("dob"));
             $contact_no = $this->input->post("contactno");
             $emergency_no = $this->input->post("emergency_no");
             $email = $this->input->post("email");
-            $date_of_joining = $this->input->post("date_of_joining");
-            $date_of_leaving = $this->input->post("date_of_leaving");
+            $date_of_joining = $this->curriculo_model->getData($this->input->post("date_of_joining"));
+            $date_of_leaving = $this->curriculo_model->getData($this->input->post("date_of_leaving"));
             $address = $this->input->post("address");
             $qualification = $this->input->post("qualification");
             $work_exp = $this->input->post("work_exp");
@@ -1022,7 +1036,7 @@ class Staff extends Admin_Controller {
                 'employee_id' => $employee_id,
                 'name' => $name,
                 'email' => $email,
-                'dob' => date('Y-m-d', $this->customlib->datetostrtotime($dob)),
+                'dob' => $dob,
                 'date_of_leaving' => '',
                 'gender' => $gender,
                 'payscale' => '',
@@ -1167,7 +1181,7 @@ class Staff extends Admin_Controller {
             }
 
             if ($date_of_joining != "") {
-                $data_insert['date_of_joining'] = date('Y-m-d', $this->customlib->datetostrtotime($date_of_joining));
+                $data_insert['date_of_joining'] = $date_of_joining;
             }
 
             if($cep){
@@ -1618,12 +1632,12 @@ class Staff extends Admin_Controller {
             $name = $this->input->post("name");
             $gender = $this->input->post("gender");
             $marital_status = $this->input->post("marital_status");
-            $dob = $this->input->post("dob");
+            $dob = $this->curriculo_model->getData($this->input->post("dob"));
             $contact_no = $this->input->post("contactno");
             $emergency_no = $this->input->post("emergency_no");
             $email = $this->input->post("email");
-            $date_of_joining = $this->input->post("date_of_joining");
-            $date_of_leaving = $this->input->post("date_of_leaving");
+            $date_of_joining = $this->curriculo_model->getData($this->input->post("date_of_joining"));
+            $date_of_leaving = $this->curriculo_model->getData($this->input->post("date_of_leaving"));
             $address = $this->input->post("address");
             $qualification = $this->input->post("qualification");
             $work_exp = $this->input->post("work_exp");
@@ -1675,7 +1689,7 @@ class Staff extends Admin_Controller {
                 'contact_no' => $contact_no,
                 'emergency_contact_no' => $emergency_no,
                 'email' => $email,
-                'dob' => date('Y-m-d', $this->customlib->datetostrtotime($dob)),
+                'dob' => $dob,
                 'marital_status' => $marital_status,
                 'local_address' => $address,
                 'permanent_address' => $permanent_address,
@@ -1702,15 +1716,15 @@ class Staff extends Admin_Controller {
                 'cep' => $cep,
                 'numero' => $numero,
             );
-           
+
             if ($date_of_joining != "") {
-                $data1['date_of_joining'] = date('Y-m-d', $this->customlib->datetostrtotime($date_of_joining));
+                $data1['date_of_joining'] = $date_of_joining;
             } else {
                 $data1['date_of_joining'] = "";
             }
 
             if ($date_of_leaving != "") {
-                $data1['date_of_leaving'] = date('Y-m-d', $this->customlib->datetostrtotime($date_of_leaving));
+                $data1['date_of_leaving'] = $date_of_leaving;
             } else {
                 $data1['date_of_leaving'] = "";
             }

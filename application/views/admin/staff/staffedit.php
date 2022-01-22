@@ -165,9 +165,13 @@
                                                 <label for="exampleInputEmail1"><?php echo $this->lang->line('date_of_birth'); ?></label><small class="req"> *</small>
                                                 <input id="dob" name="dob" placeholder="" type="text" class="form-control date"  value="<?php
                                                 if (!empty($staff["date_of_leaving"])) {
-                                                    echo date($this->customlib->getSchoolDateFormat(), strtotime($staff["dob"]));
+                                                    echo date('d/m/Y', strtotime($staff["dob"]));
                                                 }
-                                                ?>" />
+                                                                                                                                        ?>" />
+                                                <script>
+                                                            $("#dob").datepicker({ showOn: "off" });
+                                                            $('#dob').mask('99/99/9999',{placeholder:"mm/dd/yyyy"});
+                                                        </script>
                                                 <span class="text-danger"><?php echo form_error('dob'); ?></span>
                                             </div>
                                         </div>
@@ -176,10 +180,15 @@
                                                 <div class="form-group">
                                                     <label for="exampleInputEmail1"><?php echo $this->lang->line('date_of_joining'); ?></label>
                                                     <input id="date_of_joining" name="date_of_joining" placeholder="" type="text" class="form-control date"  value="<?php
-                                                    if ($staff["date_of_joining"] != '0000-00-00') {
-                                                        echo date($this->customlib->getSchoolDateFormat(), strtotime($staff["date_of_joining"]));
+                                                    if ($staff["date_of_joining"] != '0000-00-00' && $staff["date_of_joining"] != "") {
+                                                        echo date('d/m/Y', strtotime($staff["date_of_joining"]));
                                                     }
-                                                    ?>"  />
+
+                                                                                                                                                                    ?>"  />
+                                                    <script>
+                                                            $("#date_of_joining").datepicker({ showOn: "off" });
+                                                            $('#date_of_joining').mask('99/99/9999',{placeholder:"mm/dd/yyyy"});
+                                                        </script>
                                                     <span class="text-danger"><?php echo form_error('date_of_joining'); ?></span>
                                                 </div>
                                             </div>

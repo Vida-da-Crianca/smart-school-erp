@@ -20,10 +20,7 @@
 <?php endif; ?>
 
 
-<form class="spaceb60 onlineform" onsubmit="return;"
-    action=""
-    id="employeeform"
-    name="employeeform" method="post" accept-charset="utf-8" enctype="multipart/form-data">
+<form class="spaceb60 onlineform" action="" id="employeeform" name="employeeform" method="post" accept-charset="utf-8" enctype="multipart/form-data">
     <input type="hidden" name="save" value="1" />
     <input type='hidden' name='_submit' value='yeap' />
     <?=$this->customlib->getCSRF()?>
@@ -47,7 +44,7 @@
                 id="firstname"
                 value="<?php echo set_value('firstname'); ?>"
                 placeholder="Nome completo"
-                class="form-control" />
+                class="form-control" required/>
             <span class="text-danger">
                 <?php echo form_error('firstname'); ?>
             </span>
@@ -59,7 +56,7 @@
                 id="telefone"
                 value=""
                 placeholder="Telefone celular"
-                class="form-control" />
+                class="form-control" required/>
         </div>
         <div class="col-md-2 col-xs-12 col-sm-3">
             <label for="exampleInputEmail1">Cargo</label><small class="req"> *</small><br />
@@ -82,7 +79,7 @@
                 id="dob"
                 value="<?php echo set_value('dob'); ?>"
                 placeholder="Data de Nascimento do Aluno(a)"
-                class="form-control" />
+                class="form-control" required/>
         </div>
     </div>
     </br>
@@ -115,7 +112,7 @@
                 id="guardian_postal_code"
                 value=""
                 placeholder=""
-                class="form-control" onblur="pesquisaCep();" />
+                class="form-control" onblur="pesquisaCep();" required/>
         </div>
         <div class="col-md-6 col-xs-12 col-sm-6">
             <label>Endereço</label><small class="req"> *</small><br />
@@ -125,7 +122,7 @@
                 value=""
                 placeholder=""
                 disabled="disabled"
-                class="form-control" />
+                class="form-control" required />
         </div>
         <div class="col-md-2 col-xs-12 col-sm-2">
             <label>nº</label><small class="req"> *</small><br />
@@ -147,7 +144,7 @@
                 value=""
                 placeholder=""
                 disabled="disabled"
-                class="form-control" />
+                class="form-control" required/>
         </div>
         <div class="col-md-4 col-xs-12 col-sm-4">
             <label>Cidade</label><small class="req"> *</small><br />
@@ -157,7 +154,7 @@
                 value="<?php echo set_value('guardian_city'); ?>"
                 placeholder=""
                 disabled="disabled"
-                class="form-control" />
+                class="form-control" required/>
         </div>
         <div class="col-md-2 col-xs-12 col-sm-2">
             <label>UF</label><small class="req"> *</small><br />
@@ -167,7 +164,7 @@
                 value="<?php echo set_value('guardian_state'); ?>"
                 placeholder=""
                 disabled="disabled"
-                class="form-control" />
+                class="form-control" required/>
         </div>
 
         
@@ -178,6 +175,7 @@
     <div class="row">
         <?php echo  display_custom_fields('staff', false, null, $escolaridade_id); ?>
     </div>
+
     <br />
     <h4>Redes Sociais</h4>
     <div class="row">
@@ -206,15 +204,23 @@
             <input type="text" name="instagram" value="" class="form-control" />
         </div>
     </div>
+    <br />
+    <div class="row">
 
-</form>
+        <div class = "col-md-3 col-xs-12 col-sm-3">
+             <label>Sua Foto</label><small class="req"> *</small><br /><br />
+            
+              
+             <input type="file" id="file" name="file" accept=".png,png,.jpeg,jpeg,.jpeg,.jpeg,jpg,.jpg" required/>
+         </div>
+    </div>
 
-<div class = "row">
+    <div class = "row">
          <div class = "col-md-6 col-md-offset-3 col-xs-12 col-sm-8 col-sm-4 text-center">
-             <button type="button" class="onlineformbtn btn-block btn-lg" style="margin-top:22.8px;"
+             <button type="submit" class="onlineformbtn btn-block btn-lg" style="margin-top:22.8px;"
                      data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> aguarde"
                      id='btn-cadastrar'
-                      onclick="$(this)._saveCurriculo();"
+                      
                      >
                  <?=$this->lang->line('cl_enviar')?></button>
 	
@@ -222,6 +228,9 @@
      </div>
 
 <br /><br /><br /><br /><br /><br />
+
+</form>
+
 
 <script type="text/javascript">
      
@@ -307,7 +316,9 @@
                 }
             })
         }
-        $.fn._saveCurriculo = function () {
+
+        $("#employeeform").on('submit', function (e) {
+            e.preventDefault();
             $("#guardian_address").prop('disabled',false);
 		    $("#guardian_address_number").prop('disabled',false);
 		    $("#guardian_address_number").prop('disabled',false);
@@ -315,23 +326,41 @@
 		    $("#guardian_city").prop('disabled',false);
 		    $("#guardian_state").prop('disabled',false);
             $('#btn-cadastrar').button('loading');
-            $.post('<?=base_url('workwithus/enviar')?>', $('#employeeform').serialize(), function (respJson) {
-                $('#btn-cadastrar').button('reset');
 
-                try {
-                    var resp = JSON.parse(respJson);
+            $.ajax({
+                url: '<?=base_url('workwithus/enviar')?>',
+                method: 'POST',
+                data: new FormData(this),
+                contentType: false,
+                cache: false,
+                processData: false,
+                success: function (data) {
+                    $('#btn-cadastrar').button('reset');
 
-                    if (!resp.status) {
-                        $(this)._modalPopup(resp.msg, true);
-                    } else {
-                        $(this)._modalPopup(resp.msg, false);
-                        $("#employeeform").trigger("reset");
+                    try {
+                        var resp = JSON.parse(data);
+
+                        if (!resp.status) {
+                            $(this)._modalPopup(resp.msg, true);
+                        } else {
+                            $(this)._modalPopup(resp.msg, false);
+                            $("#employeeform").trigger("reset");
+                        }
+                    } catch (e) {
+                        $(this)._modalPopup(e, true);
                     }
-                } catch (e) {
-                    $(this)._modalPopup(e, true);
+                },
+                error: function(xhr, textStatus, error){
+                      console.log(xhr.statusText);
+                      console.log(textStatus);
+                      console.log(error);
+  
+                    $('#btn-cadastrar').button('reset');
+                    
+                     $(this)._modalPopup('Fatal error.', true);
                 }
-            }).fail(function (err) { console.log('Err ', err); $(this)._modalPopup('Ocorreu um erro. Tente novamente', true); $('#btn-cadastrar').button('reset'); });
-        }
+            });
+        })
 
     });
 </script>
