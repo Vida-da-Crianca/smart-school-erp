@@ -31,7 +31,7 @@
       name="employeeform" method="post" accept-charset="utf-8" enctype="multipart/form-data">
     <input type="hidden" name="save" value="1" />
      <input type='hidden' name='_submit' value='yeap' >
-    <h2>Matícula Online</h2>
+    <h2>Matrícula Online</h2>
     
     <?php if(is_array($erros) && count($erros)>0): ?>
         <?php foreach($erros as $erro ): ?>
