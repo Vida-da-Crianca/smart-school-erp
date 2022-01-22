@@ -420,7 +420,7 @@ class Welcome extends Front_Controller
                 $this->form_validation->set_rules('work_exp', 'Experiência', 'trim|required|xss_clean');
                 $this->form_validation->set_rules('cursos', 'Cursos', 'trim|required|xss_clean');
                 $this->form_validation->set_rules('outros', 'Outros', 'trim|required|xss_clean');
-
+                $this->form_validation->set_rules('file', $this->lang->line('image'), 'callback_handle_upload');
 
                 if($this->input->post('designation') == 'select')
                     throw new Exception('Campo Cargo é obrigatório!');
@@ -494,6 +494,17 @@ class Welcome extends Front_Controller
 
                  );
 
+
+                if (isset($_FILES["file"]) && !empty($_FILES['file']['name'])) {
+                    $fileInfo = pathinfo($_FILES["file"]["name"]);
+                    $img_name = $data['id'] . '.' . $fileInfo['extension'];
+                    if(!file_exists("./uploads/cv_images/"))
+                        mkdir("./uploads/cv_images", 0777, TRUE);
+
+                    move_uploaded_file($_FILES["file"]["tmp_name"], "./uploads/cv_images/" . $img_name);
+                    $data['foto'] = $img_name;
+                }
+
                 $this->curriculo_model->batchInsert($data);
                 if (!empty($custom_value_array)) {
                     $this->customfield_model->insertRecord($custom_value_array, $data['id']);
@@ -521,6 +532,40 @@ class Welcome extends Front_Controller
             echo json_encode(array('status' => false, 'msg' => '<div class="alert alert-danger">Method not allowed</div>'));
             exit;
         }
+    }
+
+    public function handle_upload() {
+        $image_validate = $this->config->item('image_validate');
+        if (isset($_FILES["file"]) && !empty($_FILES['file']['name'])) {
+
+            $file_type = $_FILES["file"]['type'];
+            $file_size = $_FILES["file"]["size"];
+            $file_name = $_FILES["file"]["name"];
+            $allowed_extension = $image_validate['allowed_extension'];
+            $ext = pathinfo($file_name, PATHINFO_EXTENSION);
+            $allowed_mime_type = $image_validate['allowed_mime_type'];
+            if ($files = @getimagesize($_FILES['file']['tmp_name'])) {
+
+                if (!in_array($files['mime'], $allowed_mime_type)) {
+                    $this->form_validation->set_message('handle_upload', $this->lang->line('file_type_not_allowed'));
+                    return false;
+                }
+                if (!in_array($ext, $allowed_extension) || !in_array($file_type, $allowed_mime_type)) {
+                    $this->form_validation->set_message('handle_upload', $this->lang->line('file_type_not_allowed'));
+                    return false;
+                }
+                if ($file_size > $image_validate['upload_size']) {
+                    $this->form_validation->set_message('handle_upload', $this->lang->line('file_size_shoud_be_less_than') . number_format($image_validate['upload_size'] / 1048576, 2) . " MB");
+                    return false;
+                }
+            } else {
+                $this->form_validation->set_message('handle_upload', $this->lang->line('file_type_not_allowed'));
+                return false;
+            }
+
+            return true;
+        }
+        return true;
     }
 
     public function admission(){

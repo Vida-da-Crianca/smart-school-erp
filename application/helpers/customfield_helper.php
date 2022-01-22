@@ -254,7 +254,7 @@ if (!function_exists('display_custom_fields')) {
             } else {
                 $chk_status = false;
             }
-            $input .= '<label class="checkbox-inline">';
+            $input .= '<label class="checkbox">';
 
             $input .= '<input type="' . $type . '" id="' . $name . '" name="' . $name . '[]"  value="' . $option_value . '" ' . set_checkbox($name, $option_value, $chk_status) . '>' . $option_value . '</label>';
             $input .= '</label>';
