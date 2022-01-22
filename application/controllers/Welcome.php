@@ -490,7 +490,8 @@ class Welcome extends Front_Controller
                    'facebook'            => $this->input->post('facebook'),
                    'instagram'           => $this->input->post('instagram'),
                    'linkedin'            => $this->input->post('linkedin'),
-                   'numero'              => $this->input->post('guardian_address_number')
+                   'numero'              => $this->input->post('guardian_address_number'),
+                   'data_envio'          => date('Y-m-d H:i:s')
 
                  );
 
