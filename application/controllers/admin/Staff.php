@@ -553,6 +553,9 @@ class Staff extends Admin_Controller {
                 $this->db->trans_rollback();
             }
 
+            if(!isset($this->resp_foto))
+                $this->resp_foto = '';
+
             echo json_encode(array('status' => $this->resp_status, 'foto' => $this->resp_foto, 'msg' => $this->resp_msg, 'id' => (isset($this->resp_id) ? $this->resp_id : '')));
             exit;
 
