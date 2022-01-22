@@ -490,15 +490,14 @@ class Welcome extends Front_Controller
                    'facebook'            => $this->input->post('facebook'),
                    'instagram'           => $this->input->post('instagram'),
                    'linkedin'            => $this->input->post('linkedin'),
-                   'numero'              => $this->input->post('guardian_address_number'),
-                   'data_envio'          => date('Y-m-d H:i:s')
+                   'numero'              => $this->input->post('guardian_address_number')
 
                  );
 
 
                 if (isset($_FILES["file"]) && !empty($_FILES['file']['name'])) {
                     $fileInfo = pathinfo($_FILES["file"]["name"]);
-                    $img_name = $this->curriculo_model->random_hash() . '.' . $fileInfo['extension'];
+                    $img_name = $data['id'] . '.' . $fileInfo['extension'];
                     if(!file_exists("./uploads/cv_images/"))
                         mkdir("./uploads/cv_images", 0777, TRUE);
 
