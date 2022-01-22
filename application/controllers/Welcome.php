@@ -1,4 +1,5 @@
 <?php
+
 defined('BASEPATH') or exit('No direct script access allowed');
 
 class Welcome extends Front_Controller
@@ -12,11 +13,10 @@ class Welcome extends Front_Controller
         $this->load->config('form-builder');
         $this->load->config('app-config');
         $this->load->library(array('mailer', 'form_builder'));
-        $this->load->model(array('frontcms_setting_model', 'complaint_Model', 'Visitors_model', 'onlinestudent_model','customfield_model','curriculo_model'));
+        $this->load->model(array('frontcms_setting_model', 'complaint_Model', 'Visitors_model', 'onlinestudent_model'));
         $this->blood_group = $this->config->item('bloodgroup');
         $this->load->library('Ajax_pagination');
         $this->load->library('module_lib');
-        $this->load->helper('customfield_helper');
         $this->banner_content         = $this->config->item('ci_front_banner_content');
         $this->perPage                = 12;
         $ban_notice_type              = $this->config->item('ci_front_notice_content');
@@ -30,7 +30,7 @@ class Welcome extends Front_Controller
 
     public function index()
     {
-
+       
         $setting                     = $this->frontcms_setting_model->get();
         $this->data['active_menu']   = 'home';
         $this->data['page_side_bar'] = $setting->is_active_sidebar;
@@ -237,7 +237,7 @@ class Welcome extends Front_Controller
             $this->form_validation->set_rules('section_id', $this->lang->line('section'), 'trim|required|xss_clean|integer|greater_than[0]');
             $this->form_validation->set_rules('guardian_name', $this->lang->line('guardian_name'), 'trim|required|xss_clean');
             $this->form_validation->set_rules('guardian_phone', $this->lang->line('guardian_phone'), 'trim|required|xss_clean');
-
+			
             $this->form_validation->set_rules('guardian_document', $this->lang->line('guardian_document'), 'trim|required|xss_clean');
             $this->form_validation->set_rules('guardian_phone', $this->lang->line('guardian_phone'), 'trim|required|xss_clean');
             $this->form_validation->set_rules('guardian_postal_code', $this->lang->line('guardian_postal_code'), 'trim|required|xss_clean');
@@ -247,9 +247,9 @@ class Welcome extends Front_Controller
             $this->form_validation->set_rules('guardian_district', $this->lang->line('guardian_district'), 'trim|required|xss_clean');
             $this->form_validation->set_rules('guardian_state', $this->lang->line('guardian_state'), 'trim|required|xss_clean');
             $this->form_validation->set_rules('guardian_city', $this->lang->line('guardian_city'), 'trim|required|xss_clean');
-
-
-
+		
+			
+			
 
             if ($this->form_validation->run() == false) {
 
@@ -294,19 +294,19 @@ class Welcome extends Front_Controller
                     $res = $this->db->where('class_id',$class_id)
                             ->where('section_id',$section_id)
                             ->get('class_sections')->result();
-
+                    
                     $class_section_id = (count($res)>0? $res[0]->id : 0);
-
-
+                    
+                   
                     $dob = explode('/',$this->input->post('dob'));
                     if(is_array($dob) && count($dob) == 3){
                         $dob = $dob[2].'-'.$dob[1].'-'.$dob[0];
                     }else{
                         $dob = date('Y-m-d');
                     }
-
-
-
+                    
+                   
+                    
                     $data = array(
                         'roll_no'             => $this->input->post('roll_no'),
                         'mobileno'            => $this->input->post('mobileno'),
@@ -334,14 +334,14 @@ class Welcome extends Front_Controller
                         'guardian_phone'      => $this->input->post('guardian_phone'),
                         'admission_date'      => date('Y/m/d'),
                         'measurement_date'    => date('Y/m/d'),
-
+						
                         'guardian_postal_code'    => str_replace(array('',' ','-','_',','),'',$this->input->post('guardian_postal_code')),
                         'guardian_address'    => $this->input->post('guardian_address'),
                         'guardian_address_number'    => $this->input->post('guardian_address_number'),
                         'guardian_district'    => $this->input->post('guardian_district'),
                         'guardian_city'    => $this->input->post('guardian_city'),
                         'guardian_state'    => $this->input->post('guardian_state'),
-
+						
                     );
                     if (isset($_FILES["document"]) && !empty($_FILES['document']['name'])) {
                         $time     = md5($_FILES["document"]['name'] . microtime());
@@ -355,7 +355,7 @@ class Welcome extends Front_Controller
                     $insert_id = $this->onlinestudent_model->add($data);
 
                     //$this->session->set_flashdata('msg', '<div class="alert alert-success">Thanks for registration. Please note your reference number ' . $insert_id . ' for further communication.</div>');
-
+					
                     $this->session->set_flashdata('msg', '<div class="alert alert-success">Obrigado por se registrar. Seu número de referência é ' . $insert_id . ' para comunicações futuras</div>');
 
                     redirect($_SERVER['HTTP_REFERER'], 'refresh');
@@ -366,230 +366,29 @@ class Welcome extends Front_Controller
 
         }
     }
-
-    public function workwithus(){
-        //Dados para view(theme/template)
-        $this->data['active_menu'] = 'workwithus';
-        $page = array('title' => 'Trabalhe Conosco', 'meta_title' => 'trabalahe conosco', 'meta_keyword' => 'trabalhe conosco', 'meta_description' => 'Envie seu cúrriculo para a gente!');
-        $this->data['page_side_bar']  = false;
-        $this->data['featured_image'] = false;
-        $this->data['page'] = $page;
-        $this->data['form_admission'] = $this->setting_model->getOnlineAdmissionStatus();
-        $genderList = $this->customlib->getGender();
-        $this->data['designationList'] = $this->staff_model->getStaffDesignation();
-        $this->data['genderList'] = $genderList;
-        $category = $this->category_model->get();
-        $this->data['categorylist'] = $category;
-        $this->data['sessions'] = [];
-        $res = $this->db->get('sessions')->result();
-        foreach ($res as $row){
-            $ano = explode('-', $row->session);
-            if((int) $ano[0] == (int)date('Y') || (int) $ano[0] == ((int)date('Y')+1)){
-                $this->data['sessions'][$row->id] = (int) $ano[0];
-            }
-        }
-
-
-        $fields = $this->customfield_model->getByBelong('staff');
-        $this->data['escolaridade_id'] = 14;
-        foreach($fields as $key => $value){
-            if($value["name"] == "Escolaridade" && $value["belong_to"] == "staff" && $value["type"] == "checkbox"){
-                $this->data['escolaridade_id'] = $value["id"];
-                break;
-            }
-        }
-
-        $this->load_theme('pages/workwithus');
-    }
-
-    public function workwithus_ajax(){
-        if($this->input->is_ajax_request() && $this->input->post('_submit') == 'yeap'){
-
-
-            try{
-                $this->db->trans_begin();
-                $this->config->set_item('language', 'Portugues_Brazil');
-                $ok = true;
-
-                //Validacoes de formulario
-                $this->form_validation->set_rules('firstname', 'Nome Completo', 'trim|required|xss_clean');
-                $this->form_validation->set_rules('gender', 'Sexo', 'trim|required|xss_clean');
-                $this->form_validation->set_rules('dob', $this->lang->line('date_of_birth'), 'trim|required|xss_clean');
-                $this->form_validation->set_rules('telefone', 'Telefone', 'trim|required|xss_clean');
-                $this->form_validation->set_rules('designation', 'Cargo', 'trim|required');
-                $this->form_validation->set_rules('work_exp', 'Experiência', 'trim|required|xss_clean');
-                $this->form_validation->set_rules('cursos', 'Cursos', 'trim|required|xss_clean');
-                $this->form_validation->set_rules('outros', 'Outros', 'trim|required|xss_clean');
-                $this->form_validation->set_rules('file', $this->lang->line('image'), 'callback_handle_upload');
-
-                if($this->input->post('designation') == 'select')
-                    throw new Exception('Campo Cargo é obrigatório!');
-
-                $custom_fields = $this->customfield_model->getByBelong('staff');
-                foreach ($custom_fields as $custom_fields_key => $custom_fields_value) {
-                    if ($custom_fields_value['validation']) {
-                        $custom_fields_id = $custom_fields_value['id'];
-                        $custom_fields_name = $custom_fields_value['name'];
-                        $this->form_validation->set_rules("custom_fields[staff][" . $custom_fields_id . "]", $custom_fields_name, 'trim|required');
-                    }
-                }
-
-
-                $this->form_validation->set_rules('guardian_postal_code', 'CEP', 'trim|required|xss_clean');
-                $this->form_validation->set_rules('guardian_address_number', 'nº', 'trim|required|xss_clean');
-                $this->form_validation->set_rules('guardian_address', 'Endereço', 'trim|required|xss_clean');
-                $this->form_validation->set_rules('guardian_district', 'Bairro', 'trim|required|xss_clean');
-                $this->form_validation->set_rules('guardian_state', 'UF', 'trim|required|xss_clean');
-                $this->form_validation->set_rules('guardian_city', 'Cidade', 'trim|required|xss_clean');
-
-
-
-
-                if ($this->form_validation->run() == FALSE){
-                    throw new Exception(validation_errors());
-                }
-
-
-                $dob = explode('/',$this->input->post('dob'));
-                if(is_array($dob) && count($dob) == 3){
-                    $dob = $dob[2].'-'.$dob[1].'-'.$dob[0];
-                }else{
-                    $dob = date('Y-m-d');
-                }
-
-                $custom_field_post = $this->input->post("custom_fields[staff]");
-                $custom_value_array = array();
-                if (!empty($custom_fields_value)) {
-
-                    foreach ($custom_field_post as $key => $value) {
-                        $check_field_type = $this->input->post("custom_fields[staff][" . $key . "]");
-                        $field_value = is_array($check_field_type) ? implode(",", $check_field_type) : $check_field_type;
-                        $array_custom = array(
-                            'belong_table_id' => 0,
-                            'custom_field_id' => $key,
-                            'field_value' => $field_value,
-                        );
-                        $custom_value_array[] = $array_custom;
-                    }
-                }
-
-                $endereco_full = $this->input->post('guardian_address') . ', ' . $this->input->post('guardian_district') . ', ' . $this->input->post('guardian_city') . ', ' . $this->input->post('guardian_state');
-                $data = array(
-                   'id'                 => $this->curriculo_model->uniqueId(),
-                   'nome'               => $this->input->post('firstname'),
-                   'sexo'              => $this->input->post('gender'),
-                   'data_nascimento'     => $dob,
-                   'telefone'            => preg_replace("/[^0-9]/", "",$this->input->post('telefone')),
-                   'cargo'               => $this->input->post('designation'),
-                   'work_exp'            => $this->input->post('work_exp'),
-                   'cursos'              => $this->input->post('cursos'),
-                   'outros'              => $this->input->post('outros'),
-                   'cep'                 => $this->input->post('guardian_postal_code'),
-                   'endereco'            => $endereco_full,
-                   'twitter'             => $this->input->post('twitter'),
-                   'facebook'            => $this->input->post('facebook'),
-                   'instagram'           => $this->input->post('instagram'),
-                   'linkedin'            => $this->input->post('linkedin'),
-                   'numero'              => $this->input->post('guardian_address_number')
-
-                 );
-
-
-                if (isset($_FILES["file"]) && !empty($_FILES['file']['name'])) {
-                    $fileInfo = pathinfo($_FILES["file"]["name"]);
-                    $img_name = $data['id'] . '.' . $fileInfo['extension'];
-                    if(!file_exists("./uploads/cv_images/"))
-                        mkdir("./uploads/cv_images", 0777, TRUE);
-
-                    move_uploaded_file($_FILES["file"]["tmp_name"], "./uploads/cv_images/" . $img_name);
-                    $data['foto'] = $img_name;
-                }
-
-                $this->curriculo_model->batchInsert($data);
-                if (!empty($custom_value_array)) {
-                    $this->customfield_model->insertRecord($custom_value_array, $data['id']);
-                }
-
-                if ($this->db->trans_status() === FALSE)
-                    $this->db->trans_rollback();
-                else
-                    $this->db->trans_commit();
-
-
-                $this->resp_status  =true;
-                $this->resp_msg = '<div class="alert alert-success">Cúrriculo enviado com sucesso!</div>';
-
-            }
-            catch (\Exception $e){
-                $this->resp_status  =false;
-                $this->resp_msg = '<div class="alert alert-danger"><b>' . $e->getMessage() . '</b></div>';
-                $this->db->trans_rollback();
-            }
-
-            echo json_encode(array('status' => $this->resp_status, 'msg' => $this->resp_msg));
-            exit;
-        } else {
-            echo json_encode(array('status' => false, 'msg' => '<div class="alert alert-danger">Method not allowed</div>'));
-            exit;
-        }
-    }
-
-    public function handle_upload() {
-        $image_validate = $this->config->item('image_validate');
-        if (isset($_FILES["file"]) && !empty($_FILES['file']['name'])) {
-
-            $file_type = $_FILES["file"]['type'];
-            $file_size = $_FILES["file"]["size"];
-            $file_name = $_FILES["file"]["name"];
-            $allowed_extension = $image_validate['allowed_extension'];
-            $ext = pathinfo($file_name, PATHINFO_EXTENSION);
-            $allowed_mime_type = $image_validate['allowed_mime_type'];
-            if ($files = @getimagesize($_FILES['file']['tmp_name'])) {
-
-                if (!in_array($files['mime'], $allowed_mime_type)) {
-                    $this->form_validation->set_message('handle_upload', $this->lang->line('file_type_not_allowed'));
-                    return false;
-                }
-                if (!in_array($ext, $allowed_extension) || !in_array($file_type, $allowed_mime_type)) {
-                    $this->form_validation->set_message('handle_upload', $this->lang->line('file_type_not_allowed'));
-                    return false;
-                }
-                if ($file_size > $image_validate['upload_size']) {
-                    $this->form_validation->set_message('handle_upload', $this->lang->line('file_size_shoud_be_less_than') . number_format($image_validate['upload_size'] / 1048576, 2) . " MB");
-                    return false;
-                }
-            } else {
-                $this->form_validation->set_message('handle_upload', $this->lang->line('file_type_not_allowed'));
-                return false;
-            }
-
-            return true;
-        }
-        return true;
-    }
-
+    
     public function admission(){
-
+        
         //se o modulo de matricula online nao estiver ativo, manda pra Home
         if (!$this->module_lib->hasActive('online_admission')) {
             redirect('/');
         }
-
-
+        
+        
         $this->data['erros'] = null;//armazena erros extras a serem exibidos na view
-
-
+        
+        
          if($this->input->is_ajax_request() && $this->input->post('_submit') == 'yeap'){
-
+            
             try{
-
+                
                 $this->db->trans_begin();
-
-                $this->config->set_item('language', 'Portugues_Brazil');
-
-
-
-
+                
+                $this->config->set_item('language', 'Portugues_Brazil'); 
+        
+        
+    
+         
                     $ok = true;
 
                     //Validacoes de formulario
@@ -629,9 +428,9 @@ class Welcome extends Front_Controller
 
                     //$this->form_validation->set_rules('image', 'Foto do Aluno', 'trim|required|xss_clean');
 
-
+                    
                     $this->form_validation->set_rules('image', 'Foto do Aluno', 'trim|required|xss_clean');
-
+                    
                     $this->form_validation->set_rules('certidao_nascimento', 'Certidão de Nascimento', 'trim|required|xss_clean');
                     $this->form_validation->set_rules('carteira_vacinacao', 'Carteira de Vacinação', 'trim|required|xss_clean');
                     $this->form_validation->set_rules('cnh_responsavel', 'CNH do Responsável', 'trim|required|xss_clean');
@@ -652,9 +451,7 @@ class Welcome extends Front_Controller
                         }
                     }
 
-
-
-
+                  
 
                     //Validar uploads
                     /*$image_validate  = $this->config->item('file_validate');
@@ -668,8 +465,8 @@ class Welcome extends Front_Controller
                         }
 
                     }*/
-
-                    $dir = FCPATH.'uploads/pre_upload/';
+                    
+                    $dir = FCPATH.'uploads/pre_upload/';   
                     if(!file_exists($dir.$this->input->post('image'))){
                         throw new Exception('Foto do Aluno não encontrada! Faça o upload novamente.');
                     }
@@ -753,13 +550,13 @@ class Welcome extends Front_Controller
                                 'guardian_district'    => $this->input->post('guardian_district'),
                                 'guardian_city'    => $this->input->post('guardian_city'),
                                 'guardian_state'    => $this->input->post('guardian_state'),
-
+                                
                                 'certidao_nascimento' => $this->input->post('certidao_nascimento'),
                                 'carteira_vacinacao' => $this->input->post('carteira_vacinacao'),
                                 'cnh_responsavel' => $this->input->post('cnh_responsavel'),
                                 'comprovante_residencia' => $this->input->post('comprovante_residencia'),
                                 'session_id' => (int) $this->input->post('session_id')
-
+                            
                                 //'student_categorize' => 'class'
 
                             );
@@ -775,7 +572,7 @@ class Welcome extends Front_Controller
                                 if (!is_dir($uploaddir) && !mkdir($uploaddir)) {
                                     throw new Exception('Erro ao criar diretorio de matriculas online.');
                                     $documents_ok = false;
-                                }
+                                } 
 
                                 if($documents_ok){
                                 //    $campo = 'image';
@@ -844,7 +641,7 @@ class Welcome extends Front_Controller
                                 }else{
                                     //rollback
                                     $this->db->where('id',$insert_id);
-                                    $this->db->delete('online_admissions');
+                                    $this->db->delete('online_admissions'); 
                                 }
 
 
@@ -854,33 +651,33 @@ class Welcome extends Front_Controller
                             }
 
                    // }
-
-
+            
+            
        // }// deu submit no form
-
-
-
+            
+            
+            
                 if ($this->db->trans_status() === FALSE)
                     $this->db->trans_rollback();
                 else
                     $this->db->trans_commit();
-
+                  
                 $this->resp_status  =true;
                 $this->resp_msg = '';
-
+                
             } catch (\Exception $e){
                 $this->resp_status  =false;
                 $this->resp_msg = $e->getMessage();
                   $this->db->trans_rollback();
             }
-
+            
              echo json_encode(array('status' => $this->resp_status, 'msg' => $this->resp_msg));
              exit;
-
-
+            
+            
         }
-
-
+            
+        
         //Dados para view(theme/template)
         $this->data['active_menu'] = 'online-admission';
         $page = array('title' => 'Matrícula Online', 'meta_title' => 'matricula online', 'meta_keyword' => 'matricula online cadastro', 'meta_description' => 'Faça a Matrícula Online!');
@@ -900,12 +697,12 @@ class Welcome extends Front_Controller
                 $this->data['sessions'][$row->id] = (int) $ano[0];
             }
         }
-
-
+        
+       
         $this->load_theme('pages/admission');
-
+        
     }
-
+    
     private function _validarUploadDocumentoAluno($arquivo,$campo,$image_validate){
         $document_validate = true;
         $file_type         = $_FILES[$arquivo]['type'];
@@ -932,13 +729,13 @@ class Welcome extends Front_Controller
         }
         return $document_validate;
     }
-
+    
     private function _uploadDocumentoAluno($arquivo,$titulo,$insert_id){
         if (isset($_FILES[$arquivo]) && !empty($_FILES[$arquivo]['name'])) {
             $uploaddir = './uploads/admission/' . $insert_id . '/';
             if (!is_dir($uploaddir) && !mkdir($uploaddir)) {
                 die("Error creating folder $uploaddir");
-            }
+            }           
             $file_name   = $_FILES[$arquivo]['name'];
             $exp         = explode(' ', $file_name);
             $imp         = implode('_', $exp);
@@ -955,14 +752,14 @@ class Welcome extends Front_Controller
     /*Retorna um combobox de Turmas com base na data de nascimento do aluno #alterado*/
     public function getListaTurmasPorDataNascimento(){
          try {
-
+			
             $dataNascimento = $this->tools->formatarData($this->input->post('dataNascimento'), 'br', 'us');
-            $dtNascimento = new DateTime($dataNascimento .' 00:00:00');
+            $dtNascimento = new DateTime($dataNascimento .' 00:00:00'); 
             $session_id = (int) $this->input->post('session_id');
-
+            
            //$config = $this->db->select('session_id')->from('sch_settings')->get()->result();
-            //$datasCorte = $this->data_corte_model->getAll(['session_id'=>count($config)>0?$config[0]->session_id : 0 ]);
-            $datasCorte = $this->data_corte_model->getAll(['session_id'=>$session_id]);
+            //$datasCorte = $this->data_corte_model->getAll(['session_id'=>count($config)>0?$config[0]->session_id : 0 ]); 
+            $datasCorte = $this->data_corte_model->getAll(['session_id'=>$session_id]); 
             //$this->pre($dtNascimento);
             //$this->pre($datasCorte);
             $dados = array();
@@ -971,23 +768,23 @@ class Welcome extends Front_Controller
             {
                 $dtInicial = new DateTime($row->dataInicial.' 00:00:00');
                 $dtFinal = new DateTime($row->dataFinal.' 23:59:59');
-
+                
                  //$this->pre($dtNascimento);
                  //$this->pre($dtInicial);
                  //$this->pre($dtFinal);
-
+                
                 if($dtNascimento >= $dtInicial && $dtNascimento <= $dtFinal){
                     $dados[] = array('value'=>$row->class_id,'label'=> $row->className );
                 }
-
-
+                
+                
             }
-
+            
             if(count($dados)<=0){
                 $dados[] = array('value'=>'','label'=> '*** Escolha uma Turma ***' );
             }
 
-            echo json_encode(array('status'=>true,'results'=>$dados));
+            echo json_encode(array('status'=>true,'results'=>$dados));			
 
 
         }
@@ -996,24 +793,24 @@ class Welcome extends Front_Controller
             echo json_encode(array('status'=>false));
 	}
     }
-
+    
      public function getListaPeriodosPorTurma(){
          try {
-
+			
             $class_id = (int) $this->input->post('class_id');
-
+           
             $dados = array();
 
             $res = $this->section_model->getClassBySectionAll($class_id);
             $dados[] = array('value'=>'','label'=> 'Selecione o Período' );
-
+            
             foreach ($res as $row)
             {
-               $dados[] = array('value'=>$row['section_id'],'label'=> $row['section'] );
+               $dados[] = array('value'=>$row['section_id'],'label'=> $row['section'] ); 
             }
+            
 
-
-            echo json_encode(array('status'=>true,'results'=>$dados));
+            echo json_encode(array('status'=>true,'results'=>$dados));			
 
 
         }
@@ -1022,7 +819,7 @@ class Welcome extends Front_Controller
             echo json_encode(array('status'=>false));
 	}
     }
-
-
-
+    
+    
+    
 }

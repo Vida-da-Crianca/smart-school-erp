@@ -70,16 +70,6 @@
     <link rel="stylesheet" href="<?php echo base_url() ?>backend/fullcalendar/dist/fullcalendar.min.css">
     <link rel="stylesheet" href="<?php echo base_url() ?>backend/fullcalendar/dist/fullcalendar.print.min.css" media="print">
 
-    <!-- Popup's customizadas -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.css" />
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.js"></script>
-
-    <!-- Font awasome - Carregar -->
-    <script src="https://kit.fontawesome.com/0409d33244.js"></script>
-             
-    <!-- Plugin de máscaras -->
-    <script src="<?php echo base_url() ?>backend/plugins/jquery.mask.min.js"></script>
-
 
 
     <script type="text/javascript">
