@@ -11,6 +11,8 @@
     </section>
     <!-- Main content -->
     <section class="content">
+
+        <?php if(!isset($curriculo)) { ?>
          <div class="row">
             <div class="col-md-12">
                 <div class="box box-primary">
@@ -89,6 +91,8 @@
                 </div>
             </div>
          </div>
+         
+             <?php } ?>
 
         <div class="row">
             <div class="col-md-12">

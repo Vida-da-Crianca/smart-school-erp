@@ -350,8 +350,13 @@
                         $(this)._modalPopup(e, true);
                     }
                 },
-                error: function () {
+                error: function(xhr, textStatus, error){
+                      console.log(xhr.statusText);
+                      console.log(textStatus);
+                      console.log(error);
+  
                     $('#btn-cadastrar').button('reset');
+                    
                      $(this)._modalPopup('Fatal error.', true);
                 }
             });
