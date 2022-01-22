@@ -40,7 +40,7 @@
                                                 <div class="multi" id="multi"></div>
                                                 <input type="hidden" name="designation" id="designation" value="" />
 
-                                                <script>
+                                               <script>
                                                     $('.multi').multi_select({
                                                       selectColor: 'dark',
                                                       selectSize: 'small',
@@ -115,176 +115,203 @@
 
                                         <div class="around10">
 
+                                            <div class="col-md-10">
+                                                <?=$xcsrf_token?>
+                                                <input type="hidden" name="id" value="<?=$curriculo->id?>">
+                                                <div class="row">
+                                                    <div class="col-md-4">
 
-                                            <?=$xcsrf_token?>
-                                            <input type="hidden" name="id" value="<?=$curriculo->id?>">
-                                            <div class="row">
-                                                <div class="col-md-4">
+                                                        <div class="form-group">
+                                                            <label for="exampleInputEmail1">Função</label><small class="req"> *</small>
+                                                            <select id="role" name="role" class="form-control">
+                                                                <option value="">Selecione</option>
+                                                                <?php foreach($staffrole as $value): ?>
+                                                                    <option value="<?=$value['id']?>" <?=($curriculo->funcao == $value["id"]) ? "selected" : ""?>><?=$value['type']?>
+                                                                <?php endforeach;?>
+                                                            </select>
+                                                            <span class="text-danger"></span>
+                                                        </div>
+                                                    </div>
+                                                    <input type="hidden" name="foto" id="foto" value="<?=$curriculo->foto?>" />
+                                                    <div class="col-md-4">
+                                                        <div class="form-group">
+                                                            <label for="exampleInputEmail1">Cargo</label>
 
-                                                    <div class="form-group">
-                                                        <label for="exampleInputEmail1">Função</label><small class="req"> *</small>
-                                                        <select id="role" name="role" class="form-control">
-                                                            <option value="">Selecione</option>
-                                                            <?php foreach($staffrole as $value): ?>
-                                                                <option value="<?=$value['id']?>" <?=($curriculo->funcao == $value["id"]) ? "selected" : ""?>><?=$value['type']?>
-                                                            <?php endforeach;?>
-                                                        </select>
-                                                        <span class="text-danger"></span>
+                                                            <select id="designation" name="designation" placeholder="" type="text" class="form-control">
+
+                                                                <option value="select">Selecione</option>
+                                                                <?php foreach($designation as $value): ?>
+                                                                    <option value="<?=$value['id']?>" <?=($curriculo->cargo == $value['id']) ? 'selected' : ''?>><?=$value['designation']?></option>
+                                                                <?php endforeach; ?>
+                                                            </select>
+                                                            <span class="text-danger"></span>
+                                                        </div>
+                                                    </div>
+
+
+                                                    <div class="col-md-4">
+                                                        <div class="form-group">
+                                                            <label for="exampleInputEmail1">Departamento</label>
+                                                            <select id="department" name="department" placeholder="" type="text" class="form-control">
+                                                                <option value="">Selecione</option>
+                                                                <?php foreach($department as $value): ?>
+                                                                    <option value="<?=$value['id']?>" <?=($curriculo->departamento == $value['id']) ? 'selected' : ''?>><?=$value['department_name']?></option>
+                                                                <?php endforeach; ?>
+                                                            </select>
+                                                            <span class="text-danger"></span>
+                                                        </div>
                                                     </div>
                                                 </div>
-                                                <input type="hidden" name="foto" id="foto" value="<?=$curriculo->foto?>" />
-                                                <div class="col-md-4">
-                                                    <div class="form-group">
-                                                        <label for="exampleInputEmail1">Cargo</label>
+                                                <div class="row">
 
-                                                        <select id="designation" name="designation" placeholder="" type="text" class="form-control">
-
-                                                            <option value="select">Selecione</option>
-                                                            <?php foreach($designation as $value): ?>
-                                                                <option value="<?=$value['id']?>" <?=($curriculo->cargo == $value['id']) ? 'selected' : ''?>><?=$value['designation']?></option>
-                                                            <?php endforeach; ?>
-                                                        </select>
-                                                        <span class="text-danger"></span>
+                                                    <div class="col-md-6">
+                                                        <div class="form-group">
+                                                            <label for="exampleInputEmail1">Nome Completo</label><small class="req"> *</small>
+                                                            <input id="name" name="name" placeholder="" type="text" class="form-control" value="<?=$curriculo->nome?>">
+                                                            <span class="text-danger"></span>
+                                                        </div>
                                                     </div>
-                                                </div>
-
-
-                                                <div class="col-md-4">
-                                                    <div class="form-group">
-                                                        <label for="exampleInputEmail1">Departamento</label>
-                                                        <select id="department" name="department" placeholder="" type="text" class="form-control">
-                                                            <option value="">Selecione</option>
-                                                            <?php foreach($department as $value): ?>
-                                                                <option value="<?=$value['id']?>" <?=($curriculo->departamento == $value['id']) ? 'selected' : ''?>><?=$value['department_name']?></option>
-                                                            <?php endforeach; ?>
-                                                        </select>
-                                                        <span class="text-danger"></span>
+                                                    <!--                                                   <div class="col-md-3">
+                                                                   <div class="form-group">
+                                                                       <label for="exampleInputEmail1">Último Nome</label>
+                                                                       <input id="surname" name="surname" placeholder="" type="text" class="form-control"  value="" />
+                                                                       <span class="text-danger"></span>
+                                                                   </div>
+                                                               </div>-->
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label for="exampleInputEmail1">Nome Do Pai</label>
+                                                            <input id="father_name" name="father_name" placeholder="" type="text" class="form-control" value="<?=$curriculo->nome_pai?>">
+                                                            <span class="text-danger"></span>
+                                                        </div>
                                                     </div>
-                                                </div>
-                                            </div>
-                                            <div class="row">
-
-                                                <div class="col-md-6">
-                                                    <div class="form-group">
-                                                        <label for="exampleInputEmail1">Nome Completo</label><small class="req"> *</small>
-                                                        <input id="name" name="name" placeholder="" type="text" class="form-control" value="<?=$curriculo->nome?>">
-                                                        <span class="text-danger"></span>
-                                                    </div>
-                                                </div>
-                                                <!--                                                   <div class="col-md-3">
-                                                               <div class="form-group">
-                                                                   <label for="exampleInputEmail1">Último Nome</label>
-                                                                   <input id="surname" name="surname" placeholder="" type="text" class="form-control"  value="" />
-                                                                   <span class="text-danger"></span>
-                                                               </div>
-                                                           </div>-->
-                                                <div class="col-md-3">
-                                                    <div class="form-group">
-                                                        <label for="exampleInputEmail1">Nome Do Pai</label>
-                                                        <input id="father_name" name="father_name" placeholder="" type="text" class="form-control" value="<?=$curriculo->nome_pai?>">
-                                                        <span class="text-danger"></span>
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-3">
-                                                    <div class="form-group">
-                                                        <label for="exampleInputEmail1">Nome da mãe</label>
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label for="exampleInputEmail1">Nome da mãe</label>
                                                         
-                                                        <input id="mother_name" name="mother_name" placeholder="" type="text" class="form-control" value="<?=$curriculo->nome_mae?>">
-                                                        <span class="text-danger"></span>
+                                                            <input id="mother_name" name="mother_name" placeholder="" type="text" class="form-control" value="<?=$curriculo->nome_mae?>">
+                                                            <span class="text-danger"></span>
+                                                        </div>
                                                     </div>
+                                                </div>
+                                                <div class="row">
+
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label for="exampleInputEmail1">E-Mail (Login Nome De Usuário)</label><small class="req"> *</small>
+                                                            <input id="email" name="email" placeholder="" type="text" class="form-control" value="<?=$curriculo->email?>">
+                                                            <span class="text-danger"></span>
+                                                        </div>
+                                                    </div>
+
+
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label for="exampleInputFile"> Sexo</label><small class="req"> *</small>
+                                                            <select class="form-control" name="gender">
+
+                                                                <option value="">Selecione</option>
+                                                                <?php foreach($genderList as $key => $value): ?>
+                                                                    <option value="<?=$key?>" <?=($curriculo->sexo == $key) ? 'selected' : ''?>><?=$value?></option>
+                                                                <?php endforeach; ?>
+                                                            </select>
+                                                            <span class="text-danger"></span>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label for="exampleInputEmail1">Data de Nascimento</label><small class="req"> *</small>
+                                                            <input id="dob" name="dob" placeholder="" type="text" class="form-control date" value="<?=date('d/m/Y', strtotime($curriculo->data_nascimento))?>">
+                                                            <script>
+                                                                $("#dob").datepicker({ showOn: "off" });
+                                                                $('#dob').mask('99/99/9999',{placeholder:"mm/dd/yyyy"});
+                                                            </script>
+                                                            <span class="text-danger"></span>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label for="exampleInputEmail1">Data De Inicío Contrato</label>
+                                                            <input id="date_of_joining" name="date_of_joining" placeholder="" type="text" class="form-control date" value="<?php if($curriculo->contrato_inicio != "") date('d/m/Y', strtotime($curriculo->contrato_inicio));?>">
+                                                            <script>
+                                                                $("#date_of_joining").datepicker({ showOn: "off" });
+                                                                $('#date_of_joining').mask('99/99/9999',{placeholder:"mm/dd/yyyy"});
+                                                            </script>
+                                                            <span class="text-danger"></span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label for="exampleInputEmail1">Telefone</label>
+                                                            <input id="mobileno" name="contactno" placeholder="" type="text" class="form-control" value="<?=$curriculo->telefone?>">
+                                                            <script>
+                                                                $('#mobileno').mask('(99)99999-9999',{placeholder:"(00)99999-9999"});
+                                                            </script>
+                                                            <span class="text-danger"></span>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label for="exampleInputEmail1">Número De Contato De Emergência</label>
+                                                            <input id="emergency_no" name="emergency_no" placeholder="" type="text" class="form-control" value="<?=$curriculo->telefone_emergencia?>">
+                                                            <script>
+                                                                $('#emergency_no').mask('(99)99999-9999',{placeholder:"(00)99999-9999"});
+                                                            </script>
+                                                            <span class="text-danger"></span>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label for="exampleInputEmail1">Estado Civil</label>
+                                                            <select class="form-control" name="marital_status">
+                                                                <option value="">Selecione</option>
+                                                                <?php foreach($marital_status as $key => $value) :?>
+                                                                    <option value="<?=$value?>" <?=($curriculo->estado_civil == $value) ? "selected" : ""?>><?=$value?></option>
+                                                                <?php endforeach; ?>
+
+                                                            </select>
+                                                            <span class="text-danger"></span>
+                                                        </div>
+                                                    </div>
+                                               
                                                 </div>
                                             </div>
-                                            <div class="row">
-
-                                                <div class="col-md-3">
-                                                    <div class="form-group">
-                                                        <label for="exampleInputEmail1">E-Mail (Login Nome De Usuário)</label><small class="req"> *</small>
-                                                        <input id="email" name="email" placeholder="" type="text" class="form-control" value="<?=$curriculo->email?>">
-                                                        <span class="text-danger"></span>
-                                                    </div>
-                                                </div>
-
-
-                                                <div class="col-md-3">
-                                                    <div class="form-group">
-                                                        <label for="exampleInputFile"> Sexo</label><small class="req"> *</small>
-                                                        <select class="form-control" name="gender">
-
-                                                            <option value="">Selecione</option>
-                                                            <?php foreach($genderList as $key => $value): ?>
-                                                                <option value="<?=$key?>" <?=($curriculo->sexo == $key) ? 'selected' : ''?>><?=$value?></option>
-                                                            <?php endforeach; ?>
-                                                        </select>
-                                                        <span class="text-danger"></span>
-                                                    </div>
-                                                </div>
-
-                                                <div class="col-md-3">
-                                                    <div class="form-group">
-                                                        <label for="exampleInputEmail1">Data de Nascimento</label><small class="req"> *</small>
-                                                        <input id="dob" name="dob" placeholder="" type="text" class="form-control date" value="<?=date('d/m/Y', strtotime($curriculo->data_nascimento))?>">
-                                                        <script>
-                                                            $("#dob").datepicker({ showOn: "off" });
-                                                            $('#dob').mask('99/99/9999',{placeholder:"mm/dd/yyyy"});
-                                                        </script>
-                                                        <span class="text-danger"></span>
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-3">
-                                                    <div class="form-group">
-                                                        <label for="exampleInputEmail1">Data De Inicío Contrato</label>
-                                                        <input id="date_of_joining" name="date_of_joining" placeholder="" type="text" class="form-control date" value="<?php if($curriculo->contrato_inicio != "") date('d/m/Y', strtotime($curriculo->contrato_inicio));?>">
-                                                        <script>
-                                                            $("#date_of_joining").datepicker({ showOn: "off" });
-                                                            $('#date_of_joining').mask('99/99/9999',{placeholder:"mm/dd/yyyy"});
-                                                        </script>
-                                                        <span class="text-danger"></span>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="row">
-                                                <div class="col-md-3">
-                                                    <div class="form-group">
-                                                        <label for="exampleInputEmail1">Telefone</label>
-                                                        <input id="mobileno" name="contactno" placeholder="" type="text" class="form-control" value="<?=$curriculo->telefone?>">
-                                                        <script>
-                                                            $('#mobileno').mask('(99)99999-9999',{placeholder:"(00)99999-9999"});
-                                                        </script>
-                                                        <span class="text-danger"></span>
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-3">
-                                                    <div class="form-group">
-                                                        <label for="exampleInputEmail1">Número De Contato De Emergência</label>
-                                                        <input id="emergency_no" name="emergency_no" placeholder="" type="text" class="form-control" value="<?=$curriculo->telefone_emergencia?>">
-                                                        <script>
-                                                            $('#emergency_no').mask('(99)99999-9999',{placeholder:"(00)99999-9999"});
-                                                        </script>
-                                                        <span class="text-danger"></span>
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-3">
-                                                    <div class="form-group">
-                                                        <label for="exampleInputEmail1">Estado Civil</label>
-                                                        <select class="form-control" name="marital_status">
-                                                            <option value="">Selecione</option>
-                                                            <?php foreach($marital_status as $key => $value) :?>
-                                                                <option value="<?=$key?>" <?=($curriculo->estado_civil == $key) ? "selected" : ""?>><?=$value?></option>
-                                                            <?php endforeach; ?>
-
-                                                        </select>
-                                                        <span class="text-danger"></span>
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-3">
-                                                    <div class="form-group">
+                                             <div class="col-md-2 text-center">
+                                                 <div class="form-group">
                                                         <label for="exampleInputFile"><?php echo $this->lang->line('photo'); ?></label>
-                                                        <div><input class="filestyle form-control" type='file' name='file' id="file" size='20' />
+                                                        <div>
+                                                            <img src="<?=base_url('uploads/cv_images/') . $curriculo->foto?>" id="foto-aluno" style="width: 100px; height: 110px;">
+                                                            <br /><br />
+                                                            <input class="filestyle form-control" type='file' onchange="readURL(this);" name='file' id="file" size='20' accept=".png,png,.jpeg,jpeg,.jpeg,.jpeg,jpg,.jpg" />
+                                                            <br />
+
+                                                            <script>
+                                                                function readURL(input) {
+                                                                  if (input.files && input.files[0]) {
+                                                                    var reader = new FileReader();
+
+                                                                    reader.onload = function(e) {
+                                                                      $('#foto-aluno')
+                                                                        .attr('src', e.target.result);
+                                                                      $('#foto-aluno').show();
+                                                                    };
+
+                                                                    reader.readAsDataURL(input.files[0]);
+                                                                  }
+                                                                }
+                                                            </script>
+
+                                                        
+                                                        
+                                                        
                                                         </div>
                                                         <span class="text-danger"><?php echo form_error('file'); ?></span>
                                                     </div>
-                                                </div>  
-                                            </div>
+                                             </div> 
+                                            
                                             <div class="row">
 
                                                 <div class="col-md-12 form-group">
@@ -396,7 +423,7 @@
                                     <div class="row pull-right">
                                         <a href="<?=base_url('admin/curriculos/pdf/') . $curriculo->id ?>" target="_blank" class="btn btn-warning" ><?=$this->lang->line('cl_print_pdf');?></a>
                                         <button type="button" class="btn btn-success" onclick="confirmar_efetivacao();"><?=$this->lang->line('cl_effective_cv');?></button>
-                                        <button type="button" class="btn btn-info" onclick="salvar_alteracoes();"><?=$this->lang->line('cl_save_cv')?></button>
+                                        <button type="submit" class="btn btn-info" ><?=$this->lang->line('cl_save_cv')?></button>
                                     </div>
                                 </div>
                             </form>
@@ -660,38 +687,62 @@
         });
     }
 
-    function salvar_alteracoes() {
-        $.post('<?=base_url('admin/curriculos/salvar/salvar')?>', $("#form1").serialize(), function (respJson) {
-            try {
-                
-                var resp = JSON.parse(respJson);
-                if (!resp.status)
-                    $.alert({
-                        'title': 'Error',
-                        'content': resp.msg
-                    });
-                else
-                    $.alert({
-                        'title': 'Sucesso',
-                        'content': resp.msg
-                    });
-
-                
-            } catch (e) {
-                console.log(e);
-            }
-        }).fail(function (err) { console.log('Err', err); });
-    }
-
     $(document).ready(function () {
         $("#postal_code").blur();
 
+        $("#form1").on('submit', function (e) {
+            e.preventDefault();
 
-        
+            $.ajax({
+                url: '<?=base_url('admin/curriculos/salvar/salvar')?>',
+                method: 'POST',
+                data: new FormData(this),
+                contentType: false,
+                cache: false,
+                processData: false,
+                success: function (respJson) {
+                    try {
 
+                        var resp = JSON.parse(respJson);
+                        if (!resp.status)
+                            $.alert({
+                                'title': 'Error',
+                                'content': resp.msg
+                            });
+                        else
+                            $.alert({
+                                'title': 'Sucesso',
+                                'content': resp.msg
+                            });
 
-        //$(this).confirm();
-    })
+                        if(resp.foto)
+                            $("#foto").val(resp.foto);
+
+                    } catch (e) {
+                        console.log(e);
+                        $.alert({
+                            'title': 'Error',
+                            'content': e
+                        });
+                    }
+
+                },
+                error: function (xhr, textStatus, error) {
+                    console.log(xhr.statusText);
+                    console.log(textStatus);
+                    console.log(error);
+
+                    $('#btn-cadastrar').button('reset');
+
+                    $.alert({
+                        'title': 'Error',
+                        'content': error
+                    });
+                }
+            });
+
+        });
+    });
 
 
 </script>

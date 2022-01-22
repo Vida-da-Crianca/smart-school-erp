@@ -44,7 +44,7 @@
                 id="firstname"
                 value="<?php echo set_value('firstname'); ?>"
                 placeholder="Nome completo"
-                class="form-control" required/>
+                class="form-control"/>
             <span class="text-danger">
                 <?php echo form_error('firstname'); ?>
             </span>
@@ -56,11 +56,11 @@
                 id="telefone"
                 value=""
                 placeholder="Telefone celular"
-                class="form-control" required/>
+                class="form-control"/>
         </div>
         <div class="col-md-2 col-xs-12 col-sm-3">
             <label for="exampleInputEmail1">Cargo</label><small class="req"> *</small><br />
-            <select id="designation" name="designation" placeholder="" type="text" class="form-control" required>
+            <select id="designation" name="designation" placeholder="" type="text" class="form-control">
                 <option value="select">Selecione</option>
                 <?php foreach($designationList as $value): ?>
                       <option value="<?=$value['id']?>"><?=$value['designation']?></option>
@@ -78,25 +78,25 @@
                 name="dob"
                 id="dob"
                 value="<?php echo set_value('dob'); ?>"
-                placeholder="Data de Nascimento do Aluno(a)"
-                class="form-control" required/>
+                placeholder="Data de Nascimento"
+                class="form-control"/>
         </div>
     </div>
     </br>
     <div class="row">
         <div class="col-md-6 col-xs-12 col-sm-3">
             <label>Experiência Profissional</label><small class="req"> *</small><br />
-            <textarea id="work_exp" name="work_exp" placeholder="" class="form-control" cols="35" rows="10" required></textarea>
+            <textarea id="work_exp" name="work_exp" placeholder="" class="form-control" cols="35" rows="10"></textarea>
             <span class="text-danger"></span>
         </div>
         <div class="col-md-3 col-xs-12 col-sm-3">
             <label>Cursos</label><small class="req"> *</small><br />
-            <textarea id="cursos" name="cursos" placeholder="" class="form-control" cols="35" rows="10" required></textarea>
+            <textarea id="cursos" name="cursos" placeholder="" class="form-control" cols="35" rows="10"></textarea>
             <span class="text-danger"></span>
         </div> 
         <div class="col-md-3 col-xs-12 col-sm-3">
             <label>Outros</label><small class="req"> *</small><br />
-            <textarea id="outros" name="outros" placeholder="" class="form-control" cols="35" rows="10" required></textarea>
+            <textarea id="outros" name="outros" placeholder="" class="form-control" cols="35" rows="10"></textarea>
             <span class="text-danger"></span>
         </div> 
     
@@ -112,7 +112,7 @@
                 id="guardian_postal_code"
                 value=""
                 placeholder=""
-                class="form-control" onblur="pesquisaCep();" required/>
+                class="form-control" onblur="pesquisaCep();"/>
         </div>
         <div class="col-md-6 col-xs-12 col-sm-6">
             <label>Endereço</label><small class="req"> *</small><br />
@@ -122,7 +122,7 @@
                 value=""
                 placeholder=""
                 disabled="disabled"
-                class="form-control" required />
+                class="form-control" />
         </div>
         <div class="col-md-2 col-xs-12 col-sm-2">
             <label>nº</label><small class="req"> *</small><br />
@@ -131,7 +131,7 @@
                 id="guardian_address_number"
                 value=""
                 placeholder=""
-                class="form-control" required/>
+                class="form-control"/>
         </div>
     </div>
     <br />
@@ -144,7 +144,7 @@
                 value=""
                 placeholder=""
                 disabled="disabled"
-                class="form-control" required/>
+                class="form-control"/>
         </div>
         <div class="col-md-4 col-xs-12 col-sm-4">
             <label>Cidade</label><small class="req"> *</small><br />
@@ -154,7 +154,7 @@
                 value="<?php echo set_value('guardian_city'); ?>"
                 placeholder=""
                 disabled="disabled"
-                class="form-control" required/>
+                class="form-control"/>
         </div>
         <div class="col-md-2 col-xs-12 col-sm-2">
             <label>UF</label><small class="req"> *</small><br />
@@ -164,7 +164,7 @@
                 value="<?php echo set_value('guardian_state'); ?>"
                 placeholder=""
                 disabled="disabled"
-                class="form-control" required/>
+                class="form-control"/>
         </div>
 
         
@@ -211,7 +211,7 @@
              <label>Sua Foto</label><small class="req"> *</small><br /><br />
             
               
-             <input type="file" id="file" name="file" accept=".png,png,.jpeg,jpeg,.jpeg,.jpeg,jpg,.jpg" required/>
+             <input type="file" id="file" name="file" accept=".png,png,.jpeg,jpeg,.jpeg,.jpeg,jpg,.jpg"/>
          </div>
     </div>
 
