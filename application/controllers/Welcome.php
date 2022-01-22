@@ -443,8 +443,6 @@ class Welcome extends Front_Controller
                 $this->form_validation->set_rules('guardian_city', 'Cidade', 'trim|required|xss_clean');
 
 
-
-
                 if ($this->form_validation->run() == FALSE){
                     throw new Exception(validation_errors());
                 }
@@ -490,14 +488,15 @@ class Welcome extends Front_Controller
                    'facebook'            => $this->input->post('facebook'),
                    'instagram'           => $this->input->post('instagram'),
                    'linkedin'            => $this->input->post('linkedin'),
-                   'numero'              => $this->input->post('guardian_address_number')
+                   'numero'              => $this->input->post('guardian_address_number'),
+                   'data_envio'          => date('Y-m-d H:i:s')
 
                  );
 
 
                 if (isset($_FILES["file"]) && !empty($_FILES['file']['name'])) {
                     $fileInfo = pathinfo($_FILES["file"]["name"]);
-                    $img_name = $data['id'] . '.' . $fileInfo['extension'];
+                    $img_name = $this->curriculo_model->rand_hash() . '.' . $fileInfo['extension'];
                     if(!file_exists("./uploads/cv_images/"))
                         mkdir("./uploads/cv_images", 0777, TRUE);
 
@@ -565,7 +564,8 @@ class Welcome extends Front_Controller
 
             return true;
         }
-        return true;
+        $this->form_validation->set_message('handle_upload', 'O campo foto é obrigatório');
+        return false;
     }
 
     public function admission(){

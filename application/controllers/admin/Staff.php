@@ -144,7 +144,7 @@ class Staff extends Admin_Controller {
                 $this->form_validation->set_rules('file', $this->lang->line('image'), 'callback_handle_upload');
 
 
-                $data = array();
+
 
                 if ($this->form_validation->run() == true) {
                     $custom_field_post = $this->input->post("custom_fields[staff]");
@@ -193,9 +193,11 @@ class Staff extends Admin_Controller {
 
                     $custom_field_post = $this->input->post("custom_fields[staff]");
 
+                    $this->resp_foto = $this->input->post("foto");
+
                     if (isset($_FILES["file"]) && !empty($_FILES['file']['name'])) {
                         $fileInfo = pathinfo($_FILES["file"]["name"]);
-                        $img_name = $this->curriculo_model->random_hash() . '.' . $fileInfo['extension'];
+                        $img_name = $this->curriculo_model->rand_hash() . '.' . $fileInfo['extension'];
                         if(!file_exists("./uploads/cv_images/"))
                             mkdir("./uploads/cv_images", 0777, TRUE);
 
@@ -204,9 +206,6 @@ class Staff extends Admin_Controller {
 
                         move_uploaded_file($_FILES["file"]["tmp_name"], "./uploads/cv_images/" . $img_name);
                         $this->resp_foto = $img_name;
-                        
-                    } else {
-                        $this->resp_foto = $this->input->post("foto");
                     }
 
                     if($action == 'salvar'){
@@ -554,7 +553,7 @@ class Staff extends Admin_Controller {
                 $this->db->trans_rollback();
             }
 
-            echo json_encode(array('status' => $this->resp_status,  'foto' => $this->resp_foto, 'msg' => $this->resp_msg, 'id' => (isset($this->resp_id) ? $this->resp_id : '')));
+            echo json_encode(array('status' => $this->resp_status, 'foto' => $this->resp_foto, 'msg' => $this->resp_msg, 'id' => (isset($this->resp_id) ? $this->resp_id : '')));
             exit;
 
         } else {

@@ -40,7 +40,7 @@
                                                 <div class="multi" id="multi"></div>
                                                 <input type="hidden" name="designation" id="designation" value="" />
 
-                                               <script>
+                                                <script>
                                                     $('.multi').multi_select({
                                                       selectColor: 'dark',
                                                       selectSize: 'small',
@@ -56,9 +56,9 @@
                                                         
                                                         data: {
                                                           <?php 
-                                                          foreach($designation as $value)
-                                                              echo '"' . $value["id"] . '": "' . $value["designation"] . '",';
-                                                          
+                  foreach($designation as $value)
+                      echo '"' . $value["id"] . '": "' . $value["designation"] . '",';
+                  
                                                           ?>
              
                                                       },
@@ -715,8 +715,9 @@
                                 'content': resp.msg
                             });
 
-                        if(resp.foto)
+                        if (resp.foto)
                             $("#foto").val(resp.foto);
+
 
                     } catch (e) {
                         console.log(e);
@@ -741,8 +742,9 @@
                 }
             });
 
-        });
-    });
+        })
+
+    })
 
 
 </script>
