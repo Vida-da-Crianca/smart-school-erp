@@ -450,6 +450,15 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                                 <td><?php echo $staff['permanent_address']; ?></td>
                                             </tr>
 											<?php }  ?>
+                                            <tr>
+                                                <td>CEP</td>
+                                                <td><?=$staff['cep']?></td>
+                                            </tr>
+                                            <tr>
+                                                <td>Número</td>
+                                                <td><?=$staff['numero']?></td>
+                                            </tr>
+                                        
                                         </tbody>
                                     </table>
                                 </div>

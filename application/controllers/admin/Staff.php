@@ -16,6 +16,7 @@ class Staff extends Admin_Controller {
         $this->load->library('Enc_lib');
         $this->load->library('mailsmsconf');
         $this->load->model("staff_model");
+        $this->load->model("curriculo_model");
         $this->load->library('encoding_lib');
         $this->load->model("leaverequest_model");
         $this->contract_type = $this->config->item('contracttype');
@@ -28,32 +29,549 @@ class Staff extends Admin_Controller {
     }
 
 
-    public function curriculos(){
+    public function curriculos($id = null){
         if (!$this->rbac->hasPrivilege('staff', 'can_view')) {
             access_denied();
         }
 
         $this->db->from('cl_curriculos');
-        $this->db->where('status',1);
-        $this->db->order_by('id','desc');
+
+        if(isset($id)){
+            $this->db->where('id', $id);
+        } else {
+            if($this->input->post("designation")){
+                $this->db->where_in('cargo', explode(",", $this->input->post("designation")));
+                $designation_selected = json_encode(explode(",", $this->input->post("designation")));
+            }
+        }
+
+        $this->db->order_by('data_envio','asc');
+
+
         $get = $this->db->get();
 
         $count = $get->num_rows();
 
         if($count > 0):
-        $curriculos = $get->result_array();
-
-        $datas['curriculos'] = $curriculos;
-
+            $curriculos = $get->result_array();
+            if(isset($id))
+                $datas['curriculo'] = $get->result_object()[0];
+            else
+                $datas['curriculos'] = $curriculos;
         endif;
+
+        // Token XCSRF (caso esteja habilitado, o mesmo sera gerado)
+        $datas["xcsrf_token"] = $this->customlib->getCSRF();
+        // Departamentos
+        $datas["department"] = $this->staff_model->getDepartment();
+        // Gêneros
+        $datas["genderList"] = $this->customlib->getGender();
+        // Designições
+        $datas["designation"] = $this->staff_model->getStaffDesignation();
+        // Funções
+        $datas["staffrole"] = $this->staff_model->getStaffRole();
+        // Estado Cívil
+        $datas["marital_status"] = $this->marital_status;
+        // Custom Fields
+        $datas["fields"] = $this->customfield_model->getByBelong('staff');
+        // Selecteds
+        $datas["designation_selected"] = (isset($designation_selected)) ? $designation_selected : json_encode(array());
+
+
+
+
         $this->load->view('layout/header');
         $this->load->view('admin/staff/curriculos',$datas);
         $this->load->view('layout/footer');
-
-
     }
 
 
+
+    public function curriculo_deletar($id){
+        if (!$this->rbac->hasPrivilege('staff', 'can_edit')) {
+            access_denied();
+        }
+
+        $result = $this->curriculo_model->delete($id);
+        if($result){
+            $this->session->set_flashdata('msg', '<div class="alert alert-danger">O Cúrriculo não foi excluído. Tente novamente mais tarde.</div>');
+        } else {
+            $this->session->set_flashdata('msg', '<div class="alert alert-success">Curriculo excluido com sucesso.</div>');
+        }
+
+        redirect('admin/staff/curriculos');
+
+    }
+
+    public function salvar_curriculo($action){
+        if (!$this->rbac->hasPrivilege('staff', 'can_edit')) {
+            access_denied();
+        }
+
+        if($this->input->is_ajax_request() && !empty($this->input->post('id')) && ($action == 'salvar' || $action == 'efetivar')){
+            try{
+                $this->db->trans_begin();
+                $this->config->set_item('language', 'Portugues_Brazil');
+                $ok = true;
+
+                $custom_fields = $this->customfield_model->getByBelong('staff');
+                foreach ($custom_fields as $custom_fields_key => $custom_fields_value) {
+                    if ($custom_fields_value['validation']) {
+                        $custom_fields_id = $custom_fields_value['id'];
+                        $custom_fields_name = $custom_fields_value['name'];
+                        $this->form_validation->set_rules("custom_fields[staff][" . $custom_fields_id . "]", $custom_fields_name, 'trim|required');
+                    }
+                }
+                $this->form_validation->set_rules('name', $this->lang->line('name'), 'trim|required|xss_clean');
+                $this->form_validation->set_rules(
+                        'email', $this->lang->line('email'), array('required', 'valid_email',
+                    array('check_exists', array($this->staff_model, 'valid_email_id')),
+                        )
+                );
+                $this->form_validation->set_rules('role', $this->lang->line('role'), 'trim|required|xss_clean');
+                $this->form_validation->set_rules('department', $this->lang->line('department'), 'trim|required|xss_clean');
+                $this->form_validation->set_rules('designation', $this->lang->line('designation'), 'trim|required|xss_clean');
+                $this->form_validation->set_rules('gender', $this->lang->line('gender'), 'trim|required|xss_clean');
+                $this->form_validation->set_rules('contactno', 'Telefone', 'trim|required|xss_clean');
+                $this->form_validation->set_rules('emergency_no', 'Telefone', 'trim|required|xss_clean');
+                $this->form_validation->set_rules('dob', $this->lang->line('date_of_birth'), 'trim|required|xss_clean');
+                $this->form_validation->set_rules('postal_code', 'CEP', 'trim|required|xss_clean');
+                $this->form_validation->set_rules('numero', 'Numero da casa', 'trim|required|xss_clean');
+                $this->form_validation->set_rules('marital_status', 'Estado civil', 'trim|required|xss_clean');
+                $this->form_validation->set_rules('address', $this->lang->line('address'), 'trim|required|xss_clean');
+                $this->form_validation->set_rules('qualification', $this->lang->line('qualification'), 'trim|required|xss_clean');
+                $this->form_validation->set_rules('work_exp', 'Experiencia Profissional', 'trim|required|xss_clean');
+
+                if ($this->form_validation->run() == true) {
+                    $custom_field_post = $this->input->post("custom_fields[staff]");
+                    $custom_value_array = array();
+                    if (!empty($custom_fields_value)) {
+
+                        foreach ($custom_field_post as $key => $value) {
+                            $check_field_type = $this->input->post("custom_fields[staff][" . $key . "]");
+                            $field_value = is_array($check_field_type) ? implode(",", $check_field_type) : $check_field_type;
+                            $array_custom = array(
+                                'belong_table_id' => $this->input->post('id'),
+                                'custom_field_id' => $key,
+                                'field_value' => $field_value,
+                            );
+                            $custom_value_array[] = $array_custom;
+                        }
+                    }
+
+
+                    $department = $this->input->post("department");
+                    $designation = $this->input->post("designation");
+                    $role = $this->input->post("role");
+                    $name = $this->input->post("name");
+                    $gender = $this->input->post("gender");
+                    $marital_status = $this->input->post("marital_status");
+                    $dob = $this->curriculo_model->getData($this->input->post("dob"));
+                    $contact_no = preg_replace("/[^0-9]/", "",$this->input->post("contactno"));
+                    $emergency_no = preg_replace("/[^0-9]/", "", $this->input->post("emergency_no"));
+                    $email = $this->input->post("email");
+                    $date_of_joining = $this->curriculo_model->getData($this->input->post("date_of_joining"));
+                    $address = $this->input->post("address");
+                    $qualification = $this->input->post("qualification");
+                    $work_exp = $this->input->post("work_exp");
+                    $facebook = $this->input->post("facebook");
+                    $twitter = $this->input->post("twitter");
+                    $linkedin = $this->input->post("linkedin");
+                    $instagram = $this->input->post("instagram");
+                    $permanent_address = $this->input->post("permanent_address");
+                    $father_name = $this->input->post("father_name");
+                    $surname = $this->input->post("surname");
+                    $mother_name = $this->input->post("mother_name");
+                    $note = $this->input->post("note");
+                    $numero = $this->input->post("numero");
+                    $cep = $this->input->post("postal_code");
+                    $id = $this->input->post("id");
+
+                    $custom_field_post = $this->input->post("custom_fields[staff]");
+
+                    if($action == 'salvar'){
+
+                        $this->customfield_model->updateRecord($custom_value_array, $id, 'staff');
+
+                        $data['nome'] = $name;
+                        $data['email'] = $email;
+                        $data['cep'] = $cep;
+                        $data['endereco'] = $address;
+                        $data['cargo'] = $designation;
+                        $data['departamento'] = $department;
+                        $data['funcao'] = $role;
+                        $data['nome_pai'] = $father_name;
+                        $data['nome_mae'] = $mother_name;
+                        $data['sexo'] = $gender;
+                        $data['data_nascimento'] = $dob;
+                        $data['telefone'] = $contact_no;
+                        $data['estado_civil'] = $marital_status;
+                        $data['facebook'] = $facebook;
+                        $data['instagram'] = $instagram;
+                        $data['linkedin'] = $linkedin;
+                        $data['twitter'] = $twitter;
+                        $data['work_exp'] = $work_exp;
+                        $data['cursos'] = $qualification;
+                        $data['outros'] = $note;
+                        $data['telefone_emergencia'] = $emergency_no;
+                        $data['contrato_inicio'] = $date_of_joining;
+                        $data['numero'] = $numero;
+                        $data['endereco_permanente'] = $permanent_address;
+
+                        $result_update = $this->curriculo_model->update($id, $data);
+
+                        if($result_update){
+                            $this->resp_status = true;
+                            $this->resp_msg = utf8_encode("Alterações salvas com sucesso!");
+                        } else {
+                            $this->resp_status = false;
+                            $this->resp_msg = utf8_encode("Não foi possível salvar os dados. Tente novamente.");
+                        }
+
+                    } else {
+
+                        $names = explode(" ", $this->input->post("name"));
+                        $name = $names[0]; unset($names[0]);
+                        $surname = implode(" ", $names);
+
+                        $employee_id = $this->input->post("employee_id");
+                        $department = $this->input->post("department");
+                        $designation = $this->input->post("designation");
+                        $role = $this->input->post("role");
+                        $gender = $this->input->post("gender");
+                        $marital_status = $this->input->post("marital_status");
+                        $dob = $this->curriculo_model->getData($this->input->post("dob"));
+                        $contact_no = preg_replace("/[^0-9]/", "",$this->input->post("contactno"));
+                        $emergency_no = preg_replace("/[^0-9]/", "", $this->input->post("emergency_no"));
+                        $email = $this->input->post("email");
+                        $date_of_joining = $this->curriculo_model->getData($this->input->post("date_of_joining"));
+                        $date_of_leaving = $this->curriculo_model->getData($this->input->post("date_of_leaving"));
+                        $address = $this->input->post("address");
+                        $qualification = $this->input->post("qualification");
+                        $work_exp = $this->input->post("work_exp");
+                        $basic_salary = $this->input->post('basic_salary');
+                        $account_title = $this->input->post("account_title");
+                        $bank_account_no = $this->input->post("bank_account_no");
+                        $bank_name = $this->input->post("bank_name");
+                        $ifsc_code = $this->input->post("ifsc_code");
+                        $bank_branch = $this->input->post("bank_branch");
+                        $contract_type = $this->input->post("contract_type");
+                        $shift = $this->input->post("shift");
+                        $location = $this->input->post("location");
+                        $leave = $this->input->post("leave");
+                        $facebook = $this->input->post("facebook");
+                        $twitter = $this->input->post("twitter");
+                        $linkedin = $this->input->post("linkedin");
+                        $instagram = $this->input->post("instagram");
+                        $permanent_address = $this->input->post("permanent_address");
+                        $numero = $this->input->post("numero");
+                        $cep = $this->input->post("postal_code");
+                        $father_name = $this->input->post("father_name");
+                        $mother_name = $this->input->post("mother_name");
+                        $note = $this->input->post("note");
+                        $epf_no = $this->input->post("epf_no");
+                        $foto = $this->input->post("foto");
+
+                        $password = $this->role->get_random_password($chars_min = 6, $chars_max = 6, $use_upper_case = false, $include_numbers = true, $include_special_chars = false);
+
+                        $data_insert = array(
+                            'password' => $this->enc_lib->passHashEnc($password),
+                            'employee_id' => $employee_id,
+                            'name' => $name,
+                            'email' => $email,
+                            'dob' => $dob,
+                            'date_of_leaving' => '',
+                            'gender' => $gender,
+                            'payscale' => '',
+                            'is_active' => 1,
+                        );
+
+                        if (isset($surname)) {
+
+                            $data_insert['surname'] = $surname;
+                        }
+
+                        if(isset($foto)){
+                            $data_insert['image'] = $foto;
+                            @rename("./uploads/cv_images/" . $foto, "./uploads/staff_images/{$foto}");
+
+                        }
+
+
+
+                        if (isset($department)) {
+
+                            $data_insert['department'] = $department;
+                        }
+
+                        if (isset($designation)) {
+
+                            $data_insert['designation'] = $designation;
+                        }
+
+                        if (isset($mother_name)) {
+
+                            $data_insert['mother_name'] = $mother_name;
+                        }
+
+                        if (isset($father_name)) {
+
+                            $data_insert['father_name'] = $father_name;
+                        }
+
+                        if (isset($contact_no)) {
+
+                            $data_insert['contact_no'] = $contact_no;
+                        }
+
+                        if (isset($emergency_no)) {
+
+                            $data_insert['emergency_contact_no'] = $emergency_no;
+                        }
+
+                        if (isset($marital_status)) {
+
+                            $data_insert['marital_status'] = $marital_status;
+                        }
+
+                        if (isset($address)) {
+
+                            $data_insert['local_address'] = $address;
+                        }
+
+                        if (isset($permanent_address)) {
+
+                            $data_insert['permanent_address'] = $permanent_address;
+                        }
+
+                        if (isset($qualification)) {
+
+                            $data_insert['qualification'] = $qualification;
+                        }
+
+                        if (isset($work_exp)) {
+
+                            $data_insert['work_exp'] = $work_exp;
+                        }
+
+                        if (isset($note)) {
+
+                            $data_insert['note'] = $note;
+                        }
+
+                        if (isset($epf_no)) {
+
+                            $data_insert['epf_no'] = $epf_no;
+                        }
+
+                        if (isset($basic_salary)) {
+
+                            $data_insert['basic_salary'] = $basic_salary;
+                        }
+
+                        if (isset($contract_type)) {
+
+                            $data_insert['contract_type'] = $contract_type;
+                        }
+
+                        if (isset($shift)) {
+
+                            $data_insert['shift'] = $shift;
+                        }
+
+                        if (isset($location)) {
+
+                            $data_insert['location'] = $location;
+                        }
+
+                        if (isset($bank_account_no)) {
+
+                            $data_insert['bank_account_no'] = $bank_account_no;
+                        }
+
+                        if (isset($bank_name)) {
+
+                            $data_insert['bank_name'] = $bank_name;
+                        }
+
+                        if (isset($account_title)) {
+
+                            $data_insert['account_title'] = $account_title;
+                        }
+
+                        if (isset($ifsc_code)) {
+
+                            $data_insert['ifsc_code'] = $ifsc_code;
+                        }
+
+                        if (isset($bank_branch)) {
+
+                            $data_insert['bank_branch'] = $bank_branch;
+                        }
+
+                        if (isset($facebook)) {
+
+                            $data_insert['facebook'] = $facebook;
+                        }
+
+                        if (isset($twitter)) {
+
+                            $data_insert['twitter'] = $twitter;
+                        }
+
+                        if (isset($linkedin)) {
+
+                            $data_insert['linkedin'] = $linkedin;
+                        }
+
+                        if (isset($instagram)) {
+
+                            $data_insert['instagram'] = $instagram;
+                        }
+
+                        if ($date_of_joining != "") {
+                            $data_insert['date_of_joining'] = $date_of_joining;
+                        }
+
+                        if($cep){
+                            $data_insert['cep'] = $cep;
+                        }
+
+                        if($numero){
+                            $data_insert['numero'] = $numero;
+                        }
+
+                        $role_array = array('role_id' => $this->input->post('role'), 'staff_id' => 0);
+                        //==========================
+                        $insert = true;
+                        $data_setting = array();
+                        $data_setting['id'] = $this->sch_setting_detail->id;
+                        $data_setting['staffid_auto_insert'] = $this->sch_setting_detail->staffid_auto_insert;
+                        $data_setting['staffid_update_status'] = $this->sch_setting_detail->staffid_update_status;
+                        $employee_id = 0;
+
+                        if ($this->sch_setting_detail->staffid_auto_insert) {
+                            if ($this->sch_setting_detail->staffid_update_status) {
+
+                                $employee_id = $this->sch_setting_detail->staffid_prefix . $this->sch_setting_detail->staffid_start_from;
+
+                                $last_student = $this->staff_model->lastRecord();
+
+                                $last_admission_digit = str_replace($this->sch_setting_detail->staffid_prefix, "", $last_student->employee_id);
+
+                                $employee_id = $this->sch_setting_detail->staffid_prefix . sprintf("%0" . $this->sch_setting_detail->staffid_no_digit . "d", $last_admission_digit + 1);
+                                $data_insert['employee_id'] = $employee_id;
+                            } else {
+                                $employee_id = $this->sch_setting_detail->staffid_prefix . $this->sch_setting_detail->staffid_start_from;
+                                $data_insert['employee_id'] = $employee_id;
+                            }
+
+                            $employee_id_exists = $this->staff_model->check_staffid_exists($employee_id);
+                            if ($employee_id_exists) {
+                                $insert = false;
+                            }
+                        } else {
+
+                            $data_insert['employee_id'] = $this->input->post('employee_id');
+                        }
+
+
+                        if ($insert) {
+
+
+
+                            //$this->customfield_model->insertRecord($custom_value_array, );
+
+
+                            $insert_id = $this->staff_model->batchInsert($data_insert, $role_array, array(), $data_setting);
+                            if(!empty($custom_value_array)){
+                                $this->customfield_model->insertRecord($custom_value_array, $insert_id);
+                            }
+
+                            if($insert_id){
+                                $this->resp_id = $insert_id;
+
+                                $teacher_login_detail = array('id' => $insert_id, 'credential_for' => 'staff', 'username' => $email, 'password' => $password, 'contact_no' => $contact_no, 'email' => $email);
+                                $this->mailsmsconf->mailsms('login_credential', $teacher_login_detail);
+
+                                $delete_dv = $this->curriculo_model->delete($this->input->post("id"));
+
+                                $this->resp_status = true;
+
+                            } else {
+                                $this->resp_status = false;
+                            }
+
+                        }
+
+                        if($this->resp_status)
+                            $this->resp_msg = utf8_encode("Candidato efetivado com sucesso!");
+                        else
+                            $this->resp_msg = utf8_encode("Não foi possível efetivar o candidato no momento. Tente novamente.");
+
+
+
+
+
+                    }
+
+
+                    if($this->resp_status == false || $this->db->trans_status() === FALSE){
+                        $this->db->trans_rollback();
+                    }else{
+                        $this->db->trans_commit();
+
+                    }
+
+                } else {
+                    throw new Exception(validation_errors());
+                }
+            }
+            catch (\Exception $e){
+                $this->resp_status  =false;
+                $this->resp_msg = '<div class="alert alert-danger"><b>' . $e->getMessage() . '</b></div>';
+                $this->db->trans_rollback();
+            }
+
+            echo json_encode(array('status' => $this->resp_status, 'msg' => $this->resp_msg, 'id' => (isset($this->resp_id) ? $this->resp_id : '')));
+            exit;
+
+        } else {
+            echo json_encode(array('status' => false, 'msg' => '<div class="alert alert-danger">Method not allowed</div>'));
+            exit;
+        }
+    }
+
+    public function cv_pdf($id){
+        if (!$this->rbac->hasPrivilege('staff', 'can_view')) {
+            access_denied();
+        }
+
+        $this->db->from('cl_curriculos');
+        $this->db->where('id', $id);
+
+        $curriculo = $this->db->get()->row_object();
+
+        // Departamentos
+        $datas["department"] = $this->staff_model->getDepartment();
+        // Gêneros
+        $datas["genderList"] = $this->customlib->getGender();
+        // Designições
+        $datas["designation"] = $this->staff_model->getStaffDesignation();
+        // Funções
+        $datas["staffrole"] = $this->staff_model->getStaffRole();
+        // Estado Cívil
+        $datas["marital_status"] = $this->marital_status;
+        // Custom Fields
+        $datas["fields"] = $this->customfield_model->getByBelong('staff');
+
+        $datas["curriculo"] = $curriculo;
+
+
+        $this->load->library('pdf');
+        $html = $this->load->view('admin/staff/cv_pdf', $datas, true);
+        $this->pdf->createPDF($html, $curriculo->nome . '-' . md5(uniqid()), false);
+    }
 
     public function index() {
         if (!$this->rbac->hasPrivilege('staff', 'can_view')) {
@@ -432,6 +950,8 @@ class Staff extends Admin_Controller {
         }
 
         $this->form_validation->set_rules('name', $this->lang->line('name'), 'trim|required|xss_clean');
+        $this->form_validation->set_rules('guardian_postal_code', 'CEP', 'trim|required|xss_clean');
+        $this->form_validation->set_rules('numero', utf8_encode('Número da casa'), 'trim|required|xss_clean');
         $this->form_validation->set_rules('role', $this->lang->line('role'), 'trim|required|xss_clean');
         $this->form_validation->set_rules('gender', $this->lang->line('gender'), 'trim|required|xss_clean');
         $this->form_validation->set_rules('dob', $this->lang->line('date_of_birth'), 'trim|required|xss_clean');
@@ -477,12 +997,12 @@ class Staff extends Admin_Controller {
             $name = $this->input->post("name");
             $gender = $this->input->post("gender");
             $marital_status = $this->input->post("marital_status");
-            $dob = $this->input->post("dob");
+            $dob = $this->curriculo_model->getData($this->input->post("dob"));
             $contact_no = $this->input->post("contactno");
             $emergency_no = $this->input->post("emergency_no");
             $email = $this->input->post("email");
-            $date_of_joining = $this->input->post("date_of_joining");
-            $date_of_leaving = $this->input->post("date_of_leaving");
+            $date_of_joining = $this->curriculo_model->getData($this->input->post("date_of_joining"));
+            $date_of_leaving = $this->curriculo_model->getData($this->input->post("date_of_leaving"));
             $address = $this->input->post("address");
             $qualification = $this->input->post("qualification");
             $work_exp = $this->input->post("work_exp");
@@ -506,6 +1026,8 @@ class Staff extends Admin_Controller {
             $mother_name = $this->input->post("mother_name");
             $note = $this->input->post("note");
             $epf_no = $this->input->post("epf_no");
+            $cep = $this->input->post("guardian_postal_code");
+            $numero = $this->input->post("numero");
 
             $password = $this->role->get_random_password($chars_min = 6, $chars_max = 6, $use_upper_case = false, $include_numbers = true, $include_special_chars = false);
 
@@ -514,7 +1036,7 @@ class Staff extends Admin_Controller {
                 'employee_id' => $employee_id,
                 'name' => $name,
                 'email' => $email,
-                'dob' => date('Y-m-d', $this->customlib->datetostrtotime($dob)),
+                'dob' => $dob,
                 'date_of_leaving' => '',
                 'gender' => $gender,
                 'payscale' => '',
@@ -659,7 +1181,15 @@ class Staff extends Admin_Controller {
             }
 
             if ($date_of_joining != "") {
-                $data_insert['date_of_joining'] = date('Y-m-d', $this->customlib->datetostrtotime($date_of_joining));
+                $data_insert['date_of_joining'] = $date_of_joining;
+            }
+
+            if($cep){
+               $data_insert['cep'] = $cep;
+            }
+
+            if($numero){
+                $data_insert['numero'] = $numero;
             }
 
             $leave_type = $this->input->post('leave_type');
@@ -1069,6 +1599,8 @@ class Staff extends Admin_Controller {
 
         $this->form_validation->set_rules('name', 'Name', 'trim|required|xss_clean');
         $this->form_validation->set_rules('role', 'Role', 'trim|required|xss_clean');
+        $this->form_validation->set_rules('guardian_postal_code', 'CEP', 'trim|required|xss_clean');
+        $this->form_validation->set_rules('numero', utf8_encode('Número da casa'), 'trim|required|xss_clean');
         $this->form_validation->set_rules('gender', 'Gender', 'trim|required|xss_clean');
         $this->form_validation->set_rules('dob', 'Date of Birth', 'trim|required|xss_clean');
         $this->form_validation->set_rules('file', $this->lang->line('image'), 'callback_handle_upload');
@@ -1100,12 +1632,12 @@ class Staff extends Admin_Controller {
             $name = $this->input->post("name");
             $gender = $this->input->post("gender");
             $marital_status = $this->input->post("marital_status");
-            $dob = $this->input->post("dob");
+            $dob = $this->curriculo_model->getData($this->input->post("dob"));
             $contact_no = $this->input->post("contactno");
             $emergency_no = $this->input->post("emergency_no");
             $email = $this->input->post("email");
-            $date_of_joining = $this->input->post("date_of_joining");
-            $date_of_leaving = $this->input->post("date_of_leaving");
+            $date_of_joining = $this->curriculo_model->getData($this->input->post("date_of_joining"));
+            $date_of_leaving = $this->curriculo_model->getData($this->input->post("date_of_leaving"));
             $address = $this->input->post("address");
             $qualification = $this->input->post("qualification");
             $work_exp = $this->input->post("work_exp");
@@ -1129,6 +1661,8 @@ class Staff extends Admin_Controller {
             $mother_name = $this->input->post("mother_name");
             $note = $this->input->post("note");
             $epf_no = $this->input->post("epf_no");
+            $cep = $this->input->post("guardian_postal_code");
+            $numero = $this->input->post("numero");
 
             $custom_field_post = $this->input->post("custom_fields[staff]");
 
@@ -1155,7 +1689,7 @@ class Staff extends Admin_Controller {
                 'contact_no' => $contact_no,
                 'emergency_contact_no' => $emergency_no,
                 'email' => $email,
-                'dob' => date('Y-m-d', $this->customlib->datetostrtotime($dob)),
+                'dob' => $dob,
                 'marital_status' => $marital_status,
                 'local_address' => $address,
                 'permanent_address' => $permanent_address,
@@ -1179,15 +1713,18 @@ class Staff extends Admin_Controller {
                 'twitter' => $twitter,
                 'linkedin' => $linkedin,
                 'instagram' => $instagram,
+                'cep' => $cep,
+                'numero' => $numero,
             );
+
             if ($date_of_joining != "") {
-                $data1['date_of_joining'] = date('Y-m-d', $this->customlib->datetostrtotime($date_of_joining));
+                $data1['date_of_joining'] = $date_of_joining;
             } else {
                 $data1['date_of_joining'] = "";
             }
 
             if ($date_of_leaving != "") {
-                $data1['date_of_leaving'] = date('Y-m-d', $this->customlib->datetostrtotime($date_of_leaving));
+                $data1['date_of_leaving'] = $date_of_leaving;
             } else {
                 $data1['date_of_leaving'] = "";
             }

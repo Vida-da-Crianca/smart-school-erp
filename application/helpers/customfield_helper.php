@@ -6,11 +6,14 @@ if (!defined('BASEPATH')) {
 
 if (!function_exists('display_custom_fields')) {
 
-    function display_custom_fields($belongs_to, $rel_id = false, $where = array())
+    function display_custom_fields($belongs_to, $rel_id = false, $where = array(), $by_index = false)
     {
         $CI = &get_instance();
         $CI->db->from('custom_fields');
         $CI->db->where('belong_to', $belongs_to);
+        if($by_index)
+            $CI->db->where('id', $by_index);
+
         $CI->db->order_by('custom_fields.belong_to', 'asc');
         $CI->db->order_by('custom_fields.weight', 'asc');
         $query       = $CI->db->get();
@@ -190,16 +193,16 @@ if (!function_exists('display_custom_fields')) {
         $input .= '<select id="' . $name . '" name="' . $name . '[]" class="form-control' . $input_class . '" ' . $_input_attrs . ' multiple  >' . $value . '>';
         $input .= '<option value="">Select</option>';
         foreach ($options as $option_key => $option_value) {
-
+            $option_value = ltrim($option_value);
             if ($_SERVER['REQUEST_METHOD'] == "POST") {
 
-                if (isset($_POST[$name]) && in_array($option_value, $name)) {
+               if (isset($_POST[ltrim($name)]) && in_array($option_value, ltrim($name))) {
                     $chk_status = true;
                 } else {
                     $chk_status = false;
                 }
 
-            } elseif ($value != "" && in_array($option_value, explode(",", $value))) {
+           } elseif ($value != "" && in_array($option_value, array_map('ltrim', explode(",", $value)))) {
                 $chk_status = true;
             } else {
                 $chk_status = false;
@@ -237,20 +240,21 @@ if (!function_exists('display_custom_fields')) {
         }
         $input .= '<div class="checkbox">';
         foreach ($options as $option_key => $option_value) {
+            $option_value = ltrim($option_value);
             if ($_SERVER['REQUEST_METHOD'] == "POST") {
-
-                if (isset($_POST[$name]) && in_array($option_value, $name)) {
+                
+                if (isset($_POST[ltrim($name)]) && in_array($option_value, ltrim($name))) {
                     $chk_status = true;
                 } else {
                     $chk_status = false;
                 }
 
-            } elseif ($value != "" && in_array($option_value, explode(",", $value))) {
+            } elseif ($value != "" && in_array($option_value, array_map('ltrim', explode(",", $value)))) {
                 $chk_status = true;
             } else {
                 $chk_status = false;
             }
-            $input .= '<label class="checkbox-inline">';
+            $input .= '<label class="checkbox">';
 
             $input .= '<input type="' . $type . '" id="' . $name . '" name="' . $name . '[]"  value="' . $option_value . '" ' . set_checkbox($name, $option_value, $chk_status) . '>' . $option_value . '</label>';
             $input .= '</label>';
