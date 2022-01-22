@@ -580,7 +580,7 @@
                         this.update(student.agenda[app.snackData.code])
                         return;
                     }
-                    $.blockUI({ message: 'Aguarde...' });
+                    //$.blockUI({ message: 'Aguarde...' });
                     await axios.post('/admin/schedule/saveAgenda/', {
                         student: {
                             agenda: student.agenda,
@@ -595,7 +595,7 @@
                         console.error(error)
                         alert('Erro ao carregar os agenda')
                     })
-                    $.unblockUI();
+                   // $.unblockUI();
                 }
             },
             update(agendaOld) {
