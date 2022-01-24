@@ -1747,6 +1747,8 @@ class Student_model extends MY_Model
             ->join("class_teacher", "class_teacher.session_id = ss.session_id AND class_teacher.class_id = classes.id AND class_teacher.section_id = sections.id")
             ->join('student_snacks', 'students.id = student_snacks.student_id')
             ->where("class_teacher.staff_id", $teatcherId)
+            ->where("students.is_active", 'yes')
+            ->where("students.disable_at", null)
             ->where('snack_id', $snackId);
         if ($classIds) {
             $query->where_in('class_teacher.class_id', $classIds);
@@ -1778,6 +1780,7 @@ class Student_model extends MY_Model
                 ->where("class_teacher.session_id", $this->current_session)
                 // if is active filter
                 ->where("students.is_active", 'yes')
+                ->where("students.disable_at", null)
                 ->order_by("students.firstname", 'asc')->distinct()
                 ->get();
 
@@ -1787,6 +1790,7 @@ class Student_model extends MY_Model
                 ->where("ss.session_id", $this->current_session)
                 // if is active filter
                 ->where("students.is_active", 'yes')
+                ->where("students.disable_at", null)
                 ->order_by("students.firstname", 'asc')->distinct()
                 ->get();
         }
