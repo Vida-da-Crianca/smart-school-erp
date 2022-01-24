@@ -1776,6 +1776,7 @@ class Student_model extends MY_Model
                 ->join("class_teacher", "class_teacher.session_id = ss.session_id AND class_teacher.class_id = classes.id AND class_teacher.section_id = sections.id")
                 ->where("class_teacher.staff_id", $teatcherId)
                 ->where("class_teacher.session_id", $this->current_session)
+                // if is active filter
                 ->where("students.is_active", 'yes')
                 ->order_by("students.firstname", 'asc')->distinct()
                 ->get();
@@ -1784,6 +1785,7 @@ class Student_model extends MY_Model
             $query = $this->db->select("students.*")->from('students')
                 ->join('student_session as ss', 'ss.student_id = students.id')
                 ->where("ss.session_id", $this->current_session)
+                // if is active filter
                 ->where("students.is_active", 'yes')
                 ->order_by("students.firstname", 'asc')->distinct()
                 ->get();

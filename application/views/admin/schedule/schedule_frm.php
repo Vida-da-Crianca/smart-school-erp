@@ -398,7 +398,9 @@
 </div>
 <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.blockUI/2.70/jquery.blockUI.min.js" integrity="sha512-eYSzo+20ajZMRsjxB6L7eyqo5kuXuS2+wEbbOkpaur+sA2shQameiJiWEzCIDwJqaB0a4a6tCuEvCOBHUg3Skg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.blockUI/2.70/jquery.blockUI.min.js"
+        integrity="sha512-eYSzo+20ajZMRsjxB6L7eyqo5kuXuS2+wEbbOkpaur+sA2shQameiJiWEzCIDwJqaB0a4a6tCuEvCOBHUg3Skg=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script>
     function showMessage(type, message) {
         var x = document.getElementById("snackbar");
@@ -580,7 +582,12 @@
                         this.update(student.agenda[app.snackData.code])
                         return;
                     }
-                    //$.blockUI({ message: 'Aguarde...' });
+
+                    if (app.snackData.code === 'alimentacao') {
+                        if (!student.agenda.alimentacao.comportamento || !student.agenda.alimentacao.horario)
+                            return;
+                    }
+
                     await axios.post('/admin/schedule/saveAgenda/', {
                         student: {
                             agenda: student.agenda,
@@ -595,7 +602,7 @@
                         console.error(error)
                         alert('Erro ao carregar os agenda')
                     })
-                   // $.unblockUI();
+
                 }
             },
             update(agendaOld) {
