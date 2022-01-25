@@ -11,7 +11,7 @@
  Target Server Version : 50736
  File Encoding         : 65001
 
- Date: 21/01/2022 15:58:22
+ Date: 25/01/2022 02:34:41
 */
 
 SET NAMES utf8mb4;
@@ -48,6 +48,7 @@ CREATE TABLE `cl_curriculos`  (
   `telefone_emergencia` text CHARACTER SET utf8 COLLATE utf8_general_ci NULL,
   `contrato_inicio` text CHARACTER SET utf8 COLLATE utf8_general_ci NULL,
   `endereco_permanente` text CHARACTER SET utf8 COLLATE utf8_general_ci NULL,
+  `foto` text CHARACTER SET utf8 COLLATE utf8_general_ci NULL,
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = MyISAM CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 

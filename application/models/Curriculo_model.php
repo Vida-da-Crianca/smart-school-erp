@@ -158,4 +158,8 @@ class Curriculo_model extends MY_Model
         return $year.'-'.$month.'-'.$day;
     }
 
+    public function rand_hash(){
+        return md5(uniqid() . time());
+    }
+
 }
