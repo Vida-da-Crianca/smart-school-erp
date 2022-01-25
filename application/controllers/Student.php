@@ -1084,9 +1084,13 @@ class Student extends Admin_Controller
 
                     $documentosEnviados = $this->db->where('student_id',(int)$id)->get('student_doc')->result();
 
+                    $documentosNovosNaoEnviadosAinda = [];
+
                     foreach($documentos as $campo => $label){
 
                         $doc = $this->input->post($campo);
+
+                        $achou = false;
 
                         foreach ($documentosEnviados as $docEnviado){
                             if(mb_strtolower($docEnviado->title,'UTF-8') == mb_strtolower($label,'UTF-8')){
@@ -1101,9 +1105,14 @@ class Student extends Admin_Controller
 
 
                                 }
+
+                                $achou = true;
                             }
                         }//foreach ($documentosEnviados as $docEnviado){
 
+                        if(!$achou){
+                            $documentosNovosNaoEnviadosAinda[$campo] = $label;
+                        }
                     }// foreach($documentos as $campo => $label){
 
 
@@ -1123,7 +1132,13 @@ class Student extends Admin_Controller
                         }
                     }
 
-
+                    if(count($documentosNovosNaoEnviadosAinda) > 0){
+                         foreach($documentosNovosNaoEnviadosAinda as $campo => $label){
+                            copy($dir.$this->input->post($campo), $uploaddir.$this->input->post($campo));
+                            $data_img = array('student_id' => $insert_id, 'title' => $label, 'doc' => $this->input->post($campo));
+                            $this->student_model->adddoc($data_img);
+                         }
+                    }
 
 
 
