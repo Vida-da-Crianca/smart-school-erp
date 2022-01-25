@@ -422,9 +422,6 @@ class Welcome extends Front_Controller
                 $this->form_validation->set_rules('outros', 'Outros', 'trim|required|xss_clean');
                 $this->form_validation->set_rules('file', $this->lang->line('image'), 'callback_handle_upload');
 
-                if($this->input->post('designation') == 'select')
-                    throw new Exception('Campo Cargo é obrigatório!');
-
                 $custom_fields = $this->customfield_model->getByBelong('staff');
                 foreach ($custom_fields as $custom_fields_key => $custom_fields_value) {
                     if ($custom_fields_value['validation']) {
@@ -441,8 +438,6 @@ class Welcome extends Front_Controller
                 $this->form_validation->set_rules('guardian_district', 'Bairro', 'trim|required|xss_clean');
                 $this->form_validation->set_rules('guardian_state', 'UF', 'trim|required|xss_clean');
                 $this->form_validation->set_rules('guardian_city', 'Cidade', 'trim|required|xss_clean');
-
-
 
 
                 if ($this->form_validation->run() == FALSE){
@@ -490,14 +485,15 @@ class Welcome extends Front_Controller
                    'facebook'            => $this->input->post('facebook'),
                    'instagram'           => $this->input->post('instagram'),
                    'linkedin'            => $this->input->post('linkedin'),
-                   'numero'              => $this->input->post('guardian_address_number')
+                   'numero'              => $this->input->post('guardian_address_number'),
+                   'data_envio'          => date('Y-m-d H:i:s')
 
                  );
 
 
                 if (isset($_FILES["file"]) && !empty($_FILES['file']['name'])) {
                     $fileInfo = pathinfo($_FILES["file"]["name"]);
-                    $img_name = $data['id'] . '.' . $fileInfo['extension'];
+                    $img_name = $this->curriculo_model->rand_hash() . '.' . $fileInfo['extension'];
                     if(!file_exists("./uploads/cv_images/"))
                         mkdir("./uploads/cv_images", 0777, TRUE);
 
@@ -565,7 +561,8 @@ class Welcome extends Front_Controller
 
             return true;
         }
-        return true;
+        $this->form_validation->set_message('handle_upload', 'O campo foto é obrigatório');
+        return false;
     }
 
     public function admission(){
