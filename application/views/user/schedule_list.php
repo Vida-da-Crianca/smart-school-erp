@@ -1,3 +1,11 @@
+<?php
+    if (!$this->input->get('date_start')) {
+        $dateStart = date('Y-m-d');
+        $dateEnd = date('Y-m-d');
+        $url = site_url("user/user/schedule?date_start=$dateStart&date_end=$dateEnd");
+        echo "<script>window.top.location.href = '$url'</script>";
+    }
+?>
 <div class="content-wrapper">
 
     <section class="content">
@@ -20,14 +28,14 @@
                             <div class="form-group">
                                 <label>Data Inicial</label>
                                 <input class="form-control" name="date_start" type="date"
-                                       value="<?= $this->input->get('date_start') ?>">
+                                       value="<?= $this->input->get('date_start') ?? date('Y-m-d') ?>">
                             </div>
                         </div>
                         <div class="col-md-3">
                             <div class="form-group">
                                 <label>Data Final</label>
                                 <input class="form-control" name="date_end" type="date"
-                                       value="<?= $this->input->get('date_end') ?>">
+                                       value="<?= $this->input->get('date_end')  ?>">
                             </div>
                         </div>
                         <div class="col-md-6">

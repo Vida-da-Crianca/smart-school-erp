@@ -653,6 +653,15 @@ class Staff_model extends MY_Model
         return $query->row_array();
     }
 
+    public function getStaffByEmployerId($empid)
+    {
+
+        $data  = array('employee_id' => $empid);
+        $query = $this->db->select('*')->where($data)->get("staff");
+
+        return $query->row_array();
+    }
+
     public function getProfile($id)
     {
 

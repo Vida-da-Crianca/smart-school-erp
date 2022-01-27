@@ -1228,8 +1228,8 @@ $lang['secret_key'] = "Chave secreta" ;
 $lang['secretary'] = "Secretário" ;
 $lang['select_any_user_to_start_your_chat'] = "Selecionar qualquer usuário inicie seu bate-papo" ;
 $lang['selected'] = "Selecionado" ;
-$lang['send_parent_password'] = "Enviar Pai Senha" ;
-$lang['send_student_password'] = "Enviar Estudante Senha" ;
+$lang['send_parent_password'] = "Enviar Senha Responsável Financeiro" ;
+$lang['send_student_password'] = "Enviar Senha Aluno" ;
 $lang['seperated'] = "Separados" ;
 $lang['seprate'] = "Separada" ;
 $lang['september'] = "Setembro" ;
@@ -1327,7 +1327,7 @@ $lang['deposit_amount_can_not_be_greater_than_remaining'] = "Valor do depósito 
 $lang['recipient'] = "Destinatário" ;
 
 # version 6.0.0
- 
+
 $lang['fees_payment_details'] = "Detalhes de pagamento de taxas";
 $lang['decription'] = "Descrição" ;
 $lang['pay_with_instamojo'] = "Pagar Com Instamojo" ;
@@ -1445,7 +1445,7 @@ $lang['setting'] = "Configuração" ;
 $lang['host'] = "Host" ;
 $lang['online_classes'] = "Aulas Ao Vivo" ;
 $lang['online_meeting'] = "Live Meetings" ;
-$lang['invoice_module'] = 'Notas Fiscais '; 
+$lang['invoice_module'] = 'Notas Fiscais ';
 $lang['invoice_collection'] = 'Lista Notas Fiscais' ;
 $lang['invoice_type_list'] = 'Lista Notas Fiscais' ;
 $lang['invoice_number'] = 'N˚ da Nota';
@@ -1475,7 +1475,7 @@ $lang['invoice_school_name'] = 'Razão Social';
 $lang['invoice_document'] = 'CNPJ';
 $lang['invoice_ccm'] = 'Inscr. Municipal';
 $lang['invoice_iss'] = 'ISS';
-$lang['invoice_password'] = 'Senha';   
+$lang['invoice_password'] = 'Senha';
 $lang['invoice_crc'] = 'CRC Contador';
 $lang['invoice_crc_state'] = 'UF CRC';
 $lang['invoice_simple_rate'] = 'Aliquota';
@@ -1503,7 +1503,7 @@ $lang['s/n'] = 'Boleto(Siscob)';
 
 
 $lang['expense_type'] = 'Para ';
-$lang['expense_payment_at'] = 'Data Pagamento'; 
+$lang['expense_payment_at'] = 'Data Pagamento';
 $lang['received_finance'] = 'Recebimentos';
 $lang['report_guardian_name'] = 'Reponsável do Financeiro / Estudante';
 $lang['report_invoice_no'] = 'Nº Nota';
@@ -1541,3 +1541,17 @@ $lang['schedule_collection_list'] = 'Lista de Agendas';
 $lang['schedule_create'] = 'Cadastrar Agenda';
 $lang['schedule_frm_create'] = 'Nova Agenda';
 $lang['schedule_frm_update'] = 'Editar Agenda';
+
+
+$lang['cl_escolaridade'] = 'Escolaridade';
+$lang['cl_enviar'] = 'Enviar Curriculo';
+$lang['cl_confirm_effective'] = 'Após confirmar a efetivação, uma senha de login será enviada para o e-mail do efetivado.<br>O usuário de acesso será o e-mail do efetivado.<br>Você também poderá inserir documentos no perfil do efetivado.<br>Deseja continuar com a efetivação?';
+$lang['cl_confirm_action'] = 'Confirmar ação';
+$lang['cl_cancelled_effective'] = 'Efetivação cancelada com sucesso!';
+$lang['cl_confirm_delete'] = 'Você realmente deseja remover este cúrriculo?';
+$lang['cl_cancelled_delete'] = 'Remoção de cúrriculo cancelada.';
+$lang['cl_delete_cv'] = 'Excluír Cúrriculo';
+$lang['cl_view_cv'] = 'Ver cúrriculo';
+$lang['cl_print_pdf'] = 'Gerar PDF do CV';
+$lang['cl_save_cv'] = 'Salvar Alterações';
+$lang['cl_effective_cv'] = 'Efetivar Candidado';

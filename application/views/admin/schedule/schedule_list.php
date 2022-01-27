@@ -1,3 +1,11 @@
+<?php
+if (!$this->input->get('date_start')) {
+    $dateStart = date('Y-m-d');
+    $dateEnd = date('Y-m-d');
+    $url = site_url("admin/schedule?date_start=$dateStart&date_end=$dateEnd");
+    echo "<script>window.top.location.href = '$url'</script>";
+}
+?>
 <div class="content-wrapper">
 
     <section class="content">
@@ -19,25 +27,28 @@
                         <div class="col-md-2">
                             <div class="form-group">
                                 <label>Data Inicial</label>
-                                <input class="form-control" name="date_start" type="date" value="<?=$this->input->get('date_start')?>">
+                                <input class="form-control" name="date_start" type="date"
+                                       value="<?= $this->input->get('date_start') ?>">
                             </div>
                         </div>
                         <div class="col-md-2">
                             <div class="form-group">
                                 <label>Data Final</label>
-                                <input class="form-control" name="date_end" type="date" value="<?=$this->input->get('date_end')?>">
+                                <input class="form-control" name="date_end" type="date"
+                                       value="<?= $this->input->get('date_end') ?>">
                             </div>
                         </div>
                         <div class="col-md-4">
                             <div class="form-group">
                                 <label>Turma</label>
-                                <select autofocus="" id="class_id"  name="class_id" class="form-control"
+                                <select autofocus="" id="class_id" name="class_id" class="form-control"
                                         autocomplete="off">
                                     <option value=""></option>
                                     <?php
-                                    foreach ($classes as $key=>$class) {
+                                    foreach ($classes as $key => $class) {
                                         ?>
-                                        <option <?=$this->input->get('class_id') == $class['class_id'] ? 'selected' : ''?>  value="<?= $class['class_id'] ?>"><?= $class['class'] ?>
+                                        <option <?= $this->input->get('class_id') == $class['class_id'] ? 'selected' : '' ?>
+                                                value="<?= $class['class_id'] ?>"><?= $class['class'] ?>
                                             - <?= $class['section'] ?></option>
                                         <?php
                                     }
@@ -54,8 +65,9 @@
                                     <?php
                                     foreach ($students as $student) {
                                         ?>
-                                        <option <?=$this->input->get('student_id') == $student['id'] ? 'selected' : ''?>  value="<?= $student['id'] ?>">
-                                            <?= $student['firstname']?> <?= $student['lastname']?>
+                                        <option <?= $this->input->get('student_id') == $student['id'] ? 'selected' : '' ?>
+                                                value="<?= $student['id'] ?>">
+                                            <?= $student['firstname'] ?> <?= $student['lastname'] ?>
                                         </option>
                                         <?php
                                     }
@@ -66,13 +78,14 @@
                         <div class="col-md-4">
                             <div class="form-group">
                                 <label>Tipo de Refeição</label> <small class="req"> *</small>
-                                <select  autofocus="" id="snack_id" name="snack_id" class="form-control select2"
+                                <select autofocus="" id="snack_id" name="snack_id" class="form-control select2"
                                         autocomplete="off">
                                     <option value=""></option>
                                     <?php
                                     foreach ($snacks as $snack) {
                                         ?>
-                                        <option <?=$this->input->get('snack_id') == $snack->id ? 'selected' : ''?>  value="<?= $snack->id ?>"><?= $snack->name?></option>
+                                        <option <?= $this->input->get('snack_id') == $snack->id ? 'selected' : '' ?>
+                                                value="<?= $snack->id ?>"><?= $snack->name ?></option>
                                         <?php
                                     }
                                     ?>
@@ -106,7 +119,7 @@
                         </tr>
                         </thead>
                         <tbody>
-                        <?php foreach ($agendas as $item) :  $item = (object) $item;?>
+                        <?php foreach ($agendas as $item) : $item = (object)$item; ?>
                             <tr>
                                 <td><?= $item->id ?></td>
                                 <td><?= date('d/m/Y', strtotime($item->date)) ?></td>

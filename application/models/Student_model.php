@@ -1747,6 +1747,8 @@ class Student_model extends MY_Model
             ->join("class_teacher", "class_teacher.session_id = ss.session_id AND class_teacher.class_id = classes.id AND class_teacher.section_id = sections.id")
             ->join('student_snacks', 'students.id = student_snacks.student_id')
             ->where("class_teacher.staff_id", $teatcherId)
+            ->where("students.is_active", 'yes')
+            ->where("students.disable_at", null)
             ->where('snack_id', $snackId);
         if ($classIds) {
             $query->where_in('class_teacher.class_id', $classIds);
@@ -1756,14 +1758,16 @@ class Student_model extends MY_Model
         }
         if ($sessionIds) {
             $query->where_in('class_teacher.session_id', $sessionIds);
+        }else{
+            $query->where("student_session.session_id", $this->current_session);
         }
 
-        $query = $query->order_by("students.firstname", 'asc')
+        $query = $query->order_by("students.firstname", 'asc')->distinct()
             ->get();
         return $query->result_array();
     }
 
-    function getStudentsByTeacher($teatcherId=null)
+    function getStudentsByTeacher($teatcherId = null)
     {
 
         if ($teatcherId) {
@@ -1773,15 +1777,34 @@ class Student_model extends MY_Model
                 ->join("sections", "ss.section_id = sections.id")
                 ->join("class_teacher", "class_teacher.session_id = ss.session_id AND class_teacher.class_id = classes.id AND class_teacher.section_id = sections.id")
                 ->where("class_teacher.staff_id", $teatcherId)
-                ->order_by("students.firstname", 'asc')
+                ->where("class_teacher.session_id", $this->current_session)
+                // if is active filter
+                ->where("students.is_active", 'yes')
+                ->where("students.disable_at", null)
+                ->order_by("students.firstname", 'asc')->distinct()
                 ->get();
 
-        }else {
+        } else {
             $query = $this->db->select("students.*")->from('students')
-                ->order_by("students.firstname", 'asc')
+                ->join('student_session as ss', 'ss.student_id = students.id')
+                ->where("ss.session_id", $this->current_session)
+                // if is active filter
+                ->where("students.is_active", 'yes')
+                ->where("students.disable_at", null)
+                ->order_by("students.firstname", 'asc')->distinct()
                 ->get();
         }
 
         return $query->result_array();
+    }
+
+    public function getByCpfGuardian($cpf)
+    {
+        $this->db->select('students.*, username')->from('students');;
+        $this->db->join('users', 'users.childs = students.id');
+        $this->db->where('students.guardian_document', "$cpf");
+        $query = $this->db->get();
+        return $query->row_array();
+
     }
 }

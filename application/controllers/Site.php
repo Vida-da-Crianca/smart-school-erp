@@ -4,14 +4,19 @@ if (!defined('BASEPATH'))
     exit('No direct script access allowed');
 
 use Spipu\Html2Pdf\Html2Pdf;
+
 // use mikehaertl\wkhtmlto\Pdf;
 use Dompdf\Dompdf;
 use Spipu\Html2Pdf\Exception\Html2PdfException;
-use Spipu\Html2Pdf\Exception\ExceptionFormatter; #alterado
+use Spipu\Html2Pdf\Exception\ExceptionFormatter;
 
-class Site extends Public_Controller {
+#alterado
 
-    public function __construct() {
+class Site extends Public_Controller
+{
+
+    public function __construct()
+    {
         parent::__construct();
         $this->check_installation();
         if ($this->config->item('installed') == true) {
@@ -19,6 +24,7 @@ class Site extends Public_Controller {
         }
 
         $this->load->model("staff_model");
+        $this->load->model("student_model");
         $this->load->library('Auth');
         $this->load->library('Enc_lib');
         $this->load->library('customlib');
@@ -28,7 +34,8 @@ class Site extends Public_Controller {
         $this->mailer;
     }
 
-    private function check_installation() {
+    private function check_installation()
+    {
         if ($this->uri->segment(1) !== 'install') {
             $this->load->config('migration');
             if ($this->config->item('installed') == false && $this->config->item('migration_enabled') == false) {
@@ -42,7 +49,8 @@ class Site extends Public_Controller {
         }
     }
 
-    function login() {
+    function login()
+    {
 
         $app_name = $this->setting_model->get();
         $app_name = $app_name[0]['name'];
@@ -73,8 +81,17 @@ class Site extends Public_Controller {
 
             echo "</pre>";
         } else {
+
+            $username = $this->input->post('username');
+            if (is_numeric($username)) {
+                $staff = $this->staff_model->getStaffByEmployerId($username);
+                if ($staff){
+                    $username =  $staff['email'];
+                }
+            }
+
             $login_post = array(
-                'email' => $this->input->post('username'),
+                'email' => $username,
                 'password' => $this->input->post('password')
             );
             $setting_result = $this->setting_model->get();
@@ -127,7 +144,7 @@ class Site extends Public_Controller {
                         redirect($_SESSION['redirect_to']);
                     else
                         redirect('admin/admin/dashboard');
-                }else {
+                } else {
                     $data['name'] = $app_name;
                     $data['error_message'] = $this->lang->line('your_account_is_disabled_please_contact_to_administrator');
 
@@ -141,7 +158,8 @@ class Site extends Public_Controller {
         }
     }
 
-    function logout() {
+    function logout()
+    {
         $admin_session = $this->session->userdata('admin');
         $student_session = $this->session->userdata('student');
         $this->auth->logout();
@@ -154,7 +172,8 @@ class Site extends Public_Controller {
         }
     }
 
-    function forgotpassword() {
+    function forgotpassword()
+    {
 
         $app_name = $this->setting_model->get();
         $data['name'] = $app_name[0]['name'];
@@ -167,8 +186,6 @@ class Site extends Public_Controller {
 
             $result = $this->staff_model->getByEmail($email);
 
-
-           
 
             if ($result && $result->email != "") {
                 if ($result->is_active == '1') {
@@ -198,7 +215,8 @@ class Site extends Public_Controller {
     }
 
     //reset password - final step for forgotten password
-    public function admin_resetpassword($verification_code = null) {
+    public function admin_resetpassword($verification_code = null)
+    {
         $app_name = $this->setting_model->get();
         $data['name'] = $app_name[0]['name'];
         if (!$verification_code) {
@@ -245,7 +263,8 @@ class Site extends Public_Controller {
     }
 
     //reset password - final step for forgotten password
-    public function resetpassword($role = null, $verification_code = null) {
+    public function resetpassword($role = null, $verification_code = null)
+    {
         $app_name = $this->setting_model->get();
         $data['name'] = $app_name[0]['name'];
         if (!$role || !$verification_code) {
@@ -291,7 +310,8 @@ class Site extends Public_Controller {
         }
     }
 
-    function ufpassword() {
+    function ufpassword()
+    {
 
         $app_name = $this->setting_model->get();
         $data['name'] = $app_name[0]['name'];
@@ -334,7 +354,14 @@ class Site extends Public_Controller {
         }
     }
 
-    function userlogin() {
+    function isCpf($cpf)
+    {
+        $cpf = preg_replace('/[^0-9]/', '', $cpf);
+        return strlen($cpf) == 11;
+    }
+
+    function userlogin()
+    {
         if ($this->auth->user_logged_in()) {
             $this->auth->user_redirect();
         }
@@ -351,8 +378,19 @@ class Site extends Public_Controller {
         if ($this->form_validation->run() == FALSE) {
             $this->load->view('userlogin', $data);
         } else {
+
+            $username = $this->input->post('username');
+
+            if ($this->isCpf($username)) {
+                $cpf = preg_replace('/[^0-9]/', '', $username);
+                $student = $this->student_model->getByCpfGuardian($cpf);
+                if ($student){
+                    $username =  $student['username'];
+                }
+            }
+
             $login_post = array(
-                'username' => $this->input->post('username'),
+                'username' => $username,
                 'password' => $this->input->post('password')
             );
             $login_details = $this->user_model->checkLogin($login_post);
@@ -426,7 +464,8 @@ class Site extends Public_Controller {
         }
     }
 
-    public function savemulticlass() {
+    public function savemulticlass()
+    {
 
         $student_id = '';
         $this->form_validation->set_rules('student_id', $this->lang->line('student'), 'trim|required|xss_clean');
@@ -449,49 +488,50 @@ class Site extends Public_Controller {
         }
         echo json_encode($array);
     }
-    
-     public function orcamento($token=null){#alterado
-       try{
-           
-           $this->orcamento_model->getByToken(trim($token));
-           $data['orcamento'] = $this->orcamento_model;
-           $data['itens'] = $this->orcamento_item_model->getAll(['idOrcamento'=> $this->orcamento_model->idOrcamento]);
-           
+
+    public function orcamento($token = null)
+    {#alterado
+        try {
+
+            $this->orcamento_model->getByToken(trim($token));
+            $data['orcamento'] = $this->orcamento_model;
+            $data['itens'] = $this->orcamento_item_model->getAll(['idOrcamento' => $this->orcamento_model->idOrcamento]);
+
             /*$img = (FCPATH.'uploads/school_content/logo/'.$this->sch_setting_detail->admin_logo);
             $type = pathinfo($img, PATHINFO_EXTENSION);
             $datax = file_get_contents($img);*/
-            
+
             $class = $this->class_model->get($this->orcamento_model->class_id);
             $section = $this->section_model->get($this->orcamento_model->section_id);
             $staff = $this->staff_model->get($this->orcamento_model->staff_id);
-           
-           $data['escola'] = [
-               /*'nome' => $this->sch_setting_detail->name,
-               'email' => $this->sch_setting_detail->email,
-               'telefone' => $this->sch_setting_detail->phone,
-               'endereco' => $this->sch_setting_detail->address,
-               'logo' => 'data:image/' . $type . ';base64,' . base64_encode($datax),*/
-               'turma'=> isset($class['class']) ? $class['class'] : '---',
-               'periodo'=> isset($section['section']) ? $section['section'] : '---',
-               'usuario'=> isset($staff['name']) ? $staff['name'].' '.$staff['surname'] : '---'
-           ];
-          
-           
-           $page = $this->load->view('admin/orcamento/print', $data,true);
-          
-          // echo $page;
-          // die('');
-           
-           $html2pdf = new Html2Pdf('P', 'A4', 'pt', true, 'UTF-8', 5);
+
+            $data['escola'] = [
+                /*'nome' => $this->sch_setting_detail->name,
+                'email' => $this->sch_setting_detail->email,
+                'telefone' => $this->sch_setting_detail->phone,
+                'endereco' => $this->sch_setting_detail->address,
+                'logo' => 'data:image/' . $type . ';base64,' . base64_encode($datax),*/
+                'turma' => isset($class['class']) ? $class['class'] : '---',
+                'periodo' => isset($section['section']) ? $section['section'] : '---',
+                'usuario' => isset($staff['name']) ? $staff['name'] . ' ' . $staff['surname'] : '---'
+            ];
+
+
+            $page = $this->load->view('admin/orcamento/print', $data, true);
+
+            // echo $page;
+            // die('');
+
+            $html2pdf = new Html2Pdf('P', 'A4', 'pt', true, 'UTF-8', 5);
             // $html2pdf->setDefaultFont('dejavusans');
-           $html2pdf->pdf->SetDisplayMode('real');
+            $html2pdf->pdf->SetDisplayMode('real');
             $html2pdf->writeHTML($page);
-            $html2pdf->output('Orcamento_'.$this->orcamento_model->idOrcamento.'.pdf');
+            $html2pdf->output('Orcamento_' . $this->orcamento_model->idOrcamento . '.pdf');
             die();
-           
-       } catch (\Exception $e){
-          echo 'Erro: '.$e->getMessage();
-       }
+
+        } catch (\Exception $e) {
+            echo 'Erro: ' . $e->getMessage();
+        }
     }
 
 

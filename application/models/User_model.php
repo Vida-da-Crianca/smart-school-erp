@@ -248,7 +248,10 @@ class User_model extends MY_Model {
 
     public function getStudentLoginDetails($student_id) {
 
-        $sql = "SELECT users.* FROM users WHERE id in (select students.parent_id from users INNER JOIN students on students.id =users.user_id WHERE users.user_id=" . $this->db->escape($student_id) . " AND users.role ='student') UNION select users.* from users INNER JOIN students on students.id =users.user_id WHERE users.user_id=" . $this->db->escape($student_id) . " AND users.role ='student'";
+        $sql = "SELECT users.*, CONCAT_WS(', ', IF(cast(COALESCE(users.childs, 0) as UNSIGNED) > 0, students.guardian_document, users.username))  as username
+            FROM users INNER JOIN students on students.id =users.user_id or students.id = users.childs  WHERE users.id in (select students.parent_id from users INNER JOIN students on students.id =users.user_id WHERE users.user_id=" . $this->db->escape($student_id) . "
+             AND users.role ='student') UNION select users.*, CONCAT_WS(', ', IF(cast(COALESCE(users.childs, 0) as UNSIGNED) > 0, students.guardian_document, users.username))  as username from users INNER JOIN students on students.id =users.user_id WHERE users.user_id=" . $this->db->escape($student_id) . " 
+             AND users.role ='student'";
         $query = $this->db->query($sql);
         return $query->result();
     }

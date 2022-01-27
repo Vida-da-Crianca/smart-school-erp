@@ -219,7 +219,7 @@
                                         <div class="col-md-4">
                                             <div class="form-group">
                                                 <label>Recado</label>
-                                                <input @change="save(student)"
+                                                <input :readonly="student.agenda.alimentacao.id === null" @change="save(student)"
                                                        v-model="student.agenda.alimentacao.message"
                                                        class="form-control"
                                                        type="text">
@@ -272,7 +272,8 @@
                                         <div class="col-md-4">
                                             <div class="form-group">
                                                 <label>Recado</label>
-                                                <input @change="save(student)"
+                                                <input :readonly="student.agenda.sono.id === null" @change="save(student)"
+
                                                        v-model="student.agenda.sono.message"
                                                        class="form-control"
                                                        type="text">
@@ -323,6 +324,7 @@
                                             <div class="form-group">
                                                 <label>Recado</label>
                                                 <input @change="save(student)"
+                                                       :readonly="student.agenda.evacuacao.id === null"
                                                        v-model="student.agenda.evacuacao.message"
                                                        class="form-control"
                                                        type="text">
@@ -380,13 +382,13 @@
                                             <div class="form-group">
                                                 <label>Recado</label>
                                                 <input @change="save(student)"
+                                                       :readonly="student.agenda.banho.id === null"
                                                        v-model="student.agenda.banho.message"
                                                        class="form-control"
                                                        type="text">
                                             </div>
                                         </div>
                                     </div>
-
                                 </div>
                             </div>
                         </div>
@@ -399,7 +401,9 @@
 </div>
 <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.blockUI/2.70/jquery.blockUI.min.js"
+        integrity="sha512-eYSzo+20ajZMRsjxB6L7eyqo5kuXuS2+wEbbOkpaur+sA2shQameiJiWEzCIDwJqaB0a4a6tCuEvCOBHUg3Skg=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script>
     function showMessage(type, message) {
         var x = document.getElementById("snackbar");
@@ -476,8 +480,23 @@
                 }
                 return this.getHours();
             };
+
+            Date.prototype.getFullMonth = function () {
+                let month = this.getMonth() + 1;
+                if (month < 10) {
+                    return '0' + month;
+                }
+                return this.getMonth();
+            };
+
+            Date.prototype.getFullDay = function () {
+                if (this.getDate() < 10) {
+                    return '0' + this.getDate();
+                }
+                return this.getDate();
+            };
             var day = new Date();
-            this.agenda.date = day.getFullYear() + '-' + (day.getMonth() + 1) + '-' + day.getDate();
+            this.agenda.date = day.getFullYear() + '-' + day.getFullMonth() + '-' + day.getFullDay();
             this.agenda.class_id = this.classes.map((classe) => {
                 return classe.class_id
             })
@@ -514,12 +533,16 @@
                                 },
                                 sono: {
                                     id: null,
+                                    dormiu: null,
+                                    acordou: null,
+                                    message: null,
                                 },
                                 banho: {
                                     id: null,
                                 },
                                 evacuacao: {
                                     id: null,
+                                    textura: null,
                                 }
                             }
                         }
@@ -549,20 +572,29 @@
                     alert('Erro ao carregar os agenda')
                 })
             },
+            sleep(milliseconds) {
+                const date = Date.now();
+                let currentDate = null;
+                do {
+                    currentDate = Date.now();
+                } while (currentDate - date < milliseconds);
+            },
             async save(student) {
                 let app = this;
                 if (this.saving) {
-                    app.interval = setTimeout(() => {
-                        app.save(student)
-                    }, 500);
-                    return;
+                    await this.sleep(500)
                 }
-                this.saving = true;
                 if (this.students.length > 0) {
                     if (student.agenda[app.snackData.code].id) {
                         this.update(student.agenda[app.snackData.code])
                         return;
                     }
+
+                    if (app.snackData.code === 'alimentacao') {
+                        if (!student.agenda.alimentacao.comportamento || !student.agenda.alimentacao.horario)
+                            return;
+                    }
+
                     await axios.post('/admin/schedule/saveAgenda/', {
                         student: {
                             agenda: student.agenda,
@@ -577,8 +609,8 @@
                         console.error(error)
                         alert('Erro ao carregar os agenda')
                     })
+
                 }
-                this.saving = false;
             },
             update(agendaOld) {
 
@@ -616,7 +648,7 @@
             }
         }
     })
-
+    //2022
     $(document).ready(function () {
         $('#app').show()
     })

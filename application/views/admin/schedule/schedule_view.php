@@ -150,7 +150,8 @@
                                                 <tr>
                                                     <td><?= (new Snack_model())->nameById($item['snack_id'])?></td>
                                                     <td><?= date('H:i', strtotime($item['horario']))?></td>
-                                                    <td><?= Schedule_model::$comportamento[$item['comportamento']]?></td>
+                                                    <!-- Index repair -->
+                                                    <td><?= array_key_exists($item['comportamento'], Schedule_model::$comportamento)  ? Schedule_model::$comportamento[$item['comportamento']] : $item['comportamento']?></td>
                                                     <td><?= $item['message']?>
                                                         <span class="message_parent"><?= $item['message_parent'] ?></span></td>
                                                 </tr>
