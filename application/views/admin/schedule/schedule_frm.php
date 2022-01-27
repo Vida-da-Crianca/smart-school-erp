@@ -493,45 +493,48 @@
                 return true;
             },
             async getStudentsBySnackId() {
-                if (!this.isValidSchedule()) return;
-                let app = this
-                await axios.post('/admin/schedule/studentsBySnackId/' + this.agenda.snack_id, {
-                    ...this.agenda
-                })
-                    .then(function (response) {
-                        let day = new Date();
-                        let minutes = day.getFullMinutes();
-                        let hour = day.getFullHours();
-                        app.students = response.data.map((student) => {
-                            student['agenda'] = {}
-                            student['agenda']['alimentacao'] = {
-                                id: null,
-                                horario: hour + ':' + minutes,
-                                comportamento: null
-                            }
-                            student['agenda']['sono'] = {
-                                id: null,
-                            }
-                            student['agenda']['banho'] = {
-                                id: null,
-                            }
-                            student['agenda']['evacuacao'] = {
-                                id: null,
-                                textura: null,
-                            }
-                            student['old_agendas'] = []
-                            return student;
-                        })
+                try {
+                    if (!this.isValidSchedule()) return;
+                    const app = this
+                    const response = await axios.post('/admin/schedule/studentsBySnackId/' + this.agenda.snack_id, {
+                        ...this.agenda
+                    });
 
-                    })
-                    .catch(function (error) {
-                        console.error(error)
-                        alert('Erro ao carregar os alunos')
-                    })
-                if (this.students.length > 0) {
-                    for (let i = 0; i < app.students.length; i++) {
-                        app.students[i].old_agendas = await app.getAgendaData(app.students[i])
-                    }
+                    const day = new Date();
+                    const minutes = day.getFullMinutes();
+                    const hour = day.getFullHours();
+                    const formatedData = await Promise.all(response.data.map(async (student) => {
+                        const formatedStudent = {
+                            ...student,
+                            agenda: {
+                                alimentacao: {
+                                    id: null,
+                                    horario: `${hour}:${minutes}`,
+                                    comportamento: null
+                                },
+                                sono: {
+                                    id: null,
+                                },
+                                banho: {
+                                    id: null,
+                                },
+                                evacuacao: {
+                                    id: null,
+                                }
+                            }
+                        }
+
+                        return {
+                            ...formatedStudent,
+                            old_agendas: await this.getAgendaData(formatedStudent)
+                        }                        
+                    }))
+
+                    this.students = formatedData;
+                    return formatedData;
+                } catch (error) {
+                    console.error(error)
+                    alert('Erro ao carregar os alunos')
                 }
             },
             getSchedule() {
