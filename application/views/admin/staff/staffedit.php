@@ -19,8 +19,6 @@
                             <div class="tshadow mb25 bozero">    
 
                                 <h4 class="pagetitleh2"><?php echo $this->lang->line('basic_information'); ?> </h4>
-
-
                                 <div class="around10">
                                     <?php //echo validation_errors()?>
                                     <?php if ($this->session->flashdata('msg')) { ?>
@@ -28,6 +26,7 @@
                                     <?php } ?>  
                                     <?php echo $this->customlib->getCSRF(); ?>
 
+                                    <div class="col-md-10">
                                     <div class="row">
                                         <?php if (!$staffid_auto_insert) { ?>
                                             <div class="col-md-3">
@@ -219,6 +218,7 @@
                                                 <div class="form-group">
                                                     <label for="exampleInputEmail1"><?php echo $this->lang->line('marital_status'); ?></label>
                                                     <select class="form-control" name="marital_status">
+
                                                         <option value=""><?php echo $this->lang->line('select'); ?></option>
                                                         <?php foreach ($marital_status as $makey => $mavalue) {
                                                             ?>
@@ -235,17 +235,46 @@
                                             </div>
 
 
-                                        <?php } if ($sch_setting->staff_photo) { ?>
-                                            <div class="col-md-3">
-                                                <div class="form-group">
-                                                    <label for="exampleInputFile"><?php echo $this->lang->line('photo'); ?></label>
-                                                    <div><input class="filestyle form-control" type='file' name='file' id="file" size='20' />
-                                                    </div>
-                                                    <span class="text-danger"><?php echo form_error('file'); ?></span></div>
-                                            </div>                          
                                         <?php } ?>
 
                                     </div>
+
+                                    </div>
+                                    
+                                    <div class="col-md-2 text-center">
+                                                 <div class="form-group">
+                                                        <label for="exampleInputFile"><?php echo $this->lang->line('photo'); ?></label>
+                                                        <div>
+                                                            <img src="<?=base_url('uploads/staff_images/') . $staff["image"]?>" id="foto-aluno" style="width: 100px; height: 110px;">
+                                                            <br /><br />
+                                                            <input class="filestyle form-control" type='file' onchange="readURL(this);" name='file' id="file" size='20' accept=".png,png,.jpeg,jpeg,.jpeg,.jpeg,jpg,.jpg" />
+                                                            <br />
+
+
+                                                            <script>
+                                                                function readURL(input) {
+                                                                  if (input.files && input.files[0]) {
+                                                                    var reader = new FileReader();
+
+                                                                    reader.onload = function(e) {
+                                                                      $('#foto-aluno')
+                                                                        .attr('src', e.target.result);
+                                                                      $('#foto-aluno').show();
+                                                                    };
+
+                                                                    reader.readAsDataURL(input.files[0]);
+                                                                  }
+                                                                }
+                                                            </script>
+
+                                                        
+                                                        
+                                                        
+                                                        </div>
+                                                        <span class="text-danger"><?php echo form_error('file'); ?></span>
+                                                    </div>
+                                             </div>
+
                                     <div class="row">
                                         <?php if ($sch_setting->staff_current_address) { ?>
 
