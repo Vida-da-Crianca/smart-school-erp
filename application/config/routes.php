@@ -47,4 +47,5 @@ $route['admin/curriculos']['post'] = 'admin/Staff/curriculos'; // Pesquisar por 
 $route['admin/curriculos/ver/(:num)']['get'] = 'admin/Staff/curriculos/$1'; // Ver um curriculo
 $route['admin/curriculos/salvar/(:any)']['post'] = 'admin/Staff/salvar_curriculo/$1'; // Salvar um curriculo
 $route['admin/curriculos/deletar/(:num)']['get'] = 'admin/Staff/curriculo_deletar/$1'; // Deletar um cúrriculo do banco de dados
-$route['admin/curriculos/pdf/(:num)']['get'] = 'admin/Staff/cv_pdf/$1';
+$route['admin/curriculos/pdf/(:num)']['get'] = 'admin/Staff/cv_pdf/$1'; // Gerar pdf do cúrriculo
+$route['admin/curriculos/(:num)/status/(:num)']['post'] = 'admin/Staff/entrevistado/$1/$2'; // Alterar status do entrevistado

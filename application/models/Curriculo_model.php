@@ -10,6 +10,10 @@ class Curriculo_model extends MY_Model
             $fields = array('foto' => array('type' => 'TEXT'));
             $this->dbforge->add_column('cl_curriculos', $fields);
         }
+        if(!$this->db->field_exists('entrevistado', 'cl_curriculos')){
+            $fields = array('entrevistado' => array('type' => 'INT', 'constraint' => 1, 'default' => 0, 'null' => false));
+            $this->dbforge->add_column('cl_curriculos', $fields);
+        }
 
         parent::__construct();
     }
@@ -116,6 +120,35 @@ class Curriculo_model extends MY_Model
             return false;
     }
 
+    /* Alterar status do entrevistado
+    - 0 = Não entrevistado
+    - 1 = Entrevistado
+    */
+
+    public function status_entrevistado($id, $status = 0){
+
+        $this->db->trans_start();
+        $this->db->trans_strict(false);
+
+        $this->db->where('id', $id);
+        $query_update = $this->db->update('cl_curriculos', array('entrevistado' => $status));
+        $this->db->trans_complete();
+
+        if($this->db->trans_status() === FALSE){
+            $this->db->trans_rollback();
+            return false;
+        }
+
+        if($query_update){
+            return true;
+        }
+
+        return false;
+
+    }
+
+    /*
+    Função não vai ser mais utilizada, porem decidi manter a mesma caso precise no futuro.
     public function delete($id, $foto = null){
         $this->db->trans_start();
         $this->db->trans_strict(false);
@@ -143,7 +176,7 @@ class Curriculo_model extends MY_Model
 
         return false;
 
-    }
+    }*/
 
     public function getData($data){
         if(empty($data))
