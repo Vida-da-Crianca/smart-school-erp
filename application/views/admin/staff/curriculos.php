@@ -443,6 +443,7 @@
                                                 <th>Data de Nascimento</th>
                                                 <th><?php echo $this->lang->line('mobile_no'); ?></th>
                                                 <th>Data Envio</th>
+                                                <th class="text-center">Entrevistado</th>
                                                 <th class="text-right"><?php echo $this->lang->line('action'); ?></th>
                                             </tr>
                                         </thead>
@@ -454,9 +455,18 @@
                                                     <td><?=date('d/m/Y', strtotime($curriculo['data_nascimento'])) . ' - ' . $this->curriculo_model->calcularIdade($curriculo['data_nascimento']) . ' anos' ?></td>
                                                     <td><i class="fab fa-whatsapp" style="color: #25D366; cursor: pointer;" onclick="callwz(<?=$this->curriculo_model->getWhatsapp($curriculo['telefone'])?>);" aria-hidden="true"></i> <?=$this->curriculo_model->masc_tel($curriculo['telefone'])?></td>
                                                     <td><?=date('d/m/Y H:i', strtotime($curriculo['data_envio']))?></td>
+                                                    <td class="text-center" id="entrevistado-<?=$curriculo['id']?>">
+                                                        <?php if($curriculo['entrevistado']): ?>
+                                                            <span class="text-success"><i class="fa fa-check"></i></span>
+                                                        <?php else: ?>
+                                                            <span class="text-danger"><i class="fa fa-close"></i></span>
+                                                        <?php endif; ?>
+                                                    </td>
                                                     <td  class="pull-right">
                                                         <a title="<?=$this->lang->line('cl_view_cv')?>" target="_blank" href="<?php echo base_url('admin/curriculos/ver/'.$curriculo['id'])?>"><i class="fa fa-navicon"></i></a>
-                                                        <a title="<?=$this->lang->line('cl_delete_cv')?>"  href="javascript:void(0);" style="color: red;" onclick="confirmar_deletar(<?=$curriculo['id']?>);"><i class=" fa fa-trash"></i></a>
+                                                        <a title="Marcar candidato como entrevistado" href="javascript:void(0);" onclick="status_entrevistado(<?=$curriculo['id']?>, 1);" style="color: lime;"><i class="fa fa-check"></i></a>
+                                                        <a title="Marcar candidato como não entrevistado" href="javascript:void(0);" onclick="status_entrevistado(<?=$curriculo['id']?>, 0);" style="color: red;"><i class="fa fa-close"></i></a>
+                                                        <!--<a title="<?=$this->lang->line('cl_delete_cv')?>"  href="javascript:void(0);" style="color: red;" onclick="confirmar_deletar(<?=$curriculo['id']?>);"><i class=" fa fa-trash"></i></a>-->
                                                         
                                                     </td>
                                                 </tr>
@@ -552,7 +562,7 @@
           }
     };
 
-    function confirmar_deletar(id) {
+    /*function confirmar_deletar(id) {
         $.confirm({
             title: '<?=$this->lang->line('cl_confirm_action')?>',
             content: '<?=$this->lang->line('cl_confirm_delete')?>',
@@ -572,6 +582,41 @@
                 }
             }
         });
+    }*/
+
+    function status_entrevistado(id, status){
+        $.confirm({
+            content: function() {
+                var self = this;
+                return $.ajax({
+                    url: '<?=base_url('admin/curriculos/')?>' + id + '/status/' + status,
+                    dataType: 'json',
+                    method: 'POST'
+                }).done(function(response){
+
+                    if(response.status){
+                        self.setTitle('Sucesso!');
+                        self.setContentAppend('<div class="alert alert-success">Status do entrevistado alterado com sucesso.</div>');
+                        if(status == 1)
+                            $("#entrevistado-" + id).html('<span class="text-success"><i class="fa fa-check"></i></span>');
+                        else
+                            $("#entrevistado-" + id).html('<span class="text-danger"><i class="fa fa-close"></i></span>');
+
+                    } else {
+                        self.setTitle('Erro de processamento');
+                        self.setContentAppend('<div class="alert alert-danger">Ocorreu um erro ao tentar alterar o status do entrevistado. Tente novamente.</div>');
+                    }
+                }).fail(function(){
+                    self.setTitle('Erro interno');
+                    self.setContentAppend('<div class="alert alert-danger">Ocorreu um erro interno no servidor. Tente novamente.</div>');
+                })
+            },
+            buttons: {
+                'Entendido': function() {
+
+                }
+            }
+        })
     }
 
     function efetivacao_confirmada() {
