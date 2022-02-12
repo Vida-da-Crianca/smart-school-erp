@@ -4,10 +4,14 @@ services:
     image: redis:6.0.9
     networks:
       - erp_net
+    ports:
+      - 6379:6379
   memcahed:
     image: memcached:1.6-alpine
     networks:
       - erp_net
+    ports:
+      - 11211:11211
 
   db:
     image: mysql:8
@@ -28,7 +32,7 @@ services:
     networks:
      - erp_net
     ports:
-     - 3307:3306
+     - 3306:3306
     configs:
       -
         source: mysql.conf
@@ -66,7 +70,7 @@ services:
       - VERSION_erp=1.0.2
       - PHP_DATE_TIMEZONE=America/Sao_Paulo
       - LICENSE_APP=63AH2N-XTFFLP-952QAM-UTBUai9NL0Q5R2lLeE4xbXZBMGVMVnEwMlpvTTU0QmNFcml6emVLNkk0MD0=
-      - BASE_URL=http://erp.dev.in/
+      - BASE_URL=http://localhost:8089/
       - ENVIRONMENT=development
     volumes:
      - ./:/app/
@@ -91,6 +95,8 @@ services:
     networks:
       - proxy
       - erp_net
+    ports:
+      - 8089:80
 networks:
   proxy:
     external: true
