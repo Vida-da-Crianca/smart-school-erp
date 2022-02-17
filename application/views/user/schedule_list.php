@@ -1,3 +1,11 @@
+<?php
+    if (!$this->input->get('date_start')) {
+        $dateStart = date('Y-m-d');
+        $dateEnd = date('Y-m-d');
+        $url = site_url("user/user/schedule?date_start=$dateStart&date_end=$dateEnd");
+        echo "<script>window.top.location.href = '$url'</script>";
+    }
+?>
 <div class="content-wrapper">
 
     <section class="content">

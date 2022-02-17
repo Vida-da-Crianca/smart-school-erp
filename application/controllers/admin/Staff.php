@@ -133,7 +133,7 @@ class Staff extends Admin_Controller {
                 $this->form_validation->set_rules('designation', $this->lang->line('designation'), 'trim|required|xss_clean');
                 $this->form_validation->set_rules('gender', $this->lang->line('gender'), 'trim|required|xss_clean');
                 $this->form_validation->set_rules('contactno', 'Telefone', 'trim|required|xss_clean');
-                $this->form_validation->set_rules('emergency_no', 'Telefone', 'trim|required|xss_clean');
+                $this->form_validation->set_rules('emergency_no', utf8_encode('Telefone de Emergência'), 'trim|required|xss_clean');
                 $this->form_validation->set_rules('dob', $this->lang->line('date_of_birth'), 'trim|required|xss_clean');
                 $this->form_validation->set_rules('postal_code', 'CEP', 'trim|required|xss_clean');
                 $this->form_validation->set_rules('numero', 'Numero da casa', 'trim|required|xss_clean');
@@ -141,6 +141,10 @@ class Staff extends Admin_Controller {
                 $this->form_validation->set_rules('address', $this->lang->line('address'), 'trim|required|xss_clean');
                 $this->form_validation->set_rules('qualification', $this->lang->line('qualification'), 'trim|required|xss_clean');
                 $this->form_validation->set_rules('work_exp', 'Experiencia Profissional', 'trim|required|xss_clean');
+                $this->form_validation->set_rules('file', $this->lang->line('image'), 'callback_handle_upload');
+
+
+
 
                 if ($this->form_validation->run() == true) {
                     $custom_field_post = $this->input->post("custom_fields[staff]");
@@ -189,6 +193,21 @@ class Staff extends Admin_Controller {
 
                     $custom_field_post = $this->input->post("custom_fields[staff]");
 
+                    $this->resp_foto = $this->input->post("foto");
+
+                    if (isset($_FILES["file"]) && !empty($_FILES['file']['name'])) {
+                        $fileInfo = pathinfo($_FILES["file"]["name"]);
+                        $img_name = $this->curriculo_model->rand_hash() . '.' . $fileInfo['extension'];
+                        if(!file_exists("./uploads/cv_images/"))
+                            mkdir("./uploads/cv_images", 0777, TRUE);
+
+                        @unlink("./uploads/cv_images/{$this->input->post("foto")}");
+
+
+                        move_uploaded_file($_FILES["file"]["tmp_name"], "./uploads/cv_images/" . $img_name);
+                        $this->resp_foto = $img_name;
+                    }
+
                     if($action == 'salvar'){
 
                         $this->customfield_model->updateRecord($custom_value_array, $id, 'staff');
@@ -217,6 +236,7 @@ class Staff extends Admin_Controller {
                         $data['contrato_inicio'] = $date_of_joining;
                         $data['numero'] = $numero;
                         $data['endereco_permanente'] = $permanent_address;
+                        $data['foto'] = $this->resp_foto;
 
                         $result_update = $this->curriculo_model->update($id, $data);
 
@@ -244,7 +264,7 @@ class Staff extends Admin_Controller {
                         $contact_no = preg_replace("/[^0-9]/", "",$this->input->post("contactno"));
                         $emergency_no = preg_replace("/[^0-9]/", "", $this->input->post("emergency_no"));
                         $email = $this->input->post("email");
-                        $date_of_joining = $this->curriculo_model->getData($this->input->post("date_of_joining"));
+                        $date_of_joining = date('Y-m-d');
                         $date_of_leaving = $this->curriculo_model->getData($this->input->post("date_of_leaving"));
                         $address = $this->input->post("address");
                         $qualification = $this->input->post("qualification");
@@ -533,7 +553,10 @@ class Staff extends Admin_Controller {
                 $this->db->trans_rollback();
             }
 
-            echo json_encode(array('status' => $this->resp_status, 'msg' => $this->resp_msg, 'id' => (isset($this->resp_id) ? $this->resp_id : '')));
+            if(!isset($this->resp_foto))
+                $this->resp_foto = '';
+
+            echo json_encode(array('status' => $this->resp_status, 'foto' => $this->resp_foto, 'msg' => $this->resp_msg, 'id' => (isset($this->resp_id) ? $this->resp_id : '')));
             exit;
 
         } else {

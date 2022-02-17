@@ -219,7 +219,7 @@
                                         <div class="col-md-4">
                                             <div class="form-group">
                                                 <label>Recado</label>
-                                                <input @change="save(student)"
+                                                <input :readonly="student.agenda.alimentacao.id === null" @change="save(student)"
                                                        v-model="student.agenda.alimentacao.message"
                                                        class="form-control"
                                                        type="text">
@@ -272,7 +272,8 @@
                                         <div class="col-md-4">
                                             <div class="form-group">
                                                 <label>Recado</label>
-                                                <input @change="save(student)"
+                                                <input :readonly="student.agenda.sono.id === null" @change="save(student)"
+
                                                        v-model="student.agenda.sono.message"
                                                        class="form-control"
                                                        type="text">
@@ -323,6 +324,7 @@
                                             <div class="form-group">
                                                 <label>Recado</label>
                                                 <input @change="save(student)"
+                                                       :readonly="student.agenda.evacuacao.id === null"
                                                        v-model="student.agenda.evacuacao.message"
                                                        class="form-control"
                                                        type="text">
@@ -380,6 +382,7 @@
                                             <div class="form-group">
                                                 <label>Recado</label>
                                                 <input @change="save(student)"
+                                                       :readonly="student.agenda.banho.id === null"
                                                        v-model="student.agenda.banho.message"
                                                        class="form-control"
                                                        type="text">
