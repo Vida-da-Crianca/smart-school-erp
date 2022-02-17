@@ -48,17 +48,20 @@ class Mailer
             ]
         ];
 
+
+   
+
         if ($this->CI->mail_config->email_type == "smtp") {
           
 
             $mail->IsSMTP();
             $mail->SMTPDebug = $this->isDebug;  
             $mail->SMTPAuth   = true;
-            $mail->SMTPSecure = $this->CI->mail_config->ssl_tls;
-            $mail->Host       = $this->CI->mail_config->smtp_server;
+            $mail->SMTPSecure = getenv('ENVIRONMENT') == 'development' ? getenv('MAIL_ENCRYPT') :  $this->CI->mail_config->ssl_tls;
+            $mail->Host       = getenv('ENVIRONMENT') == 'development' ? getenv('MAIL_HOST')  : $this->CI->mail_config->smtp_server;
             $mail->Port       = $this->CI->mail_config->smtp_port;
-            $mail->Username   = $this->CI->mail_config->smtp_username;
-            $mail->Password   = $this->CI->mail_config->smtp_password;
+            $mail->Username   = getenv('ENVIRONMENT') == 'development' ? getenv('MAIL_USER')  : $this->CI->mail_config->smtp_username;
+            $mail->Password   = getenv('ENVIRONMENT') == 'development' ? getenv('MAIL_PASSWORD')  : $this->CI->mail_config->smtp_password;
 
             
         }

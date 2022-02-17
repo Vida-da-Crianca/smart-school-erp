@@ -64,6 +64,7 @@ class  MailBilletSendCommand  extends BaseCommand
                 $items[] = $bItem->feeItems->first();
             }
             $billet->feeItems = collect($items);
+            dump($billet->id);
             $this->handleTrySendMail($billet, function($v) use($billet){
                 $mail =  (object) $v;
                 if( $mail->status ) {
