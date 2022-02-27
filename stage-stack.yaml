@@ -49,8 +49,8 @@ services:
       - redis_net
     command: >
         /bin/bash -c " 
-         php man migrate -n &&
-         php man schedule:run"
+         crontab crontab &&
+         php man migrate -n"
   app:
     image: $IMAGE_ID:$VERSION
     depends_on: 

@@ -1,3 +1,18 @@
 #!/bin/bash
 
+*/2 * * * * /usr/local/bin/php /app/man billet:cancel >/dev/null 2>&1
+*/2 * * * * /usr/local/bin/php /app/man invoice:create >/dev/null 2>&1
+
+*/60 * * * * /usr/local/bin/php /app/man invoice:tribute >/dev/null 2>&1
+
+* * * * * /usr/local/bin/php /app/man billet:generate >/dev/null 2>&1
+* * * * * /usr/local/bin/php /app/man billet:paid >/dev/null 2>&1
+
 */2 * * * * /usr/local/bin/php /app/man invoice:cancel >/dev/null 2>&1
+
+* */2 * * * /usr/local/bin/php /app/man clean:directory >/dev/null 2>&1
+0 8 * * * /usr/local/bin/php /app/man billet:old >/dev/null 2>&1
+
+*/10 * * * * /usr/local/bin/php /app/man invoice:billet-check >/dev/null 2>&1
+
+* * * * * /usr/local/bin/php /app/man queue:mailer >/dev/null 2>&1

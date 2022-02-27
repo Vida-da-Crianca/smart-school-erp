@@ -48,16 +48,16 @@ class ScheduleCommand extends BaseCommand
         $this->title('Schedule running');
 
         $comandList = [
-            'invoice:cancel' => 120,
-            'invoice:create' => 120,
-            'invoice:tribute' => (60 * 60),
-            'billet:generate' =>  60,
-            'billet:paid' => 60 * 60,
-            'billet:cancel' => 10 * (60),
-            'clean:directory' => 2 * (60 * 60),
-            'invoice:billet-check' => 10 * 60,
-            'billet:old' => ['at' => '08:00', 'timezone' => 'America/Sao_Paulo', 'interval' => 60],
-            'queue:mailer' => 60
+            // 'invoice:cancel' => 120,
+            // 'invoice:create' => 120,
+            // 'invoice:tribute' => (60 * 60),
+            // 'billet:generate' =>  60,
+            // 'billet:paid' => 60 * 60,
+            // 'billet:cancel' => 10 * (60),
+            // 'clean:directory' => 2 * (60 * 60),
+            // 'invoice:billet-check' => 10 * 60,
+            // 'billet:old' => ['at' => '08:00', 'timezone' => 'America/Sao_Paulo', 'interval' => 60],
+            // 'queue:mailer' => 60
 
         ];
         $runningProcess = [];
