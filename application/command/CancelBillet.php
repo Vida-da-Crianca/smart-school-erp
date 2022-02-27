@@ -2,6 +2,7 @@
 
 namespace Application\Command;
 
+use Application\Core\LoggerApplication;
 use Illuminate\Database\Eloquent\Collection;
 use Packages\Commands\BaseCommand;
 
@@ -34,7 +35,9 @@ class CancelBillet extends BaseCommand
 
         $this->CI->load->library('bank_payment_inter');
         $this->CI->load->model(['eloquent/Billet_eloquent', 'eloquent/Invoice_eloquent']);
+        dump('Running');
 
+        LoggerApplication::info('Ok...');
         if (!isValidDay()) {
             return;
         }

@@ -93,22 +93,22 @@ abstract class BaseCommand extends Command
 
             if (method_exists($this, 'start')) {
                 $isRunning =  in_array($this->name, $this->exceptions) ? false : true;
-                $locked = !$isRunning  ? 0 : \ProcessControl::where('name', $this->name)->count();
+                // $locked = !$isRunning  ? 0 : \ProcessControl::where('name', $this->name)->count();
                 
-                if ($locked > 0) {
-                    dump($this->name .' is running...');
-                    return 0;
-                }
-                if ($isRunning){
-                    \ProcessControl::create(['name' => $this->name, 'status' => 'running']);
-                }
+                // if ($locked > 0) {
+                //     dump($this->name .' is running...');
+                //     return 0;
+                // }
+                // if ($isRunning){
+                //     \ProcessControl::create(['name' => $this->name, 'status' => 'running']);
+                // }
                    
                 $this->start();
 
-                if ($isRunning) {
-                    sleep(3);
-                    \ProcessControl::where('name', $this->name)->delete();
-                }
+                // if ($isRunning) {
+                //     sleep(3);
+                //     \ProcessControl::where('name', $this->name)->delete();
+                // }
             } else {
                 throw new \RuntimeException("Command is not set correctly.");
             }
