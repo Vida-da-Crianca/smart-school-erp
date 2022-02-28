@@ -32,7 +32,7 @@ class CancelBillet extends BaseCommand
 
     protected function start()
     {
-
+        LoggerApplication::info('Ok');
         $this->CI->load->library('bank_payment_inter');
         $this->CI->load->model(['eloquent/Billet_eloquent', 'eloquent/Invoice_eloquent']);
         dump('Running');

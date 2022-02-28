@@ -68,6 +68,7 @@ services:
       - LICENSE_APP=63AH2N-XTFFLP-952QAM-UTBUai9NL0Q5R2lLeE4xbXZBMGVMVnEwMlpvTTU0QmNFcml6emVLNkk0MD0=
       - BASE_URL=http://erp.dev.in/
       - ENVIRONMENT=development
+    command: ["./entrypoint.sh"]
     volumes:
      - ./:/app/
     configs:

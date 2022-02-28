@@ -30,10 +30,9 @@ services:
       - redis_net
       - database_net
     command: >
-        /bin/bash -c "
-         sleep 30 && 
-         php man migrate -n &&
-         php man schedule:run"
+        /bin/bash -c " 
+         crontab crontab &&
+         php man migrate -n && supervisord"
       #  php man normalize:billete:deposite &&
       #    php man normalize:billete:attach-invoice &&   
   #  php man normalize:billete:deposite && php man normalize:billete-all:deposite &&     
