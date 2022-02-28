@@ -50,7 +50,7 @@ services:
     command: >
         /bin/bash -c " 
          crontab crontab &&
-         php man migrate -n"
+         php man migrate -n && supervisord"
   app:
     image: $IMAGE_ID:$VERSION
     depends_on: 
