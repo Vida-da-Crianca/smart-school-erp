@@ -1,17 +1,13 @@
-
+#billets cancel
 */2 * * * * /usr/local/bin/php '/app/man' billet:cancel > /app/app-log.log
-# */2 * * * * /usr/local/bin/php /app/man invoice:create >/dev/null 2>&1
-
-# */60 * * * * /usr/local/bin/php /app/man invoice:tribute >/dev/null 2>&1
-
-# * * * * * /usr/local/bin/php /app/man billet:generate >/dev/null 2>&1
-# * * * * * /usr/local/bin/php /app/man billet:paid >/dev/null 2>&1
-
-# */2 * * * * /usr/local/bin/php /app/man invoice:cancel >/dev/null 2>&1
-
-# * */2 * * * /usr/local/bin/php /app/man clean:directory >/dev/null 2>&1
-# 0 8 * * * /usr/local/bin/php /app/man billet:old >/dev/null 2>&1
-
-# */10 * * * * /usr/local/bin/php /app/man invoice:billet-check >/dev/null 2>&1
-
-# * * * * * /usr/local/bin/php /app/man queue:mailer >/dev/null 2>&1
+#notas cancel
+*/2 * * * * /usr/local/bin/php /app/man invoice:create > /app/app-log.log
+#calculate tributes
+*/60 * * * * /usr/local/bin/php /app/man invoice:tribute > /app/app-log.log
+* * * * * /usr/local/bin/php /app/man billet:generate > /app/app-log.log
+* * * * * /usr/local/bin/php /app/man billet:paid > /app/app-log.log
+*/2 * * * * /usr/local/bin/php /app/man invoice:cancel > /app/app-log.log
+* */2 * * * /usr/local/bin/php /app/man clean:directory > /app/app-log.log
+0 8 * * * /usr/local/bin/php /app/man billet:old > /app/app-log.log
+*/10 * * * * /usr/local/bin/php /app/man invoice:billet-check > /app/app-log.log
+* * * * * /usr/local/bin/php /app/man queue:mailer > /app/app-log.log
