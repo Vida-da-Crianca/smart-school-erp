@@ -1038,10 +1038,10 @@ class Customlib
 
     public function getMailMethod()
     {
-        /*$mail_method             = array();
+        $mail_method             = array();
         $mail_method['sendmail'] = 'SendMail';
         $mail_method['smtp']     = 'SMTP';
-        return $mail_method;*/
+        return $mail_method;
 		
 		return true;
     }
