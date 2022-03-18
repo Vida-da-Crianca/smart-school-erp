@@ -435,7 +435,13 @@ class Report extends Admin_Controller
             $data['resultlist'] = $this->student_model->admission_report($searchterm, $carray, $condition);
         }
         
-        $option_session_id =  $this->input->post('option_session_id') ?   $this->input->post('option_session_id') : $this->sch_setting_detail->session_id;
+        //$option_session_id =  $this->input->post('option_session_id') ?   $this->input->post('option_session_id') : $this->sch_setting_detail->session_id;
+        //$data['option_session_id'] = $option_session_id;
+        
+        $option_session_id = (isset($_POST['option_session_id']) ? $_POST['option_session_id'] : []);
+        if(count($option_session_id) <= 0){
+            $option_session_id[] = [98989898];
+        }     
         $data['option_session_id'] = $option_session_id;
         
         //Vamos montar os dados do relatorio aqui no controller
@@ -480,7 +486,7 @@ class Report extends Admin_Controller
                 LEFT JOIN student_session ON student_session.id = student_fee_items.student_session_id 
                 LEFT JOIN students ON students.id = student_session.student_id 
                 WHERE student_fee_items.id > 0 
-                AND student_session.session_id = $option_session_id  
+                AND student_session.session_id IN(".(implode(',', $option_session_id)).") 
                 AND student_fee_items.deleted_at IS NULL ";
             
             //Filtro por datas
