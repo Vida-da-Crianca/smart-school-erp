@@ -119,8 +119,49 @@
                           
                                     <label><?php echo $this->lang->line('session') ; ?></label>
                                     <?php
-                                    print(form_dropdown('option_session_id', $options_session, $option_session_id, 'class="form-control" '));
+                                     //print(form_dropdown('option_session_id', $options_session, $option_session_id, 'class="form-control" '));
                                     ?>
+                                    
+                                    
+                                    
+                                    <div class="row">
+                                        <div class="col-xs-12 dropdown" id="classDropdown0">
+                                            <div class="button-group w-full" data-toggle="dropdown">
+                                                <button type="button" class="btn btn-default btn-sm">
+                                                    <span data-default="Selecione a Sessão" class="dropdown-label">
+                                                        Selecione a Sessão</span> <span class="caret"></span>
+                                                </button>
+                                            </div>
+                                            <ul class="dropdown-menu">
+                                                <?php
+                                                foreach ($options_session as $id => $session) {
+                                                ?>
+                                                    <li class="ui-checkbox">
+                                                        <label class="small control control-checkbox" data-value="<?php echo $id ?>">
+                                                            <input type="checkbox" 
+                                                                   data-value="<?php echo $id ?>" 
+                                                                   data-label="<?php echo $session ?>" 
+                                                                       <?php //if (in_array($id, $option_session_id)) echo "checked" ?> 
+                                                                   name="option_session_id[]" 
+                                                                   value="<?php echo $id; ?>" />&nbsp;<?php echo $session ?>
+                                                            <div class="control_indicator"></div>
+                                                        </label>
+                                                    </li>
+
+                                                <?php
+
+                                                }
+                                                ?>
+
+
+                                            </ul>
+                                        </div>
+
+                                        <span class="text-danger"><?php echo form_error('class_id_option[]'); ?></span>
+                                    </div>
+                                    
+                                    
+                                    
                                     
                               
                         </div>
