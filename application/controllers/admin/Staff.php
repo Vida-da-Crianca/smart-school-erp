@@ -45,7 +45,7 @@ class Staff extends Admin_Controller {
             }
         }
 
-        $this->db->order_by('data_envio','asc');
+        $this->db->order_by('data_envio','desc');
 
 
         $get = $this->db->get();
@@ -86,8 +86,7 @@ class Staff extends Admin_Controller {
     }
 
 
-
-    public function curriculo_deletar($id){
+    /*public function curriculo_deletar($id){
         if (!$this->rbac->hasPrivilege('staff', 'can_edit')) {
             access_denied();
         }
@@ -101,6 +100,19 @@ class Staff extends Admin_Controller {
 
         redirect('admin/staff/curriculos');
 
+    }*/
+
+    public function entrevistado($id, $status){
+        if (!$this->rbac->hasPrivilege('staff', 'can_edit')) {
+            access_denied();
+        }
+
+        $result = $this->curriculo_model->status_entrevistado($id, $status);
+        if($result){
+            echo json_encode(array('status' => true));
+        } else {
+            echo json_encode(array('status' => false));
+        }
     }
 
     public function salvar_curriculo($action){

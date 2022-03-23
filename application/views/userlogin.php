@@ -119,7 +119,7 @@
                                         <label class="sr-only" for="form-username">
                                             <?php echo $this->lang->line('username'); ?></label>
                                         <input id="user_name" type="text" name="username"
-                                               placeholder="<?php echo $this->lang->line('username'); ?>"
+                                               placeholder="CPF do Responsável"
                                                class="form-username form-control" id="username">
                                         <span class="fa fa-envelope form-control-feedback"></span>
                                         <span class="text-danger"><?php echo form_error('username'); ?></span>
