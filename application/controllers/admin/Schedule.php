@@ -139,10 +139,10 @@ class Schedule extends Admin_Controller
 
             ];
             $result = $this->schedule_model->createAgendaBySnack("agenda_alimentacao", $payload);
-        } elseif ($snack->code == "sono") {
+        } elseif ($snack->code == "sono") {   
             $payload = [
-                "dormiu" => $agenda->sono->dormiu ?? date('H:i'),
-                "acordou" => $agenda->sono->acordou ?? date('H:i'),
+                "dormiu" => $agenda->sono->dormiu ?? null, // Não inserir horario automatico caso não tenha preenchido
+                "acordou" => $agenda->sono->acordou ?? null,// Não inserir horario automatico caso não tenha preenchido
                 "agenda_id" => $student->agenda_id,
                 "snack_id" => $snack->id,
                 "student_id" => $student->id,

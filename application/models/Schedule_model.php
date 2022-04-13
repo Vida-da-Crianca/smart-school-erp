@@ -36,6 +36,19 @@ class Schedule_model extends CI_Model
 
     private function recados_recentes_tabela(){
 
+        // Fixar agenda de sono
+        $fix_sono = array(
+            'acordou' => array(
+                'type' => 'time',
+                'null' => TRUE
+            ),
+            'dormiu' => array(
+                'type' => 'time',
+                'null' => TRUE
+            )
+        );
+        $this->dbforge->modify_column('agenda_sono', $fix_sono);
+
         $campos = array(
             'id' => array(
                 'type' => 'INT',
@@ -88,22 +101,25 @@ class Schedule_model extends CI_Model
         $dataPost = (object)$data;
         if($dataPost->snack_id == (5 || 6 || 7 || 12 || 13)){
             $data_agora = date('Y-m-d');
-            $data_result = $this->db->query("SELECT * FROM agenda_sono WHERE student_id = '{$dataPost->student_id}' AND created_at >= '{$data_agora} 00:00:00' AND created_at <= '{$data_agora} 23:59:59' ORDER BY created_at DESC")->row_object();
+            $data_horarios = $this->db->query("SELECT * FROM agenda_sono WHERE student_id = '{$dataPost->student_id}' AND created_at >= '{$data_agora} 00:00:00' AND created_at <= '{$data_agora} 23:59:59'")->result_object();
             
-            if($data_result){
-                if(!empty($data_result->dormiu) && !empty($data_result->acordou)){
-                    if($dataPost->horario >= $data_result->dormiu && $dataPost->horario <= $data_result->acordou){
-                        $resp['status'] = false;
-                        $resp['msg'] = 'Não é permitido cadastrar refeição no horario que o aluno estava dormindo.';
-                        return $resp;
-                    }
-                }
+            if($data_horarios){
 
-                if(!empty($data_result->dormiu) && empty($data_result->acordou)){
-                    if($dataPost->horario >= $data_result->dormiu){
-                        $resp['status'] = false;
-                        $resp['msg'] = 'Não é permitido cadastrar refeição no horario que o aluno esta dormindo.';
-                        return $resp;
+                foreach($data_horarios as $data_result){
+                    if(!empty($data_result->dormiu) && !empty($data_result->acordou) && isset($dataPost->horario)){
+                        if($dataPost->horario >= $data_result->dormiu && $dataPost->horario <= $data_result->acordou){
+                            $resp['status'] = false;
+                            $resp['msg'] = 'Não é permitido cadastrar refeição no horario que o aluno estava dormindo.';
+                            return $resp;
+                        }
+                    }
+
+                    if(!empty($data_result->dormiu) && empty($data_result->acordou)){
+                        if($dataPost->horario >= $data_result->dormiu){
+                            $resp['status'] = false;
+                            $resp['msg'] = 'Não é permitido cadastrar refeição no horario que o aluno esta dormindo.';
+                            return $resp;
+                        }
                     }
                 }
             }
@@ -249,11 +265,11 @@ class Schedule_model extends CI_Model
         $agenda_dados = $this->db->get();
         $agenda_dados = $agenda_dados->row_object();
 
-        if(isset($data->dormiu) || isset($data->acordou)){
+        if(isset($data->dormiu) && isset($data->acordou)){
             if($data->dormiu > $data->acordou || $data->acordou < $data->dormiu){
                 $resp['status'] = false;
                 $resp['msg'] = 'O campo dormiu não pode ser maior que o campo acordou.<br>O campo acordou não pode ser menor que o campo dormiu.';
-                return $resp;
+                return $resp; 
             }
         }
         // Bloqueio agenda
@@ -264,7 +280,7 @@ class Schedule_model extends CI_Model
 
             if($data_result){
 
-                if(!empty($data_result->dormiu) && !empty($data_result->acordou)){
+                if(!empty($data_result->dormiu) && !empty($data_result->acordou) && isset($data->horario)){
                     if($data->horario >= $data_result->dormiu && $data->horario <= $data_result->acordou){
                         $resp['status'] = false;
                         $resp['msg'] = 'Não é permitido cadastrar refeição no horario que o aluno estava dormindo.';
@@ -272,7 +288,7 @@ class Schedule_model extends CI_Model
                     }
                 }
 
-                if(!empty($data_result->dormiu) && empty($data_result->acordou)){
+                if(!empty($data_result->dormiu) && empty($data_result->acordou) && isset($data->horario)){
                     if($data->horario >= $data_result->dormiu){
                         $resp['status'] = false;
                         $resp['msg'] = 'Não é permitido cadastrar refeição no horario que o aluno esta dormindo.';
@@ -282,38 +298,42 @@ class Schedule_model extends CI_Model
             }
         }
 
-        $aluno = $this->db->query("SELECT firstname, lastname, parent_id FROM students WHERE id = '{$agenda_dados->student_id}' LIMIT 1")->row_object();
+        if(isset($agenda_dados->student_id)){
+            $aluno = $this->db->query("SELECT firstname, lastname, parent_id FROM students WHERE id = '{$agenda_dados->student_id}' LIMIT 1")->row_object();
 
-        if(isset($agenda_dados->message_parent) && isset($agenda_dados->message) && !empty($agenda_dados->message_parent) && !empty($agenda_dados->message)){
+            if(isset($agenda_dados->message_parent) && isset($agenda_dados->message) && !empty($agenda_dados->message_parent) && !empty($agenda_dados->message)){
 
-        } else {
-            // Enviar notificação para o professor.
-            if(isset($data->message_parent) && $agenda_dados->message_parent != $data->message_parent && !empty($data->message_parent)){
-                // Inserir recado na lista de recados
-                $this->db->insert('recados_recentes', array(
-                    'student_id' => $agenda_dados->student_id,
-                    'internal_id' => $data->id,
-                    'agenda_id' => $agenda_dados->agenda_id,
-                    'tabela' => $table,
-                    'created_by' => $agenda_dados->created_by
-                ));
-                $user = $this->session->userdata('student')['username'];
-                $this->firebase_model->sendNotification("Novo recado de {$user}", "Você recebeu um novo recado na agenda do aluno {$aluno->firstname} {$aluno->lastname}.\nRecado: {$data->message_parent}", $agenda_dados->created_by, 'staff');
-        
-            }
+            } else {
+                // Enviar notificação para o professor.
+                if(isset($data->message_parent) && $agenda_dados->message_parent != $data->message_parent && !empty($data->message_parent)){
+                    // Inserir recado na lista de recados
+                    $this->db->insert('recados_recentes', array(
+                        'student_id' => $agenda_dados->student_id,
+                        'internal_id' => $data->id,
+                        'agenda_id' => $agenda_dados->agenda_id,
+                        'tabela' => $table,
+                        'created_by' => $agenda_dados->created_by
+                    ));
+                    $user = $this->session->userdata('student')['username'];
+                    $url_action = base_url() . "admin/schedule/view/{$agenda_dados->agenda_id}/{$agenda_dados->student_id}";
+                    $this->firebase_model->sendNotification("Novo recado de {$user}", "Você recebeu um novo recado na agenda do(a) aluno(a) {$aluno->firstname} {$aluno->lastname}.\nRecado: {$data->message_parent}", $url_action, $agenda_dados->created_by, 'staff');
+            
+                }
 
-            // Enviar notificação para o responsável
-            else if(isset($data->message) && $agenda_dados->message != $data->message && !empty($data->message)){
-                // Inserir recado na lista de recados
-                $this->db->insert('recados_recentes', array(
-                    'student_id' => $agenda_dados->student_id,
-                    'internal_id' => $data->id,
-                    'agenda_id' => $agenda_dados->agenda_id,
-                    'tabela' => $table,
-                    'created_by' => 0
-                ));
-                $user = $this->session->userdata('admin')['username'];
-                $this->firebase_model->sendNotification("Novo recado do professor {$user}", "Você recebeu um novo recado do professor na agenda do(a) seu(sua) filh(a) {$aluno->firstname}.\nRecado: {$data->message}", $aluno->parent_id, 'parent');
+                // Enviar notificação para o responsável
+                else if(isset($data->message) && $agenda_dados->message != $data->message && !empty($data->message)){
+                    // Inserir recado na lista de recados
+                    $this->db->insert('recados_recentes', array(
+                        'student_id' => $agenda_dados->student_id,
+                        'internal_id' => $data->id,
+                        'agenda_id' => $agenda_dados->agenda_id,
+                        'tabela' => $table,
+                        'created_by' => 0
+                    ));
+                    $user = $this->session->userdata('admin')['username'];
+                    $url_action = base_url() . "user/user/scheduleShow/{$agenda_dados->agenda_id}/{$agenda_dados->student_id}";
+                    $this->firebase_model->sendNotification("Novo recado do professor {$user}", "Você recebeu um novo recado do(a) professor(a) na agenda do(a) seu(sua) filh(a) {$aluno->firstname}.\nRecado: {$data->message}", $aluno->parent_id, 'parent');
+                }
             }
         }
         

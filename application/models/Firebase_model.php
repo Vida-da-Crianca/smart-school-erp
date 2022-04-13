@@ -87,7 +87,7 @@ class Firebase_model extends MY_Model {
         }
     }
 
-    public function sendNotification($title, $message, $user_id, $user_type){
+    public function sendNotification($title, $message, $url, $user_id, $user_type){
         $user_tokens = $this->get_user_device_tokens($user_id, $user_type);
         if($user_tokens){
             $http_req = curl_init();
@@ -100,7 +100,8 @@ class Firebase_model extends MY_Model {
                 'registration_ids' => $user_tokens,
                 'notification' => array(
                     'title' => $title,
-                    'body' => $message
+                    'body' => $message,
+                    'click_action' => $url
                 )
             );
 
@@ -113,12 +114,7 @@ class Firebase_model extends MY_Model {
             curl_setopt($http_req, CURLOPT_TIMEOUT, 50);
             curl_setopt($http_req, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
 
-            var_dump($user_tokens);
-
             $result = curl_exec($http_req);
-
-            var_dump($result);
-
             curl_close($http_req);
             return TRUE;
         }
