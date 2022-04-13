@@ -265,5 +265,7 @@ if ($this->session->flashdata('success_msg')) {
 </div>
 
 <!-- Notificações Background com Firebase -->
-<script type="module" src="<?php echo base_url(); ?>sw/firebase"></script>
+<!-- Notificações Background com Firebase -->
+<script src="https://www.gstatic.com/firebasejs/7.23.0/firebase.js"></script>
+<script type="text/javascript" src="<?php echo base_url(); ?>sw/firebase"></script>
 <script type="text/javascript" src="<?php echo base_url(); ?>backend/recados/user_recados.js"></script>

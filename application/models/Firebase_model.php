@@ -2,12 +2,6 @@
 if (!defined('BASEPATH'))
 exit('No direct script access allowed');
 
-use Kreait\Firebase\Factory;
-use Kreait\Firebase\Messaging\CloudMessage;
-use Kreait\Firebase\Messaging\Notification;
-use Kreait\Firebase\Messaging\RawMessageFromArray;
-use Kreait\Firebase\Messaging\MulticastSendReport;
-
 class Firebase_model extends MY_Model {
     public function __construct() {
         // Verificar tabelas
@@ -96,48 +90,36 @@ class Firebase_model extends MY_Model {
     public function sendNotification($title, $message, $user_id, $user_type){
         $user_tokens = $this->get_user_device_tokens($user_id, $user_type);
         if($user_tokens){
-            $message = new RawMessageFromArray([
-                'android' => [
-                    // https://firebase.google.com/docs/reference/fcm/rest/v1/projects.messages#androidconfig
-                    'ttl' => '3600s',
-                    'priority' => 'high',
-                    'notification' => [
-                        'title' => $title,
-                        'body' => $message,
-                        'icon' => 'stock_ticker_update',
-                        'color' => '#f45342',
-                    ],
-                ],
-                'apns' => [
-                    // https://firebase.google.com/docs/reference/fcm/rest/v1/projects.messages#apnsconfig
-                    'headers' => [
-                        'apns-priority' => '5',
-                    ],
-                    'payload' => [
-                        'aps' => [
-                            'alert' => [
-                                'title' => $title,
-                                'body' => $message,
-                            ],
-                            'badge' => 42,
-                        ],
-                    ],
-                ],
-                'webpush' => [
-                    // https://firebase.google.com/docs/reference/fcm/rest/v1/projects.messages#webpushconfig
-                    'headers' => [
-                        'Urgency' => 'high',
-                    ],
-                    'notification' => [
-                        'title' => $title,
-                        'body' => $message
-                    ],
-                ],
-            ]);
+            $http_req = curl_init();
+            $http_headers = array(
+                'Authorization: key=AAAAMkieMLo:APA91bEnbmWd57QgsnP_0jEZj7m7vSZRhVM2z91A2PhM_h5wmPmVdaY2N_RvTz7YyhhOvW9faMqlqGA55yXPI09cFksugYP8qovUWc0Y5iWsjjzDoIK-mzoTgd6eNvefyDaKceo24V_F',
+                'Content-Type: application/json'
+            );
 
-            $factory = (new Factory)->withServiceAccount(__DIR__ . '/../../erp-firebase.json');
-            $messaging = $factory->createMessaging();
-            $resp = $messaging->sendMulticast($message, $user_tokens);
+            $message = array(
+                'registration_ids' => $user_tokens,
+                'notification' => array(
+                    'title' => $title,
+                    'body' => $message
+                )
+            );
+
+            curl_setopt($http_req, CURLOPT_URL, "https://fcm.googleapis.com/fcm/send");
+            curl_setopt($http_req, CURLOPT_POST, true);
+            curl_setopt($http_req, CURLOPT_HTTPHEADER, $http_headers);
+            curl_setopt($http_req, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($http_req, CURLOPT_SSL_VERIFYPEER, false);
+            curl_setopt($http_req, CURLOPT_POSTFIELDS, json_encode($message));
+            curl_setopt($http_req, CURLOPT_TIMEOUT, 50);
+            curl_setopt($http_req, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
+
+            var_dump($user_tokens);
+
+            $result = curl_exec($http_req);
+
+            var_dump($result);
+
+            curl_close($http_req);
             return TRUE;
         }
         return FALSE;
