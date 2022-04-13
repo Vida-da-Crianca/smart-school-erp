@@ -12,6 +12,7 @@ class Admin extends Admin_Controller
         parent::__construct();
         $this->load->model("classteacher_model");
         $this->load->model("Staff_model");
+        $this->load->model('schedule_model');
         $this->load->library('Enc_lib');
 
         $this->sch_setting_detail = $this->setting_model->getSetting();
@@ -813,6 +814,22 @@ class Admin extends Admin_Controller
             //==================
             $response = $this->auth->andapp_update();
         }
+    }
+
+    public function recados(){
+        if($this->session->userdata('admin')){
+            $this->output->set_content_type('application/json');
+            $this->output->set_output(json_encode(array('result' => true, 'data' => $this->schedule_model->getRecados($this->session->userdata('admin')['id'], true))));
+            return;
+        }
+        $this->output->set_output(json_encode(array('result' => false)));
+    }
+
+    public function send_recados(){
+        $result = $this->schedule_model->ajaxRecados($this->input->post(NULL, FALSE));
+        $this->output->set_content_type('application/json');
+        $this->output->set_output(json_encode($result));
+
     }
 
 }

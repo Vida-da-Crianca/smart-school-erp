@@ -43,9 +43,13 @@ $route['admin/documents/(:any)']['delete'] = 'admin/DocumentController/destroy/$
 $route['workwithus'] = 'welcome/workwithus';
 $route['workwithus/enviar']['post'] = 'welcome/workwithus_ajax';
 $route['admin/curriculos'] = 'admin/Staff/curriculos'; // Lista de curriculos
-$route['admin/curriculos']['post'] = 'admin/Staff/curriculos'; // Pesquisar por cargo
+//$route['admin/curriculos'] = 'admin/Staff/curriculos'; // Pesquisar por cargo
 $route['admin/curriculos/ver/(:num)']['get'] = 'admin/Staff/curriculos/$1'; // Ver um curriculo
 $route['admin/curriculos/salvar/(:any)']['post'] = 'admin/Staff/salvar_curriculo/$1'; // Salvar um curriculo
-$route['admin/curriculos/deletar/(:num)']['get'] = 'admin/Staff/curriculo_deletar/$1'; // Deletar um cúrriculo do banco de dados
-$route['admin/curriculos/pdf/(:num)']['get'] = 'admin/Staff/cv_pdf/$1'; // Gerar pdf do cúrriculo
+$route['admin/curriculos/deletar/(:num)']['get'] = 'admin/Staff/curriculo_deletar/$1'; // Deletar um cï¿½rriculo do banco de dados
+$route['admin/curriculos/pdf/(:num)']['get'] = 'admin/Staff/cv_pdf/$1'; // Gerar pdf do cï¿½rriculo
 $route['admin/curriculos/(:num)/status/(:num)']['post'] = 'admin/Staff/entrevistado/$1/$2'; // Alterar status do entrevistado
+
+// Sistema de notificaÃ§Ãµes push
+$route['sw/firebase'] = 'firebase/user_firebase_script';
+$route['sw/token']['post'] = 'firebase/ajax_salvar_token';
