@@ -17,7 +17,8 @@ messaging.setBackgroundMessageHandler(function(payload) {
   );
   const notificationTitle = payload.notification.title;
   const notificationOptions = {
-    body: payload.notification.body
+    body: payload.notification.body,
+    click_action: payload.notification.click_action
   };
 
   return self.registration.showNotification(
