@@ -11,10 +11,17 @@ firebase.initializeApp(firebaseConfig);
 const messaging = firebase.messaging();
 function notify(){
     $.confirm({
+        theme: 'dark',
+        columnClass: 'medium',
         title: 'Exibir Notificações',
-        content: 'Por favor, permita que nosso site envie notificações para você.',
+        content: 'Por favor, permita que nosso site envie notificações para você, caso esta janela persista, siga o tutorial abaixo.' +
+        '<div class="text-center"><br><br><h3>Tutorial Navegador Mobile</h3><br>1. Toque no cadeado ao lado da url: <br><img src="' + baseurl + '/backend/dist/img/tut_1.png"/>' +
+        '<br>2. Depois toque em Permissões.<br><img src="' + baseurl + '/backend/dist/img/tutm_1.png"/> <br>3. Toque em Notificações: <br><img src="' + baseurl + '/backend/dist/img/tutm_2.png"/> ' +
+        '<br>4. E por fim, toque no botão de liga/desliga: <br><img src="' + baseurl + '/backend/dist/img/tutm_3.png"/><br><br><h3>Tutorial Navegador WEB</h3><br>1. Clique no cadeado ao lado da url: <br><img src="' + baseurl + '/backend/dist/img/tut_1.png"/>' +
+        '<br>2. Depois clique no botão de liga/desliga, igual na imagem (destacado em vermelho).<br><img src="' + baseurl + '/backend/dist/img/tut_2.png"/><br>3. Pronto, feche esta janela.' +
+        '</div>',
         buttons: {
-            'Permitir Notificações': function(){
+            'Entendido': function(){
                 initFirebaseMessagingRegistration();
             }
         }
