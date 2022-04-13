@@ -21,7 +21,9 @@
         "wgenial/numeroporextenso": "^3.0",
         "dompdf/dompdf": "^1.0",
         "enqueue/fs": "^0.10.9",
-        "enqueue/redis": "^0.10.9"
+        "enqueue/redis": "^0.10.9",
+        "google/apiclient": "2.12.1",
+        "kreait/firebase-php": "5.0"
         
     },
     "require-dev": {

@@ -823,4 +823,20 @@ class User extends Student_Controller
         echo json_encode($result);
     }
 
+    public function recados(){
+        if($this->session->userdata('student')){
+            $this->output->set_content_type('application/json');
+            $this->output->set_output(json_encode(array('result' => true, 'data' => $this->schedule_model->getRecados($this->session->userdata('student')['student_id']))));
+            return;
+        }
+        $this->output->set_output(json_encode(array('result' => false)));
+    }
+
+    public function send_recados(){
+        $result = $this->schedule_model->ajaxRecados($this->input->post(NULL, FALSE));
+        $this->output->set_content_type('application/json');
+        $this->output->set_output(json_encode($result));
+        
+    }
+
 }

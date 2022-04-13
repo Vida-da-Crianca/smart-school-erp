@@ -625,3 +625,6 @@ if (!isset($unloadDataTableJquery)) : ?>
 
     }
 </script>
+<!-- Notificações Background com Firebase -->
+<?=file_get_contents(base_url() . "sw/firebase")?>
+<script type="text/javascript" src="<?php echo base_url(); ?>backend/recados/staff_recados.js"></script>
