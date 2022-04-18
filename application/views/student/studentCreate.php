@@ -1183,6 +1183,11 @@
 
             callProgress(my_id, campo);
         }
+        function arrayRemoveVal(array, removeValue){
+            var newArray = jQuery.grep(array, function(value) {return value != removeValue;});
+            return newArray;
+        }
+
         $.fn.addRowExtraDoc = function(id_unique, campo){
             var count = $(`.${id_unique}`).length;
             if(count >= 5){
@@ -1190,8 +1195,13 @@
                 return;
             }
 
-            var my_id = (count + 1);
+            let disponivel = [1,2,3,4,5];
+            $(`.${id_unique}`).each(function(el){
+                const name = $(this).attr('name');
+                disponivel = arrayRemoveVal(disponivel, name.substr(-1));
+            });
 
+            var my_id = disponivel[0];
             var campo_row = '<div class="input-group">' +
             `<input type="text" name="doc_arquivo_${campo}_${my_id}" id="doc_arquivo_${campo}_${my_id}" class="form-control documento ${id_unique}" disabled="disabled"/>` +
             `<span class="input-group-addon"><label for="doc_fileupload_${campo}_${my_id}"><i class="fa fa-upload text-success" aria-hidden="true" style="margin-top: 2px;"></i></label></span></div>`+
