@@ -41,7 +41,8 @@ class Receive extends Admin_Controller {
                 $fileInfo = pathinfo($_FILES["file"]["name"]);
                 $img_name = 'id' . $dispatch_id . '.' . $fileInfo['extension'];
                 move_uploaded_file($_FILES["file"]["tmp_name"], "./uploads/front_office/dispatch_receive/" . $img_name);
-                $this->Dispatch_model->image_add('receive', $dispatch_id, $img_name);
+                $webp = webpImagem("./uploads/front_office/dispatch_receive/{$img_name}", 70, true);
+                $this->Dispatch_model->image_add('receive', $dispatch_id, basename($webp));
             }
 
             $this->session->set_flashdata('msg', '<div class="alert alert-success">'.$this->lang->line('success_message').'</div>');
@@ -80,7 +81,8 @@ class Receive extends Admin_Controller {
                 $fileInfo = pathinfo($_FILES["file"]["name"]);
                 $img_name = 'id' . $id . '.' . $fileInfo['extension'];
                 move_uploaded_file($_FILES["file"]["tmp_name"], "./uploads/front_office/dispatch_receive/" . $img_name);
-                $this->Dispatch_model->image_update('dispatch', $id, $img_name);
+                $webp = webpImagem("./uploads/front_office/dispatch_receive/{$img_name}", 70, true);
+                $this->Dispatch_model->image_update('dispatch', $id, basename($webp));
             }
             $this->session->set_flashdata('msg', '<div class="alert alert-success">'.$this->lang->line('success_message').'</div>');
             redirect('admin/receive');

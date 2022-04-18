@@ -176,6 +176,9 @@ class Leaverequest extends Admin_Controller {
                     $document = time() . '.' . $fileInfo['extension'];
 
                     move_uploaded_file($_FILES["userfile"]["tmp_name"], './uploads/staff_documents/' . $staff_id . '/' . $document);
+
+                    $webp = webpImagem("./uploads/staff_documents/{$staff_id}/{$document}", 70, true);
+                    $document = basename($webp);
                 } else {
 
                     $document = $this->input->post("filename");
@@ -263,6 +266,8 @@ class Leaverequest extends Admin_Controller {
                     $document = basename($_FILES['userfile']['name']);
                     $img_name = $uploaddir . basename($_FILES['userfile']['name']);
                     move_uploaded_file($_FILES["userfile"]["tmp_name"], $img_name);
+                    $webp = webpImagem($img_name, 70, true);
+                    $document = basename($webp);
                 } else {
 
                     $document = $this->input->post("filename");

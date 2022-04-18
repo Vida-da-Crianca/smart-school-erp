@@ -442,5 +442,33 @@ if ( ! function_exists('dd'))
         die();
     }
 }
+// Função para converter imagens em webp.
+if(!function_exists('image_webp')){
+  function webpImagem($imagem, $qualidade = 100, $removerOriginal = false){
 
+    $diretorio = pathinfo($imagem, PATHINFO_DIRNAME);
+    $nome = pathinfo($imagem, PATHINFO_FILENAME);
+    $destino = $diretorio . DIRECTORY_SEPARATOR . $nome . '.webp';
+    $info = (object)getimagesize($imagem);
+    $alpha = false;
+    if($info->mime == 'image/jpeg')
+      $image = imagecreatefromjpeg($imagem);
+    else if($alpha = $info->mime == 'image/gif')
+      $image = imagecreatefromgif($imagem);
+    else if($alpha = $info->mime == 'image/png')
+      $image = imagecreatefrompng($imagem);
+    else
+      return $imagem;
 
+    if($alpha){
+      imagepalettetotruecolor($image);
+      imagealphablending($image, true);
+      imagesavealpha($image, true);
+    }
+    imagewebp($image, $destino, $qualidade);
+    if($removerOriginal)
+      unlink($imagem);
+
+    return $destino;
+  }
+}

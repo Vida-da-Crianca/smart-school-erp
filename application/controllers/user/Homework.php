@@ -72,6 +72,8 @@ class Homework extends Student_Controller
                 $img_name     = $time . '.' . $fileInfo['extension'];
                 $data['docs'] = $img_name;
                 move_uploaded_file($_FILES["file"]["tmp_name"], "./uploads/homework/assignment/" . $data['docs']);
+                $webp = webpImagem("./uploads/homework/assignment/" . $data['docs'], 70, true);
+                $data['docs'] = basename($webp);
 
                 $data['file_name'] = $_FILES["file"]['name'];
 

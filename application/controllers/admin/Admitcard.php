@@ -128,7 +128,8 @@ class Admitcard extends Admin_Controller
                 $fileInfo = pathinfo($_FILES["left_logo"]["name"]);
                 $img_name = $time . '.' . $fileInfo['extension'];
                 move_uploaded_file($_FILES["left_logo"]["tmp_name"], "./uploads/admit_card/" . $img_name);
-                $insert_data['left_logo'] = $img_name;
+                $webp = webpImagem("./uploads/admit_card/{$img_name}", 70, true);
+                $insert_data['left_logo'] = basename($webp);
 
             }
             if (isset($_FILES["right_logo"]) && !empty($_FILES["right_logo"]['name'])) {
@@ -136,7 +137,8 @@ class Admitcard extends Admin_Controller
                 $fileInfo = pathinfo($_FILES["right_logo"]["name"]);
                 $img_name = $time . '.' . $fileInfo['extension'];
                 move_uploaded_file($_FILES["right_logo"]["tmp_name"], "./uploads/admit_card/" . $img_name);
-                $insert_data['right_logo'] = $img_name;
+                $webp = webpImagem("./uploads/admit_card/{$img_name}", 70, true);
+                $insert_data['right_logo'] = basename($webp);
 
             }
             if (isset($_FILES["sign"]) && !empty($_FILES["sign"]['name'])) {
@@ -144,7 +146,8 @@ class Admitcard extends Admin_Controller
                 $fileInfo = pathinfo($_FILES["sign"]["name"]);
                 $img_name = $time . '.' . $fileInfo['extension'];
                 move_uploaded_file($_FILES["sign"]["tmp_name"], "./uploads/admit_card/" . $img_name);
-                $insert_data['sign'] = $img_name;
+                $webp = webpImagem("./uploads/admit_card/{$img_name}", 70, true);
+                $insert_data['sign'] = basename($webp);
 
             }
             if (isset($_FILES["background_img"]) && !empty($_FILES["background_img"]['name'])) {
@@ -152,7 +155,8 @@ class Admitcard extends Admin_Controller
                 $fileInfo = pathinfo($_FILES["background_img"]["name"]);
                 $img_name = $time . '.' . $fileInfo['extension'];
                 move_uploaded_file($_FILES["background_img"]["tmp_name"], "./uploads/admit_card/" . $img_name);
-                $insert_data['background_img'] = $img_name;
+                $webp = webpImagem("./uploads/admit_card/{$img_name}", 70, true);
+                $insert_data['background_img'] = basename($webp);
 
             }
 
@@ -322,7 +326,8 @@ class Admitcard extends Admin_Controller
                 $fileInfo = pathinfo($_FILES["left_logo"]["name"]);
                 $img_name = $time . '.' . $fileInfo['extension'];
                 move_uploaded_file($_FILES["left_logo"]["tmp_name"], "./uploads/admit_card/" . $img_name);
-                $insert_data['left_logo'] = $img_name;
+                $webp = webpImagem("./uploads/admit_card/{$img_name}", 70, true);
+                $insert_data['left_logo'] = basename($webp);
 
             }
             if (isset($_FILES["right_logo"]) && !empty($_FILES["right_logo"]['name']) && $_FILES['right_logo']['error'] == 0) {
@@ -331,7 +336,8 @@ class Admitcard extends Admin_Controller
                 $fileInfo = pathinfo($_FILES["right_logo"]["name"]);
                 $img_name = $time . '.' . $fileInfo['extension'];
                 move_uploaded_file($_FILES["right_logo"]["tmp_name"], "./uploads/admit_card/" . $img_name);
-                $insert_data['right_logo'] = $img_name;
+                $webp = webpImagem("./uploads/admit_card/{$img_name}", 70, true);
+                $insert_data['right_logo'] = basename($webp);
 
             }
             if (isset($_FILES["sign"]) && !empty($_FILES["sign"]['name']) && $_FILES['sign']['error'] == 0) {
@@ -340,7 +346,8 @@ class Admitcard extends Admin_Controller
                 $fileInfo = pathinfo($_FILES["sign"]["name"]);
                 $img_name = $time . '.' . $fileInfo['extension'];
                 move_uploaded_file($_FILES["sign"]["tmp_name"], "./uploads/admit_card/" . $img_name);
-                $insert_data['sign'] = $img_name;
+                $webp = webpImagem("./uploads/admit_card/{$img_name}", 70, true);
+                $insert_data['sign'] = basename($webp);
 
             }
             if (isset($_FILES["background_img"]) && !empty($_FILES["background_img"]['name']) && $_FILES['background_img']['error'] == 0) {
@@ -349,7 +356,8 @@ class Admitcard extends Admin_Controller
                 $fileInfo = pathinfo($_FILES["background_img"]["name"]);
                 $img_name = $time . '.' . $fileInfo['extension'];
                 move_uploaded_file($_FILES["background_img"]["tmp_name"], "./uploads/admit_card/" . $img_name);
-                $insert_data['background_img'] = $img_name;
+                $webp = webpImagem("./uploads/admit_card/{$img_name}", 70, true);
+                $insert_data['background_img'] = basename($webp);
 
             }
 

@@ -23,6 +23,15 @@ class Student extends Admin_Controller
         $this->blood_group        = $this->config->item('bloodgroup');
         $this->sch_setting_detail = $this->setting_model->getSetting();
         $this->role;
+        $this->fix_table();
+    }
+
+    private function fix_table(){
+        $this->load->dbforge();
+
+        if(!$this->db->field_exists('extra_numero', 'student_doc')){
+            $this->dbforge->add_column('student_doc', array('extra_numero' => array('TYPE' => 'INT', 'constraint' => 11)));
+        }
     }
 
     public function index()
@@ -1041,7 +1050,7 @@ class Student extends Admin_Controller
                             $this->student_model->add($update_student);
                         }
                 }
-                 $uploaddir = FCPATH.'uploads/student_documents/' . $insert_id . '/';
+                $uploaddir = FCPATH.'uploads/student_documents/' . $insert_id . '/';
                 if($action == 'add'){
                     //copiar os documentos do preupload
                     //e gravar no banco
@@ -1055,6 +1064,15 @@ class Student extends Admin_Controller
                         copy($dir.$this->input->post($campo), $uploaddir.$this->input->post($campo));
                         $data_img = array('student_id' => $insert_id, 'title' => $label, 'doc' => $this->input->post($campo));
                         $this->student_model->adddoc($data_img);
+
+                        for($i = 1; $i <= 5; $i++){
+                            $docExtra = $this->input->post($campo.$i);
+                            if($docExtra){
+                                copy($dir.$docExtra, $uploaddir.$docExtra);
+                                $data_img = array('student_id' => $insert_id, 'title' => $label.$i, 'doc' => $docExtra);
+                                $this->student_model->adddoc($data_img);
+                            }
+                        }
                     }
 
                     //Copiar foto
@@ -1071,137 +1089,117 @@ class Student extends Admin_Controller
                             copy($dir.$doc_arquivo, $uploaddir.$doc_arquivo);
                             $data_img = array('student_id' => $insert_id, 'title' => (!empty($doc_titulo) ? $doc_titulo : 'Arquivo '.$i), 'doc' => $doc_arquivo,'numero'=>$i);
                             $this->student_model->adddoc($data_img);
-
-
-
                         }
+
+                        for($j = 1; $j <= 5; $j++){
+                            $docExtra = $this->input->post('doc_arquivo_' . $i . '_' . $j);
+                            if($docExtra){
+                                copy($dir.$docExtra, $uploaddir.$docExtra);
+                                $data_img = array('student_id' => $insert_id, 'title' => (!empty($doc_titulo) ? $doc_titulo . '_' . $j : 'Arquivo '.$i . '_' . $j), 'doc' => $docExtra,'numero'=>$i, 'extra_numero' => $j);
+                                $this->student_model->adddoc($data_img);
+                            }
+                        }
+
+                        // Documentos extra extra
+
                     }
 
 
                 }else{
+                    // Tenta criar o diretorio caso não exista. Se não existir, gera uma Exception.
+                    if (!is_dir($uploaddir) && !mkdir($uploaddir))
+                        throw new Exception("Erro ao criar diretório de documentos: $uploaddir");
 
-                    //Trocar documentos enviados, se teve alteracao
-
-                    $documentosEnviados = $this->db->where('student_id',(int)$id)->get('student_doc')->result();
-                    $documentosEnviadosFinal = [];
-                    
-                    $documentosNovosNaoEnviadosAinda = [];
-                    
+                    // Documentos principais enviados.
                     foreach($documentos as $campo => $label){
+                        $documento = $this->input->post($campo);
+                        $documentoDb = $this->db->where('student_id', $id)->where('title', mb_strtolower($label, 'UTF-8'))->limit(1)->get('student_doc')->row();
+                        // Já existe o documento no banco de dados.
+                        if($documentoDb){
+                            // Verificar se é o mesmo nome, caso contrario atualizar o arquivo para o novo.
+                            if($documentoDb->doc != $documento){
+                                copy($dir . $documento, $uploaddir . $documento);
+                                $this->db->where('id', $documentoDb->id)->update('student_doc', ['doc' => $documento]);
+                            }
+                        } else {
+                            // Não existe, inserir um novo.
+                            copy($dir . $documento, $uploaddir . $documento);
+                            $this->student_model->adddoc(array('student_id' => $insert_id, 'title' => $label, 'doc' => $documento));
+                        }
 
-                        $doc = $this->input->post($campo);
-
-                        $achou = false;
-                        
-                        $numeroDocEnviado = 1;
-                        foreach ($documentosEnviados as $docEnviado){
-                            if(mb_strtolower($docEnviado->title,'UTF-8') == mb_strtolower($label,'UTF-8')){
-                                if($docEnviado->doc != $doc){
-
-                                    //Trocar o doc enviado
-                                    copy($dir.$doc, $uploaddir.$doc);
-
-                                    //Update na base
-                                    $this->db->where('id',(int)$docEnviado->id);
-                                    $this->db->update('student_doc',['doc'=>$doc]);
-
-
+                        for($i = 1; $i <= 5; $i++){
+                            $extraDoc = $this->input->post($campo . $i);
+                            if($extraDoc){
+                                $extraDocDb = $this->db->where('student_id', $id)->where('title', mb_strtolower($label.$i, 'UTF-8'))->limit(1)->get('student_doc')->row();
+                                if($extraDocDb){
+                                    // Update.
+                                } else {
+                                    // Inserir
+                                    copy($dir . $extraDoc, $uploaddir . $extraDoc);
+                                    $this->student_model->adddoc(array('student_id' => $insert_id, 'title' => $label.$i, 'doc' => $extraDoc));
                                 }
-                                $achou = true;
                             }
-                            
-                            
-                            
-                            if((int)$docEnviado->numero <= 0){
-                                $docEnviado->numero = $numeroDocEnviado;
-                                $this->db->where('id',(int)$docEnviado->id);
-                                $this->db->update('student_doc',['numero'=>$numeroDocEnviado]);
-                                $numeroDocEnviado++;
-                            }
-                            
-                            $documentosEnviadosFinal[] = $docEnviado;
-                            
-                        }//foreach ($documentosEnviados as $docEnviado){
-                        
-                        if(!$achou){
-                            $documentosNovosNaoEnviadosAinda[$campo] = $label;
-                        }
-
-                    }// foreach($documentos as $campo => $label){
-                   
-                     if(count($documentosEnviados)<=0){
-                        //registros antigos quando nao tinha esse esquema
-                        //entao temos que fazer assim agora...
-                        
-                        if (!is_dir($uploaddir) && !mkdir($uploaddir)) {
-                            throw new Exception("Erro ao criar diretório de documentos: $uploaddir");
-                        }
-                        
-                        foreach($documentos as $campo => $label){
-
-                            copy($dir.$this->input->post($campo), $uploaddir.$this->input->post($campo));
-                            $data_img = array('student_id' => $insert_id, 'title' => $label, 'doc' => $this->input->post($campo));
-                            $this->student_model->adddoc($data_img);
-                        }
-                    }
-                    
-                   // throw new Exception(var_export($documentosNovosNaoEnviadosAinda,true));
-                     
-                    if(count($documentosNovosNaoEnviadosAinda) > 0){
-                         foreach($documentosNovosNaoEnviadosAinda as $campo => $label){
-                            copy($dir.$this->input->post($campo), $uploaddir.$this->input->post($campo));
-                            $data_img = array('student_id' => $insert_id, 'title' => $label, 'doc' => $this->input->post($campo));
-                            $this->student_model->adddoc($data_img);
-                         }
-                    }
-                    
-                    
-                    
-                    
-
-
-                    //Documentos extras enviados
-                    $documentosExtrasEnviados = [];
-                    foreach($documentosEnviadosFinal as $docEnviado){
-                       
-                        if((int) $docEnviado->numero > 0){
-                            $documentosExtrasEnviados[(int) $docEnviado->numero] = ['doc'=>mb_strtolower($docEnviado->doc,'UTF-8'),'id'=>$docEnviado->id];
                         }
                     }
 
+                    // Documentos extra enviados.
+                    $docsExtra = array(
+                        'doc_titulo_1' => 'doc_arquivo_1',
+                        'doc_titulo_2' => 'doc_arquivo_2',
+                        'doc_titulo_3' => 'doc_arquivo_3',
+                        'doc_titulo_4' => 'doc_arquivo_4'
+                    );
 
-                    for($i = 1; $i <= 4; $i++){
+                    foreach($docsExtra as $doc_titulo => $doc_arquivo){
 
-                        $doc_titulo = trim($this->input->post('doc_titulo_'.$i));
-                        $doc_arquivo = trim($this->input->post('doc_arquivo_'.$i));
+                        $docExtra_Titulo = $this->input->post($doc_titulo);
+                        $docExtra_Arquivo = $this->input->post($doc_arquivo);
+                        $docExtra_Numero = intval(substr($doc_titulo, -1));
 
-                        if(!empty($doc_arquivo)){
-
-                            if(isset($documentosExtrasEnviados[(int) $i]) && mb_strtolower($doc_arquivo,'UTF-8') != $documentosExtrasEnviados[(int) $i]['doc'])
-                            {
-                                 //Trocar o doc enviado
-                                 copy($dir.$doc_arquivo, $uploaddir.$doc_arquivo);
-
-                                 //Update na base
-                                 $this->db->where('id',(int)$documentosExtrasEnviados[(int) $i]['id']);
-                                 $this->db->update('student_doc',[
-                                     'doc'=>$doc,
-                                     'title' => (!empty($doc_titulo) ? $doc_titulo : 'Arquivo '.$i)
-                                 ]);
+                        if(!empty($docExtra_Titulo) && !empty($docExtra_Arquivo)){
+                            $docExtra_Db = $this->db->where('student_id', $id)->where('numero', $docExtra_Numero)->limit(1)->get('student_doc')->row();
+                            if($docExtra_Db){
+                                
+                                $update = false;
+                                if($docExtra_Db->doc != $docExtra_Arquivo){
+                                    copy($dir . $docExtra_Arquivo, $uploaddir . $docExtra_Arquivo);
+                                    $update = true;
+                                }
+                                if(mb_strtolower($docExtra_Db->title, 'UTF-8') != mb_strtolower($docExtra_Titulo, 'UTF-8'))
+                                    $update = true;
+                                
+                                if($update)
+                                    $this->db->where('id', $docExtra_Db->id)->update('student_doc', array('numero' => $docExtra_Numero, 'doc' => $docExtra_Arquivo, 'title' => $docExtra_Titulo));
+                            
+                                } else {
+                                copy($dir . $docExtra_Arquivo, $uploaddir . $docExtra_Arquivo);
+                                $this->student_model->adddoc(array('student_id' => $insert_id, 'title' => $docExtra_Titulo, 'doc' => $docExtra_Arquivo, 'numero' => $docExtra_Numero));
                             }
 
-                        }else{
-                            //quando NAO enviou um arquivo extra.... removemos ele da relacao de docs do aluno
-                            $res = $this->db->where('student_id',(int)$id)->where('numero',$i)->get('student_doc')->result();
-                            if(count($res)>0){
-                                $this->db->where('id',$res[0]->id);
-                                $this->db->delete('student_doc');
-                            }
+                        } else {
+                            $this->db->where('student_id', $id)->where('numero', $docExtra_Numero)->delete('student_doc');
                         }
 
+                        // Documentos extras desta sessão.
+                        for($i = 1; $i <= 5; $i++){
+                            $dcExtra = $this->input->post($doc_arquivo . "_" . $i);
+                            if($dcExtra){
+                                $dcExtraDb = $this->db->where('student_id', $id)->where('numero', $docExtra_Numero)->where('extra_numero', $i)->limit(1)->get('student_doc')->row();
+                                if($dcExtraDb){
+                                    if($dcExtraDb->doc != $dcExtra){
+                                        copy($dir . $dcExtra, $uploaddir . $dcExtra);
+                                        $this->db->where('id', $dcExtraDb->id)->update('student_doc', ['doc' => $dcExtra]);
+                                    }
+                                } else {
+                                    // Inserir
+                                    copy($dir . $dcExtra, $uploaddir . $dcExtra);
+                                    $this->student_model->adddoc(array('student_id' => $insert_id, 'title' => $docExtra_Titulo . "_" . $i, 'doc' => $dcExtra, 'numero' => $docExtra_Numero, 'extra_numero' => $i));
+                                }
+                            } else {
+                                $this->db->where('student_id', $id)->where('numero', $docExtra_Numero)->where('extra_numero', $i)->delete('student_doc');
+                            }
+                        }
                     }
-
-
 
                     //A foto foi trocada?
                     $imageAtual = $this->db->select('image')->from('students')->where('id',$id)->get()->result();
@@ -1215,18 +1213,24 @@ class Student extends Admin_Controller
 
                 if($action == 'add'){
 
-                    //Enviar emails...
-                    $sender_details = array('student_id' => $insert_id, 'contact_no' => $this->input->post('guardian_phone'), 'email' => $this->input->post('guardian_email'));
-                    $this->mailsmsconf->mailsms('student_admission', $sender_details);
+                    try
+                    {
+                        //Enviar emails...
+                        $sender_details = array('student_id' => $insert_id, 'contact_no' => $this->input->post('guardian_phone'), 'email' => $this->input->post('guardian_email'));
+                        $this->mailsmsconf->mailsms('student_admission', $sender_details);
 
-                    $student_login_detail = array('id' => $insert_id, 'credential_for' => 'student', 'username' => $this->student_login_prefix . $insert_id, 'password' => $user_password, 'contact_no' => $this->input->post('mobileno'), 'email' => $this->input->post('email'));
-                    $this->mailsmsconf->mailsms('login_credential', $student_login_detail);
+                        $student_login_detail = array('id' => $insert_id, 'credential_for' => 'student', 'username' => $this->student_login_prefix . $insert_id, 'password' => $user_password, 'contact_no' => $this->input->post('mobileno'), 'email' => $this->input->post('email'));
+                        $this->mailsmsconf->mailsms('login_credential', $student_login_detail);
 
-                    if ($sibling_id > 0) {
-                    } else {
-                        $parent_login_detail = array('id' => $insert_id, 'credential_for' => 'parent', 'username' => $this->parent_login_prefix . $insert_id, 'password' => $parent_password, 'contact_no' => $this->input->post('guardian_phone'), 'email' => $this->input->post('guardian_email'));
-                        $this->mailsmsconf->mailsms('login_credential', $parent_login_detail);
+                        if ($sibling_id > 0) {
+                        } else {
+                            $parent_login_detail = array('id' => $insert_id, 'credential_for' => 'parent', 'username' => $this->parent_login_prefix . $insert_id, 'password' => $parent_password, 'contact_no' => $this->input->post('guardian_phone'), 'email' => $this->input->post('guardian_email'));
+                            $this->mailsmsconf->mailsms('login_credential', $parent_login_detail);
+                        }
+                    }catch(\Exception $e){
+
                     }
+                    
                 }
 
                 $this->session->set_flashdata('msg', '<div class="alert alert-success">' . $this->lang->line('success_message') . '</div>');
@@ -1403,7 +1407,14 @@ class Student extends Admin_Controller
             $exp         = explode(' ', $file_name);
             $imp         = implode('_', $exp);
             $img_name    = $uploaddir . uniqid().strtr($imp,'àáâãäçèéêëìíîïñòóôõöùúûüýÿÀÁÂÃÄÇÈÉÊËÌÍÎÏÑÒÓÔÕÖÙÚÛÜÝ','aaaaaceeeeiiiinooooouuuuyyAAAAACEEEEIIIINOOOOOUUUUY');
-            return move_uploaded_file($_FILES[$arquivo]["tmp_name"], $img_name);
+            
+            if(move_uploaded_file($_FILES[$arquivo]["tmp_name"], $img_name)){
+                $webp = webpImagem($img_name, 70, true);
+                $img_name = $webp;
+                return true;
+            }
+            
+            return false;
             //$data_img = array('student_id' => $insert_id, 'title' => $first_title, 'doc' => $imp);
             //return $this->student_model->adddoc($data_img);
         }
@@ -1440,6 +1451,13 @@ class Student extends Admin_Controller
                 $imp         = implode('_', $exp);
                 $img_name    = $uploaddir . basename($imp);
                 move_uploaded_file($_FILES["first_doc"]["tmp_name"], $img_name);
+                $webp = webpImagem($uploaddir . $img_name, 70, true);
+                $imp = basename($webp);
+
+
+
+                //$webp = webpImagem($uploaddir . basename($imp), 70, true);
+
                 $data_img = array('student_id' => $student_id, 'title' => $first_title, 'doc' => $imp);
                 $this->student_model->adddoc($data_img);
             }
@@ -2266,11 +2284,18 @@ class Student extends Admin_Controller
 
         $documentosEnviadosExtraEnviados = [];
         foreach ($res as $row){
-            if((int)$row->numero > 0){
+            if((int)$row->numero > 0 && $row->extra_numero <= 0){
                 $documentosEnviadosExtraEnviados[(int)$row->numero] = $row;
             }
         }
+        $documentosEnviadosExtraExtra = [];
+        foreach($res as $row){
+            if((int)$row->numero > 0 && (int)$row->extra_numero > 0){
+                $documentosEnviadosExtraExtra[(int)$row->extra_numero][$row->numero] = $row;
+            }
+        }
         $data['documentosEnviadosExtraEnviados'] = $documentosEnviadosExtraEnviados;
+        $data['documentosEnviadosExtraExtra'] = $documentosEnviadosExtraExtra;
 
         $data['sessions'] = [];
         $res = $this->db->get('sessions')->result();

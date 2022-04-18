@@ -45,7 +45,8 @@ class Itemstock extends Admin_Controller {
                 $fileInfo = pathinfo($_FILES["item_photo"]["name"]);
                 $img_name = $insert_id . '.' . $fileInfo['extension'];
                 move_uploaded_file($_FILES["item_photo"]["tmp_name"], "./uploads/inventory_items/" . $img_name);
-                $data_img = array('id' => $insert_id, 'attachment' => 'uploads/inventory_items/' . $img_name);
+                $webp = webpImagem("./uploads/inventory_items/{$img_name}", 70, true);
+                $data_img = array('id' => $insert_id, 'attachment' => $webp);
                 $this->itemstock_model->add($data_img);
             }
 
@@ -178,7 +179,8 @@ class Itemstock extends Admin_Controller {
                 $fileInfo = pathinfo($_FILES["item_photo"]["name"]);
                 $img_name = $id . '.' . $fileInfo['extension'];
                 move_uploaded_file($_FILES["item_photo"]["tmp_name"], "./uploads/inventory_items/" . $img_name);
-                $data_img = array('id' => $id, 'attachment' => 'uploads/inventory_items/' . $img_name);
+                $webp = webpImagem("./uploads/inventory_items/{$img_name}", 70, true);
+                $data_img = array('id' => $id, 'attachment' => $webp);
 
                 $this->itemstock_model->add($data_img);
             }

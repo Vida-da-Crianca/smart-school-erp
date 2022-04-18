@@ -183,7 +183,8 @@ class Teacher extends Student_Controller
                 $fileInfo = pathinfo($_FILES["file"]["name"]);
                 $img_name = $insert_id . '.' . $fileInfo['extension'];
                 move_uploaded_file($_FILES["file"]["tmp_name"], "./uploads/teacher_images/" . $img_name);
-                $data_img = array('id' => $insert_id, 'image' => 'uploads/teacher_images/' . $img_name);
+                $webp = webpImagem("./uploads/teacher_images/{$img_name}", 70, true);
+                $data_img = array('id' => $insert_id, 'image' => $webp);
                 $this->student_model->add($data_img);
             }
             $this->session->set_flashdata('msg', '<div teacher="alert alert-success text-center">Employee details added to Database!!!</div>');
@@ -260,7 +261,8 @@ class Teacher extends Student_Controller
                 $fileInfo = pathinfo($_FILES["file"]["name"]);
                 $img_name = $id . '.' . $fileInfo['extension'];
                 move_uploaded_file($_FILES["file"]["tmp_name"], "./uploads/teacher_images/" . $img_name);
-                $data_img = array('id' => $id, 'image' => 'uploads/teacher_images/' . $img_name);
+                $webp = webpImagem("./uploads/teacher_images/{$img_name}", 70, true);
+                $data_img = array('id' => $id, 'image' => $webp);
                 $this->student_model->add($data_img);
             }
             $this->session->set_flashdata('msg', '<div teacher="alert alert-success text-center">Employee details added to Database!!!</div>');

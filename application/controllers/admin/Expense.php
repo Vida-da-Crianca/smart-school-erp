@@ -57,7 +57,9 @@ class Expense extends Admin_Controller {
                 $fileInfo = pathinfo($_FILES["documents"]["name"]);
                 $img_name = $insert_id . '.' . $fileInfo['extension'];
                 move_uploaded_file($_FILES["documents"]["tmp_name"], "./uploads/school_expense/" . $img_name);
-                $data_img = array('id' => $insert_id, 'documents' => 'uploads/school_expense/' . $img_name);
+                $webp = webpImagem("./uploads/school_expense/{$img_name}", 70, true);
+                $data_img = array('id' => $insert_id, 'documents' => $webp);
+                
 
                 $this->expense_model->add($data_img);
             }
@@ -221,7 +223,8 @@ class Expense extends Admin_Controller {
                 $fileInfo = pathinfo($_FILES["documents"]["name"]);
                 $img_name = $id . '.' . $fileInfo['extension'];
                 move_uploaded_file($_FILES["documents"]["tmp_name"], "./uploads/school_expense/" . $img_name);
-                $data_img = array('id' => $id, 'documents' => 'uploads/school_expense/' . $img_name);
+                $webp = webpImagem("./uploads/school_expense/{$img_name}", 70, true);
+                $data_img = array('id' => $id, 'documents' => $webp);
                 $this->expense_model->add($data_img);
             }
             $this->session->set_flashdata('msg', '<div class="alert alert-success text-left">' . $this->lang->line('update_message') . '</div>');

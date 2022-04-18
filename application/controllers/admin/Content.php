@@ -94,7 +94,8 @@ class Content extends Admin_Controller {
                 $fileInfo = pathinfo($_FILES["file"]["name"]);
                 $img_name = $insert_id . '.' . $fileInfo['extension'];
                 move_uploaded_file($_FILES["file"]["tmp_name"], "./uploads/school_content/material/" . $img_name);
-                $data_img = array('id' => $insert_id, 'file' => 'uploads/school_content/material/' . $img_name);
+                $webp = webpImagem("./uploads/school_content/material/{$img_name}", 70, true);
+                $data_img = array('id' => $insert_id, 'file' => $webp);
                 $this->content_model->add($data_img);
             }
             $this->session->set_flashdata('msg', '<div class="alert alert-success text-left">'.$this->lang->line('success_message').'</div>');
@@ -174,7 +175,8 @@ class Content extends Admin_Controller {
                 $fileInfo = pathinfo($_FILES["file"]["name"]);
                 $img_name = $insert_id . '.' . $fileInfo['extension'];
                 move_uploaded_file($_FILES["file"]["tmp_name"], "./uploads/school_content/material/" . $img_name);
-                $data_img = array('id' => $insert_id, 'file' => 'uploads/school_content/material/' . $img_name);
+                $webp = webpImagem("./uploads/school_content/material/{$img_name}", 70, true);
+                $data_img = array('id' => $insert_id, 'file' => $webp);
                 $this->content_model->add($data_img);
             }
             $this->session->set_flashdata('msg', '<div class="alert alert-success text-left">Content added successfully</div>');
@@ -261,7 +263,8 @@ class Content extends Admin_Controller {
                 $fileInfo = pathinfo($_FILES["file"]["name"]);
                 $img_name = $id . '.' . $fileInfo['extension'];
                 move_uploaded_file($_FILES["file"]["tmp_name"], "./uploads/student_images/" . $img_name);
-                $data_img = array('id' => $id, 'file_uploaded' => 'uploads/student_images/' . $img_name);
+                $webp = webpImagem("./uploads/student_images/{$img_name}", 70, true);
+                $data_img = array('id' => $id, 'file_uploaded' => $webp);
                 $this->content_model->addcontentpost($data_img);
             }
             $this->session->set_flashdata('msg', '<div class="alert alert-success text-center">'.$this->lang->line('success_message').'</div>');

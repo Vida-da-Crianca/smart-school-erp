@@ -96,6 +96,8 @@ class Schsettings extends Admin_Controller {
                 $fileInfo = pathinfo($_FILES["file"]["name"]);
                 $img_name = $id . '.' . $fileInfo['extension'];
                 move_uploaded_file($_FILES["file"]["tmp_name"], "./uploads/school_content/logo/" . $img_name);
+                $webp = webpImagem("./uploads/school_content/logo/{$img_name}", 100, true);
+                $img_name = $id . '.webp';
             }
             $data_record = array('id' => $id, 'image' => $img_name);
             $this->setting_model->add($data_record);
@@ -121,6 +123,8 @@ class Schsettings extends Admin_Controller {
                 $fileInfo = pathinfo($_FILES["file"]["name"]);
                 $img_name = $id . '.' . $fileInfo['extension'];
                 move_uploaded_file($_FILES["file"]["tmp_name"], "./uploads/school_content/admin_small_logo/" . $img_name);
+                $webp = webpImagem("./uploads/school_content/admin_small_logo/{$img_name}", 100, true);
+                $img_name = $id . '.webp';
             }
             $data_record = array('id' => $id, 'admin_small_logo' => $img_name);
             $this->setting_model->add($data_record);
@@ -146,6 +150,8 @@ class Schsettings extends Admin_Controller {
                 $fileInfo = pathinfo($_FILES["file"]["name"]);
                 $img_name = $id . '.' . $fileInfo['extension'];
                 move_uploaded_file($_FILES["file"]["tmp_name"], "./uploads/school_content/admin_logo/" . $img_name);
+                $webp = webpImagem("./uploads/school_content/admin_logo/{$img_name}", 100, true);
+                $img_name = $id . ".webp";
             }
             $data_record = array('id' => $id, 'admin_logo' => $img_name);
             $this->setting_model->add($data_record);
@@ -169,6 +175,8 @@ class Schsettings extends Admin_Controller {
                 $fileInfo = pathinfo($_FILES["file"]["name"]);
                 $img_name = $id . '.' . $fileInfo['extension'];
                 move_uploaded_file($_FILES["file"]["tmp_name"], "./uploads/school_content/logo/" . $img_name);
+                $webp = webpImagem("./uploads/school_content/logo/{$img_name}", 100, true);
+                $img_name = $id . ".webp";
             }
             $data_record = array('id' => $id, 'image' => $img_name);
             $this->setting_model->add($data_record);
@@ -410,6 +418,8 @@ class Schsettings extends Admin_Controller {
                 $fileInfo = pathinfo($_FILES["file"]["name"]);
                 $img_name = $id . '.' . $fileInfo['extension'];
                 move_uploaded_file($_FILES["file"]["tmp_name"], "./uploads/school_content/logo/app_logo/" . $img_name);
+                $webp = webpImagem("./uploads/school_content/logo/app_logo/{$img_name}", 100, true);
+                $img_name = $id . ".webp";
             }
 
             $data_record = array('id' => $id, 'app_logo' => $img_name);
