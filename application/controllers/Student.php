@@ -1102,6 +1102,7 @@ class Student extends Admin_Controller
 
                         // Documentos extra extra
 
+
                     }
 
 
@@ -1133,6 +1134,8 @@ class Student extends Admin_Controller
                                 $extraDocDb = $this->db->where('student_id', $id)->where('title', mb_strtolower($label.$i, 'UTF-8'))->limit(1)->get('student_doc')->row();
                                 if($extraDocDb){
                                     // Update.
+                                    copy($dir . $extraDoc, $uploaddir . $extraDoc);
+                                    $this->db->where('id', $extraDocDb->id)->update('student_doc', array('doc' => $extraDoc));
                                 } else {
                                     // Inserir
                                     copy($dir . $extraDoc, $uploaddir . $extraDoc);

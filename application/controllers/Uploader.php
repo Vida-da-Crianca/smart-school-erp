@@ -128,7 +128,7 @@ class Uploader extends CI_Controller {
                     move_uploaded_file($img["tmp_name"], $dir . $nome_img . $extension);
                     $webp = webpImagem($dir . $nome_img . $extension, 70, true);
                     $this->resp_status = true;
-                    $this->resp_msg = array('name'=> $nome_img . '.webp','base64'=> base64_encode(file_get_contents($webp)));
+                    $this->resp_msg = array('name'=> basename($webp),'base64'=> base64_encode(file_get_contents($webp)));
                 }
                 else{
                     throw new Exception('Defina a Imagem');
