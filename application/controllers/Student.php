@@ -1218,13 +1218,13 @@ class Student extends Admin_Controller
                                 }
                                     
                                 
-                                if($update){
+                                if($update)
                                     $this->db->where('id', $docExtra_Db->id)->update('student_doc', array('numero' => $docExtra_Numero, 'doc' => $docExtra_Arquivo, 'title' => $docExtra_Titulo));
-                                } else {
+                             } else {
                                     copy($dir . $docExtra_Arquivo, $uploaddir . $docExtra_Arquivo);
                                     $this->student_model->adddoc(array('student_id' => $insert_id, 'title' => $docExtra_Titulo, 'doc' => $docExtra_Arquivo, 'numero' => $docExtra_Numero));
                                 }
-                            }
+                            
 
                         } else {
                             // Verificar permissões;
