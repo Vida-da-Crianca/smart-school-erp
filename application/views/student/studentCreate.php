@@ -651,8 +651,10 @@
                                                         </a></label></span>
                                                         <?php endif; ?>
 
+                                                        <?php if($this->rbac->hasPrivilege('arquivos_aluno', 'can_edit')): ?>
                                                         <span class="input-group-addon"><label for="<?=$campo?>_fileupload"><i class="fa fa-upload text-success" aria-hidden="true" style="margin-top: 2px;"></i></label></span>
-                                                </div>
+                                                        <?php endif;?>
+                                                    </div>
                                                 <input type="file" name="<?php echo $campo; ?>_fileupload"
                                                        id="<?php echo $campo; ?>_fileupload"
                                                        accept=".png,png,.jpeg,jpeg,.jpeg,.jpeg,jpg,.jpg, pdf, .pdf"
@@ -675,9 +677,10 @@
                                                                 <i class="fa fa-external-link"></i>
                                                             </a></label></span>
                                                             <?php endif; ?>
-
-                                                            <span class="input-group-addon"><label for="<?=$campo.$i?>_fileupload"><i class="fa fa-upload text-success" aria-hidden="true" style="margin-top: 2px;"></i></label></span>
-                                                        </div>
+                                                            <?php if($this->rbac->hasPrivilege('arquivos_aluno', 'can_edit')): ?>
+                                                                <span class="input-group-addon"><label for="<?=$campo.$i?>_fileupload"><i class="fa fa-upload text-success" aria-hidden="true" style="margin-top: 2px;"></i></label></span>
+                                                            <?php endif;?>
+                                                            </div>
 
                                                         <input type="file" name="<?=$campo.$i?>_fileupload"
                                                             id="<?=$campo.$i?>_fileupload"
@@ -750,9 +753,11 @@
                                                                             </label>
                                                                         </span>
                                                                 <?php endif; ?>
-
+                                                                
+                                                                <?php if($this->rbac->hasPrivilege('arquivos_aluno', 'can_edit')): ?>
                                                                 <span class="input-group-addon"><label for="doc_fileupload_<?=$i?>"><i class="fa fa-upload text-success" aria-hidden="true" style="margin-top: 2px;"></i></label></span>
-                                                                <?php if($action != 'add' && isset($documentosEnviadosExtraEnviados[$i])): ?>
+                                                                <?php endif; ?>
+                                                                <?php if($action != 'add' && isset($documentosEnviadosExtraEnviados[$i]) && $this->rbac->hasPrivilege('arquivos_aluno', 'can_delete')): ?>
                                                                 <span class="input-group-addon"><a href="javascript:" class="btn btn-xs btn-danger"
                                                                 onclick="confirmarRemover('#doc_arquivo_<?=$i?>');"
                                                                 >
@@ -791,9 +796,11 @@
                                                                             </label>
                                                                         </span>
                                                                     <?php endif; ?>
-
+                                                                     
+                                                                    <?php if($this->rbac->hasPrivilege('arquivos_aluno', 'can_edit')): ?>
                                                                     <span class="input-group-addon"><label for="doc_fileupload_<?=$i?>_<?=$j?>"><i class="fa fa-upload text-success" aria-hidden="true" style="margin-top: 2px;"></i></label></span>
-                                                                    <?php if($action != 'add' && isset($documentosEnviadosExtraExtra[$j][$i])): ?>
+                                                                    <?php endif; ?>
+                                                                    <?php if($action != 'add' && isset($documentosEnviadosExtraExtra[$j][$i]) && $this->rbac->hasPrivilege('arquivos_aluno', 'can_delete')): ?>
                                                                     <span class="input-group-addon"><a href="javascript:" class="btn btn-xs btn-danger"
                                                                     onclick="confirmarRemover('#doc_arquivo_<?=$i?>_<?=$j?>');"
                                                                     >

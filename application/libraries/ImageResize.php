@@ -97,15 +97,19 @@ class ImageResize {
                 $upload_image = $this->destination_dir . basename($fileName);
                 //upload image
                 if (move_uploaded_file($this->curr_tmp_name, $upload_image)) {
+                    // Webp
+                    $webp = webpImagem($upload_image, 70, true);
+                    $file_ext = mime_content_type($webp);
+                    $fileName = basename($webp);
                     //thumbnail creation
-                    $this->image_size_info = filesize($this->curr_tmp_name);
+                    $this->image_size_info = filesize($webp);
 
 
                     $img_array = array(
-                        'store_name' => $this->new_file_name,
+                        'store_name' => $fileName,
                         'file_type' => $file_ext,
                         'file_size' => $this->image_size_info,
-                        'thumb_name' => $this->new_file_name,
+                        'thumb_name' => $fileName,
                         'thumb_path' => $this->thumbnail_destination_dir,
                         'dir_path' => $this->destination_dir,
                         'height' => 0,
@@ -113,7 +117,7 @@ class ImageResize {
                     );
 
                     if ($this->generate_thumbnails) {
-                        if ($file_ext == 'image/jpeg' || $file_ext == 'image/png' || $file_ext == 'image/gif') {
+                        if ($file_ext == 'image/jpeg' || $file_ext == 'image/png' || $file_ext == 'image/gif' || $file_ext == 'image/webp') {
                             $thumbnail = $this->thumbnail_destination_dir . $fileName;
                             list($width, $height) = getimagesize($upload_image);
                             $img_array['height'] = $height;
@@ -132,6 +136,9 @@ class ImageResize {
                                 case 'image/gif':
                                     $source = imagecreatefromgif($upload_image);
                                     break;
+                                case 'image/webp':
+                                    $source = imagecreatefromwebp($upload_image);
+                                    break;
                                 default:
                                 // $source = imagecreatefromjpeg($upload_image);
                             }
@@ -147,6 +154,9 @@ class ImageResize {
 
                                 case 'image/gif':
                                     imagegif($thumb_create, $thumbnail, 100);
+                                    break;
+                                case 'image/webp':
+                                    imagewebp($thumb_create, $thumbnail, 100);
                                     break;
                                 default:
                                 // imagejpeg($thumb_create, $thumbnail, 100);

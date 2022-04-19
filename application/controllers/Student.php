@@ -32,6 +32,33 @@ class Student extends Admin_Controller
         if(!$this->db->field_exists('extra_numero', 'student_doc')){
             $this->dbforge->add_column('student_doc', array('extra_numero' => array('TYPE' => 'INT', 'constraint' => 11)));
         }
+        
+        $groupPermission = $this->db->where('short_code', 'arquivos_aluno')->get('permission_group')->row();
+        $insert_id = 0;
+        if(!$groupPermission){
+            $this->db->insert('permission_group', array(
+                'name' => 'Arquivos do Aluno',
+                'short_code' => 'arquivos_aluno',
+                'is_active' => 1,
+                'system' => 0
+            ));
+            $insert_id = $this->db->insert_id();
+        } else {
+            $insert_id = $groupPermission->id;
+        }
+
+        $permission = $this->db->where('perm_group_id', $insert_id)->where('short_code', 'arquivos_aluno')->get('permission_category')->row();
+        if(!$permission){
+            $this->db->insert('permission_category', array(
+                'perm_group_id' => $insert_id,
+                'name' => 'Arquivos do Aluno',
+                'short_code' => 'arquivos_aluno',
+                'enable_view' => 1,
+                'enable_add' => 1,
+                'enable_edit' => 0,
+                'enable_delete' => 0
+            ));
+        }
     }
 
     public function index()
@@ -257,8 +284,11 @@ class Student extends Admin_Controller
 
     public function doc_delete($id, $student_id)
     {
+        if(!$this->rbac->hasPrivilege('arquivos_aluno', 'can_delete')){
+            access_denied();
+        }
         $this->student_model->doc_delete($id);
-        $this->session->set_flashdata('msg', '<i class="fa fa-check-square-o" aria-hidden="true"></i> ' . $this->lang->line('delete_message') . '');
+        $this->session->set_flashdata('msg', '<i class="fa fa-check-square-o" aria-hidden="true"></i> fsdafsdafasdfsdasafdfsad' . $this->lang->line('delete_message') . '');
         redirect('student/view/' . $student_id);
     }
 
@@ -878,6 +908,7 @@ class Student extends Admin_Controller
                 //validar class and section
                 
                 
+                
 
                $this->_validarClassSectionVagas($class_id,$section_id);
                 
@@ -1119,6 +1150,10 @@ class Student extends Admin_Controller
                         if($documentoDb){
                             // Verificar se é o mesmo nome, caso contrario atualizar o arquivo para o novo.
                             if($documentoDb->doc != $documento){
+                                // Verificar permissões;
+                                if (!$this->rbac->hasPrivilege('arquivos_aluno', 'can_edit'))
+                                    throw new Exception("Você não tem autorização para atualizar anexos do aluno.");
+                                
                                 copy($dir . $documento, $uploaddir . $documento);
                                 $this->db->where('id', $documentoDb->id)->update('student_doc', ['doc' => $documento]);
                             }
@@ -1133,6 +1168,9 @@ class Student extends Admin_Controller
                             if($extraDoc){
                                 $extraDocDb = $this->db->where('student_id', $id)->where('title', mb_strtolower($label.$i, 'UTF-8'))->limit(1)->get('student_doc')->row();
                                 if($extraDocDb){
+                                    // Verificar permissões;
+                                    if (!$this->rbac->hasPrivilege('arquivos_aluno', 'can_edit'))
+                                        throw new Exception("Você não tem autorização para atualizar anexos do aluno.");
                                     // Update.
                                     copy($dir . $extraDoc, $uploaddir . $extraDoc);
                                     $this->db->where('id', $extraDocDb->id)->update('student_doc', array('doc' => $extraDoc));
@@ -1165,21 +1203,33 @@ class Student extends Admin_Controller
                                 
                                 $update = false;
                                 if($docExtra_Db->doc != $docExtra_Arquivo){
+                                    // Verificar permissões;
+                                    if (!$this->rbac->hasPrivilege('arquivos_aluno', 'can_edit'))
+                                        throw new Exception("Você não tem autorização para atualizar anexos do aluno.");
                                     copy($dir . $docExtra_Arquivo, $uploaddir . $docExtra_Arquivo);
                                     $update = true;
                                 }
-                                if(mb_strtolower($docExtra_Db->title, 'UTF-8') != mb_strtolower($docExtra_Titulo, 'UTF-8'))
+                                if(mb_strtolower($docExtra_Db->title, 'UTF-8') != mb_strtolower($docExtra_Titulo, 'UTF-8')){
+                                    // Verificar permissões;
+                                    if (!$this->rbac->hasPrivilege('arquivos_aluno', 'can_edit'))
+                                        throw new Exception("Você não tem autorização para atualizar anexos do aluno.");
+                                    
                                     $update = true;
+                                }
+                                    
                                 
-                                if($update)
+                                if($update){
                                     $this->db->where('id', $docExtra_Db->id)->update('student_doc', array('numero' => $docExtra_Numero, 'doc' => $docExtra_Arquivo, 'title' => $docExtra_Titulo));
-                            
                                 } else {
-                                copy($dir . $docExtra_Arquivo, $uploaddir . $docExtra_Arquivo);
-                                $this->student_model->adddoc(array('student_id' => $insert_id, 'title' => $docExtra_Titulo, 'doc' => $docExtra_Arquivo, 'numero' => $docExtra_Numero));
+                                    copy($dir . $docExtra_Arquivo, $uploaddir . $docExtra_Arquivo);
+                                    $this->student_model->adddoc(array('student_id' => $insert_id, 'title' => $docExtra_Titulo, 'doc' => $docExtra_Arquivo, 'numero' => $docExtra_Numero));
+                                }
                             }
 
                         } else {
+                            // Verificar permissões;
+                            if (!$this->rbac->hasPrivilege('arquivos_aluno', 'can_delete'))
+                                throw new Exception("Você não tem autorização para excluir anexos do aluno.");
                             $this->db->where('student_id', $id)->where('numero', $docExtra_Numero)->delete('student_doc');
                         }
 
@@ -1190,6 +1240,10 @@ class Student extends Admin_Controller
                                 $dcExtraDb = $this->db->where('student_id', $id)->where('numero', $docExtra_Numero)->where('extra_numero', $i)->limit(1)->get('student_doc')->row();
                                 if($dcExtraDb){
                                     if($dcExtraDb->doc != $dcExtra){
+                                        // Verificar permissões;
+                                        if (!$this->rbac->hasPrivilege('arquivos_aluno', 'can_edit'))
+                                            throw new Exception("Você não tem autorização para atualizar anexos do aluno.");
+                                        
                                         copy($dir . $dcExtra, $uploaddir . $dcExtra);
                                         $this->db->where('id', $dcExtraDb->id)->update('student_doc', ['doc' => $dcExtra]);
                                     }
@@ -1199,6 +1253,9 @@ class Student extends Admin_Controller
                                     $this->student_model->adddoc(array('student_id' => $insert_id, 'title' => $docExtra_Titulo . "_" . $i, 'doc' => $dcExtra, 'numero' => $docExtra_Numero, 'extra_numero' => $i));
                                 }
                             } else {
+                                // Verificar permissões;
+                                if (!$this->rbac->hasPrivilege('arquivos_aluno', 'can_delete'))
+                                    throw new Exception("Você não tem autorização para remover anexos do aluno.");
                                 $this->db->where('student_id', $id)->where('numero', $docExtra_Numero)->where('extra_numero', $i)->delete('student_doc');
                             }
                         }
