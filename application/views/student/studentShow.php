@@ -1122,12 +1122,14 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                                                title="<?php echo $this->lang->line('download'); ?>">
                                                                 <i class="fa fa-download"></i>
                                                             </a>
+                                                            <?php if($this->rbac->hasPrivilege('student', 'can_delete')): ?>
                                                             <a href="<?php echo base_url(); ?>student/doc_delete/<?php echo $value['id'] . "/" . $value['student_id']; ?>"
                                                                class="btn btn-default btn-xs" data-toggle="tooltip"
                                                                title="<?php echo $this->lang->line('delete'); ?>"
                                                                onclick="return confirm('<?php echo $this->lang->line('delete_confirm') ?>');">
                                                                 <i class="fa fa-remove"></i>
                                                             </a>
+                                                            <?php endif; ?>
                                                         </td>
                                                     </tr>
                                                     <?php

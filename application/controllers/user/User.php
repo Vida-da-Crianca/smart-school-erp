@@ -353,7 +353,8 @@ class User extends Student_Controller
                 $imp         = implode('_', $exp);
                 $img_name    = $uploaddir . basename($imp);
                 move_uploaded_file($_FILES["first_doc"]["tmp_name"], $img_name);
-                $data_img = array('student_id' => $student_id, 'title' => $first_title, 'doc' => $imp);
+                $webp = webpImagem($img_name, 70, true);
+                $data_img = array('student_id' => $student_id, 'title' => $first_title, 'doc' => basename($webp));
                 $this->student_model->adddoc($data_img);
 
             }
@@ -706,7 +707,8 @@ class User extends Student_Controller
                 $fileInfo = pathinfo($_FILES["file"]["name"]);
                 $img_name = $id . '.' . $fileInfo['extension'];
                 move_uploaded_file($_FILES["file"]["tmp_name"], "./uploads/student_images/" . $img_name);
-                $data_img = array('id' => $id, 'image' => 'uploads/student_images/' . $img_name);
+                $webp = webpImagem("./uploads/student_images/{$img_name}", 70, true);
+                $data_img = array('id' => $id, 'image' => $webp);
                 $this->student_model->add($data_img);
             }
 
@@ -714,7 +716,8 @@ class User extends Student_Controller
                 $fileInfo = pathinfo($_FILES["father_pic"]["name"]);
                 $img_name = $id . "father" . '.' . $fileInfo['extension'];
                 move_uploaded_file($_FILES["father_pic"]["tmp_name"], "./uploads/student_images/" . $img_name);
-                $data_img = array('id' => $id, 'father_pic' => 'uploads/student_images/' . $img_name);
+                $webp = webpImagem("./uploads/student_images/{$img_name}", 70, true);
+                $data_img = array('id' => $id, 'father_pic' => $webp);
                 $this->student_model->add($data_img);
             }
 
@@ -722,7 +725,8 @@ class User extends Student_Controller
                 $fileInfo = pathinfo($_FILES["mother_pic"]["name"]);
                 $img_name = $id . "mother" . '.' . $fileInfo['extension'];
                 move_uploaded_file($_FILES["mother_pic"]["tmp_name"], "./uploads/student_images/" . $img_name);
-                $data_img = array('id' => $id, 'mother_pic' => 'uploads/student_images/' . $img_name);
+                $webp = webpImagem("./uploads/student_images/{$img_name}", 70, true);
+                $data_img = array('id' => $id, 'mother_pic' => $webp);
                 $this->student_model->add($data_img);
             }
 
@@ -730,7 +734,8 @@ class User extends Student_Controller
                 $fileInfo = pathinfo($_FILES["guardian_pic"]["name"]);
                 $img_name = $id . "guardian" . '.' . $fileInfo['extension'];
                 move_uploaded_file($_FILES["guardian_pic"]["tmp_name"], "./uploads/student_images/" . $img_name);
-                $data_img = array('id' => $id, 'guardian_pic' => 'uploads/student_images/' . $img_name);
+                $webp = webpImagem("./uploads/student_images/{$img_name}", 70, true);
+                $data_img = array('id' => $id, 'guardian_pic' => $webp);
                 $this->student_model->add($data_img);
             }
 
@@ -821,6 +826,22 @@ class User extends Student_Controller
         $table = "agenda_" . $data->snack_code;
         $result = $this->schedule_model->updateAgendaOld($table, $data->item);
         echo json_encode($result);
+    }
+
+    public function recados(){
+        if($this->session->userdata('student')){
+            $this->output->set_content_type('application/json');
+            $this->output->set_output(json_encode(array('result' => true, 'data' => $this->schedule_model->getRecados($this->session->userdata('student')['student_id']))));
+            return;
+        }
+        $this->output->set_output(json_encode(array('result' => false)));
+    }
+
+    public function send_recados(){
+        $result = $this->schedule_model->ajaxRecados($this->input->post(NULL, FALSE));
+        $this->output->set_content_type('application/json');
+        $this->output->set_output(json_encode($result));
+        
     }
 
 }

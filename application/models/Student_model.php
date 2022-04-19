@@ -1759,7 +1759,7 @@ class Student_model extends MY_Model
         if ($sessionIds) {
             $query->where_in('class_teacher.session_id', $sessionIds);
         }else{
-            $query->where("student_session.session_id", $this->current_session);
+            $query->where("ss.session_id", $this->current_session);
         }
 
         $query = $query->order_by("students.firstname", 'asc')->distinct()

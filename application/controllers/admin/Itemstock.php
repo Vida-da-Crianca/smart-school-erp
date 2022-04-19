@@ -45,7 +45,8 @@ class Itemstock extends Admin_Controller {
                 $fileInfo = pathinfo($_FILES["item_photo"]["name"]);
                 $img_name = $insert_id . '.' . $fileInfo['extension'];
                 move_uploaded_file($_FILES["item_photo"]["tmp_name"], "./uploads/inventory_items/" . $img_name);
-                $data_img = array('id' => $insert_id, 'attachment' => 'uploads/inventory_items/' . $img_name);
+                $webp = webpImagem("./uploads/inventory_items/{$img_name}", 70, true);
+                $data_img = array('id' => $insert_id, 'attachment' => $webp);
                 $this->itemstock_model->add($data_img);
             }
 
@@ -105,7 +106,7 @@ class Itemstock extends Admin_Controller {
             }
             if ($_FILES["file"]["type"] != 'image/gif' &&
                     $_FILES["file"]["type"] != 'image/jpeg' &&
-                    $_FILES["file"]["type"] != 'image/png') {
+                    $_FILES["file"]["type"] != 'image/png' && $_FILES["file"]["type"] != 'image/webp') {
 
                 $this->form_validation->set_message('handle_upload', $this->lang->line('file_type_not_allowed'));
                 return false;
@@ -178,7 +179,8 @@ class Itemstock extends Admin_Controller {
                 $fileInfo = pathinfo($_FILES["item_photo"]["name"]);
                 $img_name = $id . '.' . $fileInfo['extension'];
                 move_uploaded_file($_FILES["item_photo"]["tmp_name"], "./uploads/inventory_items/" . $img_name);
-                $data_img = array('id' => $id, 'attachment' => 'uploads/inventory_items/' . $img_name);
+                $webp = webpImagem("./uploads/inventory_items/{$img_name}", 70, true);
+                $data_img = array('id' => $id, 'attachment' => $webp);
 
                 $this->itemstock_model->add($data_img);
             }

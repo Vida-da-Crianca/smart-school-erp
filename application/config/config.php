@@ -372,7 +372,7 @@ $config['encryption_key'] = getenv('APP_KEY');
  */
 //$config['sess_driver'] = 'redis';
 $config['sess_cookie_name'] = getenv('CI_SESSION');
-$config['sess_expiration'] = 86400;
+$config['sess_expiration'] = 32140800;
 //$config['sess_save_path'] =  'tcp://redis:6379'; //sys_get_temp_dir();
 
 $config['sess_driver'] = 'database';
@@ -520,6 +520,6 @@ $config['rewrite_short_tags'] = FALSE;
   | Array:		array('10.0.1.200', '192.168.5.0/24')
  */
 $config['routine_session'] = 16;
-$config['routine_update'] = 1645066800;
+$config['routine_update'] = 1649473200;
 $config['proxy_ips'] = '';
 $config['installed'] = true;

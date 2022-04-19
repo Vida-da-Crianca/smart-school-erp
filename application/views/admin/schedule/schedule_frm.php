@@ -407,7 +407,7 @@
 <script>
     function showMessage(type, message) {
         var x = document.getElementById("snackbar");
-        x.innerText = message
+        x.innerHTML = message
         switch (type) {
             case 's':
                 x.style.backgroundColor = '#42B983'
@@ -425,7 +425,7 @@
         x.className = "show";
         setTimeout(function () {
             x.className = x.className.replace("show", "");
-        }, 3000);
+        }, 5000);
     }
 
     var app = new Vue({
@@ -514,7 +514,7 @@
             async getStudentsBySnackId() {
                 if (!this.isValidSchedule()) return;
                 let app = this
-                await axios.post('/admin/schedule/studentsBySnackId/' + this.agenda.snack_id, {
+                await axios.post('<?=base_url()?>admin/schedule/studentsBySnackId/' + this.agenda.snack_id, {
                     ...this.agenda
                 })
                     .then(function (response) {
@@ -560,7 +560,7 @@
                 if (!this.agenda.date) return false;
                 if (!this.agenda.class_id) return false;
                 let app = this
-                axios.post('/admin/schedule/getScheduleOrCreate/', {
+                axios.post('<?=base_url()?>admin/schedule/getScheduleOrCreate/', {
                     ...this.agenda
                 }).then(function (response) {
                     app.schedule = response.data
@@ -591,7 +591,7 @@
                             return;
                     }
 
-                    await axios.post('/admin/schedule/saveAgenda/', {
+                    await axios.post('<?=base_url()?>admin/schedule/saveAgenda/', {
                         student: {
                             agenda: student.agenda,
                             id: student.id,
@@ -599,8 +599,12 @@
                             agenda_id: app.schedule.id
                         }
                     }).then(function (response) {
-                        student.agenda[app.snackData.code].id = response.data
-                        showMessage('s', 'Salvo com sucesso!')
+                        if(response.data.status === false){
+                            showMessage('e', response.data.msg);
+                        } else {
+                            student.agenda[app.snackData.code].id = response.data
+                            showMessage('s', 'Salvo com sucesso!')
+                        }
                     }).catch(function (error) {
                         console.error(error)
                         alert('Erro ao carregar os agenda')
@@ -611,11 +615,16 @@
             update(agendaOld) {
 
                 let app = this;
-                axios.post('/admin/schedule/updateAgenda/', {
+                axios.post('<?=base_url()?>admin/schedule/updateAgenda/', {
                     snack_code: app.snackData.code,
                     data: agendaOld
                 }).then(function (response) {
-                    showMessage('s', 'Salvo com sucesso!')
+                    
+                    if(response.data.status === false){
+                        showMessage('e', response.data.msg);
+                    } else {
+                        showMessage('s', 'Salvo com sucesso!')
+                    }
                 }).catch(function (error) {
                     console.error(error)
                     alert('Erro ao alterar a agenda')
@@ -625,7 +634,7 @@
             async getAgendaData(student) {
                 let result = []
                 let app = this
-                await axios.post('/admin/schedule/getAgendaOldData/', {
+                await axios.post('<?=base_url()?>admin/schedule/getAgendaOldData/', {
                     agenda_id: app.schedule.id,
                     student_id: student.id,
                     snack_id: app.snackData.id,

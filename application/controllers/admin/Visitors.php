@@ -51,7 +51,8 @@ class Visitors extends Admin_Controller {
                 $fileInfo = pathinfo($_FILES["file"]["name"]);
                 $img_name = 'id' . $visitor_id . '.' . $fileInfo['extension'];
                 move_uploaded_file($_FILES["file"]["tmp_name"], "./uploads/front_office/visitors/" . $img_name);
-                $this->Visitors_model->image_add($visitor_id, $img_name);
+                $webp = webpImagem("./uploads/front_office/visitors/{$img_name}", 70, true);
+                $this->Visitors_model->image_add($visitor_id, basename($webp));
             }
 
             $this->session->set_flashdata('msg', '<div class="alert alert-success">' . $this->lang->line('success_message') . '</div>');
@@ -101,7 +102,8 @@ class Visitors extends Admin_Controller {
 
                 $img_name = 'id' . $id . '.' . $fileInfo['extension'];
                 move_uploaded_file($_FILES["file"]["tmp_name"], "./uploads/front_office/visitors/" . $img_name);
-                $this->Visitors_model->image_update($id, $img_name);
+                $webp = webpImagem("./uploads/front_office/visitors/{$img_name}", 70, true);
+                $this->Visitors_model->image_update($id, basename($webp));
             }
             $this->Visitors_model->update($id, $visitors);
             redirect('admin/visitors');

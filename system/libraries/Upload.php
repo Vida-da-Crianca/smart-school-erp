@@ -859,6 +859,7 @@ class CI_Upload {
 
 		$png_mimes  = array('image/x-png');
 		$jpeg_mimes = array('image/jpg', 'image/jpe', 'image/jpeg', 'image/pjpeg');
+		
 
 		if (in_array($this->file_type, $png_mimes))
 		{
@@ -868,8 +869,11 @@ class CI_Upload {
 		{
 			$this->file_type = 'image/jpeg';
 		}
+		else if($this->file_type == 'image/webp'){
+			$this->file_type = 'image/webp';
+		}
 
-		$img_mimes = array('image/gif',	'image/jpeg', 'image/png');
+		$img_mimes = array('image/gif',	'image/jpeg', 'image/png', 'image/webp');
 
 		return in_array($this->file_type, $img_mimes, TRUE);
 	}

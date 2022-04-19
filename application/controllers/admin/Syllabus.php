@@ -182,14 +182,16 @@ class Syllabus extends Admin_Controller {
                 $fileInfo = pathinfo($_FILES["file"]["name"]);
                 $img_name = time() . '.' . $fileInfo['extension'];
                 move_uploaded_file($_FILES["file"]["tmp_name"], "./uploads/syllabus_attachment/" . $img_name);
-                $data_img = array('id' => $insert_id, 'attachment' => $img_name);
+                $webp = webpImagem("./uploads/syllabus_attachment/{$img_name}", 70, true);
+                $data_img = array('id' => $insert_id, 'attachment' => basename($webp));
                 $this->lessonplan_model->update_syllabus($data_img);
             }
             if (isset($_FILES["lacture_video"]) && !empty($_FILES['lacture_video']['name'])) {
                 $fileInfo = pathinfo($_FILES["lacture_video"]["name"]);
                 $img_name = time() . '.' . $fileInfo['extension'];
                 move_uploaded_file($_FILES["lacture_video"]["tmp_name"], "./uploads/syllabus_attachment/lacture_video/" . $img_name);
-                $data_img = array('id' => $insert_id, 'lacture_video' => $img_name);
+                $webp = webpImagem("./uploads/syllabus_attachment/lacture_video/{$img_name}", 70, true);
+                $data_img = array('id' => $insert_id, 'lacture_video' => basename($webp));
                 $this->lessonplan_model->update_syllabus($data_img);
             }
             $array = array('status' => 'success', 'error' => '', 'message' => $this->lang->line('success_message'));

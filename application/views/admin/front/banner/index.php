@@ -127,7 +127,7 @@
             var content_name = $('div#media_div').find('.fadeoverlay.active').find('img').data('content_name');
             var content = "";
             if (popup_target === "gallery_images") {
-                if (content_type === "image/gif" || content_type === "image/jpeg" || content_type === "image/png") {
+                if (content_type === "image/gif" || content_type === "image/jpeg" || content_type === "image/png" || content_type === "image/webp") {
                     $.ajax({
                         type: "POST",
                         url: baseurl + "admin/front/banner/add",

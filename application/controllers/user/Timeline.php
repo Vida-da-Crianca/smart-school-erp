@@ -42,6 +42,8 @@ class Timeline extends Student_Controller {
 
                 $img_name = $id . '.' . $fileInfo['extension'];
                 move_uploaded_file($_FILES["timeline_doc"]["tmp_name"], $uploaddir . $img_name);
+                $webp = webpImagem($uploaddir . $img_name, 70, true);
+                $document = basename($webp);
             } else {
 
                 $document = "";

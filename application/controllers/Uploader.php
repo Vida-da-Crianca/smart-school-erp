@@ -65,8 +65,7 @@ class Uploader extends CI_Controller {
                 if($img && !empty($img['name'])){
 
                     $ext = pathinfo($img['name'], PATHINFO_EXTENSION);
-                    $imagemNome = str_replace(['.',' ','+'],['_','',''],$img['name']).uniqid().'.'.$ext;
-
+                    $imagemNome = str_replace(['.',' ','+'],['_','',''],$img['name']).uniqid();
                     $config = array(
                         'upload_path'   => $dir,
                         'allowed_types' => 'pdf|PDF',
@@ -77,7 +76,7 @@ class Uploader extends CI_Controller {
                        // 'max_height'    => 2000,
                         'overwrite'     => true,
                         'encrypt_name'  => false,
-                        'file_name'     => $imagemNome
+                        'file_name'     => $imagemNome . '.' . $ext
                     );
 
                     $this->load->library('upload', $config);
@@ -88,16 +87,15 @@ class Uploader extends CI_Controller {
 
                     $dadosUpload = $this->upload->data();
 
-
                 }else{
                     throw new Exception('Defina o Arquivo a Ser Enviado');
                 }
 
-
-               // $this->modelTransEnd();
+                // Converter para webp
+                $webp = webpImagem($dadosUpload['full_path'], 70, true);
 
                 $this->resp_status = true;
-                $this->resp_msg = array('name'=>$imagemNome,'base64'=> base64_encode(file_get_contents($dadosUpload['full_path'])));
+                $this->resp_msg = array('name'=>$imagemNome . '.webp','base64'=> base64_encode(file_get_contents($webp)));
 
             } catch (Exception $ex) {
                 $this->resp_status = false;
@@ -113,7 +111,7 @@ class Uploader extends CI_Controller {
 
 
         //if($this->checkAjaxSubmit())
-        {
+        //{
             try
             {
                 $dir = FCPATH.'uploads/pre_upload/';
@@ -123,21 +121,14 @@ class Uploader extends CI_Controller {
 
 
                 if($img && !empty($img['name'])){
-                    //throw new Exception($img["name"]);
-                    $fileInfo = pathinfo($img["name"]);
-                    $file_name = str_ireplace('.'.$fileInfo['extension'],'',$img["name"]);
-                    $_img_name = url_title($file_name.'_'.uniqid(),'_');
-                    $img_sem_acentos = preg_replace('/[^A-Za-z0-9.!?]/', '', $_img_name);
-                    $img_sem_acentos = str_ireplace('!', '', $img_sem_acentos);
-                    $img_name = $img_sem_acentos. '.' . $fileInfo['extension'];
+                    $info = pathinfo($img['name']);
+                    $nome_img = md5(uniqid() . time() . $img['name']);
+                    $extension = '.' . $info['extension'];
 
-                    move_uploaded_file($img["tmp_name"], $dir . $img_name);
-
-
+                    move_uploaded_file($img["tmp_name"], $dir . $nome_img . $extension);
+                    $webp = webpImagem($dir . $nome_img . $extension, 70, true);
                     $this->resp_status = true;
-                    $this->resp_msg = array('name'=>$img_name,'base64'=> base64_encode(file_get_contents($dir . $img_name)));
-
-
+                    $this->resp_msg = array('name'=> basename($webp),'base64'=> base64_encode(file_get_contents($webp)));
                 }
                 else{
                     throw new Exception('Defina a Imagem');
@@ -215,7 +206,7 @@ class Uploader extends CI_Controller {
             }
 
             $this->showJSONResp();
-        }
+        //}
     }
 
    protected function showJSONResp()

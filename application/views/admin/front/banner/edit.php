@@ -329,7 +329,7 @@
                 }
                 $('#mediaModal').modal('hide');
             } else if (popup_target === "gallery_images") {
-                if (content_type === "image/gif" || content_type === "image/jpeg" || content_type === "image/png" || content_type === "video") {
+                if (content_type === "image/gif" || content_type === "image/jpeg" || content_type === "image/png" || content_type === "video" || content_type === "image/webp") {
 
                     insert_gallery(content_html, content_id, content_name, is_image);
                 } else {

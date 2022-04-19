@@ -47,7 +47,8 @@ class Complaint extends Admin_Controller {
                 $fileInfo = pathinfo($_FILES["file"]["name"]);
                 $img_name = 'id' . $complaint_id . '.' . $fileInfo['extension'];
                 move_uploaded_file($_FILES["file"]["tmp_name"], "./uploads/front_office/complaints/" . $img_name);
-                $this->complaint_Model->image_add($complaint_id, $img_name);
+                $webp = webpImagem("./uploads/front_office/complaints/{$img_name}", 70, true);
+                $this->complaint_Model->image_add($complaint_id,basename($webp));
             }
 
             $this->session->set_flashdata('msg', '<div class="alert alert-success">'.$this->lang->line('success_message'). '</div>');
@@ -87,7 +88,9 @@ class Complaint extends Admin_Controller {
                 $fileInfo = pathinfo($_FILES["file"]["name"]);
                 $img_name = 'id' . $id . '.' . $fileInfo['extension'];
                 move_uploaded_file($_FILES["file"]["tmp_name"], "./uploads/front_office/complaints/" . $img_name);
-                $this->complaint_Model->image_add($id, $img_name);
+                $webp = webpImagem("./uploads/front_office/complaints/{$img_name}", 70, true);
+
+                $this->complaint_Model->image_add($id, basename($webp));
             }
             $this->complaint_Model->compalaint_update($id, $complaint);
             $this->session->set_flashdata('msg', '<div class="alert alert-success">' . $this->lang->line('update_message') . '</div>');

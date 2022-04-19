@@ -337,7 +337,7 @@
             },
             update() {
                 let app = this;
-                axios.post('/user/user/updateAgenda/', {
+                axios.post('<?=base_url()?>user/user/updateAgenda/', {
                     snack_code: this.code,
                     item: {
                         id: this.id,
