@@ -106,7 +106,7 @@ class Itemstock extends Admin_Controller {
             }
             if ($_FILES["file"]["type"] != 'image/gif' &&
                     $_FILES["file"]["type"] != 'image/jpeg' &&
-                    $_FILES["file"]["type"] != 'image/png') {
+                    $_FILES["file"]["type"] != 'image/png' && $_FILES["file"]["type"] != 'image/webp') {
 
                 $this->form_validation->set_message('handle_upload', $this->lang->line('file_type_not_allowed'));
                 return false;

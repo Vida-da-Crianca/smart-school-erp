@@ -1,6 +1,6 @@
 <?php
 foreach ($img_array as $key => $gallery_value) {
-    if ($gallery_value['file_type'] == 'image/png' || $gallery_value['file_type'] == 'image/jpeg' || $gallery_value['file_type'] == 'image/jpeg' || $gallery_value['file_type'] == 'image/jpeg' || $gallery_value['file_type'] == 'image/gif') {
+    if ($gallery_value['file_type'] == 'image/png' || $gallery_value['file_type'] == 'image/jpeg' || $gallery_value['file_type'] == 'image/jpeg' || $gallery_value['file_type'] == 'image/jpeg' || $gallery_value['file_type'] == 'image/gif' || $fallery_value['file_type'] == 'image/webp') {
         $file = base_url() . $gallery_value['thumb_path'] . $gallery_value['img_name'];
     } elseif ($gallery_value['file_type'] == 'video') {
         $file = base_url() . $gallery_value['thumb_path'] . $gallery_value['img_name'];

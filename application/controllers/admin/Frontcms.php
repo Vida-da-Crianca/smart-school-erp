@@ -127,7 +127,7 @@ class Frontcms extends Admin_Controller {
             }
             if ($_FILES["logo"]["type"] != 'image/gif' &&
                     $_FILES["logo"]["type"] != 'image/jpeg' &&
-                    $_FILES["logo"]["type"] != 'image/png') {
+                    $_FILES["logo"]["type"] != 'image/png' && $_FILES["logo"]["type"] != 'image/webp') {
                 $this->form_validation->set_message('handle_upload', $this->lang->line('invalid_file_type'));
                 return false;
             }

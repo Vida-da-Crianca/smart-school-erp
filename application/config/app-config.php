@@ -16,8 +16,8 @@ $config['exam_type'] = array(
 );
 
 $config['image_validate'] = array(
-    'allowed_mime_type' => array('image/jpeg', 'image/jpg', 'image/png'), //mime_type
-    'allowed_extension' => array('jpg', 'jpeg', 'png', 'gif', 'bmp', 'svg', 'JPG', 'JPEG', 'PNG', 'GIF', 'BMP', 'SVG', 'Jpg', 'Jpeg', 'Png', 'Gif', 'Bmp', 'Svg'), // image extensions
+    'allowed_mime_type' => array('image/jpeg', 'image/jpg', 'image/png', 'image/webp'), //mime_type
+    'allowed_extension' => array('jpg', 'jpeg', 'png', 'gif', 'bmp', 'svg', 'JPG', 'JPEG', 'PNG', 'GIF', 'BMP', 'SVG', 'Jpg', 'Jpeg', 'Png', 'Gif', 'Bmp', 'Svg', 'webp', 'WEBP'), // image extensions
     'upload_size' => 10048576, // bytes
 );
 
@@ -40,6 +40,7 @@ $config['file_validate'] = array(
         'image/jpeg',
         'image/jpg',
         'image/png',
+        'image/webp',
         'audio/mpeg',
         'audio/mpg',
         'audio/mpeg3',

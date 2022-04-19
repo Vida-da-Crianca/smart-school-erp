@@ -203,7 +203,7 @@ class Teacher extends Student_Controller
             }
             if ($_FILES["file"]["type"] != 'image/gif' &&
                 $_FILES["file"]["type"] != 'image/jpeg' &&
-                $_FILES["file"]["type"] != 'image/png') {
+                $_FILES["file"]["type"] != 'image/png' && $_FILES["file"]["type"] != 'image/webp') {
                 $this->form_validation->set_message('handle_upload', 'File type not allowed');
                 return false;
             }

@@ -97,19 +97,20 @@ class ImageResize {
                 $upload_image = $this->destination_dir . basename($fileName);
                 //upload image
                 if (move_uploaded_file($this->curr_tmp_name, $upload_image)) {
-                    // Webp
-                    $webp = webpImagem($upload_image, 70, true);
-                    $file_ext = mime_content_type($webp);
-                    $fileName = basename($webp);
                     //thumbnail creation
+                    $webp = webpImagem($upload_image, 70, true);
+                    $this->new_file_name = basename($webp);
+                    $file_ext = mime_content_type($webp);
                     $this->image_size_info = filesize($webp);
-
+                    $upload_image = $webp;
+                    $fileName = $this->new_file_name;
+                    $this->curr_tmp_name = $webp;
 
                     $img_array = array(
-                        'store_name' => $fileName,
+                        'store_name' => $this->new_file_name,
                         'file_type' => $file_ext,
                         'file_size' => $this->image_size_info,
-                        'thumb_name' => $fileName,
+                        'thumb_name' => $this->new_file_name,
                         'thumb_path' => $this->thumbnail_destination_dir,
                         'dir_path' => $this->destination_dir,
                         'height' => 0,
@@ -139,6 +140,7 @@ class ImageResize {
                                 case 'image/webp':
                                     $source = imagecreatefromwebp($upload_image);
                                     break;
+                            
                                 default:
                                 // $source = imagecreatefromjpeg($upload_image);
                             }
@@ -248,6 +250,11 @@ class ImageResize {
                 imagedestroy($this->new_canvas);
                 return array('file_name' => $this->file_name, 'file_type' => $this->image_type, 'store_name' => $this->new_file_name, 'dir_path' => $this->destination_dir, 'thumb_path' => $this->thumbnail_destination_dir);
                 break;
+            case 'image/webp':
+                imagewebp($this->new_canvas, $this->save_dir . $this->new_file_name, $this->quality);
+                imagedestroy($this->new_canvas);
+                return array('file_name' => $this->file_name, 'file_type' => $this->image_type, 'store_name' => $this->new_file_name, 'dir_path' => $this->destination_dir, 'thumb_path' => $this->thumbnail_destination_dir);
+                break;
             default:
                 imagedestroy($this->new_canvas);
                 return false;
@@ -287,6 +294,8 @@ class ImageResize {
             case 'image/jpeg': case 'image/pjpeg':
                 return imagecreatefromjpeg($this->curr_tmp_name);
                 break;
+            case 'image/webp':
+                return imagecreatefromwebp($this->curr_tmp_name);
             default:
                 return false;
         }
@@ -299,6 +308,7 @@ class ImageResize {
             case 'image/gif': return '.gif';
             case 'image/jpeg': return '.jpg';
             case 'image/png': return '.png';
+            case 'image/webp': return '.webp';
             default: return false;
         }
     }

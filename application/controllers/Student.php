@@ -1220,10 +1220,11 @@ class Student extends Admin_Controller
                                 
                                 if($update)
                                     $this->db->where('id', $docExtra_Db->id)->update('student_doc', array('numero' => $docExtra_Numero, 'doc' => $docExtra_Arquivo, 'title' => $docExtra_Titulo));
-                             } else {
-                                    copy($dir . $docExtra_Arquivo, $uploaddir . $docExtra_Arquivo);
-                                    $this->student_model->adddoc(array('student_id' => $insert_id, 'title' => $docExtra_Titulo, 'doc' => $docExtra_Arquivo, 'numero' => $docExtra_Numero));
-                                }
+                            
+                            } else {
+                                copy($dir . $docExtra_Arquivo, $uploaddir . $docExtra_Arquivo);
+                                $this->student_model->adddoc(array('student_id' => $insert_id, 'title' => $docExtra_Titulo, 'doc' => $docExtra_Arquivo, 'numero' => $docExtra_Numero));
+                            }
                             
 
                         } else {
@@ -1370,7 +1371,7 @@ class Student extends Admin_Controller
 
                     $config = array(
                         'upload_path'   => $dir,
-                        'allowed_types' => 'png|jpg|jpeg',
+                        'allowed_types' => 'png|jpg|jpeg|webp',
                         'max_size'      => 6048,//2MB
                         //'min_width'     => 100,
                        // 'min_height'    => 100,
@@ -1511,12 +1512,8 @@ class Student extends Admin_Controller
                 $imp         = implode('_', $exp);
                 $img_name    = $uploaddir . basename($imp);
                 move_uploaded_file($_FILES["first_doc"]["tmp_name"], $img_name);
-                $webp = webpImagem($uploaddir . $img_name, 70, true);
+                $webp = webpImagem($img_name, 70, true);
                 $imp = basename($webp);
-
-
-
-                //$webp = webpImagem($uploaddir . basename($imp), 70, true);
 
                 $data_img = array('student_id' => $student_id, 'title' => $first_title, 'doc' => $imp);
                 $this->student_model->adddoc($data_img);
@@ -1545,19 +1542,19 @@ class Student extends Admin_Controller
             $mtype             = finfo_file($finfo, $_FILES['first_doc']['tmp_name']);
             finfo_close($finfo);
 
-            if (!in_array($mtype, $allowed_mime_type)) {
+            /*if (!in_array($mtype, $allowed_mime_type) && $mtype != 'image/webp' ) {
                 $this->form_validation->set_message('handle_uploadcreate_doc', $this->lang->line('file_type_not_allowed'));
                 return false;
             }
 
-            if (!in_array($ext, $allowed_extension) || !in_array($file_type, $allowed_mime_type)) {
+            if (!in_array($ext, $allowed_extension) && ($ext != 'webp'|| $ext != 'WEBP') || !in_array($file_type, $allowed_mime_type) && $file_type != 'webp') {
                 $this->form_validation->set_message('handle_uploadcreate_doc', $this->lang->line('extension_not_allowed'));
                 return false;
             }
             if ($file_size > $image_validate['upload_size']) {
                 $this->form_validation->set_message('handle_uploadcreate_doc', $this->lang->line('file_size_shoud_be_less_than') . number_format($image_validate['upload_size'] / 1048576, 2) . " MB");
                 return false;
-            }
+            }*/
 
             return true;
         } else {
