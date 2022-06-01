@@ -220,7 +220,7 @@ class Onlinestudent extends Admin_Controller {
                             'guardian_email' => $this->input->post('guardian_email'),
                             'gender' => $this->input->post('gender'),
                             'guardian_name' => $this->input->post('guardian_name'),
-                            'guardian_document' => $this->input->post('guardian_document'),
+                            'guardian_document' => preg_replace('/[^0-9]/', '', $this->input->post('guardian_document')),
                             'guardian_relation' => $this->input->post('guardian_relation'),
                             'guardian_phone' => $this->input->post('guardian_phone'),
                             'guardian_address' => $this->input->post('guardian_address'),
