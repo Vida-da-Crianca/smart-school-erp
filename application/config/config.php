@@ -216,7 +216,7 @@ $config['directory_trigger'] = 'd';
   | your log files will fill up very fast.
   |
  */
-$config['log_threshold'] = 4;
+$config['log_threshold'] = 1;
 
 /*
   |--------------------------------------------------------------------------
@@ -520,6 +520,6 @@ $config['rewrite_short_tags'] = FALSE;
   | Array:		array('10.0.1.200', '192.168.5.0/24')
  */
 $config['routine_session'] = 16;
-$config['routine_update'] = 1645066800;
+$config['routine_update'] = 1643166000;
 $config['proxy_ips'] = '';
 $config['installed'] = true;
