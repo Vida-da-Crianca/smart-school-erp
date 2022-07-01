@@ -597,6 +597,8 @@ class Studentfee extends Admin_Controller
             $mailsms_array->email = $email;
             $mailsms_array->parent_app_key = $parent_app_key;
 
+            $mailsms_array['student_id'] = $student_session_id;
+
             $this->mailsmsconf->mailsms('fee_submission', $mailsms_array);
 
             $array = array('status' => 'success', 'error' => '', 'print' => $print_record);

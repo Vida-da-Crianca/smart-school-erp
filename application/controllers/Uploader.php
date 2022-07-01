@@ -223,4 +223,48 @@ class Uploader extends CI_Controller {
         echo json_encode(array('status' => $this->resp_status, 'msg' => $this->resp_msg));
         exit;
     }
+
+    public function uploadBase64() {
+
+
+        {
+            try
+            {
+                $dir = FCPATH.'uploads/marksheet/';
+                $data = json_decode(file_get_contents('php://input'));
+                $image = null;
+
+                if (preg_match('/^data:image\/(\w+);base64,/', $data->file, $type)) {
+                    $content = substr($data->file, strpos($data->file, ',') + 1);
+                    $type = strtolower($type[1]); // jpg, png, gif
+
+                    if (!in_array($type, [ 'jpg', 'jpeg', 'gif', 'png' ])) {
+                        throw new \Exception('invalid image type');
+                    }
+                    $content = str_replace( ' ', '+', $content );
+                    $content = base64_decode($content);
+
+                    if ($content === false) {
+                        throw new \Exception('base64_decode failed');
+                    }
+
+                    $image =  $content;
+                } else {
+                    throw new \Exception('did not match data URI with image data');
+                }
+
+
+                file_put_contents($dir.$data->filename, $image);
+
+                $this->resp_status = true;
+                $this->resp_msg = base_url().'uploads/marksheet/'.$data->filename;
+
+            } catch (Exception $ex) {
+                $this->resp_status = false;
+                $this->resp_msg = $ex->getMessage();
+            }
+
+            $this->showJSONResp();
+        }
+    }
 }

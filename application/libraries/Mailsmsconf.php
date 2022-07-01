@@ -13,6 +13,8 @@ class Mailsmsconf {
         $this->CI->load->library('mailgateway');
         $this->CI->load->model('examresult_model');
         $this->CI->load->model('student_model');
+        $this->CI->load->model(['eloquent/Student_eloquent']);
+        $this->CI->load->model(['eloquent/Student_fee_item_eloquent']);
         $this->config_mailsms = $this->CI->config->item('mailsms');
     }
 
@@ -116,6 +118,7 @@ class Mailsmsconf {
                 foreach ($exam_result['exam_result'] as $res_key => $res_value) {
 
                     $detail = array(
+                        'student_id' => $res_value->id,
                         'student_name' => $res_value->firstname . " " . $res_value->lastname,
                         'exam_roll_no' => $res_value->exam_roll_no,
                         'email' => $res_value->email,
@@ -149,12 +152,14 @@ class Mailsmsconf {
 
         if ($chk_mail_sms['mail'] or $chk_mail_sms['sms'] or $chk_mail_sms['notification']) {
             $student_result = $this->getAbsentStudentlist($student_session_array);
+            dd($student_result);
             if (!empty($student_result)) {
 
                 foreach ($student_result as $student_result_k => $student_result_v) {
                     $detail = array(
                         'date' => $date,
                         'parent_app_key' => $student_result_v->parent_app_key,
+                        'student_id' => $student_result_v->id,
                         'firstname' => $student_result_v->firstname,
                         'lastname' => $student_result_v->lastname,
                         'mobileno' => $student_result_v->mobileno,
@@ -223,6 +228,7 @@ class Mailsmsconf {
                             'app_key' => $student_value['app_key'],
                             'class' => $student_value['class'],
                             'section' => $student_value['section'],
+                            'student_id' => $student_value['id'],
                             'homework_date' => $homework_date,
                             'submit_date' => $submit_date,
                             'subject' => $subject,
@@ -234,6 +240,7 @@ class Mailsmsconf {
                         $student_notification_list[] = array(
                             'app_key' => $student_value['parent_app_key'],
                             'class' => $student_value['class'],
+                            'student_id' => $student_value['id'],
                             'section' => $student_value['section'],
                             'homework_date' => $homework_date,
                             'submit_date' => $submit_date,
@@ -247,6 +254,7 @@ class Mailsmsconf {
                         $student_email_list[$student_value['email']] = array(
                             'class' => $student_value['class'],
                             'section' => $student_value['section'],
+                            'student_id' => $student_value['id'],
                             'homework_date' => $homework_date,
                             'submit_date' => $submit_date,
                             'subject' => $subject,
@@ -258,6 +266,7 @@ class Mailsmsconf {
                         $student_email_list[$student_value['guardian_email']] = array(
                             'class' => $student_value['class'],
                             'section' => $student_value['section'],
+                            'student_id' => $student_value['id'],
                             'homework_date' => $homework_date,
                             'submit_date' => $submit_date,
                             'subject' => $subject,
@@ -270,6 +279,7 @@ class Mailsmsconf {
                             'class' => $student_value['class'],
                             'section' => $student_value['section'],
                             'homework_date' => $homework_date,
+                            'student_id' => $student_value['id'],
                             'submit_date' => $submit_date,
                             'subject' => $subject,
                             'admission_no' => $student_value['admission_no'],
@@ -280,6 +290,7 @@ class Mailsmsconf {
                         $student_sms_list[$student_value['guardian_phone']] = array(
                             'class' => $student_value['class'],
                             'section' => $student_value['section'],
+                            'student_id' => $student_value['id'],
                             'homework_date' => $homework_date,
                             'submit_date' => $submit_date,
                             'subject' => $subject,

@@ -150,7 +150,9 @@ class Cron extends CI_Controller
                 }
                 if (!empty($studentList)) {
                     foreach ($studentList as $eachStudent_key => $eachStudent_value) {
-                     
+                        if (isset($eachStudent_value['id'])){
+                            $eachStudent_value['student_id'] = $eachStudent_value['id'];
+                        }
                         $this->mailsmsconf->mailsms('fees_reminder', $eachStudent_value);
                     }
 

@@ -328,6 +328,9 @@ class Notification extends Admin_Controller
     public function savetemplate()
     {
         $response =array();
+
+       $content = $this->input->post('template_message');
+
         $this->form_validation->set_rules('temp_id', $this->lang->line('template_id'), 'required|trim|xss_clean');
         $this->form_validation->set_rules('template_message', $this->lang->line('template_message'), 'required|trim|xss_clean');
    
@@ -344,7 +347,7 @@ class Notification extends Admin_Controller
            
             $data_update = array(
                 'id' => $this->input->post('temp_id'),
-                'template' => $this->input->post('template_message')
+                'template' => $content
               
             );
             $this->notificationsetting_model->update($data_update);

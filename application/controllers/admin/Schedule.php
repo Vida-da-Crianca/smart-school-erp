@@ -142,7 +142,7 @@ class Schedule extends Admin_Controller
         } elseif ($snack->code == "sono") {
             $payload = [
                 "dormiu" => $agenda->sono->dormiu ?? date('H:i'),
-                "acordou" => $agenda->sono->acordou ?? date('H:i'),
+                "acordou" => $agenda->sono->acordou ?? null,
                 "agenda_id" => $student->agenda_id,
                 "snack_id" => $snack->id,
                 "student_id" => $student->id,

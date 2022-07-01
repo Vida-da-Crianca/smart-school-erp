@@ -850,9 +850,9 @@ class Staff_model extends MY_Model
 
     public function checkLogin($data)
     {
-
         $record = $this->getByEmail($data['email']);
         if ($record) {
+
             $pass_verify = $this->enc_lib->passHashDyc($data['password'], $record->password);
             if ($pass_verify) {
                 $roles = $this->staffroles_model->getStaffRoles($record->id);
