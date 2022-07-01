@@ -5,6 +5,9 @@ if (!defined('BASEPATH')) {
 }
 
 use Application\Support\Parser;
+use WGenial\NumeroPorExtenso\NumeroPorExtenso;
+use Application\Support\NumberExtensil;
+use Illuminate\Support\Str;
 
 class Mailgateway
 {
