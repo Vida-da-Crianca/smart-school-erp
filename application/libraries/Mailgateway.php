@@ -23,6 +23,7 @@ class Mailgateway
         $this->_CI->load->library('mailer');
         $this->_CI->mailer;
         $this->sch_setting = $this->_CI->setting_model->get();
+        $this->sch_setting_detail = $this->_CI->setting_model->getSetting();
     }
 
     public function sentMail($sender_details, $template, $subject)
