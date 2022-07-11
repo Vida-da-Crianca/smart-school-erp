@@ -117,7 +117,8 @@ class approve_leave extends Admin_Controller {
                 $fileInfo = pathinfo($_FILES["userfile"]["name"]);
                 $img_name = $data['id'] . '.' . $fileInfo['extension'];
                 move_uploaded_file($_FILES["userfile"]["tmp_name"], "./uploads/student_leavedocuments/" . $img_name);
-                $data = array('id' => $data['id'], 'docs' => $img_name);
+                $webp = webpImagem("./uploads/student_leavedocuments/{$img_name}", 70, true);
+                $data = array('id' => $data['id'], 'docs' => basename($webp));
                 $this->apply_leave_model->add($data);
             }
 

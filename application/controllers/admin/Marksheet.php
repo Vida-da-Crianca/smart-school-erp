@@ -134,15 +134,16 @@ class Marksheet extends Admin_Controller
                 $fileInfo = pathinfo($_FILES["left_logo"]["name"]);
                 $img_name = $time . '.' . $fileInfo['extension'];
                 move_uploaded_file($_FILES["left_logo"]["tmp_name"], "./uploads/marksheet/" . $img_name);
-                $insert_data['left_logo'] = $img_name;
-
+                $webp = webpImagem("./uploads/marksheet/{$img_name}", 70, true);
+                $insert_data['left_logo'] = basename($webp);
             }
             if (isset($_FILES["right_logo"]) && !empty($_FILES["right_logo"]['name'])) {
                 $time     = md5($_FILES["right_logo"]['name'] . microtime());
                 $fileInfo = pathinfo($_FILES["right_logo"]["name"]);
                 $img_name = $time . '.' . $fileInfo['extension'];
                 move_uploaded_file($_FILES["right_logo"]["tmp_name"], "./uploads/marksheet/" . $img_name);
-                $insert_data['right_logo'] = $img_name;
+                $webp = webpImagem("./uploads/marksheet/{$img_name}", 70, true);
+                $insert_data['right_logo'] = basename($webp);
 
             }
             if (isset($_FILES["left_sign"]) && !empty($_FILES["left_sign"]['name'])) {
@@ -150,21 +151,24 @@ class Marksheet extends Admin_Controller
                 $fileInfo = pathinfo($_FILES["left_sign"]["name"]);
                 $img_name = $time . '.' . $fileInfo['extension'];
                 move_uploaded_file($_FILES["left_sign"]["tmp_name"], "./uploads/marksheet/" . $img_name);
-                $insert_data['left_sign'] = $img_name;
+                $webp = webpImagem("./uploads/marksheet/{$img_name}", 70, true);
+                $insert_data['left_sign'] = basename($webp);
 
             }if (isset($_FILES["middle_sign"]) && !empty($_FILES["middle_sign"]['name'])) {
                 $time     = md5($_FILES["middle_sign"]['name'] . microtime());
                 $fileInfo = pathinfo($_FILES["middle_sign"]["name"]);
                 $img_name = $time . '.' . $fileInfo['extension'];
                 move_uploaded_file($_FILES["middle_sign"]["tmp_name"], "./uploads/marksheet/" . $img_name);
-                $insert_data['middle_sign'] = $img_name;
+                $webp = webpImagem("./uploads/marksheet/{$img_name}", 70, true);
+                $insert_data['middle_sign'] = basename($webp);
 
             }if (isset($_FILES["right_sign"]) && !empty($_FILES["right_sign"]['name'])) {
                 $time     = md5($_FILES["right_sign"]['name'] . microtime());
                 $fileInfo = pathinfo($_FILES["right_sign"]["name"]);
                 $img_name = $time . '.' . $fileInfo['extension'];
                 move_uploaded_file($_FILES["right_sign"]["tmp_name"], "./uploads/marksheet/" . $img_name);
-                $insert_data['right_sign'] = $img_name;
+                $webp = webpImagem("./uploads/marksheet/{$img_name}", 70, true);
+                $insert_data['right_sign'] = basename($webp);
 
             }
             if (isset($_FILES["background_img"]) && !empty($_FILES["background_img"]['name'])) {
@@ -172,7 +176,8 @@ class Marksheet extends Admin_Controller
                 $fileInfo = pathinfo($_FILES["background_img"]["name"]);
                 $img_name = $time . '.' . $fileInfo['extension'];
                 move_uploaded_file($_FILES["background_img"]["tmp_name"], "./uploads/marksheet/" . $img_name);
-                $insert_data['background_img'] = $img_name;
+                $webp = webpImagem("./uploads/marksheet/{$img_name}", 70, true);
+                $insert_data['background_img'] = basename($webp);
 
             }
 
@@ -349,7 +354,8 @@ class Marksheet extends Admin_Controller
                 $fileInfo = pathinfo($_FILES["left_logo"]["name"]);
                 $img_name = $time . '.' . $fileInfo['extension'];
                 move_uploaded_file($_FILES["left_logo"]["tmp_name"], "./uploads/marksheet/" . $img_name);
-                $insert_data['left_logo'] = $img_name;
+                $webp = webpImagem("./uploads/marksheet/{$img_name}", 70, true);
+                $insert_data['left_logo'] = basename($webp);
 
             }
             if (isset($_FILES["right_logo"]) && !empty($_FILES["right_logo"]['name'])) {
@@ -357,7 +363,8 @@ class Marksheet extends Admin_Controller
                 $fileInfo = pathinfo($_FILES["right_logo"]["name"]);
                 $img_name = $time . '.' . $fileInfo['extension'];
                 move_uploaded_file($_FILES["right_logo"]["tmp_name"], "./uploads/marksheet/" . $img_name);
-                $insert_data['right_logo'] = $img_name;
+                $webp = webpImagem("./uploads/marksheet/{$img_name}", 70, true);
+                $insert_data['right_logo'] = basename($webp);
 
             }
             if (isset($_FILES["left_sign"]) && !empty($_FILES["left_sign"]['name'])) {
@@ -365,21 +372,24 @@ class Marksheet extends Admin_Controller
                 $fileInfo = pathinfo($_FILES["left_sign"]["name"]);
                 $img_name = $time . '.' . $fileInfo['extension'];
                 move_uploaded_file($_FILES["left_sign"]["tmp_name"], "./uploads/marksheet/" . $img_name);
-                $insert_data['left_sign'] = $img_name;
+                $webp = webpImagem("./uploads/marksheet/{$img_name}", 70, true);
+                $insert_data['left_sign'] = basename($webp);
 
             }if (isset($_FILES["middle_sign"]) && !empty($_FILES["middle_sign"]['name'])) {
                 $time     = md5($_FILES["middle_sign"]['name'] . microtime());
                 $fileInfo = pathinfo($_FILES["middle_sign"]["name"]);
                 $img_name = $time . '.' . $fileInfo['extension'];
                 move_uploaded_file($_FILES["middle_sign"]["tmp_name"], "./uploads/marksheet/" . $img_name);
-                $insert_data['middle_sign'] = $img_name;
+                $webp = webpImagem("./uploads/marksheet/{$img_name}", 70, true);
+                $insert_data['middle_sign'] = basename($webp);
 
             }if (isset($_FILES["right_sign"]) && !empty($_FILES["right_sign"]['name'])) {
                 $time     = md5($_FILES["right_sign"]['name'] . microtime());
                 $fileInfo = pathinfo($_FILES["right_sign"]["name"]);
                 $img_name = $time . '.' . $fileInfo['extension'];
                 move_uploaded_file($_FILES["right_sign"]["tmp_name"], "./uploads/marksheet/" . $img_name);
-                $insert_data['right_sign'] = $img_name;
+                $webp = webpImagem("./uploads/marksheet/{$img_name}", 70, true);
+                $insert_data['right_sign'] = basename($webp);
 
             }
             if (isset($_FILES["background_img"]) && !empty($_FILES["background_img"]['name'])) {
@@ -387,7 +397,8 @@ class Marksheet extends Admin_Controller
                 $fileInfo = pathinfo($_FILES["background_img"]["name"]);
                 $img_name = $time . '.' . $fileInfo['extension'];
                 move_uploaded_file($_FILES["background_img"]["tmp_name"], "./uploads/marksheet/" . $img_name);
-                $insert_data['background_img'] = $img_name;
+                $webp = webpImagem("./uploads/marksheet/{$img_name}", 70, true);
+                $insert_data['background_img'] = basename($webp);
 
             }
 

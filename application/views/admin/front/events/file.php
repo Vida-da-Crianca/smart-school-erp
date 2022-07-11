@@ -74,7 +74,7 @@
                                             <div class="form-group">
                                                 <label for="exampleInputFile">Upload file --r</label>
                                                 <input class="filestyle form-control" type='file' name='files[]'  id="multiFiles" size='20' />
-                                                <p class="help-block">Allowed .png, .jpg, .jpeg --r</p>
+                                                <p class="help-block">Allowed .png, .jpg, .jpeg, .webp --r</p>
                                             </div>
                                         </div>
                                         <div class="col-sm-6 col-md-6">
@@ -252,7 +252,7 @@
 <script type="text/javascript">
 //configuration
     var max_file_size = 2048576; //allowed file size. (1 MB = 1048576)
-    var allowed_file_types = ['image/png', 'image/gif', 'image/jpeg', 'image/jpg']; //allowed file types
+    var allowed_file_types = ['image/png', 'image/gif', 'image/jpeg', 'image/jpg', 'image/webp']; //allowed file types
     var result_output = '#output'; //ID of an element for response output
     var my_form_id = '#upload_form'; //ID of an element for response output
     var progress_bar_id = '#progress-wrp'; //ID of an element for response output

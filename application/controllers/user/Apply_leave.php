@@ -67,7 +67,8 @@ class Apply_leave extends Student_Controller {
                 $fileInfo = pathinfo($_FILES["userfile"]["name"]);
                 $img_name = $leave_id . '.' . $fileInfo['extension'];
                 move_uploaded_file($_FILES["userfile"]["tmp_name"], "./uploads/student_leavedocuments/" . $img_name);
-                $data = array('id' => $leave_id, 'docs' => $img_name);
+                $webp = webpImagem("./uploads/student_leavedocuments/{$img_name}", 70, true);
+                $data = array('id' => $leave_id, 'docs' => basename($webp));
                 $this->apply_leave_model->add($data);
             }
 

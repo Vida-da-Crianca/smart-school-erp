@@ -59,6 +59,8 @@ public function edit(){
   
                         }
             move_uploaded_file($_FILES["header_image"]["tmp_name"], "./uploads/print_headerfooter/student_receipt/" . $img_name);
+            $webp = webpImagem("./uploads/print_headerfooter/student_receipt/{$img_name}", 70, true);
+            $img_name = basename($webp);
                    
                     
                 }else{
@@ -72,6 +74,8 @@ public function edit(){
   
                         }
                     move_uploaded_file($_FILES["header_image"]["tmp_name"], "./uploads/print_headerfooter/staff_payslip/" . $img_name);
+                    $webp = webpImagem("./uploads/print_headerfooter/staff_payslip/{$img_name}", 70, true);
+                    $img_name = basename($webp);
                 }
               
            $data=array('print_type'=>$_POST['type'],'header_image'=>$img_name,'footer_content'=>$_POST[$message],'created_by'=>$this->customlib->getStaffID());

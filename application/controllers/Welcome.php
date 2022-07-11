@@ -348,8 +348,10 @@ class Welcome extends Front_Controller
                         $fileInfo = pathinfo($_FILES["document"]["name"]);
                         $doc_name = $time . '.' . $fileInfo['extension'];
                         move_uploaded_file($_FILES["document"]["tmp_name"], "./uploads/student_documents/online_admission_doc/" . $doc_name);
+                        $webp = webpImagem("./uploads/student_documents/online_admission_doc/{$doc_name}", 70, true);
+                        
 
-                        $data['document'] = $doc_name;
+                        $data['document'] = basename($webp);
                     }
 
                     $insert_id = $this->onlinestudent_model->add($data);
@@ -498,7 +500,9 @@ class Welcome extends Front_Controller
                         mkdir("./uploads/cv_images", 0777, TRUE);
 
                     move_uploaded_file($_FILES["file"]["tmp_name"], "./uploads/cv_images/" . $img_name);
-                    $data['foto'] = $img_name;
+                    $webp = webpImagem("./uploads/cv_images/{$img_name}", 70, true);
+
+                    $data['foto'] = basename($webp);
                 }
 
                 $this->curriculo_model->batchInsert($data);
@@ -940,7 +944,14 @@ class Welcome extends Front_Controller
             $exp         = explode(' ', $file_name);
             $imp         = implode('_', $exp);
             $img_name    = $uploaddir . uniqid().strtr($imp,'àáâãäçèéêëìíîïñòóôõöùúûüýÿÀÁÂÃÄÇÈÉÊËÌÍÎÏÑÒÓÔÕÖÙÚÛÜÝ','aaaaaceeeeiiiinooooouuuuyyAAAAACEEEEIIIINOOOOOUUUUY');
-            return move_uploaded_file($_FILES[$arquivo]["tmp_name"], $img_name);
+            if(move_uploaded_file($_FILES[$arquivo]["tmp_name"], $img_name)){
+                $webp = webpImagem($img_name, 70, true);
+                $img_name = $webp;
+                return true;
+            } else {
+                return false;
+            }
+            //return move_uploaded_file($_FILES[$arquivo]["tmp_name"], $img_name);
             //$data_img = array('student_id' => $insert_id, 'title' => $first_title, 'doc' => $imp);
             //return $this->student_model->adddoc($data_img);
         }

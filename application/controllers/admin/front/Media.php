@@ -149,7 +149,8 @@ class Media extends Admin_Controller {
 
         $is_image = "0";
         $is_video = "0";
-        if ($result->file_type == 'image/png' || $result->file_type == 'image/jpeg' || $result->file_type == 'image/jpeg' || $result->file_type == 'image/jpeg' || $result->file_type == 'image/gif') {
+
+        if ($result->file_type == 'image/png' || $result->file_type == 'image/jpeg' || $result->file_type == 'image/jpeg' || $result->file_type == 'image/jpeg' || $result->file_type == 'image/gif' || $result->file_type == 'image/webp') {
            
             $file = base_url() . $result->dir_path . $result->img_name;
             $file_src = base_url() . $result->thumb_path . $result->img_name;

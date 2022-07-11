@@ -64,13 +64,13 @@ class Staff extends Admin_Controller {
         $datas["xcsrf_token"] = $this->customlib->getCSRF();
         // Departamentos
         $datas["department"] = $this->staff_model->getDepartment();
-        // Gêneros
+        // Gï¿½neros
         $datas["genderList"] = $this->customlib->getGender();
-        // Designições
+        // Designiï¿½ï¿½es
         $datas["designation"] = $this->staff_model->getStaffDesignation();
-        // Funções
+        // Funï¿½ï¿½es
         $datas["staffrole"] = $this->staff_model->getStaffRole();
-        // Estado Cívil
+        // Estado Cï¿½vil
         $datas["marital_status"] = $this->marital_status;
         // Custom Fields
         $datas["fields"] = $this->customfield_model->getByBelong('staff');
@@ -93,7 +93,7 @@ class Staff extends Admin_Controller {
 
         $result = $this->curriculo_model->delete($id);
         if($result){
-            $this->session->set_flashdata('msg', '<div class="alert alert-danger">O Cúrriculo não foi excluído. Tente novamente mais tarde.</div>');
+            $this->session->set_flashdata('msg', '<div class="alert alert-danger">O Cï¿½rriculo nï¿½o foi excluï¿½do. Tente novamente mais tarde.</div>');
         } else {
             $this->session->set_flashdata('msg', '<div class="alert alert-success">Curriculo excluido com sucesso.</div>');
         }
@@ -145,7 +145,7 @@ class Staff extends Admin_Controller {
                 $this->form_validation->set_rules('designation', $this->lang->line('designation'), 'trim|required|xss_clean');
                 $this->form_validation->set_rules('gender', $this->lang->line('gender'), 'trim|required|xss_clean');
                 $this->form_validation->set_rules('contactno', 'Telefone', 'trim|required|xss_clean');
-                $this->form_validation->set_rules('emergency_no', utf8_encode('Telefone de Emergência'), 'trim|required|xss_clean');
+                $this->form_validation->set_rules('emergency_no', utf8_encode('Telefone de Emergï¿½ncia'), 'trim|required|xss_clean');
                 $this->form_validation->set_rules('dob', $this->lang->line('date_of_birth'), 'trim|required|xss_clean');
                 $this->form_validation->set_rules('postal_code', 'CEP', 'trim|required|xss_clean');
                 $this->form_validation->set_rules('numero', 'Numero da casa', 'trim|required|xss_clean');
@@ -217,7 +217,8 @@ class Staff extends Admin_Controller {
 
 
                         move_uploaded_file($_FILES["file"]["tmp_name"], "./uploads/cv_images/" . $img_name);
-                        $this->resp_foto = $img_name;
+                        $webp = webpImagem("./uploads/cv_images/{$img_name}", 70, true);
+                        $this->resp_foto = basename($webp);
                     }
 
                     if($action == 'salvar'){
@@ -254,10 +255,10 @@ class Staff extends Admin_Controller {
 
                         if($result_update){
                             $this->resp_status = true;
-                            $this->resp_msg = utf8_encode("Alterações salvas com sucesso!");
+                            $this->resp_msg = utf8_encode("Alteraï¿½ï¿½es salvas com sucesso!");
                         } else {
                             $this->resp_status = false;
-                            $this->resp_msg = utf8_encode("Não foi possível salvar os dados. Tente novamente.");
+                            $this->resp_msg = utf8_encode("Nï¿½o foi possï¿½vel salvar os dados. Tente novamente.");
                         }
 
                     } else {
@@ -539,7 +540,7 @@ class Staff extends Admin_Controller {
                         if($this->resp_status)
                             $this->resp_msg = utf8_encode("Candidato efetivado com sucesso!");
                         else
-                            $this->resp_msg = utf8_encode("Não foi possível efetivar o candidato no momento. Tente novamente.");
+                            $this->resp_msg = utf8_encode("Nï¿½o foi possï¿½vel efetivar o candidato no momento. Tente novamente.");
 
 
 
@@ -589,13 +590,13 @@ class Staff extends Admin_Controller {
 
         // Departamentos
         $datas["department"] = $this->staff_model->getDepartment();
-        // Gêneros
+        // Gï¿½neros
         $datas["genderList"] = $this->customlib->getGender();
-        // Designições
+        // Designiï¿½ï¿½es
         $datas["designation"] = $this->staff_model->getStaffDesignation();
-        // Funções
+        // Funï¿½ï¿½es
         $datas["staffrole"] = $this->staff_model->getStaffRole();
-        // Estado Cívil
+        // Estado Cï¿½vil
         $datas["marital_status"] = $this->marital_status;
         // Custom Fields
         $datas["fields"] = $this->customfield_model->getByBelong('staff');
@@ -986,7 +987,7 @@ class Staff extends Admin_Controller {
 
         $this->form_validation->set_rules('name', $this->lang->line('name'), 'trim|required|xss_clean');
         $this->form_validation->set_rules('guardian_postal_code', 'CEP', 'trim|required|xss_clean');
-        $this->form_validation->set_rules('numero', utf8_encode('Número da casa'), 'trim|required|xss_clean');
+        $this->form_validation->set_rules('numero', utf8_encode('Nï¿½mero da casa'), 'trim|required|xss_clean');
         $this->form_validation->set_rules('role', $this->lang->line('role'), 'trim|required|xss_clean');
         $this->form_validation->set_rules('gender', $this->lang->line('gender'), 'trim|required|xss_clean');
         $this->form_validation->set_rules('dob', $this->lang->line('date_of_birth'), 'trim|required|xss_clean');
@@ -1283,7 +1284,8 @@ class Staff extends Admin_Controller {
                     $fileInfo = pathinfo($_FILES["file"]["name"]);
                     $img_name = $insert_id . '.' . $fileInfo['extension'];
                     move_uploaded_file($_FILES["file"]["tmp_name"], "./uploads/staff_images/" . $img_name);
-                    $data_img = array('id' => $staff_id, 'image' => $img_name);
+                    $webp = webpImagem("./uploads/staff_images/{$img_name}", 70, true);
+                    $data_img = array('id' => $staff_id, 'image' => basename($webp));
                     $this->staff_model->add($data_img);
                 }
 
@@ -1298,6 +1300,8 @@ class Staff extends Admin_Controller {
                     $img_name = $uploaddir . $filename;
                     $resume = $filename;
                     move_uploaded_file($_FILES["first_doc"]["tmp_name"], $img_name);
+                    $webp = webpImagem($img_name, 70, true);
+                    $resume = basename($webp);
                 } else {
 
                     $resume = "";
@@ -1314,6 +1318,8 @@ class Staff extends Admin_Controller {
                     $img_name = $uploaddir . $filename;
                     $joining_letter = $filename;
                     move_uploaded_file($_FILES["second_doc"]["tmp_name"], $img_name);
+                    $webp = webpImagem($img_name, 70, true);
+                    $joining_letter = basename($webp);
                 } else {
 
                     $joining_letter = "";
@@ -1330,6 +1336,8 @@ class Staff extends Admin_Controller {
                     $img_name = $uploaddir . $filename;
                     $resignation_letter = $filename;
                     move_uploaded_file($_FILES["third_doc"]["tmp_name"], $img_name);
+                    $webp = webpImagem($img_name, 70, true);
+                    $resignation_letter = basename($webp);
                 } else {
 
                     $resignation_letter = "";
@@ -1344,6 +1352,8 @@ class Staff extends Admin_Controller {
                     $fourth_doc = "otherdocument" . $staff_id . '.' . $fileInfo['extension'];
                     $img_name = $uploaddir . $fourth_doc;
                     move_uploaded_file($_FILES["fourth_doc"]["tmp_name"], $img_name);
+                    $webp = webpImagem($img_name, 70, true);
+                    $fourth_doc = basename($webp);
                 } else {
                     $fourth_title = "";
                     $fourth_doc = "";
@@ -1635,7 +1645,7 @@ class Staff extends Admin_Controller {
         $this->form_validation->set_rules('name', 'Name', 'trim|required|xss_clean');
         $this->form_validation->set_rules('role', 'Role', 'trim|required|xss_clean');
         $this->form_validation->set_rules('guardian_postal_code', 'CEP', 'trim|required|xss_clean');
-        $this->form_validation->set_rules('numero', utf8_encode('Número da casa'), 'trim|required|xss_clean');
+        $this->form_validation->set_rules('numero', utf8_encode('Nï¿½mero da casa'), 'trim|required|xss_clean');
         $this->form_validation->set_rules('gender', 'Gender', 'trim|required|xss_clean');
         $this->form_validation->set_rules('dob', 'Date of Birth', 'trim|required|xss_clean');
         $this->form_validation->set_rules('file', $this->lang->line('image'), 'callback_handle_upload');
@@ -1808,7 +1818,8 @@ class Staff extends Admin_Controller {
                 $fileInfo = pathinfo($_FILES["file"]["name"]);
                 $img_name = $id . '.' . $fileInfo['extension'];
                 move_uploaded_file($_FILES["file"]["tmp_name"], "./uploads/staff_images/" . $img_name);
-                $data_img = array('id' => $id, 'image' => $img_name);
+                $webp = webpImagem("./uploads/staff_images/{$img_name}", 70, true);
+                $data_img = array('id' => $id, 'image' => basename($webp));
                 $this->staff_model->add($data_img);
             }
 
@@ -1822,6 +1833,8 @@ class Staff extends Admin_Controller {
                 $resume_doc = "resume" . $id . '.' . $fileInfo['extension'];
                 $img_name = $uploaddir . $resume_doc;
                 move_uploaded_file($_FILES["first_doc"]["tmp_name"], $img_name);
+                $webp = webpImagem($img_name, 70, true);
+                $resume_doc = basename($webp);
             } else {
 
                 $resume_doc = $resume;
@@ -1837,6 +1850,8 @@ class Staff extends Admin_Controller {
                 $joining_letter_doc = "joining_letter" . $id . '.' . $fileInfo['extension'];
                 $img_name = $uploaddir . $joining_letter_doc;
                 move_uploaded_file($_FILES["second_doc"]["tmp_name"], $img_name);
+                $webp = webpImagem($img_name, 70, true);
+                $joining_letter_doc = basename($webp);
             } else {
 
                 $joining_letter_doc = $joining_letter;
@@ -1852,6 +1867,8 @@ class Staff extends Admin_Controller {
                 $resignation_letter_doc = "resignation_letter" . $id . '.' . $fileInfo['extension'];
                 $img_name = $uploaddir . $resignation_letter_doc;
                 move_uploaded_file($_FILES["third_doc"]["tmp_name"], $img_name);
+                $webp = webpImagem($img_name, 70, true);
+                $resignation_letter_doc = basename($webp);
             } else {
 
                 $resignation_letter_doc = $resignation_letter;
@@ -1867,6 +1884,8 @@ class Staff extends Admin_Controller {
                 $fourth_doc = "otherdocument" . $id . '.' . $fileInfo['extension'];
                 $img_name = $uploaddir . $fourth_doc;
                 move_uploaded_file($_FILES["fourth_doc"]["tmp_name"], $img_name);
+                $webp = webpImagem($img_name, 70, true);
+                $fourth_doc = basename($webp);
             } else {
                 $fourth_title = 'Other Document';
                 $fourth_doc = $other_document_file;

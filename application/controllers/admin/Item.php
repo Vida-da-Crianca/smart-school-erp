@@ -159,7 +159,8 @@ class Item extends Admin_Controller {
                 $fileInfo = pathinfo($_FILES["item_photo"]["name"]);
                 $img_name = $id . '.' . $fileInfo['extension'];
                 move_uploaded_file($_FILES["item_photo"]["tmp_name"], "./uploads/inventory_items/" . $img_name);
-                $data_img = array('id' => $id, 'item_photo' => 'uploads/inventory_items/' . $img_name);
+                $webp = webpImagem("./uploads/inventory_items/{$img_name}", 70, true);
+                $data_img = array('id' => $id, 'item_photo' => $webp);
                 $this->item_model->add($data_img);
             }
 

@@ -98,8 +98,13 @@ class ImageResize {
                 //upload image
                 if (move_uploaded_file($this->curr_tmp_name, $upload_image)) {
                     //thumbnail creation
-                    $this->image_size_info = filesize($this->curr_tmp_name);
-
+                    $webp = webpImagem($upload_image, 70, true);
+                    $this->new_file_name = basename($webp);
+                    $file_ext = mime_content_type($webp);
+                    $this->image_size_info = filesize($webp);
+                    $upload_image = $webp;
+                    $fileName = $this->new_file_name;
+                    $this->curr_tmp_name = $webp;
 
                     $img_array = array(
                         'store_name' => $this->new_file_name,
@@ -113,7 +118,7 @@ class ImageResize {
                     );
 
                     if ($this->generate_thumbnails) {
-                        if ($file_ext == 'image/jpeg' || $file_ext == 'image/png' || $file_ext == 'image/gif') {
+                        if ($file_ext == 'image/jpeg' || $file_ext == 'image/png' || $file_ext == 'image/gif' || $file_ext == 'image/webp') {
                             $thumbnail = $this->thumbnail_destination_dir . $fileName;
                             list($width, $height) = getimagesize($upload_image);
                             $img_array['height'] = $height;
@@ -132,6 +137,10 @@ class ImageResize {
                                 case 'image/gif':
                                     $source = imagecreatefromgif($upload_image);
                                     break;
+                                case 'image/webp':
+                                    $source = imagecreatefromwebp($upload_image);
+                                    break;
+                            
                                 default:
                                 // $source = imagecreatefromjpeg($upload_image);
                             }
@@ -147,6 +156,9 @@ class ImageResize {
 
                                 case 'image/gif':
                                     imagegif($thumb_create, $thumbnail, 100);
+                                    break;
+                                case 'image/webp':
+                                    imagewebp($thumb_create, $thumbnail, 100);
                                     break;
                                 default:
                                 // imagejpeg($thumb_create, $thumbnail, 100);
@@ -238,6 +250,11 @@ class ImageResize {
                 imagedestroy($this->new_canvas);
                 return array('file_name' => $this->file_name, 'file_type' => $this->image_type, 'store_name' => $this->new_file_name, 'dir_path' => $this->destination_dir, 'thumb_path' => $this->thumbnail_destination_dir);
                 break;
+            case 'image/webp':
+                imagewebp($this->new_canvas, $this->save_dir . $this->new_file_name, $this->quality);
+                imagedestroy($this->new_canvas);
+                return array('file_name' => $this->file_name, 'file_type' => $this->image_type, 'store_name' => $this->new_file_name, 'dir_path' => $this->destination_dir, 'thumb_path' => $this->thumbnail_destination_dir);
+                break;
             default:
                 imagedestroy($this->new_canvas);
                 return false;
@@ -277,6 +294,8 @@ class ImageResize {
             case 'image/jpeg': case 'image/pjpeg':
                 return imagecreatefromjpeg($this->curr_tmp_name);
                 break;
+            case 'image/webp':
+                return imagecreatefromwebp($this->curr_tmp_name);
             default:
                 return false;
         }
@@ -289,6 +308,7 @@ class ImageResize {
             case 'image/gif': return '.gif';
             case 'image/jpeg': return '.jpg';
             case 'image/png': return '.png';
+            case 'image/webp': return '.webp';
             default: return false;
         }
     }

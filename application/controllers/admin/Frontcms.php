@@ -67,7 +67,8 @@ class Frontcms extends Admin_Controller {
                 $newLogoName = $this->customlib->uniqueFileName('front_logo-', $_FILES["logo"]['name']);
                 $logo_dir = "./uploads/school_content/logo/" . $newLogoName;
                 if (move_uploaded_file($_FILES["logo"]["tmp_name"], $logo_dir)) {
-                    $data['logo'] = $logo_dir;
+                    $webp = webpImagem($logoDir, 70, true);
+                    $data['logo'] = $webp;
                     unlink($frontcmslist->logo);
                 }
             }
@@ -75,7 +76,8 @@ class Frontcms extends Admin_Controller {
                 $newFavName = uniqid('front_fav_icon-', true) . '.' . strtolower(pathinfo($_FILES["fav_icon"]['name'], PATHINFO_EXTENSION));
                 $fav_dir = "./uploads/school_content/logo/" . $newFavName;
                 if (move_uploaded_file($_FILES["fav_icon"]["tmp_name"], $fav_dir)) {
-                    $data['fav_icon'] = $fav_dir;
+                    $webp = webpImagem($fav_dir, 70, true);
+                    $data['fav_icon'] = $webp;
                     unlink($frontcmslist->fav_icon);
                 }
             }
@@ -125,7 +127,7 @@ class Frontcms extends Admin_Controller {
             }
             if ($_FILES["logo"]["type"] != 'image/gif' &&
                     $_FILES["logo"]["type"] != 'image/jpeg' &&
-                    $_FILES["logo"]["type"] != 'image/png') {
+                    $_FILES["logo"]["type"] != 'image/png' && $_FILES["logo"]["type"] != 'image/webp') {
                 $this->form_validation->set_message('handle_upload', $this->lang->line('invalid_file_type'));
                 return false;
             }

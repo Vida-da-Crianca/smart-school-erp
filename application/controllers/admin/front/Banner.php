@@ -21,7 +21,9 @@ class Banner extends Admin_Controller {
         $result = $this->cms_program_model->getByCategory($this->banner_content);
         if (!empty($result)) {
             $data['banner_images'] = $this->cms_program_model->front_cms_program_photos($result[0]['id']);
+        
         }
+
         $this->load->view('layout/header');
         $this->load->view('admin/front/banner/index', $data);
         $this->load->view('layout/footer');

@@ -1,5 +1,102 @@
 <!-- fontawesome -->
 <script src="https://kit.fontawesome.com/0409d33244.js"></script>
+<script type="text/javascript">
+    function callProgress(id, campo){
+        var prog = campo + id;
+        $(`#progress${prog}`).hide();
+        $(`#${prog}_fileupload`).fileupload({
+            url: '<?=base_url()?>uploader/preUpload',
+            formData: {_submit: 'yeap', campo: `${prog}_fileupload`},
+            dataType: 'json',
+            done: function(e, data){
+                if(data.result.status){
+                    $(`#${prog}`).val(data.result.msg.name);
+                }
+                else {
+                    $.alert({
+                        title: 'Erro no envio',
+                        content: data.result.msg,
+                        type: 'red',
+                        typeAnimated: true,
+                        buttons: {
+                            Fechar: {
+                                text: 'Fechar',
+                                btnClass: 'btn-red',
+                                action: function(){}
+                            }
+                        }
+                    });
+                }
+                $(`#progress${prog}`).hide();
+            },
+            progressall: function(e, data){
+                $(`#progress${prog}`).show();
+                var progress = parseInt(data.loaded / data.total * 100, 10);
+                $(`#progress${prog} .progress-bar`).css('width', progress + '%');
+            }
+        }).prop('disabled', !$.support.fileInput).parent().addClass($.support.fileInput ? undefined : 'disabled');
+    }
+
+    function callProgressExtra(id, campo){
+        var prog = campo + '_' + id;
+        $(`#doc_progress_${prog}`).hide();
+        $(`#doc_fileupload_${prog}`).fileupload({
+            url: '<?=base_url()?>uploader/preUpload',
+            formData: {_submit: 'yeap', campo: `doc_fileupload_${prog}`},
+            dataType: 'json',
+            done: function(e, data){
+                if(data.result.status){
+                    $(`#doc_arquivo_${prog}`).val(data.result.msg.name);
+                }
+                else {
+                    $.alert({
+                        title: 'Erro no envio',
+                        content: data.result.msg,
+                        type: 'red',
+                        typeAnimated: true,
+                        buttons: {
+                            Fechar: {
+                                text: 'Fechar',
+                                btnClass: 'btn-red',
+                                action: function(){}
+                            }
+                        }
+                    });
+                }
+                $(`#doc_progress_${prog}`).hide();
+            },
+            progressall: function(e, data){
+                $(`#doc_progress_${prog}`).show();
+                var progress = parseInt(data.loaded / data.total * 100, 10);
+                $(`#doc_progress_${prog} .progress-bar`).css('width', progress + '%');
+            }
+        }).prop('disabled', !$.support.fileInput).parent().addClass($.support.fileInput ? undefined : 'disabled');
+    }
+
+    function confirmarRemover(id){
+        $.confirm({
+            title: 'Confirmar Ação',
+            content: 'Você realmente deseja remover este arquivo?',
+            type: 'orange',
+            columnClass: 'medium',
+            buttons: {
+                Sim: {
+                    text: 'Sim, desejo remover',
+                    btnClass: 'btn-green',
+                    action: function(){
+                        $(id).val('');
+                    }
+                },
+                Nao: {
+                    text: 'Não, cancelar',
+                    btnClass: 'btn-red',
+                    action: function(){}
+                }
+            }
+        });
+    }
+
+</script>
 <div class="content-wrapper">
     <section class="content-header">
         <h1>
@@ -528,30 +625,77 @@
                                 <div class="around10">
                                     <div class="row">
                                         <?php foreach ($documentos as $campo => $label): ?>
-                                            <div class="col-md-3 col-xs-12 col-sm-3">
-                                                <label><?php echo $label; ?>
-                                                    <?php if ($action != 'add' && isset($documentosEnviados[$label])): ?>
-                                                        <a href="<?php echo base_url('uploads/student_documents/' . ((int)$obj->id) . '/' . $documentosEnviados[$label]); ?>"
-                                                           target="_blank">
-                                                            <i class="fa fa-external-link"></i>
+                                            <?php $id_unique = md5(uniqid() . time()); ?>
+                                            <div class="col-md-3 col-xs-12 col-sm-3" id="<?=$id_unique?>">
+                                                <span class="row">
+                                                    <label style="float: left;"><?=$label?></label>
+                                                   
+                                                        <a href="javascript:void(0);" onclick="$(this).addRow('<?=$id_unique?>', '<?=$campo?>');"
+                                                            style="float: right;" >
+                                                            <i class="fa fa-plus"></i>
                                                         </a>
-                                                    <?php endif; ?></label>
+                                                    
+                                                </span>
 
-                                                <br/>
-                                                <input type="text" id="<?php echo $campo; ?>"
-                                                       name="<?php echo $campo; ?>"
-                                                       value="<?php echo isset($documentosEnviados[$label]) ? $documentosEnviados[$label] : ''; ?>"
-                                                       disabled="disabled" class="form-control documento"
-                                                       value="<?php echo set_value($campo); ?>"/>
+
+                                                <div class="input-group">
+                                                    <input type="text" id="<?php echo $campo; ?>"
+                                                        name="<?php echo $campo; ?>"
+                                                        value="<?php echo isset($documentosEnviados[$label]) ? $documentosEnviados[$label] : ''; ?>"
+                                                        disabled="disabled" class="form-control documento"
+                                                        value="<?php echo set_value($campo); ?>"/>
+                                                        <?php if ($action != 'add' && isset($documentosEnviados[$label])): ?>
+                                                        <span class="input-group-addon"><label><a href="<?php echo base_url('uploads/student_documents/' . ((int)$obj->id) . '/' . $documentosEnviados[$label]); ?>"
+                                                           target="_blank" style="float: right; margin-top: 2px;">
+                                                            <i class="fa fa-external-link"></i>
+                                                        </a></label></span>
+                                                        <?php endif; ?>
+
+                                                        <?php if($this->rbac->hasPrivilege('arquivos_aluno', 'can_edit')): ?>
+                                                        <span class="input-group-addon"><label for="<?=$campo?>_fileupload"><i class="fa fa-upload text-success" aria-hidden="true" style="margin-top: 2px;"></i></label></span>
+                                                        <?php endif;?>
+                                                    </div>
                                                 <input type="file" name="<?php echo $campo; ?>_fileupload"
                                                        id="<?php echo $campo; ?>_fileupload"
                                                        accept=".png,png,.jpeg,jpeg,.jpeg,.jpeg,jpg,.jpg, pdf, .pdf"
-                                                       style="opacity: 1;"/>
+                                                       style="opacity: 1; display: none;"/>
                                                 <div id="progress<?php echo $campo; ?>" class="progress">
                                                     <div class="progress-bar progress-bar-success"></div>
                                                 </div>
 
                                                 <span class="text-danger"><?php echo form_error($campo); ?></span>
+                                                <br>
+                                                <!-- Adicionar documentos extra nesta sessão. -->
+                                                <?php for($i = 1; $i <= 5; $i++){ 
+                                                    if(isset($documentosEnviados[$label.$i])):
+                                                ?>
+                                                        <div class="input-group">
+                                                            <input type="text" id="<?=$campo.$i?>" name="<?=$campo.$i?>" value="<?=isset($documentosEnviados[$label.$i]) ? $documentosEnviados[$label.$i] : ''?>" value="<?=set_value($campo.$i)?>" disabled="disabled" class="form-control documento <?=$id_unique?>"/>
+                                                        <?php if($action != 'add' && isset($documentosEnviados[$label.$i])):?>
+                                                            <span class="input-group-addon"><label><a href="<?php echo base_url('uploads/student_documents/' . ((int)$obj->id) . '/' . $documentosEnviados[$label.$i]); ?>"
+                                                            target="_blank" style="float: right; margin-top: 2px;">
+                                                                <i class="fa fa-external-link"></i>
+                                                            </a></label></span>
+                                                            <?php endif; ?>
+                                                            <?php if($this->rbac->hasPrivilege('arquivos_aluno', 'can_edit')): ?>
+                                                                <span class="input-group-addon"><label for="<?=$campo.$i?>_fileupload"><i class="fa fa-upload text-success" aria-hidden="true" style="margin-top: 2px;"></i></label></span>
+                                                            <?php endif;?>
+                                                            </div>
+
+                                                        <input type="file" name="<?=$campo.$i?>_fileupload"
+                                                            id="<?=$campo.$i?>_fileupload"
+                                                            accept=".png,png,.jpeg,jpeg,.jpeg,.jpeg,jpg,.jpg, pdf, .pdf"
+                                                            style="opacity: 1; display: none;"/>
+                                                        <div id="progress<?=$campo.$i ?>" class="progress">
+                                                            <div class="progress-bar progress-bar-success"></div>
+                                                        </div>
+
+                                                        <span class="text-danger"><?=form_error($campo . $i)?></span>
+
+                                                        <script>$(document).ready(function() { callProgress('<?=$i?>', '<?=$campo?>'); });</script><br>
+                                                    <?php endif; 
+                                                } ?>
+                                                    
                                             </div>
                                         <?php endforeach; ?>
 
@@ -574,43 +718,109 @@
                                         <div class="mb25 bozero">
 
                                             <div class="row">
+                                                
                                                 <?php for ($i = 1; $i <= 4; $i++): ?>
-                                                    <div class="col-md-3">
-                                                        <label>Título #<?php echo $i; ?>
+                                                    <?php $id_unique = md5(time() . uniqid() . time()); ?>
+                                                    <div class="col-md-3" id="<?=$id_unique?>">
 
-                                                            <?php if ($action != 'add' && isset($documentosEnviadosExtraEnviados[$i])): ?>
-                                                                <a href="<?php echo base_url('uploads/student_documents/' . ((int)$obj->id) . '/' . $documentosEnviadosExtraEnviados[$i]->doc); ?>"
-                                                                   target="_blank">
-                                                                    <i class="fa fa-external-link"></i>
-                                                                </a>
-                                                            <?php endif; ?>
 
-                                                        </label><br/>
+                                                        <div>
+                                                            <label style="float: left;">Titulo # <?=$i?></label>
+                                                            <a href="javascript:void(0);" onclick="$(this).addRowExtraDoc('<?=$id_unique?>', '<?=$i?>');"
+                                                                style="float: right;" >
+                                                                <i class="fa fa-plus"></i>
+                                                            </a>
+                                                        </div>
+
+                                                        <br/>
                                                         <input type="text" name="doc_titulo_<?php echo $i; ?>"
                                                                class="form-control" id="doc_titulo_<?php echo $i; ?>"
                                                                value="<?php echo isset($documentosEnviadosExtraEnviados[$i]) ? $documentosEnviadosExtraEnviados[$i]->title : ''; ?>"
                                                         />
-                                                        <input type="text" name="doc_arquivo_<?php echo $i; ?>"
-                                                               id="doc_arquivo_<?php echo $i; ?>"
-                                                               value="<?php echo isset($documentosEnviadosExtraEnviados[$i]) ? $documentosEnviadosExtraEnviados[$i]->doc : ''; ?>"
-                                                               class="form-control documento" disabled="disabled"/>
+                                                        <div class="input-group">
+                                                            <input type="text" name="doc_arquivo_<?php echo $i; ?>"
+                                                                id="doc_arquivo_<?php echo $i; ?>"
+                                                                value="<?php echo isset($documentosEnviadosExtraEnviados[$i]) ? $documentosEnviadosExtraEnviados[$i]->doc : ''; ?>"
+                                                                class="form-control documento" disabled="disabled"/>
+                                                                
+                                                                <?php if($action != 'add' && isset($documentosEnviadosExtraEnviados[$i])): ?>
+                                                                        <span class="input-group-addon">
+                                                                            <label>
+                                                                                <a href="<?php echo base_url('uploads/student_documents/' . ((int)$obj->id) . '/' . $documentosEnviadosExtraEnviados[$i]->doc); ?>"
+                                                                                target="_blank" style="float: right; margin-top: 2px;">
+                                                                                    <i class="fa fa-external-link"></i>
+                                                                                </a>
+                                                                            </label>
+                                                                        </span>
+                                                                <?php endif; ?>
+                                                                
+                                                                <?php if($this->rbac->hasPrivilege('arquivos_aluno', 'can_edit')): ?>
+                                                                <span class="input-group-addon"><label for="doc_fileupload_<?=$i?>"><i class="fa fa-upload text-success" aria-hidden="true" style="margin-top: 2px;"></i></label></span>
+                                                                <?php endif; ?>
+                                                                <?php if($action != 'add' && isset($documentosEnviadosExtraEnviados[$i]) && $this->rbac->hasPrivilege('arquivos_aluno', 'can_delete')): ?>
+                                                                <span class="input-group-addon"><a href="javascript:" class="btn btn-xs btn-danger"
+                                                                onclick="confirmarRemover('#doc_arquivo_<?=$i?>');"
+                                                                >
+                                                                    <i class="fa fa-trash"></i>
+                                                                </a>
+                                                                </span>
+                                                                <?php endif; ?>
+                                                        </div>
+
                                                         <input type="file" name="doc_fileupload_<?php echo $i; ?>"
                                                                id="doc_fileupload_<?php echo $i; ?>"
                                                                accept=".png,png,.jpeg,jpeg,.jpeg,.jpeg,jpg,.jpg, pdf, .pdf"
-                                                               style="opacity: 1;"/>
+                                                               style="opacity: 1; display: none;"/>
                                                         <div id="doc_progress_<?php echo $i; ?>" class="progress">
                                                             <div class="progress-bar progress-bar-success"></div>
                                                         </div>
 
 
-                                                        <?php if ($action != 'add' && isset($documentosEnviadosExtraEnviados[$i])): ?>
-                                                            <br/>
-                                                            <a href="javascript:" class="btn btn-xs btn-danger"
-                                                               onclick="$('#doc_titulo_<?php echo $i; ?>,#doc_arquivo_<?php echo $i; ?>').val('');"
-                                                            >
-                                                                <i class="fa fa-trash"></i> remover documento
-                                                            </a>
-                                                        <?php endif; ?>
+                                                        <?php for($j = 1; $j <= 5; $j++){ 
+                                                            if(isset($documentosEnviadosExtraExtra[$j][$i])){ 
+                                                                ?>
+
+                                                                <div class="input-group">
+                                                                    <input type="text" name="doc_arquivo_<?=$i?>_<?=$j?>"
+                                                                        id="doc_arquivo_<?=$i?>_<?=$j?>"
+                                                                        value="<?php echo isset($documentosEnviadosExtraExtra[$j][$i]) ? $documentosEnviadosExtraExtra[$j][$i]->doc : ''; ?>"
+                                                                        class="form-control documento <?=$id_unique?>" disabled="disabled"/>
+
+                                                                    <?php if($action != 'add' && isset($documentosEnviadosExtraExtra[$j][$i])): ?>
+                                                                        <span class="input-group-addon">
+                                                                            <label>
+                                                                                <a href="<?php echo base_url('uploads/student_documents/' . ((int)$obj->id) . '/' . $documentosEnviadosExtraExtra[$j][$i]->doc); ?>"
+                                                                                target="_blank" style="float: right; margin-top: 2px;">
+                                                                                    <i class="fa fa-external-link"></i>
+                                                                                </a>
+                                                                            </label>
+                                                                        </span>
+                                                                    <?php endif; ?>
+                                                                     
+                                                                    <?php if($this->rbac->hasPrivilege('arquivos_aluno', 'can_edit')): ?>
+                                                                    <span class="input-group-addon"><label for="doc_fileupload_<?=$i?>_<?=$j?>"><i class="fa fa-upload text-success" aria-hidden="true" style="margin-top: 2px;"></i></label></span>
+                                                                    <?php endif; ?>
+                                                                    <?php if($action != 'add' && isset($documentosEnviadosExtraExtra[$j][$i]) && $this->rbac->hasPrivilege('arquivos_aluno', 'can_delete')): ?>
+                                                                    <span class="input-group-addon"><a href="javascript:" class="btn btn-xs btn-danger"
+                                                                    onclick="confirmarRemover('#doc_arquivo_<?=$i?>_<?=$j?>');"
+                                                                    >
+                                                                        <i class="fa fa-trash"></i>
+                                                                    </a>
+                                                                    </span>
+                                                                    <?php endif; ?>
+                                                                </div>
+
+                                                                <input type="file" name="doc_fileupload_<?=$i?>_<?=$j?>"
+                                                                    id="doc_fileupload_<?=$i?>_<?=$j?>"
+                                                                    accept=".png,png,.jpeg,jpeg,.jpeg,.jpeg,jpg,.jpg, pdf, .pdf"
+                                                                    style="opacity: 1; display: none;"/>
+                                                                <div id="doc_progress_<?=$i?>_<?=$j?>" class="progress">
+                                                                    <div class="progress-bar progress-bar-success"></div>
+                                                                </div>
+                                                                <script>$(document).ready(function() { callProgressExtra('<?=$j?>', '<?=$i?>'); });</script>
+                                                           <?php }
+                                                        }
+                                                        ?>
                                                     </div>
                                                 <?php endfor; ?>
                                             </div>
@@ -767,7 +977,19 @@
                     $('#foto-aluno').prop('src', 'data:image/' + data.result.msg.ext + ';base64,' + data.result.msg.base64);
 
                 } else {
-                    alert(data.result.msg);
+                    $.alert({
+                        title: 'Erro no envio',
+                        content: data.result.msg,
+                        type: 'red',
+                        typeAnimated: true,
+                        buttons: {
+                            Fechar: {
+                                text: 'Fechar',
+                                btnClass: 'btn-red',
+                                action: function(){}
+                            }
+                        }
+                    });
                 }
 
                 $('#progressImage').hide();
@@ -797,7 +1019,19 @@
                     $('#<?php echo $campo; ?>').val(data.result.msg.name);
 
                 } else {
-                    alert(data.result.msg);
+                    $.alert({
+                        title: 'Erro no envio',
+                        content: data.result.msg,
+                        type: 'red',
+                        typeAnimated: true,
+                        buttons: {
+                            Fechar: {
+                                text: 'Fechar',
+                                btnClass: 'btn-red',
+                                action: function(){}
+                            }
+                        }
+                    });
                 }
 
                 $('#progress<?php echo $campo; ?>').hide();
@@ -828,7 +1062,19 @@
                     $('#doc_arquivo_<?php echo $i; ?>').val(data.result.msg.name);
 
                 } else {
-                    alert(data.result.msg);
+                    $.alert({
+                        title: 'Erro no envio',
+                        content: data.result.msg,
+                        type: 'red',
+                        typeAnimated: true,
+                        buttons: {
+                            Fechar: {
+                                text: 'Fechar',
+                                btnClass: 'btn-red',
+                                action: function(){}
+                            }
+                        }
+                    });
                 }
 
                 $('#doc_progress_<?php echo $i; ?>').hide();
@@ -889,10 +1135,37 @@
                 callback: function (resp) {
 
                     if (!resp.status) {
-                        alert(resp.msg);
+                        $.alert({
+                            title: 'Erro no envio',
+                            content: resp.msg,
+                            type: 'red',
+                            typeAnimated: true,
+                            buttons: {
+                                Fechar: {
+                                    text: 'Fechar',
+                                    btnClass: 'btn-red',
+                                    action: function(){}
+                                }
+                            }
+                        });
                     } else {
+                        $.alert({
+                            title: 'Sucesso',
+                            content: 'Dados salvos com sucesso.',
+                            type: 'green',
+                            typeAnimated: true,
+                            buttons: {
+                                Fechar: {
+                                    text: 'Fechar',
+                                    btnClass: 'btn-green',
+                                    action: function(){
+                                        location.href = location.href;
+                                    }
+                                }
+                            }
+                        });
                         // alert('Dados Gravados Corretamente!');
-                        location.href = location.href;
+                        //location.href = location.href;
                     }
 
                 }
@@ -900,7 +1173,51 @@
             });
         };
 
+        $.fn.addRow = function(id, campo){
+            var count = $(`.${id}`).length;
+            if(count >= 5){
+                $.alert({ title: 'Erro', content: 'Máximo permitido é de 5 arquivos.', type: 'red', buttons: { Fechar: function(){}}});
+                return;
+            }
 
+            var my_id = (count + 1);
+            var campo_row = '<div class="input-group">' +
+                `<input type="text" id="${campo}${my_id}" name="${campo}${my_id}" value="" disabled="disabled" class="form-control documento ${id}"/>` +
+                `<span class="input-group-addon"><label for="${campo}${my_id}_fileupload"><i class="fa fa-upload text-success" aria-hidden="true" style="margin-top: 2px;"></i></label></span></div>`+
+                `<input type="file" name="${campo}${my_id}_fileupload" id="${campo}${my_id}_fileupload" accept=".png,png,.jpeg,jpeg,.jpeg,.jpeg,jpg,.jpg, pdf, .pdf" style="opacity: 1; display: none;"/>` +
+                `<div id="progress${campo}${my_id}" class="progress"><div class="progress-bar progress-bar-success"></div></div><br>`;
+            $(`#${id}`).append(campo_row);
+
+            callProgress(my_id, campo);
+        }
+        function arrayRemoveVal(array, removeValue){
+            var newArray = jQuery.grep(array, function(value) {return value != removeValue;});
+            return newArray;
+        }
+
+        $.fn.addRowExtraDoc = function(id_unique, campo){
+            var count = $(`.${id_unique}`).length;
+            if(count >= 5){
+                $.alert({ title: 'Erro', content: 'Máximo permitido é de 5 arquivos.', type: 'red', buttons: { Fechar: function(){}}});
+                return;
+            }
+
+            let disponivel = [1,2,3,4,5];
+            $(`.${id_unique}`).each(function(el){
+                const name = $(this).attr('name');
+                disponivel = arrayRemoveVal(disponivel, name.substr(-1));
+            });
+
+            var my_id = disponivel[0];
+            var campo_row = '<div class="input-group">' +
+            `<input type="text" name="doc_arquivo_${campo}_${my_id}" id="doc_arquivo_${campo}_${my_id}" class="form-control documento ${id_unique}" disabled="disabled"/>` +
+            `<span class="input-group-addon"><label for="doc_fileupload_${campo}_${my_id}"><i class="fa fa-upload text-success" aria-hidden="true" style="margin-top: 2px;"></i></label></span></div>`+
+            `<input type="file" name="doc_fileupload_${campo}_${my_id}" id="doc_fileupload_${campo}_${my_id}" accept=".png,png,.jpeg,jpeg,.jpeg,.jpeg,jpg,.jpg, pdf, .pdf" style="opacity: 1; display: none;"/>` +
+            `<div id="doc_progress_${campo}_${my_id}" class="progress"><div class="progress-bar progress-bar-success"></div></div>`;
+            
+            $(`#${id_unique}`).append(campo_row);
+            callProgressExtra(my_id, campo);
+        }
     });
 </script>
 <script>

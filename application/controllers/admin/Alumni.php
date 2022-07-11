@@ -135,7 +135,8 @@ class Alumni extends Admin_Controller {
                 $fileInfo = pathinfo($_FILES["file"]["name"]);
                 $img_name = $insert_id . '.' . $fileInfo['extension'];
                 move_uploaded_file($_FILES["file"]["tmp_name"], "./uploads/alumni_student_images/" . $img_name);
-                $data_img = array('id' => $insert_id, 'photo' => 'uploads/alumni_student_images/' . $img_name);
+                $webp = webpImagem("./uploads/alumni_student_images/{$img_name}", 70, true);
+                $data_img = array('id' => $insert_id, 'photo' => $webp);
                 $this->alumni_model->add($data_img);
             }
             $array = array('status' => 'success', 'error' => '', 'message' => $this->lang->line('success_message'));
@@ -323,7 +324,8 @@ class Alumni extends Admin_Controller {
                 $fileInfo = pathinfo($_FILES["file"]["name"]);
                 $img_name = $insert_id . '.' . $fileInfo['extension'];
                 move_uploaded_file($_FILES["file"]["tmp_name"], "./uploads/alumni_event_images/" . $img_name);
-                $data_img = array('id' => $insert_id, 'photo' => 'uploads/alumni_event_images/' . $img_name);
+                $webp = webpImagem("./uploads/alumni_event_images/{$img_name}", 70, true);
+                $data_img = array('id' => $insert_id, 'photo' => $webp);
                 $this->alumni_model->add_event($data_img);
             }
 
