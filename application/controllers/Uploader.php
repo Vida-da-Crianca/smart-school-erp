@@ -65,7 +65,8 @@ class Uploader extends CI_Controller {
                 if($img && !empty($img['name'])){
 
                     $ext = pathinfo($img['name'], PATHINFO_EXTENSION);
-                    $imagemNome = str_replace(['.',' ','+'],['_','',''],$img['name']).uniqid();
+                    $imagemNome = str_replace(['.',' ','+'],['_','',''],$img['name']).uniqid().'.'.$ext;
+
                     $config = array(
                         'upload_path'   => $dir,
                         'allowed_types' => 'pdf|PDF',
@@ -76,7 +77,7 @@ class Uploader extends CI_Controller {
                        // 'max_height'    => 2000,
                         'overwrite'     => true,
                         'encrypt_name'  => false,
-                        'file_name'     => $imagemNome . '.' . $ext
+                        'file_name'     => $imagemNome
                     );
 
                     $this->load->library('upload', $config);
@@ -87,15 +88,16 @@ class Uploader extends CI_Controller {
 
                     $dadosUpload = $this->upload->data();
 
+
                 }else{
                     throw new Exception('Defina o Arquivo a Ser Enviado');
                 }
 
-                // Converter para webp
-                $webp = webpImagem($dadosUpload['full_path'], 70, true);
+
+               // $this->modelTransEnd();
 
                 $this->resp_status = true;
-                $this->resp_msg = array('name'=>$imagemNome . '.webp','base64'=> base64_encode(file_get_contents($webp)));
+                $this->resp_msg = array('name'=>$imagemNome,'base64'=> base64_encode(file_get_contents($dadosUpload['full_path'])));
 
             } catch (Exception $ex) {
                 $this->resp_status = false;
@@ -111,7 +113,7 @@ class Uploader extends CI_Controller {
 
 
         //if($this->checkAjaxSubmit())
-        //{
+        {
             try
             {
                 $dir = FCPATH.'uploads/pre_upload/';
@@ -121,14 +123,21 @@ class Uploader extends CI_Controller {
 
 
                 if($img && !empty($img['name'])){
-                    $info = pathinfo($img['name']);
-                    $nome_img = md5(uniqid() . time() . $img['name']);
-                    $extension = '.' . $info['extension'];
+                    //throw new Exception($img["name"]);
+                    $fileInfo = pathinfo($img["name"]);
+                    $file_name = str_ireplace('.'.$fileInfo['extension'],'',$img["name"]);
+                    $_img_name = url_title($file_name.'_'.uniqid(),'_');
+                    $img_sem_acentos = preg_replace('/[^A-Za-z0-9.!?]/', '', $_img_name);
+                    $img_sem_acentos = str_ireplace('!', '', $img_sem_acentos);
+                    $img_name = $img_sem_acentos. '.' . $fileInfo['extension'];
 
-                    move_uploaded_file($img["tmp_name"], $dir . $nome_img . $extension);
-                    $webp = webpImagem($dir . $nome_img . $extension, 70, true);
+                    move_uploaded_file($img["tmp_name"], $dir . $img_name);
+
+
                     $this->resp_status = true;
-                    $this->resp_msg = array('name'=> basename($webp),'base64'=> base64_encode(file_get_contents($webp)));
+                    $this->resp_msg = array('name'=>$img_name,'base64'=> base64_encode(file_get_contents($dir . $img_name)));
+
+
                 }
                 else{
                     throw new Exception('Defina a Imagem');
@@ -206,12 +215,56 @@ class Uploader extends CI_Controller {
             }
 
             $this->showJSONResp();
-        //}
+        }
     }
 
    protected function showJSONResp()
     {
         echo json_encode(array('status' => $this->resp_status, 'msg' => $this->resp_msg));
         exit;
+    }
+
+    public function uploadBase64() {
+
+
+        {
+            try
+            {
+                $dir = FCPATH.'uploads/marksheet/';
+                $data = json_decode(file_get_contents('php://input'));
+                $image = null;
+
+                if (preg_match('/^data:image\/(\w+);base64,/', $data->file, $type)) {
+                    $content = substr($data->file, strpos($data->file, ',') + 1);
+                    $type = strtolower($type[1]); // jpg, png, gif
+
+                    if (!in_array($type, [ 'jpg', 'jpeg', 'gif', 'png' ])) {
+                        throw new \Exception('invalid image type');
+                    }
+                    $content = str_replace( ' ', '+', $content );
+                    $content = base64_decode($content);
+
+                    if ($content === false) {
+                        throw new \Exception('base64_decode failed');
+                    }
+
+                    $image =  $content;
+                } else {
+                    throw new \Exception('did not match data URI with image data');
+                }
+
+
+                file_put_contents($dir.$data->filename, $image);
+
+                $this->resp_status = true;
+                $this->resp_msg = base_url().'uploads/marksheet/'.$data->filename;
+
+            } catch (Exception $ex) {
+                $this->resp_status = false;
+                $this->resp_msg = $ex->getMessage();
+            }
+
+            $this->showJSONResp();
+        }
     }
 }
