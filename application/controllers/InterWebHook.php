@@ -14,9 +14,6 @@ class InterWebhook extends CI_Controller
     {
         parent::__construct();
         $this->load->model(['eloquent/Billet_eloquent',  'eloquent/Invoice_eloquent', 'eloquent/Student_deposite_eloquent']);
-        $this->load->library('bank_payment_inter');
-
-        $teste = new Bank_payment_inter();
     }
 
     public function baixaBoleto(){
