@@ -5,7 +5,6 @@
 #calculate tributes
 */60 * * * * /usr/local/bin/php /app/man invoice:tribute > /app/app-log.log
 * * * * * /usr/local/bin/php /app/man billet:generate > /app/app-log.log
-* * * * * /usr/local/bin/php /app/man billet:paid > /app/app-log.log
 */2 * * * * /usr/local/bin/php /app/man invoice:cancel > /app/app-log.log
 * */2 * * * /usr/local/bin/php /app/man clean:directory > /app/app-log.log
 0 8 * * * /usr/local/bin/php /app/man billet:old > /app/app-log.log

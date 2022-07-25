@@ -305,6 +305,8 @@ class Paymentsettings extends Admin_Controller {
            $this->form_validation->set_rules('banco_inter_api_password', $this->lang->line('key'), 'trim|xss_clean');
            $this->form_validation->set_rules('banco_inter_pay_fine', $this->lang->line('key'), 'trim|xss_clean');
            $this->form_validation->set_rules('banco_inter_pay_moura', $this->lang->line('key'), 'trim|xss_clean');
+           $this->form_validation->set_rules('banco_inter_api_email', 'Client ID', 'trim|xss_clean|required');
+           $this->form_validation->set_rules('banco_inter_salt', 'Client Secret', 'trim|xss_clean|required');
            
           
            
@@ -318,6 +320,8 @@ class Paymentsettings extends Admin_Controller {
                    'api_password' => $this->input->post('banco_inter_api_password'),
                    'pay_moura' => $this->input->post('banco_inter_pay_moura'),
                    'pay_fine' => $this->input->post('banco_inter_pay_fine'),
+                   'api_email' => $this->input->post('banco_inter_api_email'),
+                   'salt' => $this->input->post('banco_inter_salt'),
                    'payment_type' => 'banco_inter',
                );
 
@@ -332,6 +336,8 @@ class Paymentsettings extends Admin_Controller {
                    'banco_inter_api_publishable_key' => form_error('banco_inter_api_publishable_key'),
                    'banco_inter_api_username' => form_error('banco_inter_api_username'),
                    'banco_inter_api_password' => form_error('banco_inter_api_password'),
+                   'banco_inter_api_email' => form_error('banco_inter_api_email'),
+                   'banco_inter_salt' => form_error('banco_inter_salt')
                   
                    
                   

@@ -512,6 +512,28 @@
                                                     </div>
                                                 </div>
 
+                                                <div class="form-group">
+                                                    <label class="control-label col-md-5 col-sm-12 col-xs-12">
+                                                        Client ID
+                                                        <small class="req"> *</small></label>
+                                                    <div class="col-md-7 col-sm-7 col-xs-12">
+                                                        <input name="banco_inter_api_email" placeholder="" type="text" class="form-control col-md-7 col-xs-12" value="<?php echo isset($banco_inter_result->api_email) ? $banco_inter_result->api_email : ""; ?>" />
+                                                        <span class=" text text-danger banco_inter_api_email_error"></span>
+                                                    </div>
+                                                </div>
+
+                                                <div class="form-group">
+                                                    <label class="control-label col-md-5 col-sm-12 col-xs-12">
+                                                        Client Secret
+                                                        <small class="req"> *</small></label>
+                                                    <div class="col-md-7 col-sm-7 col-xs-12">
+                                                        <input name="banco_inter_salt" placeholder="" type="text" class="form-control col-md-7 col-xs-12" value="<?php echo isset($banco_inter_result->salt) ? $banco_inter_result->salt : ""; ?>" />
+                                                        <span class=" text text-danger banco_inter_salt_error"></span>
+                                                    </div>
+                                                </div>
+
+
+
                                             </div>
                                             <div class="col-md-5 text text-center disblock">
                                                 <a href="https://www.bancointer.com.br/" target="_blank"><img src="<?php echo base_url(); ?>/backend/images/bank-inter.svg" width="200">
