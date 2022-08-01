@@ -30,12 +30,11 @@ if (!function_exists('discord_log')) {
   {
     $env =  sprintf('DISCORD_LOGS_%s', strtoupper(getenv('ENVIRONMENT')));
     if (!$env) return;
-    log_message('debug', sprintf('**%s** %s``` %s ```', $title, PHP_EOL, $message) );
-    // (new DiscordMsg(
-    //   sprintf('**%s** %s``` %s ```', $title, PHP_EOL, $message), // message
-    //   getenv($env),
-    //   ''
-    // ))->send();
+    (new DiscordMsg(
+      sprintf('**%s** %s``` %s ```', $title, PHP_EOL, $message), // message
+      getenv($env),
+      ''
+    ))->send();
   }
 }
 
@@ -45,12 +44,11 @@ if (!function_exists('discord_exception')) {
   {
     $env =  sprintf('DISCORD_EXCEPTIONS_%s', strtoupper(getenv('ENVIRONMENT')));
     if (!$env) return;
-    log_message('error', sprintf('**%s** %s``` %s ```', $title, PHP_EOL, $message) );
-    // (new DiscordMsg(
-    //   sprintf('**%s** %s``` %s ```', $title, PHP_EOL, $message), // message
-    //   getenv($env),
-    //   ''
-    // ))->send();
+    (new DiscordMsg(
+      sprintf('**%s** %s``` %s ```', $title, PHP_EOL, $message), // message
+      getenv($env),
+      ''
+    ))->send();
   }
 }
 
@@ -260,6 +258,7 @@ function get_student_var_document(): array
     'aluno_nome',
     'aluno_turma',
     'aluno_email',
+    'aluno_senha'
   ];
 }
 
@@ -284,10 +283,12 @@ function get_guardian_var_document(): array
     'guardiao_logradouro_cep',
     'guardiao_documento',
     'guardiao_ocupacao',
+    'guardiao_senha',  
     'mes_atual_extenso',
     'mes_atual_numero',
     'dia_atual',
-    'ano_atual'
+    'ano_atual',
+   
 
     // 'email', 'guardian_name', 'state', 'city', 'firstname', 'lastname', 'guardian_occupation', "guardian_address",
     // "guardian_address_number",
@@ -413,62 +414,4 @@ function mask($val, $mask)
   }
 
   return $maskared;
-}
-
-if ( ! function_exists('dd'))
-{
-    function dd()
-    {
-        list($callee) = debug_backtrace();
-
-        $args = func_get_args();
-
-        $total_args = func_num_args();
-
-        echo '<div><fieldset style="background: #fefefe !important; border:1px red solid; padding:15px">';
-        echo '<legend style="background:#00a14a; color:white; padding:5px;">' .$callee['file'].' @line: '.$callee['line'].'</legend><pre><code>';
-
-        $i = 0;
-
-        foreach ($args as $arg)
-        {
-            echo '<strong>Debug #' . ++$i . ' of ' . $total_args . '</strong>: ' . '<br>';
-
-            var_dump($arg);
-        }
-
-        echo "</code></pre></fieldset><div><br>";
-
-        die();
-    }
-}
-// Função para converter imagens em webp.
-if(!function_exists('image_webp')){
-  function webpImagem($imagem, $qualidade = 100, $removerOriginal = false){
-
-    $diretorio = pathinfo($imagem, PATHINFO_DIRNAME);
-    $nome = pathinfo($imagem, PATHINFO_FILENAME);
-    $destino = $diretorio . DIRECTORY_SEPARATOR . $nome . '.webp';
-    $info = (object)getimagesize($imagem);
-    $alpha = false;
-    if($info->mime == 'image/jpeg')
-      $image = imagecreatefromjpeg($imagem);
-    else if($alpha = $info->mime == 'image/gif')
-      $image = imagecreatefromgif($imagem);
-    else if($alpha = $info->mime == 'image/png')
-      $image = imagecreatefrompng($imagem);
-    else
-      return $imagem;
-
-    if($alpha){
-      imagepalettetotruecolor($image);
-      imagealphablending($image, true);
-      imagesavealpha($image, true);
-    }
-    imagewebp($image, $destino, $qualidade);
-    if($removerOriginal)
-      unlink($imagem);
-
-    return $destino;
-  }
 }

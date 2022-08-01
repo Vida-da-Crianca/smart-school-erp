@@ -167,7 +167,30 @@ class DocumentController extends Admin_Controller
         $student =  Student_eloquent::where('id', $user_id)->with(['session' => function ($q) {
             return $q->with(['section', 'class_item'])->where('session_id', $this->sch_setting_detail->session_id);
         }])->first();
-
+        
+        //Carregar a senha do pai  e do aluno
+        $aluno_senha = '';
+        try{
+            
+            $res = $this->db->where('user_id',(int)$student->id)
+                    ->where('role','student')->get('users')->result();
+            $aluno_senha = count($res) > 0 ? $res[0]->password : '';
+            
+        } catch (\Exception $e){
+            
+        }
+        
+        $guardiao_senha = '';
+        try{
+            
+            $res = $this->db->where('id',(int)$student->parent_id)
+                    ->where('role','parent')->get('users')->result();
+            $guardiao_senha = count($res) > 0 ? $res[0]->password : '';
+            
+        } catch (\Exception $e){
+            
+        }
+            
         $now = new \DateTime();
         $data = [
             'aluno_nome' => $student->fullname,
@@ -189,6 +212,9 @@ class DocumentController extends Admin_Controller
             'guardiao_logradouro_cep' =>   mask($student->guardian_postal_code, '#####-###'),
             'guardiao_documento' =>  mask($student->guardian_document,'###.###.###-##'),
             'guardiao_ocupacao' => $student->guardian_ocupation,
+            'guardiao_senha' => $guardiao_senha,
+            'aluno_senha' => $aluno_senha,
+            
             'mes_atual_extenso' => get_month($now),
             'mes_atual_numero' => $now->format('m'),
             'dia_atual' => $now->format('d'),
