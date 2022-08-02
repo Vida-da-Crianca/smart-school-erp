@@ -351,28 +351,6 @@ class Mailgateway
         $student = Student_eloquent::where('id', $id)->with(['session' => function ($q) {
             return $q->with(['section', 'class_item'])->where('session_id', $this->sch_setting_detail->session_id);
         }])->first();
-        
-        
-        //Carregar a senha do pai  e do aluno
-        $aluno_senha = '';
-        try{
-            
-            $res = $this->_CI->db->where('user_id',(int)$student->id)
-                    ->where('role','student')->get('users')->result();
-            $aluno_senha = count($res) > 0 ? $res[0]->password : '';
-            
-        } catch (\Exception $e){}
-        
-        $guardiao_senha = '';
-        try{
-            
-            $res = $this->_CI->db->where('id',(int)$student->parent_id)
-                    ->where('role','parent')->get('users')->result();
-            $guardiao_senha = count($res) > 0 ? $res[0]->password : '';
-            
-        } catch (\Exception $e){}
-        
-        
         $parser = new Parser();
         $now = new \DateTime();
         $data = [
@@ -399,9 +377,6 @@ class Mailgateway
             'mes_atual_numero' => $now->format('m'),
             'dia_atual' => $now->format('d'),
             'ano_atual' => $now->format('Y'),
-            
-            'guardiao_senha' => $guardiao_senha,
-            'aluno_senha' => $aluno_senha,
 
         ];
 
