@@ -8,6 +8,9 @@ use ctodobom\APInterPHP\Cobranca\Mensagem;
 use ctodobom\APInterPHP\Cobranca\Mora;
 use ctodobom\APInterPHP\Cobranca\Multa;
 use ctodobom\APInterPHP\Cobranca\Pagador;
+use ctodobom\APInterPHP\TokenRequest;
+
+require_once APPPATH . 'libraries' . DIRECTORY_SEPARATOR . 'vendor' . DIRECTORY_SEPARATOR . 'autoload.php';
 
 
 class Bank_payment_inter
@@ -36,10 +39,61 @@ class Bank_payment_inter
         $CI->load->model('eloquent/Payment_setting_eloquent');
         $CI->load->model('eloquent/Billet_eloquent');
         $settings = Payment_setting_eloquent::where('payment_type', 'banco_inter')->first();
-        $this->bank = new BancoInter($settings->account_no, $settings->api_secret_key, $settings->api_publishable_key);
-        $this->bank->setKeyPassword($settings->api_password);
+
+        // A Api v2 requer o TokenRequest e os scopos do mesmo.
+        $this->bank = new BancoInter($settings->account_no, $settings->api_secret_key, $settings->api_publishable_key,
+            new TokenRequest($settings->api_email,$settings->salt,'boleto-cobranca.read boleto-cobranca.write'));
+
+        // define callback para salvar token emitido
+        $this->bank->setTokenNewCallback(function(string $tokenJson) {
+            if ($tokenFile = fopen('inter-oauth-token.txt','w')) {
+                fwrite($tokenFile, $tokenJson);
+                fclose($tokenFile);
+            }
+        });
+
+        // define callback para obter token do cache
+        $this->bank->setTokenLoadCallback(function() {
+            $oAuthTokenData = null;
+            // uso do @ para evitar o warning se o arquivo não existe
+            if (($tokenFile = @fopen('inter-oauth-token.txt','r')) !== false) {
+                // se tiver arquivo com token, carrega ele e retorna
+                $tokenJson = fread($tokenFile, 8192);
+                $oAuthTokenData = json_decode($tokenJson, true);
+                fclose($tokenFile);
+                return $oAuthTokenData;
+            } else {
+                // retorno "falso" força a emissão de novo token
+                return false;
+            }
+        });
+
+
+        // Verifica se o certificado possui senha.
+        if(!empty($settings->api_password)){
+            $this->bank->setKeyPassword($settings->api_password);
+        }
+
+        // Criar webhook para boletos.
+        $this->criarWebhook();
+
         $this->settings = $settings;
         $this->CI = $CI;
+    }
+
+    
+
+    /** 
+     * Criar webhook com base na url atual do site.
+     */
+    private function criarWebhook(){
+        $webhook_url = base_url() . "InterWebHook/baixaBoleto";
+        $teste = $this->bank->controllerPut("/cobranca/v2/boletos/webhook",["webhookUrl" => $webhook_url], null);
+    }
+
+    public function listarWebhooks(){
+        $teste = $this->bank->controllerGet('/cobranca/v2/boletos/webhook');
+        var_dump($teste);
     }
 
     private function configure($options = [])
@@ -65,13 +119,13 @@ class Bank_payment_inter
             $doc->setBairro($data->getAddressDistrict());
             $doc->setCidade($data->getAddressCity());
             $doc->setCep($data->getAddressPostalCode());
-            $doc->setCnpjCpf($data->getUserDocument());
+            $doc->setCpfCnpj($data->getUserDocument());
             $doc->setUf($data->getAddressState());
             $boleto = new Boleto();
-            $boleto->setCnpjCPFBeneficiario($this->settings->api_username);
+            //$boleto->setCnpjCPFBeneficiario($this->settings->api_username);
             $boleto->setPagador($doc);
             $boleto->setSeuNumero( $data->getYourNumber());
-            $boleto->setDataEmissao(date('Y-m-d'));
+            //$boleto->setDataEmissao(date('Y-m-d'));
             $boleto->setValorNominal($data->getPrice());
             $boleto->setDataVencimento($data->getDatePayment()   /*date_add(new \DateTime() , new \DateInterval("P10D"))->format('Y-m-d')*/);
             $this->applyFine($boleto, $data);
