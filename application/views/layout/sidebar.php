@@ -478,10 +478,20 @@
 
                             if ($this->rbac->hasPrivilege('marks_grade', 'can_view')) {
                             ?>
-                                <li class="<?php echo set_Submenu('Examinations/grade'); ?>"><a href="<?php echo base_url(); ?>admin/grade"><i class="fa fa-angle-double-right"></i> <?php echo $this->lang->line('marks_grade'); ?></a></li> <?php } ?>
+                                <li class="<?php echo set_Submenu('Examinations/grade'); ?>"><a href="<?php echo base_url(); ?>admin/grade"><i class="fa fa-angle-double-right"></i> <?php echo $this->lang->line('marks_grade'); ?></a></li> 
+                            <?php } 
 
+                            if ($this->rbac->hasPrivilege('questionnaires_manage', 'can_view')) {
+                                ?>
+                                    <li class="<?php echo set_Submenu('Examinations/questionnaires_add'); ?>"><a href="<?php echo base_url(); ?>admin/questionnaires/add"><i class="fa fa-angle-double-right"></i> <?php echo $this->lang->line('questionnaires_manage'); ?></a></li> 
+                                <?php } 
 
+                            if ($this->rbac->hasPrivilege('questionnaires_answer', 'can_view')) {
+                            ?>
+                                <li class="<?php echo set_Submenu('Examinations/questionnaires'); ?>"><a href="<?php echo base_url(); ?>admin/questionnaires"><i class="fa fa-angle-double-right"></i> <?php echo $this->lang->line('questionnaires'); ?></a></li> 
+                            <?php } ?>
 
+                      
                         </ul>
                     </li>
             <?php
@@ -1292,6 +1302,10 @@
                             <?php
                             }
                             ?>
+
+
+<li class="<?php echo set_Submenu('Reports/questionnaires'); ?>"><a href="<?php echo base_url(); ?>report/questionnaires"><i class="fa fa-angle-double-right"></i> Questionários</a></li>
+
                                 
                                 
                            <li class="<?php echo set_Submenu('audit/index'); ?>">

@@ -388,6 +388,9 @@ $lang['male'] = "Masculino";
 $lang['manage'] = "Gerenciar";
 $lang['mark_as_holiday'] = "Marcar Como Férias";
 $lang['marks_grade'] = "Marcas De Grau";
+$lang['questionnaires'] = "Questionários";
+$lang['questionnaires_manage'] = "Geren. de Questionários ";
+
 $lang['marks_register'] = "Marcas De Registo";
 $lang['marks_register_prepared'] = "Marcas De Registrar Preparado";
 $lang['member_id'] = "Id De Membro";

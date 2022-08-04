@@ -44,4 +44,4 @@ $application  = new Application('Man Command Line', '1.0.0');
   foreach($commands as $key => $command){
        $application->add( new $command($ci));
   }
-$application->run();
+$application->run();     

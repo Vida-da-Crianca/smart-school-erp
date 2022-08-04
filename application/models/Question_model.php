@@ -2,6 +2,299 @@
 
 class Question_model extends MY_model {
 
+    public function addQuestionary($quest_title, $quest_description, $quest_observation, $quest_criteria, $quest_segment, $quest_section, $quest_data, $quest_time, $quest_status, $quest_teacher, $quest_user) {
+    
+        $data = array(
+            'quest_title' => $quest_title, 
+            'quest_description' => $quest_description,
+            'quest_observation' => $quest_observation,
+            'quest_criteria' => $quest_criteria, 
+            'quest_segment' => $quest_segment, 
+            'quest_section' => $quest_section, 
+            'quest_data' => $quest_data,
+            'quest_time' => $quest_time,
+            'quest_status' => $quest_status,
+            'quest_teacher' => $quest_teacher,
+            'quest_user' => $quest_user
+        ); 
+
+        return $this->db->insert('questionnaries',$data);
+    }
+
+
+    public function addQuestionaryDuplicated($quest_title, $quest_description, $quest_observation, $quest_criteria, $quest_segment, $quest_section, $quest_data, $quest_time, $quest_status, $quest_teacher, $quest_user) {
+    
+        $data = array(
+            'quest_title' => $quest_title, 
+            'quest_description' => $quest_description,
+            'quest_observation' => $quest_observation,
+            'quest_criteria' => $quest_criteria, 
+            'quest_segment' => $quest_segment, 
+            'quest_section' => $quest_section, 
+            'quest_data' => $quest_data,
+            'quest_time' => $quest_time,
+            'quest_status' => $quest_status,
+            'quest_teacher' => $quest_teacher,
+            'quest_user' => $quest_user
+        ); 
+
+        $this->db->insert('questionnaries',$data);
+        return $this->db->insert_id();
+    }
+
+    public function updateQuestionary($quest_title, $quest_description, $quest_observation, $quest_status,  $quest_id) {
+        $this->db->where('id', $quest_id);
+
+        $data = array(
+            'quest_title' => $quest_title, 
+            'quest_description' => $quest_description,
+            'quest_observation' => $quest_observation,
+            'quest_status' => $quest_status,
+        ); 
+
+        return $this->db->update('questionnaries',$data);
+
+    }
+
+    public function getQuestionnaires() {
+
+            $this->db->order_by('id','desc');
+        return $this->db->get('questionnaries')->result();
+
+    }
+
+    public function getQuestionary($id) {
+
+        $this->db->where('id',$id);
+        return $this->db->get('questionnaries')->row_array();
+
+    }
+
+    public function deleteQuestionary($quest_id) {
+        $this->db->where('id', $quest_id);
+        return $this->db->delete('questionnaries');
+    }
+
+
+    // Inicio Respostas
+    public function addAnswers($quest_id, $quest_ask_title ) {
+        $data = array(
+            'quest_id' => $quest_id,
+            'quest_answer_title' => $quest_ask_title,
+        );
+
+        return $this->db->insert('questionnaries_answer', $data);
+    }
+
+    public function getAnswers($quest_id) {
+
+        $this->db->where('quest_id', $quest_id);
+        $this->db->order_by('id','desc');
+
+        return $this->db->get('questionnaries_answer')->result();
+    }
+
+    public function getAnswer($answer_id) {
+
+        $this->db->where('id', $answer_id);
+        return $this->db->get('questionnaries_answer')->row_array()['quest_answer_title'];
+    }
+
+
+    public function deleteAnswers($answer_id) {
+
+        $this->db->where('id', $answer_id);
+        return $this->db->delete('questionnaries_answer');
+
+    }
+    // Fim Respotas
+
+
+     // Inicio Perguntas
+     public function addAsks($quest_id, $quest_ask_title ) {
+        $data = array(
+            'quest_id' => $quest_id,
+            'quest_ask_title' => $quest_ask_title,
+        );
+
+        return $this->db->insert('questionnaries_ask', $data);
+    }
+
+    public function getAsks($quest_id) {
+
+        $this->db->where('quest_id', $quest_id);
+        $this->db->order_by('id','desc');
+
+        return $this->db->get('questionnaries_ask')->result();
+    }
+
+
+    public function deleteAsks($ask_id) {
+
+        $this->db->where('id', $ask_id);
+        return $this->db->delete('questionnaries_ask');
+
+    }
+    // Fim Perguntas
+
+
+
+
+
+
+
+
+
+// Inicio Respondendo Perguntas
+
+    public function answerGetQuestion($quest_id) {
+
+        $this->db->where('quest_id', $quest_id);
+        $this->db->order_by('id','desc');
+
+        return $this->db->get('questionnaries_answer')->result();
+    }
+
+    public function answerGetAsks($quest_id) {
+
+        $this->db->where('quest_id', $quest_id);
+        $this->db->order_by('id','desc');
+
+        return $this->db->get('questionnaries_ask')->result();
+    }
+
+    public function user_answer_check($quest_id, $quest_user) {
+
+        $this->db->where('quest_id', $quest_id);
+        $this->db->where('quest_user', $quest_user);
+
+        return $this->db->get('questionnaries_user_answer_check')->row_array();
+
+    }
+
+    public function deleteQuestionaryCheck($quest_id) {
+        $this->db->where('id', $quest_id);
+        return $this->db->delete('questionnaries_user_answer_check');
+    }
+
+    public function searchQuestionnairesCheck($quest_criteria, $quest_segment, $quest_section, $quest_teacher = null) {
+
+        $this->db->where('quest_criteria', $quest_criteria);
+        $this->db->where('quest_segment', $quest_segment);
+        $this->db->where('quest_section', $quest_section);
+       
+        if ($quest_teacher !== 0) {
+            $this->db->where('quest_teacher', $quest_teacher);
+        }
+
+        return $this->db->get('questionnaries_user_answer_check')->result();
+
+    }
+
+    //Pega a resposta da pergunta
+    public function user_answer_check_item($quest_id, $quest_ask_id, $quest_user) {
+
+        $this->db->where('quest_id', $quest_id);
+        $this->db->where('quest_user', $quest_user);
+        $this->db->where('quest_ask_id', $quest_ask_id);
+
+        return $this->db->get('questionnaries_user_answer_list')->row_array()['quest_answer_id'];
+
+    }
+
+    //Pega o texto da resposta da pergunta
+
+    public function questionnaries_user_answer_check($quest_id, $quest_user, $quest_data, $quest_time, $quest_criteria, $quest_segment, $quest_section, $quest_teacher = null) {
+
+        $data = array(
+            'quest_id' => $quest_id,
+            'quest_user' => $quest_user,
+            'quest_data' => $quest_data,
+            'quest_time' => $quest_time,
+            'quest_criteria' =>$quest_criteria,
+            'quest_segment' => $quest_segment,
+            'quest_section' => $quest_section,
+            'quest_teacher' => $quest_teacher
+
+
+        );
+
+        return $this->db->insert('questionnaries_user_answer_check', $data);
+
+    }
+
+    public function questionnaries_user_answer_list($quest_id, $quest_ask_id, $quest_answer_id, $quest_user) {
+
+        $data = array(
+            'quest_id' => $quest_id,
+            'quest_user' => $quest_user,
+            'quest_ask_id' => $quest_ask_id,
+            'quest_answer_id' => $quest_answer_id,
+        );
+
+        return $this->db->insert('questionnaries_user_answer_list', $data);
+
+    }
+
+// Fim Respondendo Perguntas
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ public function class_teacher($teacher_id) {
+    $this->db->where('staff_id', $teacher_id);
+    return $this->db->get('class_teacher')->result();
+ }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 	 public function add($data) {
 		$this->db->trans_start(); # Starting Transaction
         $this->db->trans_strict(false); # See Note 01. If you wish can remove as well

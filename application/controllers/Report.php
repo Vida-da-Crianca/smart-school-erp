@@ -1373,6 +1373,52 @@ class Report extends Admin_Controller
         $this->load->view('layout/footer', $data);
     }
 
+    public function questionnaires() {
+
+        $this->session->set_userdata('top_menu', 'Reports');
+        $this->session->set_userdata('sub_menu', 'Reports/questionnaires');
+        $this->session->set_userdata('subsub_menu', 'Reports/questionnaires');     
+
+        if ($this->input->post()) {
+
+            $quest_criteria = $this->input->post('quest_criteria');
+       
+
+            if ($quest_criteria == "classes") {
+            
+                $quest_section = htmlspecialchars($this->input->post('quest_section'));
+                $quest_segment = htmlspecialchars($this->input->post('quest_segment'));
+                $quest_teacher = null;
+    
+    
+    
+            } else if ($quest_criteria == "teachers") {
+    
+                $r = explode("-", $this->input->post('quest_section'));
+                
+                $quest_section = $r[0];
+                $quest_segment = $r[1];
+                $quest_teacher = htmlspecialchars($this->input->post('quest_segment'));
+    
+            }
+
+            $data = array(
+
+                'questionnaires' => $this->question_model->searchQuestionnairesCheck($quest_criteria, $quest_segment, $quest_section, $quest_teacher),
+            );
+            
+        } else {
+
+            $data = array();
+
+        }
+
+        $this->load->view('layout/header', $data);
+        $this->load->view('reports/questionnaires', $data);
+        $this->load->view('layout/footer', $data);
+        
+    }
+
     public function finance()
     {
         $this->session->set_userdata('top_menu', 'Reports');

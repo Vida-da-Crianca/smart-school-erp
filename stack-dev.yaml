@@ -12,10 +12,10 @@ services:
   db:
     image: mysql:8
     environment:
-      MYSQL_DATABASE: erp
-      MYSQL_PASSWORD: erp
-      MYSQL_ROOT_PASSWORD: erp
-      MYSQL_USER: erp
+      MYSQL_DATABASE: erpjb
+      MYSQL_PASSWORD: 
+      MYSQL_ROOT_PASSWORD: 
+      MYSQL_USER: root
     command: 
       [
         '--default_authentication_plugin=mysql_native_password',
@@ -66,7 +66,7 @@ services:
       - VERSION_erp=1.0.2
       - PHP_DATE_TIMEZONE=America/Sao_Paulo
       - LICENSE_APP=63AH2N-XTFFLP-952QAM-UTBUai9NL0Q5R2lLeE4xbXZBMGVMVnEwMlpvTTU0QmNFcml6emVLNkk0MD0=
-      - BASE_URL=http://erp.dev.in/
+      - BASE_URL=http://localhost/smart-school-erp/
       - ENVIRONMENT=development
     command: ["./entrypoint.sh"]
     volumes:
