@@ -437,6 +437,7 @@
                     $this->rbac->hasPrivilege('print_admit_card', 'can_view') ||
                     $this->rbac->hasPrivilege('design_marksheet', 'can_view') ||
                     $this->rbac->hasPrivilege('print_marksheet', 'can_view') ||
+                    $this->rbac->hasPrivilege('exam_questionnaires', 'can_view') ||
                     $this->rbac->hasPrivilege('marks_grade', 'can_view'))) {
                 ?>
                     <li class="treeview <?php echo set_Topmenu('Examinations'); ?>">
@@ -481,15 +482,19 @@
                                 <li class="<?php echo set_Submenu('Examinations/grade'); ?>"><a href="<?php echo base_url(); ?>admin/grade"><i class="fa fa-angle-double-right"></i> <?php echo $this->lang->line('marks_grade'); ?></a></li> 
                             <?php } 
 
-                            if ($this->rbac->hasPrivilege('questionnaires_manage', 'can_view')) {
+                            if ($this->rbac->hasPrivilege('exam_questionnaires', 'can_add')) {
                                 ?>
-                                    <li class="<?php echo set_Submenu('Examinations/questionnaires_add'); ?>"><a href="<?php echo base_url(); ?>admin/questionnaires/add"><i class="fa fa-angle-double-right"></i> <?php echo $this->lang->line('questionnaires_manage'); ?></a></li> 
-                                <?php } 
+                                    <li class="<?php echo set_Submenu('Examinations/questionnaires_add'); ?>"><a href="<?php echo base_url(); ?>admin/questionnaires/add"><i class="fa fa-angle-double-right"></i>Criar Questionários</a></li> 
+                                <?php 
+                                
+                            } 
 
-                            if ($this->rbac->hasPrivilege('questionnaires_answer', 'can_view')) {
+                            if ($this->rbac->hasPrivilege('exam_questionnaires', 'can_view')) {
                             ?>
-                                <li class="<?php echo set_Submenu('Examinations/questionnaires'); ?>"><a href="<?php echo base_url(); ?>admin/questionnaires"><i class="fa fa-angle-double-right"></i> <?php echo $this->lang->line('questionnaires'); ?></a></li> 
-                            <?php } ?>
+                                <li class="<?php echo set_Submenu('Examinations/questionnaires'); ?>"><a href="<?php echo base_url(); ?>admin/questionnaires"><i class="fa fa-angle-double-right"></i> Responder Questionários</a></li> 
+                            <?php
+                            
+                            } ?>
 
                       
                         </ul>
@@ -1175,6 +1180,7 @@
                     $this->rbac->hasPrivilege('stock_report', 'can_view') ||
                     $this->rbac->hasPrivilege('add_item_report', 'can_view') ||
                     $this->rbac->hasPrivilege('issue_inventory_report', 'can_view') ||
+                    $this->rbac->hasPrivilege('exam_questionnaires', 'can_add') ||
                     $this->rbac->hasPrivilege('syllabus_status_report', 'can_view') ||
                     $this->rbac->hasPrivilege('teacher_syllabus_status_report', 'can_view'))) {
             ?>
@@ -1302,11 +1308,21 @@
                             <?php
                             }
                             ?>
+                            
+
+                          
+                        <?php
+                            if ($this->rbac->hasPrivilege('exam_questionnaires', 'can_add'))
+                            
+                            {
+                                ?>
 
 
-<li class="<?php echo set_Submenu('Reports/questionnaires'); ?>"><a href="<?php echo base_url(); ?>report/questionnaires"><i class="fa fa-angle-double-right"></i> Questionários</a></li>
+                                <li class="<?php echo set_Submenu('Reports/questionnaires_report'); ?>"><a href="<?php echo base_url(); ?>report/questionnaires"><i class="fa fa-angle-double-right"></i> Questionários</a></li>
 
-                                
+                                <?php
+                            }
+                            ?>  
                                 
                            <li class="<?php echo set_Submenu('audit/index'); ?>">
                                <a href="<?php echo base_url(); ?>report/limite_alunos">

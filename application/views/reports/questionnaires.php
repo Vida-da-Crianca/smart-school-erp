@@ -34,30 +34,67 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                 <div class="col-md-4">
                                     <div class="form-group">
                                         <label for="exampleInputEmail1">Direcionamento do Questionário *</small></label>
-                                        <select class="form-control" required name="quest_criteria" id="criteria">
-                                            <option default value="">Selecione uma Opção</option>
-                                            <option value="classes">Para Turmas (Alunos e Responsáveis)</option>
-                                            <option value="teachers">Para Professores</option>
-                                        </select>
+                                        
+
+                                           <?php $role = $this->customlib->getUserData();
+
+
+                                            if ($role['role_id'] == "2") { ?>
+
+                                                    <select class="form-control" required name="quest_criteria" id="criteria_teacher">
+                                                    <option default value="">Selecione uma Opção</option>
+                                                    <option value="classes">Para Turmas (Alunos e Responsáveis)</option>
+                                                </select>
+
+                                            <?php } else { ?>
+                                                <select class="form-control" required name="quest_criteria" id="criteria">
+                                                    <option default value="">Selecione uma Opção</option>
+                                                    <option value="classes">Para Turmas (Alunos e Responsáveis)</option>
+                                                    <option value="teachers">Para Professores</option>
+                                                </select>
+
+                                            <?php  } ?>
+                                      
                                         <span class="text-danger"><?php echo form_error('exam_id'); ?></span>
                                     </div>
                                 </div>
-                                <div class="col-md-4">
-                                    <div class="form-group">
-                                    <label for="exampleInputEmail1">Segmentação</label><small class="req"> *</small>
-                                        <select class="form-control" required name="quest_segment" id="segment">                
-                                        </select>
-                                        <span class="text-danger"><?php echo form_error('class_id'); ?></span>
+
+                                <?php $role = $this->customlib->getUserData();
+
+
+                                if ($role['role_id'] == "2") { ?>
+
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                        <label for="exampleInputEmail1">Segmentação</label><small class="req"> *</small>
+                                            <select class="form-control" required name="quest_segment" id="segment">                
+                                            </select>
+                                            <span class="text-danger"><?php echo form_error('class_id'); ?></span>
+                                        </div>
+                                    </div>                   
+
+                                <?php } else { ?>
+
+                                
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                        <label for="exampleInputEmail1">Segmentação</label><small class="req"> *</small>
+                                            <select class="form-control" required name="quest_segment" id="segment">                
+                                            </select>
+                                            <span class="text-danger"><?php echo form_error('class_id'); ?></span>
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="col-md-4">
-                                    <div class="form-group">
-                                        <label for="exampleInputEmail1">Horário da Turma</label><small class="req"> *</small>
-                                        <select class="form-control" required name="quest_section" id="section">   
-                                         </select>
-                                        <span class="text-danger"><?php echo form_error('section_id'); ?></span>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label for="exampleInputEmail1">Horário da Turma</label><small class="req"> *</small>
+                                            <select class="form-control" required name="quest_section" id="section">   
+                                            </select>
+                                            <span class="text-danger"><?php echo form_error('section_id'); ?></span>
+                                        </div>
                                     </div>
-                                </div>
+
+                                <?php  } ?>
+                                
 
 
                         <div class="col-sm-12">
@@ -107,7 +144,25 @@ if (empty($questionnaires)) {
 
             ?>
                                                 <tr>
-                                                    <td><?= $this->customlib->getUserData($a->quest_user)['name']?> <?= $this->customlib->getUserData($a->quest_user)['surname']?></td>
+                                               
+                                                    <td>
+                                                        <?php
+
+                                                                                                                   
+                                                        
+                                                            if ($a->quest_student != 0) {
+                                                            
+
+                                                                    echo $this->student_model->get($a->quest_student)['firstname']." ".$this->student_model->get($a->quest_student)['lastname'];
+                         
+                                                            } else {
+
+                                                                echo $this->staff_model->get($a->quest_teacher)['name']." ".$this->staff_model->get($a->quest_teacher)['surname'];
+                                                            }
+                                                        ?>
+
+                                                
+                                                    </td>
                                                     <td> <?=$this->question_model->getQuestionary($a->quest_id)['quest_title']?></td>
                                                  
                                                     <td> <?=$this->question_model->getQuestionary($a->quest_id)['quest_data']?></td>
@@ -115,7 +170,20 @@ if (empty($questionnaires)) {
                                                     <td><?=$a->quest_data?> - <?=$a->quest_time?></td>
                                                     <td><p style="text-transform: uppercase;font-size:10px;margin-top:5px;color:green" >respondida</p></td>
                                                     <td>
-                                                        <button style="font-size: 12px;" type="button" data-placement="left" class="btn btn-default btn-xs btn-modal-answer-view " data-toggle="tooltip" id="load" data-recordid="<?=$a->quest_id?>" data-title="<?=$this->question_model->getQuestionary($a->quest_id)['quest_title']?>"  data-description="<?=$this->question_model->getQuestionary($a->quest_id)['quest_description']?>" data-observation="<?=$this->question_model->getQuestionary($a->quest_id)['quest_observation']?>" data-nome="<?= $this->customlib->getUserData($a->quest_user)['name']?> <?= $this->customlib->getUserData($a->quest_user)['surname']?>" data-data="<?=$a->quest_data?> - <?=$a->quest_time?>"  title="Visualizar Questionário" > VISUALIZAR <i class="fa fa-arrow-right"></i></button>
+                                                        <button style="font-size: 12px;" type="button" data-placement="left" class="btn btn-default btn-xs btn-modal-answer-view " data-toggle="tooltip" id="load" data-recordid="<?=$a->quest_id?>" data-title="<?=$this->question_model->getQuestionary($a->quest_id)['quest_title']?>"  data-description="<?=$this->question_model->getQuestionary($a->quest_id)['quest_description']?>" data-observation="<?=$this->question_model->getQuestionary($a->quest_id)['quest_observation']?>" data-nome=" <?php
+
+                                                                                                                   
+                                                        
+if ($a->quest_student != 0) {
+
+
+        echo $this->student_model->get($a->quest_student)['firstname']." ".$this->student_model->get($a->quest_student)['lastname'];
+
+} else {
+
+    echo $this->staff_model->get($a->quest_teacher)['name']." ".$this->staff_model->get($a->quest_teacher)['surname'];
+}
+?>" data-data="<?=$a->quest_data?> - <?=$a->quest_time?>" data-user="<?=$a->quest_user?>"  title="Visualizar Questionário" > VISUALIZAR <i class="fa fa-arrow-right"></i></button>
                                                         
                                                         <button class="btn btn-default btn-xs " onclick="deleteQuestionaryCheck(<?=$a->id?>)"> <i class="fa fa-remove"></i></button>
 
@@ -309,6 +377,35 @@ $count++;
     })
 
 
+
+    $(document).on('change','#criteria_teacher', function(e) {
+
+        var criteria = $(this).val()
+        var base_url = '<?php echo base_url() ?>';
+
+        if (criteria == "classes") {
+
+            $.ajax({
+                type: "POST",
+                url: base_url + "admin/questionnaires/getSectionsRelated",
+                data:{teacher_id: <?=$role['id']?>},
+                success: function (data) {
+                    $('#segment').html("")
+                    $('#section').html("")
+            
+
+                    $('#segment').html("")
+                    $('#segment').append("<option value='' >Selecione uma Opção</option>")
+                    $('#segment').append(data)
+                    
+                }
+            });
+
+        }
+
+    
+        })
+
 </script>
 
 
@@ -323,9 +420,10 @@ $count++;
             var observation = $(this).data('observation');
             var nome = $(this).data('nome');
             var data = $(this).data('data');
+            var user = $(this).data('user');
 
 
-            answerGetQuestionView(recordid)
+            answerGetQuestionView(recordid, user)
 
 
             $('#titulo-modal-answer_view').text(title)
@@ -343,12 +441,12 @@ $count++;
     });
 
 
-    function answerGetQuestionView(quest_id) {
+    function answerGetQuestionView(quest_id, quest_user) {
 
             $.ajax({
                 type: "POST",
                 url: base_url + "admin/questionnaires/answerGetQuestionView",
-                data:{quest_id:quest_id},
+                data:{quest_id:quest_id, quest_user:quest_user},
                 success: function (data) {
                     // $('#quest_ask_div_view').html("") 
                     $('#quest_ask_div_view').html("") 

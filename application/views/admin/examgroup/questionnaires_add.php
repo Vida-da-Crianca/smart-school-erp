@@ -56,6 +56,7 @@
                                         <th>Título</th>
                                         <th>Direcionamento</th>
                                         <th>Data Publicação</th>
+                                        <th>Criador</th>
                                         <th>Status</th>
                                         <th>Respostas</th>
                                         <th>Perguntas</th>
@@ -63,10 +64,19 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <?php foreach ($this->question_model->getQuestionnaires() as $q) { ?>
+                                    <?php foreach ($questionnaires as $q) { ?>
                                         <tr>
                                             <td class="mailbox-name"> <?=$q->quest_title?></td>
-                                            <td class="mailbox-name" style="text-transform: uppercase;font-size:10px"> <?php if ($q->quest_criteria == "teachers") {echo " Professores";} else if ($q->quest_criteria == "classes") {echo " Turmas";} else if ($q->quest_criteria == "all") { echo " Todos";} ?></td>
+                                            <td class="mailbox-name" style="text-transform: uppercase;font-size:10px"> 
+
+                                            <?php if ($q->quest_criteria == "teachers") {
+                                                echo " Professor";} 
+                                            else if ($q->quest_criteria == "classes") {
+                                                echo " Turma ";} 
+                                            else if ($q->quest_criteria == "all") { 
+                                                echo " Todos";} ?>
+                                            
+                                        </td>
                                             <td class="mailbox-name"> 
                                                 
 
@@ -76,6 +86,13 @@
                                                         -
                                                 <?php }?>
                                             
+                                            </td>
+                                            <td>
+                                                <small><?php
+                                         
+                                         echo substr($this->staff_model->get($q->quest_user)['name'],0,10)."...";
+                                               
+                                       ?></small>
                                             </td>
                                             <td class="mailbox-name">
                                                 <?php if ($q->quest_status == "1") { ?>
@@ -98,7 +115,7 @@
                                             </td>
                                             <td class="pull-right">
 
-                                                <button type="button" data-placement="right" title="Editar" class="btn btn-default btn-xs btn-modal-edit" data-toggle="tooltip"  id="load" data-recordid="<?=$q->id?>" data-title="<?=$q->quest_title?>"  data-observation="<?=$q->quest_observation?>"   data-description="<?=$q->quest_description?>"><i class="fa fa-pencil"></i></button>
+                                                <button type="button" data-placement="right" title="Editar" class="btn btn-default btn-xs btn-modal-edit" data-toggle="tooltip"  id="load" data-recordid="<?=$q->id?>" data-criador="<?=$this->staff_model->get($q->quest_user)['name']?> <?=$this->staff_model->get($q->quest_user)['surname']?>" data-title="<?=$q->quest_title?>"  data-observation="<?=$q->quest_observation?>"   data-description="<?=$q->quest_description?>"><i class="fa fa-pencil"></i></button>
                                         
                                                 <button class="btn btn-default btn-xs " data-toggle="tooltip" title="Excluir" onclick="deleteQuestionary(<?=$q->id?>)"> <i class="fa fa-remove"></i></button>
 
@@ -150,15 +167,33 @@
                     </div>
                     <div class="col-md-6 ml-2" >
                         <label for="">Direcionamento do Questionário</label>
-                            <select class="form-control" required name="quest_criteria" id="criteria">
-                                <option default value="">Selecione uma Opção</option>
-                                <option value="classes">Para Turmas (Alunos e Responsáveis)</option>
-                                <option value="teachers">Para Professores</option>
-                            </select>
+
+
+                                <?php $role = $this->customlib->getUserData();
+
+                                if ($role['role_id'] == "2") { ?>
+
+                                    <select class="form-control" required name="quest_criteria" id="criteria_teachers">
+                                        <option default value="">Selecione uma Opção</option>
+                                        <option value="classes">Para Turmas (Alunos e Responsáveis)</option>
+                                    </select>
+
+
+                                <?php } else { ?>
+
+                                    <select class="form-control" required name="quest_criteria" id="criteria">
+                                        <option default value="">Selecione uma Opção</option>
+                                        <option value="classes">Para Turmas (Alunos e Responsáveis)</option>
+                                        <option value="teachers">Para Professores</option>
+                                    </select>
+
+
+                                <?php } ?>
+                           
                         <br>
                         <div id="segment-div" style="display:none;">
                             <label for="">Segmentação</label>                        
-                            <select class="form-control" required name="quest_segment" id="segment">                
+                            <select class="form-control"  name="quest_segment" id="segment">                
                             </select>
                         </div>
                         <br>
@@ -201,7 +236,8 @@
                     <div class="col-md-1"></div>
                     <div class="col-md-10">
                         <input type="hidden" name="quest_id" id="quest_id_update" required>
-                        <label for="">Direcionamento</label>
+                        <label for="">Criador</label>
+                        <p id="quest_criador"></p>
                         <p id="direcionamento-update"></p>
                         <label for="">Status</label>
                         <select class="form-control" name="quest_status" id="">
@@ -538,6 +574,34 @@
     })
 
 
+
+    $(document).on('change','#criteria_teachers', function(e) {
+
+    var criteria = $(this).val()
+    var base_url = '<?php echo base_url() ?>';
+
+        if (criteria == "classes") {
+
+            $.ajax({
+                type: "POST",
+                url: base_url + "admin/questionnaires/getSectionsRelated",
+                success: function (data) {
+                    $('#segment-div').css('display','none')
+                    $('#segment-div').css('display','none')
+                    $('#section-div').css('display','block')
+                   
+                    $('#section').html("")
+                    $('#section').append("<option value='' >Selecione uma Opção</option>")
+                    $('#section').append(data)
+                    
+                }
+            });
+
+        } 
+    })
+
+
+
 </script>
 
 
@@ -600,6 +664,7 @@
             var title = $(this).data('title')
             var description = $(this).data('description')
             var observation = $(this).data('observation')
+            var criador = $(this).data('criador')
 
             // var title = $(this).data('title');
 
@@ -609,6 +674,7 @@
 
             $('.modal-title-update').text(title)
             $('#quest_title_update').val(title)
+            $('#quest_criador').text(criador)
             $('#quest_description_update').val(description)
             $('#quest_observation_update').val(observation)
             $('#quest_id_update').val(recordid)

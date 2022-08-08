@@ -63,7 +63,7 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <?php foreach ($this->question_model->getQuestionnaires() as $q) { ?>
+                                    <?php foreach ($questionnaires as $q) { ?>
                                         <tr>
                                             <td class="mailbox-name"> <?=$q->quest_title?></td>
                                             <td class="mailbox-name" > 
@@ -102,7 +102,7 @@
 
                                                     <?php if ($this->question_model->user_answer_check($q->id, $this->customlib->getUserData()['id'])) {  ?>
 
-                                                        <button style="font-size: 12px;" type="button" data-placement="left" class="btn btn-default btn-xs btn-modal-answer-view " data-toggle="tooltip" id="load" data-recordid="<?=$q->id?>" data-title="<?=$q->quest_title?>" data-description="<?=$q->quest_description?>" data-observation="<?=$q->quest_observation?>" title="Visualizar Questionário" > VISUALIZAR <i class="fa fa-arrow-right"></i></button>
+                                                        <button style="font-size: 12px;" type="button" data-placement="left" class="btn btn-default btn-xs btn-modal-answer-view " data-toggle="tooltip" id="load" data-recordid="<?=$q->id?>"   data-title="<?=$q->quest_title?>" data-description="<?=$q->quest_description?>" data-observation="<?=$q->quest_observation?>" title="Visualizar Questionário" > VISUALIZAR <i class="fa fa-arrow-right"></i></button>
 
                                                     <?php } else { ?>
 

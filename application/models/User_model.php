@@ -372,6 +372,13 @@ class User_model extends MY_Model {
             return false;
         }
     }
+    public function getUser($id) {
+
+        $this->db->where('id',$id);
+        return $this->db->get('users')->row_array();
+    }
+
+ 
 
     public function forgotPassword($usertype, $email) {
         $result = false;

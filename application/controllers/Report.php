@@ -15,6 +15,7 @@ class Report extends Admin_Controller
         $this->payment_mode = $this->customlib->payment_mode();
         $this->search_type = $this->customlib->get_searchtype();
         $this->sch_setting_detail = $this->setting_model->getSetting();
+        $this->load->model('user_model');
         
         
        /* $string = 'ZZZZçççàéíÌ )()*(*(&(*(&%!123456asasÀÁ';
@@ -1375,9 +1376,12 @@ class Report extends Admin_Controller
 
     public function questionnaires() {
 
+        $role = $this->customlib->getUserData();
+
+
         $this->session->set_userdata('top_menu', 'Reports');
-        $this->session->set_userdata('sub_menu', 'Reports/questionnaires');
-        $this->session->set_userdata('subsub_menu', 'Reports/questionnaires');     
+        $this->session->set_userdata('sub_menu', 'Reports/questionnaires_report');
+        $this->session->set_userdata('subsub_menu', 'Reports/questionnaires_report');     
 
         if ($this->input->post()) {
 
@@ -1386,9 +1390,25 @@ class Report extends Admin_Controller
 
             if ($quest_criteria == "classes") {
             
-                $quest_section = htmlspecialchars($this->input->post('quest_section'));
-                $quest_segment = htmlspecialchars($this->input->post('quest_segment'));
-                $quest_teacher = null;
+              
+
+                if ($role['role_id'] == "2"){
+
+                    $r = explode("-", $this->input->post('quest_segment'));
+                
+                    $quest_section = $r[1];
+                    $quest_segment = $r[0];
+                    $quest_teacher = null;
+    
+    
+                } else {
+    
+                   
+    
+                    $quest_section = htmlspecialchars($this->input->post('quest_section'));
+                    $quest_segment = htmlspecialchars($this->input->post('quest_segment'));
+                    $quest_teacher = null;
+                }
     
     
     
@@ -1401,6 +1421,8 @@ class Report extends Admin_Controller
                 $quest_teacher = htmlspecialchars($this->input->post('quest_segment'));
     
             }
+         
+            
 
             $data = array(
 

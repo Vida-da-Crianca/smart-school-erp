@@ -435,7 +435,7 @@ if ($this->config->item('SSLK') == "") {
                     <?php
                 }
 
-                if ($this->studentmodule_lib->hasActive('examinations')) {
+                // if ($this->studentmodule_lib->hasActive('examinations')) {
                     ?>
                     <li class="treeview <?php echo set_Topmenu('Examinations'); ?>">
                         <a href="#">
@@ -445,18 +445,23 @@ if ($this->config->item('SSLK') == "") {
                         </a>
                         <ul class="treeview-menu">
 
-                            <li class="<?php echo set_Submenu('examSchedule/index'); ?>"><a
+                            <!-- <li class="<?php echo set_Submenu('examSchedule/index'); ?>"><a
                                         href="<?php echo base_url(); ?>user/examschedule"><i
                                             class="fa fa-angle-double-right"></i> <?php echo $this->lang->line('exam_schedule'); ?>
                                 </a></li>
                             <li class="<?php echo set_Submenu('examresult/index'); ?>"><a
                                         href="<?php echo base_url(); ?>user/exam/examresult"><i
                                             class="fa fa-angle-double-right"></i> <?php echo $this->lang->line('exam') . " " . $this->lang->line('result'); ?>
+                                </a></li> -->
+
+                                <li class="<?php echo set_Submenu('questionnaires/questionnaires'); ?>"><a
+                                        href="<?php echo base_url(); ?>user/exam/questionnaires"><i
+                                            class="fa fa-angle-double-right"></i> Responder Questionários
                                 </a></li>
                         </ul>
                     </li>
                     <?php
-                }
+                // }
                 if ($this->studentmodule_lib->hasActive('notice_board')) {
                     ?>
 

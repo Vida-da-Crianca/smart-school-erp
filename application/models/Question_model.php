@@ -56,9 +56,16 @@ class Question_model extends MY_model {
 
     }
 
-    public function getQuestionnaires() {
+    public function getQuestionnaires($teacher = null) {
 
             $this->db->order_by('id','desc');
+            $this->db->where('quest_delete', 0);
+
+            if($teacher != null) {
+                $this->db->where('quest_user', $teacher);
+
+            }
+
         return $this->db->get('questionnaries')->result();
 
     }
@@ -71,8 +78,14 @@ class Question_model extends MY_model {
     }
 
     public function deleteQuestionary($quest_id) {
+
         $this->db->where('id', $quest_id);
-        return $this->db->delete('questionnaries');
+
+        $data = array(
+            'quest_delete' => 1, 
+        ); 
+
+        return $this->db->update('questionnaries',$data);
     }
 
 
@@ -167,6 +180,8 @@ class Question_model extends MY_model {
 
         $this->db->where('quest_id', $quest_id);
         $this->db->where('quest_user', $quest_user);
+        $this->db->order_by('id','desc');
+
 
         return $this->db->get('questionnaries_user_answer_check')->row_array();
 
@@ -177,13 +192,50 @@ class Question_model extends MY_model {
         return $this->db->delete('questionnaries_user_answer_check');
     }
 
+    
+    public function searchQuestionnairesForStudents($quest_criteria, $quest_segment, $quest_section) {
+
+        $this->db->where('quest_criteria', $quest_criteria);
+        $this->db->where('quest_segment', $quest_segment);
+        $this->db->where('quest_section', $quest_section);
+
+        $this->db->where('quest_delete', 0);
+        $this->db->where('quest_status', 1);
+       
+        $this->db->order_by('id','desc');
+
+     
+
+        return $this->db->get('questionnaries')->result();
+
+    }
+
+    public function searchQuestionnairesForTeachers($quest_teacher) {
+
+        // $this->db->where('quest_criteria', $quest_criteria);
+        // $this->db->where('quest_segment', $quest_segment);
+        // $this->db->where('quest_section', $quest_section);
+        $this->db->where('quest_teacher', $quest_teacher);
+        $this->db->where('quest_delete', 0);
+        $this->db->where('quest_status', 1);
+     
+        $this->db->order_by('id','desc');
+
+
+        return $this->db->get('questionnaries')->result();
+
+    }
+
     public function searchQuestionnairesCheck($quest_criteria, $quest_segment, $quest_section, $quest_teacher = null) {
 
         $this->db->where('quest_criteria', $quest_criteria);
         $this->db->where('quest_segment', $quest_segment);
         $this->db->where('quest_section', $quest_section);
+
+        $this->db->order_by('id','desc');
+
        
-        if ($quest_teacher !== 0) {
+        if ($quest_teacher !== null) {
             $this->db->where('quest_teacher', $quest_teacher);
         }
 
@@ -197,6 +249,8 @@ class Question_model extends MY_model {
         $this->db->where('quest_id', $quest_id);
         $this->db->where('quest_user', $quest_user);
         $this->db->where('quest_ask_id', $quest_ask_id);
+        $this->db->order_by('id','desc');
+
 
         return $this->db->get('questionnaries_user_answer_list')->row_array()['quest_answer_id'];
 
@@ -204,9 +258,9 @@ class Question_model extends MY_model {
 
     //Pega o texto da resposta da pergunta
 
-    public function questionnaries_user_answer_check($quest_id, $quest_user, $quest_data, $quest_time, $quest_criteria, $quest_segment, $quest_section, $quest_teacher = null) {
+    public function questionnaries_user_answer_check($quest_id, $quest_user, $quest_data, $quest_time, $quest_criteria, $quest_segment, $quest_section, $quest_teacher = null, $quest_student = null) {
 
-        $data = array(
+        $data = array(    
             'quest_id' => $quest_id,
             'quest_user' => $quest_user,
             'quest_data' => $quest_data,
@@ -214,7 +268,8 @@ class Question_model extends MY_model {
             'quest_criteria' =>$quest_criteria,
             'quest_segment' => $quest_segment,
             'quest_section' => $quest_section,
-            'quest_teacher' => $quest_teacher
+            'quest_teacher' => $quest_teacher,
+            'quest_student' => $quest_student
 
 
         );
