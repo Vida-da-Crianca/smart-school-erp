@@ -10,12 +10,16 @@ use Billet_eloquent;
 use ctodobom\APInterPHP\BancoInter;
 use ctodobom\APInterPHP\Cobranca\Boleto;
 use ctodobom\APInterPHP\Cobranca\Pagador;
+use ctodobom\APInterPHP\TokenRequest;
 use DateInterval;
 use DateTime;
 use Illuminate\Database\Eloquent\Collection;
 use Packages\Commands\BaseCommand;
 use stdClass;
 use Illuminate\Database\Capsule\Manager as DB;
+
+require_once APPPATH . 'libraries' . DIRECTORY_SEPARATOR . 'vendor' . DIRECTORY_SEPARATOR . 'autoload.php';
+
 
 
 class BankTestCommand extends BaseCommand
@@ -59,13 +63,13 @@ class BankTestCommand extends BaseCommand
 
             $conta = "84806796";
             $cnpj = "05460684000128";
-            $certificado = "/app/certificates/inter/2022.pem";
-            $chavePrivada = "/app/certificates/inter/2022.key";
+            $certificado = "/app/certificates/inter/v2.crt";
+            $chavePrivada = "/app/certificates/inter/v2.key";
             // dados de teste
             $cpfPagador = "36635374043";
             $estadoPagador = "SP";
          
-            $banco = new BancoInter($conta, $certificado, $chavePrivada);
+            $banco = new BancoInter($conta, $certificado, $chavePrivada, new TokenRequest('867517e8-8bd0-45a7-94d6-a3a1c500bb19','0a86c402-3ae2-42d3-9273-0a4431b1b682','boleto-cobranca.read boleto-cobranca.write'));
            
             $pagador = new Pagador();
             $pagador->setTipoPessoa(Pagador::PESSOA_FISICA);
@@ -76,14 +80,12 @@ class BankTestCommand extends BaseCommand
             $pagador->setCidade("Cidade");
             $pagador->setCep("12345000");
             
-            $pagador->setCnpjCpf($cpfPagador);
+            $pagador->setCpfCnpj($cpfPagador);
             $pagador->setUf($estadoPagador);
             
             $boleto = new Boleto();
-            $boleto->setCnpjCPFBeneficiario($cnpj);
             $boleto->setPagador($pagador);
             $boleto->setSeuNumero("123456");
-            $boleto->setDataEmissao(date('Y-m-d'));
             $boleto->setValorNominal(100.10);
             $boleto->setDataVencimento(date_add(new DateTime() , new DateInterval("P10D"))->format('Y-m-d'));
             $banco->createBoleto($boleto);

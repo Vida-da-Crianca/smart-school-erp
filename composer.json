@@ -2,7 +2,6 @@
     "require": {
         "vlucas/phpdotenv": "^4.1",
         "illuminate/database": "^5.8.36",
-        "ctodobom/api-inter":"dev-master",
         "symfony/console": "^5.1",
         "symfony/filesystem": "^5.1",
         "symfony/process": "^5.1",
@@ -35,6 +34,11 @@
             "Application\\":"./application/",
             "Packages\\Commands\\":"packages/commands/"
            
+        }
+    },
+    "config": {
+        "platform": {
+            "php": "7.4.26"
         }
     }
 }

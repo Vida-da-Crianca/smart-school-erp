@@ -1,0 +1,9 @@
+/.buildpath
+/composer.phar
+/vendor/
+/private
+.env
+*~
+*.pdf
+/.settings
+inter-oauth-token.txt
