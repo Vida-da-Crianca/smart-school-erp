@@ -496,7 +496,7 @@
                 return this.getDate();
             };
             var day = new Date();
-            this.agenda.date = day.getFullYear() + '-' + day.getFullMonth() + '-' + day.getFullDay();
+            this.agenda.date =  new Date().toISOString().substring(0, 10)
             this.agenda.class_id = this.classes.map((classe) => {
                 return classe.class_id
             })
